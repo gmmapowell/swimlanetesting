@@ -1,14 +1,19 @@
 package com.gmmapowell.swimlane.owntests;
 
-import static org.junit.Assert.fail;
+import java.io.File;
 
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
+import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
+import org.eclipse.swtbot.eclipse.finder.waits.WaitForJobs;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -22,19 +27,39 @@ public class SwtBotTestCase {
 	@BeforeClass
 	public static void setUp() throws Exception {
 		bot = new SWTWorkbenchBot();
+		SWTBotShell as = bot.activeShell();
 		closeWelcomeView();
+		importSampleProject();
+		Conditions.waitForJobs(Job.NONE, null);
+//		try { Thread.sleep(1000); } catch (InterruptedException ex) { }
+		as.activate();
 	}
 
 	@Test
 	public void test() {
 		showView("Swimlane Testing", "Hexagons");
-		bot.viewByTitle("Hexagons");
+		SWTBotView view = bot.viewByTitle("Hexagons");
+		dumpView(view);
 	}
 
 	protected static void closeWelcomeView() {
 		SWTBotView welcome = bot.viewByTitle("Welcome");
 		if (welcome != null)
 			welcome.close();
+	}
+
+	private static void importSampleProject() {
+		bot.menu("File").menu("Import...").click();
+		System.out.println("Active = " + bot.activeShell());
+		bot.tree().expandNode("General").getNode("Existing Projects into Workspace").click();
+		bot.button("Next >").click();
+		String cwd = System.getProperty("user.dir");
+		String projdir = new File(new File(cwd).getParentFile(), "sample-proj").getPath();
+		System.out.println(projdir);
+//		dumpActiveShell();
+		bot.comboBox().setText(projdir);
+		bot.button("Cancel").setFocus();
+		bot.button("Finish").click();
 	}
 
 	protected void showView(String... path) {
@@ -56,7 +81,7 @@ public class SwtBotTestCase {
 		bot.button("OK").click();
 	}
 
-	public void dumpActiveShell() {
+	public static void dumpActiveShell() {
 		SWTBotShell s = bot.activeShell();
 		System.out.println("Widgets in active shell " + s);
 		s.display.asyncExec(new Runnable() {
@@ -67,11 +92,34 @@ public class SwtBotTestCase {
 		});
 	}
 
-	protected void dumpComposite(Composite sw, String indent) {
+	private void dumpView(SWTBotView view) {
+		view.getWidget().getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				dumpComposite((Composite) view.getWidget(), "  ");
+			}
+		});
+		for (SWTBotToolbarButton b : view.getToolbarButtons())
+			System.out.println("Button " + b);
+	}
+
+	protected static void dumpComposite(Composite sw, String indent) {
 		for (Control c : sw.getChildren()) {
-			System.out.println(indent + c);
-			if (c instanceof Composite)
-				dumpComposite((Composite) c, indent + "  ");
+			dumpControl(indent, c);
+		}
+	}
+
+	protected static void dumpControl(String indent, Control c) {
+		System.out.println(indent + c + " " + c.getClass());
+		if (c instanceof Composite)
+			dumpComposite((Composite) c, indent + "  ");
+		// we should also specifically consider other "composite" items such as lists, trees and tables
+		if (c instanceof Table) {
+			Table t = (Table) c;
+			for (int i=0;i<t.getItemCount();i++) {
+				System.out.println(indent + "  row " + i + " " + t.getItem(i));
+//				dumpControl(indent + "    ", t.getItem(i));
+			}
 		}
 	}
 
