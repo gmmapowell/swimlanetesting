@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.SWT;
@@ -16,7 +18,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
+import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
@@ -52,10 +56,8 @@ public class SwtBotTestCase {
 			public void run() {
 				Menu sm = bot.getDisplay().getSystemMenu();
 				for (MenuItem x : sm.getItems()) {
-					System.out.println("sm = " + x.getText());
 					if (x.getText().startsWith("Preferences")) {
 						try {
-							System.out.println("Invoking ...");
 							x.notifyListeners(SWT.Selection, new Event());
 						} catch (Exception ex) {
 							ex.printStackTrace(System.out);
@@ -84,11 +86,40 @@ public class SwtBotTestCase {
 		showView("Swimlane Testing", "Hexagons");
 		SWTBotView view = bot.viewByTitle("Hexagons");
 		dumpView(view);
-		System.out.println(projectMenu().menuItems());
+		Date startBuildAt = new Date();
 		projectMenu().menu("Build All").click();
 		SWTBotLabel lastBuild = bot.labelWithId("hexagons.lastBuild");
 		assertNotNull(lastBuild);
-		assertEquals("hello", lastBuild.getText());
+		bot.waitUntil(labelAfterDate(lastBuild, startBuildAt));
+	}
+
+	private ICondition labelAfterDate(SWTBotLabel field, Date date) {
+		return new ICondition() {
+			private SimpleDateFormat sdf;
+
+			@Override
+			public void init(SWTBot bot) {
+				sdf = new SimpleDateFormat("HHmmss.sss");
+			}
+			
+			@Override
+			public boolean test() throws Exception {
+				String text = field.getText();
+				System.out.println(sdf.format(new Date()) + " " + new Date() + " " + date + " " + text);
+				try {
+					Date d = sdf.parse(text);
+					return d.after(date);
+				} catch (Exception ex) {
+					System.out.println("Error parsing " + text + ": " + ex);
+					return false;
+				}
+			}
+			
+			@Override
+			public String getFailureMessage() {
+				return "not implemented";
+			}
+		};
 	}
 
 	// The actual project menu is hidden by (multiple) sub-menus of "Search" that are also Project; turn off recursive searching to find the right menu

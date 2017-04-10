@@ -90,7 +90,7 @@ public class HexagonView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		Label lastBuild = new Label(parent, SWT.NONE);
 		lastBuild.setData("org.eclipse.swtbot.widget.key", "hexagons.lastBuild");
-		lastBuild.setText("hello");
+		lastBuild.setText("none");
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
