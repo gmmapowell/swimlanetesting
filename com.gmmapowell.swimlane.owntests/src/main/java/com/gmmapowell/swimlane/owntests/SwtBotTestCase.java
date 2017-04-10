@@ -3,14 +3,18 @@ package com.gmmapowell.swimlane.owntests;
 import java.io.File;
 
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
-import org.eclipse.swtbot.eclipse.finder.waits.WaitForJobs;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
@@ -28,11 +32,46 @@ public class SwtBotTestCase {
 	public static void setUp() throws Exception {
 		bot = new SWTWorkbenchBot();
 		SWTBotShell as = bot.activeShell();
+		turnOffAutoBuild();
+		as.activate();
 		closeWelcomeView();
 		importSampleProject();
 		Conditions.waitForJobs(Job.NONE, null);
-//		try { Thread.sleep(1000); } catch (InterruptedException ex) { }
+		try { Thread.sleep(1000); } catch (InterruptedException ex) { }
 		as.activate();
+	}
+
+	protected static SWTBotShell openPreferencesWindow() {
+		bot.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				Menu sm = bot.getDisplay().getSystemMenu();
+				for (MenuItem x : sm.getItems()) {
+					System.out.println("sm = " + x.getText());
+					if (x.getText().startsWith("Preferences")) {
+						try {
+							System.out.println("Invoking ...");
+							x.notifyListeners(SWT.Selection, new Event());
+						} catch (Exception ex) {
+							ex.printStackTrace(System.out);
+						}
+					}
+				}
+				
+			}
+		});
+		return bot.shell("Preferences");
+	}
+
+	protected static void turnOffAutoBuild() {
+		openPreferencesWindow();
+		bot.tree().expandNode("General").select("Workspace");
+		SWTBotCheckBox buildAuto = bot.checkBox("Build automatically");
+		if (buildAuto != null && buildAuto.isChecked()) {
+			buildAuto.click();
+		}
+		bot.button("Apply").click();
+		bot.button("OK").click();
 	}
 
 	@Test
@@ -40,6 +79,7 @@ public class SwtBotTestCase {
 		showView("Swimlane Testing", "Hexagons");
 		SWTBotView view = bot.viewByTitle("Hexagons");
 		dumpView(view);
+		System.out.println(bot.menu("Project").menuItems());
 	}
 
 	protected static void closeWelcomeView() {
