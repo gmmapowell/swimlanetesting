@@ -1,10 +1,10 @@
 package com.gmmapowell.swimlane.owntests;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.core.runtime.jobs.Job;
@@ -25,7 +25,6 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.AfterClass;
@@ -93,7 +92,7 @@ public class SwtBotTestCase {
 		bot.waitUntil(labelAfterDate(lastBuild, startBuildAt));
 	}
 
-	private ICondition labelAfterDate(SWTBotLabel field, Date date) {
+	private ICondition labelAfterDate(SWTBotLabel field, Date wantAfter) {
 		return new ICondition() {
 			private SimpleDateFormat sdf;
 
@@ -105,10 +104,20 @@ public class SwtBotTestCase {
 			@Override
 			public boolean test() throws Exception {
 				String text = field.getText();
-				System.out.println(sdf.format(new Date()) + " " + new Date() + " " + date + " " + text);
+				System.out.println(sdf.format(new Date()) + " " + new Date() + " " + wantAfter + " " + text);
 				try {
-					Date d = sdf.parse(text);
-					return d.after(date);
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(new Date());
+
+					Date d1 = sdf.parse(text);
+					Calendar c1 = Calendar.getInstance();
+					c1.setTime(d1);
+					
+					int copy = Calendar.HOUR_OF_DAY|Calendar.MINUTE|Calendar.SECOND|Calendar.MILLISECOND;
+					cal.set(copy, c1.get(copy));
+					Date d = cal.getTime();
+					System.out.println("Parsed out " + d);
+					return d.after(wantAfter);
 				} catch (Exception ex) {
 					System.out.println("Error parsing " + text + ": " + ex);
 					return false;

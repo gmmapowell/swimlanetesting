@@ -1,6 +1,12 @@
 package com.gmmapowell.swimlane.views;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.*;
@@ -31,7 +37,7 @@ import org.eclipse.swt.SWT;
  * <p>
  */
 
-public class HexagonView extends ViewPart {
+public class HexagonView extends ViewPart implements IResourceChangeListener {
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -42,6 +48,10 @@ public class HexagonView extends ViewPart {
 	private Action action1;
 	private Action action2;
 	private Action doubleClickAction;
+
+	private Label lastBuild;
+
+	private SimpleDateFormat sdf;
 
 	/*
 	 * The content provider class is responsible for
@@ -88,7 +98,9 @@ public class HexagonView extends ViewPart {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
-		Label lastBuild = new Label(parent, SWT.NONE);
+		sdf = new SimpleDateFormat("HHmmss.sss");
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_BUILD);
+		lastBuild = new Label(parent, SWT.NONE);
 		lastBuild.setData("org.eclipse.swtbot.widget.key", "hexagons.lastBuild");
 		lastBuild.setText("none");
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
@@ -188,5 +200,17 @@ public class HexagonView extends ViewPart {
 	 */
 	public void setFocus() {
 		viewer.getControl().setFocus();
+	}
+
+	@Override
+	public void resourceChanged(IResourceChangeEvent event) {
+		System.out.println("Resource changed " + event);
+		lastBuild.getDisplay().asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				lastBuild.setText(sdf.format(new Date()));
+			}
+		});
 	}
 }
