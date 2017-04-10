@@ -1,5 +1,8 @@
 package com.gmmapowell.swimlane.owntests;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.io.File;
 
 import org.eclipse.core.runtime.jobs.Job;
@@ -15,8 +18,10 @@ import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotText;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.AfterClass;
@@ -81,6 +86,9 @@ public class SwtBotTestCase {
 		dumpView(view);
 		System.out.println(projectMenu().menuItems());
 		projectMenu().menu("Build All").click();
+		SWTBotLabel lastBuild = bot.labelWithId("hexagons.lastBuild");
+		assertNotNull(lastBuild);
+		assertEquals("hello", lastBuild.getText());
 	}
 
 	// The actual project menu is hidden by (multiple) sub-menus of "Search" that are also Project; turn off recursive searching to find the right menu

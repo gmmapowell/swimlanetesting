@@ -2,6 +2,7 @@ package com.gmmapowell.swimlane.views;
 
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.graphics.Image;
@@ -87,6 +88,9 @@ public class HexagonView extends ViewPart {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
+		Label lastBuild = new Label(parent, SWT.NONE);
+		lastBuild.setData("org.eclipse.swtbot.widget.key", "hexagons.lastBuild");
+		lastBuild.setText("hello");
 		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 		viewer.setContentProvider(new ViewContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
