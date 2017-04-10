@@ -32,9 +32,9 @@ public class SwtBotTestCase {
 	public static void setUp() throws Exception {
 		bot = new SWTWorkbenchBot();
 		SWTBotShell as = bot.activeShell();
+		closeWelcomeView();
 		turnOffAutoBuild();
 		as.activate();
-		closeWelcomeView();
 		importSampleProject();
 		Conditions.waitForJobs(Job.NONE, null);
 		try { Thread.sleep(1000); } catch (InterruptedException ex) { }
@@ -79,7 +79,13 @@ public class SwtBotTestCase {
 		showView("Swimlane Testing", "Hexagons");
 		SWTBotView view = bot.viewByTitle("Hexagons");
 		dumpView(view);
-		System.out.println(bot.menu("Project").menuItems());
+		System.out.println(projectMenu().menuItems());
+		projectMenu().menu("Build All").click();
+	}
+
+	// The actual project menu is hidden by (multiple) sub-menus of "Search" that are also Project; turn off recursive searching to find the right menu
+	protected SWTBotMenu projectMenu() {
+		return bot.menu().menu("Project", false, 0);
 	}
 
 	protected static void closeWelcomeView() {
