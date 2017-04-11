@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.views;
+package com.gmmapowell.swimlane.eclipse.views;
 
 
 import java.text.SimpleDateFormat;

@@ -3,11 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Swim Lane Tester
 Bundle-SymbolicName: com.gmmapowell.swimlane;singleton:=true
 Bundle-Version: 1.0.0
-Bundle-Activator: com.gmmapowell.swimlane.Activator
+Bundle-Activator: com.gmmapowell.swimlane.eclipse.Activator
 Bundle-Vendor: Gareth Powell
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
-Export-Package: com.gmmapowell.swimlane.views
+Export-Package: com.gmmapowell.swimlane.eclipse.views

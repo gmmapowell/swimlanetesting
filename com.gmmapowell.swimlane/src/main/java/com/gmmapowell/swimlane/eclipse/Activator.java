@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane;
+package com.gmmapowell.swimlane.eclipse;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
