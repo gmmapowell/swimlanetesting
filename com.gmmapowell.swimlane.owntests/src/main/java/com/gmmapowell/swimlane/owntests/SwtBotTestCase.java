@@ -1,15 +1,16 @@
 package com.gmmapowell.swimlane.owntests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.Date;
 
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
-import org.eclipse.swtbot.eclipse.finder.waits.Conditions;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTableItem;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,7 +29,6 @@ public class SwtBotTestCase {
 		ext.closeWelcomeView();
 		ext.turnOffAutoBuild();
 		ext.importSampleProject();
-		Conditions.waitForJobs(Job.NONE, null);
 		try { Thread.sleep(1000); } catch (InterruptedException ex) { }
 		ext.showView("Swimlane Testing", "Hexagons");
 		hexView = bot.viewByTitle("Hexagons");
@@ -41,7 +41,14 @@ public class SwtBotTestCase {
 	}
 
 	@Test
-	public void test() {
+	public void testThatItFoundTheAcceptanceTest() {
+		// For now, we are just trying to test that it can figure out the classes and everything without worrying about the formatting
+		// That is a subsequent step which will involve rewriting this test
+		SWTBotTable table = bot.table();
+		assertNotNull(table);
+		assertEquals(1, table.rowCount());
+		SWTBotTableItem ti = table.getTableItem(0);
+		assertEquals("com/gmmapowell/swimlane/sample/AcceptanceTest.class", ti.getText());
 	}
 
 	@AfterClass
