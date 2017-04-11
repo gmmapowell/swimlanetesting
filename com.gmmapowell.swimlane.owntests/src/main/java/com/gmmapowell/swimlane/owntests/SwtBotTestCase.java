@@ -98,7 +98,7 @@ public class SwtBotTestCase {
 
 			@Override
 			public void init(SWTBot bot) {
-				sdf = new SimpleDateFormat("HHmmss.sss");
+				sdf = new SimpleDateFormat("HHmmss.SSS");
 			}
 			
 			@Override

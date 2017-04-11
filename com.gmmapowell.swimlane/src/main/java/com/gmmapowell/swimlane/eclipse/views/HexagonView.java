@@ -98,7 +98,7 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
-		sdf = new SimpleDateFormat("HHmmss.sss");
+		sdf = new SimpleDateFormat("HHmmss.SSS");
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_BUILD);
 		lastBuild = new Label(parent, SWT.NONE);
 		lastBuild.setData("org.eclipse.swtbot.widget.key", "hexagons.lastBuild");
