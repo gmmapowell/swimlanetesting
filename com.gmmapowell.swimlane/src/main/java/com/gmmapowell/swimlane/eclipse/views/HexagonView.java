@@ -3,15 +3,12 @@ package com.gmmapowell.swimlane.eclipse.views;
 
 import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -29,7 +26,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
+import com.gmmapowell.swimlane.eclipse.popos.TestHolder;
 import com.gmmapowell.swimlane.eclipse.project.ProjectHelper;
 import com.gmmapowell.swimlane.eclipse.project.ProjectScanner;
 
@@ -79,20 +76,18 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 	 * (like Task List, for example).
 	 */
 	 
-	class ViewContentProvider implements IStructuredContentProvider, Accumulator {
-		private final List<String> msgs = new ArrayList<String>();
+	class ViewContentProvider implements IStructuredContentProvider {
+		private final TestHolder tests = new TestHolder();
 		
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 		}
 		public void dispose() {
 		}
 		public Object[] getElements(Object parent) {
-			return msgs.toArray();
-		}
-		public void add(String elt) {
-			msgs.add(elt);
+			return tests.msgs.toArray();
 		}
 	}
+	
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 		public String getColumnText(Object obj, int index) {
 			return getText(obj);
@@ -150,7 +145,7 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 			IJavaProject jp = JavaCore.create(p);
 			if (jp != null) {
 				ProjectHelper ph = new ProjectHelper(jp);
-				ProjectScanner scanner = new ProjectScanner(content, ph);
+				ProjectScanner scanner = new ProjectScanner(content.tests, ph);
 				try {
 					URLClassLoader cl = ph.deduceClasspath();
 					scanner.scan(jp);
