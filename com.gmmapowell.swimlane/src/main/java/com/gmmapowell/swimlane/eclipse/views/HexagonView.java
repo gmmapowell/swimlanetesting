@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
 
+import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,8 +11,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -27,6 +30,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
+import com.gmmapowell.swimlane.eclipse.project.ProjectHelper;
 import com.gmmapowell.swimlane.eclipse.project.ProjectScanner;
 
 
@@ -142,11 +146,19 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects(SWT.NONE);
-		ProjectScanner scanner = new ProjectScanner(content);
 		for (IProject p : projects) {
 			IJavaProject jp = JavaCore.create(p);
-			if (jp != null)
-				scanner.scan(jp);
+			if (jp != null) {
+				ProjectHelper ph = new ProjectHelper(jp);
+				ProjectScanner scanner = new ProjectScanner(content, ph);
+				try {
+					URLClassLoader cl = ph.deduceClasspath();
+					scanner.scan(jp);
+				} catch (JavaModelException e) {
+					// TODO: we should capture "problems" with the view
+					e.printStackTrace();
+				}
+			}
 		}
 
 		lastBuild.getDisplay().asyncExec(new Runnable() {
