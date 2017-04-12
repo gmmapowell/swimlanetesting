@@ -8,7 +8,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 public class TestHolder implements Accumulator{
 	public final List<String> msgs = new ArrayList<String>();
 
-	public void add(String elt) {
-		msgs.add(elt);
+	public void acceptance(Class<?> elt) {
+		msgs.add(elt.getName());
 	}
 }

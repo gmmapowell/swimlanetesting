@@ -9,33 +9,33 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.ClassAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.ProjectSimplifier;
 
 public class ProjectScanner {
 	private final Set<String> scanned = new TreeSet<String>();
-	private final Accumulator accumulator;
 	private final ProjectSimplifier resolver;
+	private final ClassAnalyzer analyzer;
 
-	public ProjectScanner(Accumulator accumulator, ProjectSimplifier resolver) {
-		this.accumulator = accumulator;
+	public ProjectScanner(ProjectSimplifier resolver, ClassAnalyzer analyzer) {
 		this.resolver = resolver;
+		this.analyzer = analyzer;
 	}
 
 	public void scan(IJavaProject jp) throws JavaModelException {
-		scanUnder(accumulator, jp, jp.getOutputLocation());
+		scanUnder(jp, jp.getOutputLocation());
 		for (IClasspathEntry e : jp.getRawClasspath())
-			scanUnder(accumulator, jp, e.getOutputLocation());
+			scanUnder(jp, e.getOutputLocation());
 	}
 
-	private void scanUnder(Accumulator accumulator, IJavaProject p, IPath op) {
+	private void scanUnder(IJavaProject p, IPath op) {
 		if (op == null)
 			return;
 		File root = resolver.resolvePath(op);
-		scanAll(accumulator, root, root);
+		scanAll(root, root);
 	}
 
-	private void scanAll(Accumulator accumulator, File root, File under) {
+	private void scanAll(File root, File under) {
 		if (under == null)
 			return;
 		String path = under.getPath();
@@ -44,9 +44,13 @@ public class ProjectScanner {
 		scanned.add(path);
 		if (under.isDirectory()) {
 			for (File m : under.listFiles())
-				scanAll(accumulator, root, m);
+				scanAll(root, m);
 		} else if (under.isFile() && under.getName().endsWith(".class")) {
-			accumulator.add(path.substring(root.getPath().length()+1));
+			analyzer.consider(className(path.substring(root.getPath().length()+1, path.length()-6)));
 		}
+	}
+	
+	private String className(String s) {
+		return s.replace('/', '.');
 	}
 }

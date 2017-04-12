@@ -26,6 +26,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
+import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
 import com.gmmapowell.swimlane.eclipse.popos.TestHolder;
 import com.gmmapowell.swimlane.eclipse.project.ProjectHelper;
 import com.gmmapowell.swimlane.eclipse.project.ProjectScanner;
@@ -144,10 +145,10 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 		for (IProject p : projects) {
 			IJavaProject jp = JavaCore.create(p);
 			if (jp != null) {
-				ProjectHelper ph = new ProjectHelper(jp);
-				ProjectScanner scanner = new ProjectScanner(content.tests, ph);
 				try {
+					ProjectHelper ph = new ProjectHelper(jp);
 					URLClassLoader cl = ph.deduceClasspath();
+					ProjectScanner scanner = new ProjectScanner(ph, new HexagonTestAnalyzer(cl, content.tests));
 					scanner.scan(jp);
 				} catch (JavaModelException e) {
 					// TODO: we should capture "problems" with the view

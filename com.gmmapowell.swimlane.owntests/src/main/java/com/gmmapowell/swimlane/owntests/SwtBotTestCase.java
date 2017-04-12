@@ -48,7 +48,7 @@ public class SwtBotTestCase {
 		assertNotNull(table);
 		assertEquals(1, table.rowCount());
 		SWTBotTableItem ti = table.getTableItem(0);
-		assertEquals("com/gmmapowell/swimlane/sample/AcceptanceTest.class", ti.getText());
+		assertEquals("com.gmmapowell.swimlane.sample.AcceptanceTest", ti.getText());
 	}
 
 	@AfterClass
