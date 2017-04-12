@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.eclipse.project;
+package com.gmmapowell.swimlane.tests.adapter.project;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,6 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.ProjectSimplifier;
+import com.gmmapowell.swimlane.eclipse.project.ProjectHelper;
 
 public class GeneralProjectTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
