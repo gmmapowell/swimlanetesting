@@ -1,21 +1,15 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -31,6 +25,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+
+import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
+import com.gmmapowell.swimlane.eclipse.project.ProjectScanner;
 
 
 /**
@@ -78,7 +75,7 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 	 * (like Task List, for example).
 	 */
 	 
-	class ViewContentProvider implements IStructuredContentProvider {
+	class ViewContentProvider implements IStructuredContentProvider, Accumulator {
 		private final List<String> msgs = new ArrayList<String>();
 		
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
@@ -144,58 +141,21 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		System.out.println("Resource changed " + event);
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects(0);
-		Set<String> scanned = new TreeSet<String>();
+		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects(SWT.NONE);
+		ProjectScanner scanner = new ProjectScanner(content);
 		for (IProject p : projects) {
-			try {
-//				IBuildConfiguration bc = p.getActiveBuildConfig();
-//				System.out.println(bc.getClass());
-				IJavaProject jp = JavaCore.create(p);
-				if (jp != null) {
-					scanUnder(scanned, p, jp.getOutputLocation());
-					for (IClasspathEntry e : jp.getRawClasspath()) {
-						System.out.println(e);
-						scanUnder(scanned, p, e.getOutputLocation());
-					}
-				}
-			} catch (CoreException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			IJavaProject jp = JavaCore.create(p);
+			if (jp != null)
+				scanner.scan(jp);
 		}
+
 		lastBuild.getDisplay().asyncExec(new Runnable() {
-			
 			@Override
 			public void run() {
 				lastBuild.setText(sdf.format(new Date()));
 				viewer.refresh();
 			}
 		});
-	}
-
-	private void scanUnder(Set<String> scanned, IProject p, IPath op) throws CoreException {
-		if (op == null)
-			return;
-		File root = p.getWorkspace().getRoot().getFolder(op).getRawLocation().toFile();
-		scanAll(scanned, root, root);
-	}
-
-	private void scanAll(Set<String> scanned, File root, File under) throws CoreException {
-		if (under == null)
-			return;
-		String path = under.getPath();
-		if (scanned.contains(path))
-			return;
-		scanned.add(path);
-		System.out.println("Scanning " + under);
-		if (under.isDirectory()) {
-			for (File m : under.listFiles())
-				scanAll(scanned, root, m);
-		} else if (under.isFile() && under.getName().endsWith(".class")) {
-			content.add(path.substring(root.getPath().length()+1));
-		} else
-			System.out.println("Cannot handle " + under.getClass());
 	}
 
 	/*
