@@ -1,17 +1,23 @@
 package com.gmmapowell.swimlane.owntests;
 
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.SWTBot;
@@ -163,7 +169,7 @@ public class ExtendedBot {
 	}
 
 	public void dumpView(SWTBotView view) {
-		view.getWidget().getDisplay().asyncExec(new Runnable() {
+		view.getWidget().getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {
 				dumpComposite((Composite) view.getWidget(), "  ");
@@ -192,6 +198,23 @@ public class ExtendedBot {
 			}
 		}
 	}
-	
 
+	public Point getSize(Widget widget) {
+		List<Point> p = new ArrayList<>();
+		widget.getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				Point size = ((Composite)widget).getSize();
+				p.add(size);
+			}
+		});
+		return p.get(0);
+	}
+
+	public void assertPct(int mine, int from, double min, double max) {
+		int pct = mine*100/from;
+		if (pct >= min && pct <= max)
+			return;
+		fail(pct + " was not between " + min + " and " + max);
+	}
 }
