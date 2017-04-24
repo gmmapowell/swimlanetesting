@@ -2,31 +2,44 @@ package com.gmmapowell.swimlane.tests.view;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.util.Calendar;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.junit.Rule;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.models.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.views.HexagonView;
+import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
 import com.gmmapowell.swimlane.tests.hamcrest.DisplayHelper;
 
 public class TestASimpleCaseOfOneAcceptanceTest {
-	@Rule
-	public final DisplayHelper displayHelper = new DisplayHelper();
-	private Shell shell;
-	private HexagonView part;
+	@ClassRule
+	public static final DisplayHelper displayHelper = new DisplayHelper();
+	private static Shell shell;
+	private static HexagonViewPart part;
 
-	protected void setup() {
+	@BeforeClass
+	public static void setup() throws Exception {
 		shell = displayHelper.createShell();
-		part = new HexagonView();
+		part = new HexagonViewPart();
 		part.createControls(shell);
+		shell.setSize(600, 300);
 		shell.open();
 		displayHelper.flushPendingEvents();
 		part.setModel(testModel());
@@ -35,11 +48,48 @@ public class TestASimpleCaseOfOneAcceptanceTest {
 	
 	@Test
 	public void testTheBuildLabelHasTheRightTime() {
-        setup();
         dumpControl("", shell);
         Label lastBuild = getControl(shell, "hexagons.lastBuild");
         assertNotNull(lastBuild);
         assertEquals("042020.420", lastBuild.getText());
+	}
+
+	@Test
+	public void testTheAcceptanceRowLooksRight() throws Exception {
+		Canvas acceptance = getControl(shell, "hexagons.acceptance.1");
+		assertNotNull("No acceptance test was found", acceptance);
+		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
+			@Override
+			public void checkImage(ImageProxy proxy) {
+				proxy.assertColorOfPixel(SWT.COLOR_GREEN, 5, 3);
+				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 500, 3);
+			}
+		});
+	}
+
+	private void checkSizeColors(Canvas canvas, int x, int y, ImageChecker checker) {
+		Point pt = canvas.getSize();
+		assertEquals(x, pt.x);
+		assertEquals(y, pt.y);
+		GC gc = new GC(canvas);
+		Image image = new Image(canvas.getDisplay(), pt.x, pt.y);
+		PaletteData palette = image.getImageData().palette;
+		gc.copyArea(image, 0, 0);
+		checker.checkImage(new ImageProxy() {
+			@Override
+			public void assertColorOfPixel(int swtColor, int x, int y) {
+				Color color = displayHelper.getDisplay().getSystemColor(swtColor);
+				RGB actual = palette.getRGB(image.getImageData().getPixel(x, y));
+				boolean match = 
+					actual.red >= color.getRed()-5 && actual.red <= color.getRed() + 5 &&
+					actual.green >= color.getGreen()-5 && actual.green <= color.getGreen() + 5 &&
+					actual.blue >= color.getBlue()-5 && actual.blue <= color.getBlue() + 5;
+				if (!match)
+					fail("Color " + actual + " was not close enough to SWT " + swtColor + " " + color.getRGB());
+			}
+		});
+		image.dispose();
+		gc.dispose();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -79,12 +129,16 @@ public class TestASimpleCaseOfOneAcceptanceTest {
 		}
 	}
 
-	private HexagonDataModel testModel() {
+	private static HexagonDataModel testModel() {
 		HexagonDataModel hdm = new HexagonDataModel();
 		Calendar cal = Calendar.getInstance();
 		cal.set(2017, 04, 20, 4, 20, 20);
 		cal.set(Calendar.MILLISECOND, 420);
 		hdm.setBuildTime(cal.getTime());
 		return hdm;
+	}
+	
+	@AfterClass
+	public static void tearDownClass() throws Exception {
 	}
 }

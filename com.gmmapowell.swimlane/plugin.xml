@@ -12,7 +12,7 @@
             name="Hexagons"
             icon="icons/sample.gif"
             category="com.gmmapowell.swimlane"
-            class="com.gmmapowell.swimlane.eclipse.views.HexagonView"
+            class="com.gmmapowell.swimlane.eclipse.views.HexagonViewPart"
             id="com.gmmapowell.swimlane.views.HexagonView">
       </view>
    </extension>
