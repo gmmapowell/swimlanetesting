@@ -2,9 +2,14 @@ package com.gmmapowell.swimlane.tests.view;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -44,6 +49,11 @@ public class TestASimpleCaseOfOneAcceptanceTest {
 		displayHelper.flushPendingEvents();
 		part.setModel(testModel());
 		displayHelper.flushPendingEvents();
+	}
+	
+	@Test
+	public void testAllTheControlsWeWantAreThere() throws Exception{
+		assertControls(shell, "hexagons.lastBuild", "hexagons.acceptance.1");
 	}
 	
 	@Test
@@ -90,6 +100,24 @@ public class TestASimpleCaseOfOneAcceptanceTest {
 		});
 		image.dispose();
 		gc.dispose();
+	}
+
+	private void assertControls(Control c, String... names) {
+		List<String> list = new ArrayList<String>(Arrays.asList(names));
+		assertControls(c, list);
+		assertTrue("Controls were missing: " + list, list.isEmpty());
+	}
+
+	private void assertControls(Control c, List<String> list) {
+		String key = (String) c.getData("org.eclipse.swtbot.widget.key");
+		if (key != null && !list.remove(key))
+			fail("An unexpected control " + key + " was found");
+		if (c instanceof Composite) {
+			for (Control ch : ((Composite)c).getChildren()) {
+				assertControls(ch, list);
+			}
+				
+		}
 	}
 
 	@SuppressWarnings("unchecked")
