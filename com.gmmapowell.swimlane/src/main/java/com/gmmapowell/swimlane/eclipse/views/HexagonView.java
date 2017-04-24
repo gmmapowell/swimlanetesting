@@ -1,6 +1,5 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
-
 import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,6 +26,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
+import com.gmmapowell.swimlane.eclipse.models.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.popos.TestHolder;
 import com.gmmapowell.swimlane.eclipse.project.ProjectHelper;
 import com.gmmapowell.swimlane.eclipse.project.ProjectScanner;
@@ -58,14 +58,14 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 	public static final String ID = "com.gmmapowell.swimlane.views.HexagonView";
 
 	private ViewContentProvider content;
+	private Label lastBuild;
 	private TableViewer viewer;
 //	private Action action1;
 //	private Action action2;
 //	private Action doubleClickAction;
 
-	private Label lastBuild;
 
-	private SimpleDateFormat sdf;
+	private final SimpleDateFormat sdf;
 
 	/*
 	 * The content provider class is responsible for
@@ -108,6 +108,7 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 	 * The constructor.
 	 */
 	public HexagonView() {
+		sdf = new SimpleDateFormat("HHmmss.SSS");
 	}
 
 	/**
@@ -115,17 +116,8 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
-		sdf = new SimpleDateFormat("HHmmss.SSS");
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_BUILD);
-		lastBuild = new Label(parent, SWT.NONE);
-		lastBuild.setData("org.eclipse.swtbot.widget.key", "hexagons.lastBuild");
-		lastBuild.setText("none");
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		content = new ViewContentProvider();
-		viewer.setContentProvider(content);
-		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setSorter(new NameSorter());
-		viewer.setInput(getViewSite());
+		createControls(parent);
 		/*
 		getSite().setSelectionProvider(viewer);
 		makeActions();
@@ -135,12 +127,35 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 		*/
 	}
 
+	public void createControls(Composite parent) {
+		lastBuild = new Label(parent, SWT.NONE);
+		lastBuild.setData("org.eclipse.swtbot.widget.key", "hexagons.lastBuild");
+		lastBuild.setText("none");
+		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		content = new ViewContentProvider();
+		viewer.setContentProvider(content);
+		viewer.setLabelProvider(new ViewLabelProvider());
+		viewer.setSorter(new NameSorter());
+		viewer.setInput(getViewSite());
+	}
+
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
 
+	public void setModel(HexagonDataModel model) {
+		lastBuild.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				lastBuild.setText(sdf.format(model.getBuildTime()));
+				viewer.refresh();
+			}
+		});
+	}
+
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
+		HexagonDataModel model = new HexagonDataModel();
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects(SWT.NONE);
 		for (IProject p : projects) {
 			IJavaProject jp = JavaCore.create(p);
@@ -157,13 +172,8 @@ public class HexagonView extends ViewPart implements IResourceChangeListener {
 			}
 		}
 
-		lastBuild.getDisplay().asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				lastBuild.setText(sdf.format(new Date()));
-				viewer.refresh();
-			}
-		});
+		model.setBuildTime(new Date());
+		setModel(model);
 	}
 
 	/*
