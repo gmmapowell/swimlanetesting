@@ -63,7 +63,7 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 	private Label lastBuild;
 	private final SimpleDateFormat sdf;
 
-	private Canvas acceptance;
+//	private Canvas acceptance;
 
 	private HexagonDataModel model;
 
@@ -115,48 +115,50 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 			public void run() {
 				lastBuild.setText(sdf.format(model.getBuildTime()));
 				if (addit) {
-					BarData accModel = model.getAcceptanceTests().get(0);
-					acceptance = new Canvas(parent, SWT.NONE);
-					acceptance.setData("org.eclipse.swtbot.widget.key", "hexagons.acceptance.1");
-					GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
-					gd.heightHint = 6;
-					acceptance.setLayoutData(gd);
-					acceptance.addPaintListener(new PaintListener() {
-						
-						@Override
-						public void paintControl(PaintEvent e) {
-							int total = accModel.getTotal();
-							int compl = accModel.getComplete();
-							Point size = acceptance.getSize();
-							int barx = size.x*compl/total;
-							GC gc = new GC(acceptance);
-							if (barx > 0) {
-								Color barColor = parent.getDisplay().getSystemColor(getColor(accModel.getStatus()));
-								gc.setBackground(barColor);
-								gc.fillRectangle(0, 0, barx, size.y);
+					int id = 0;
+					for (BarData accModel : model.getAcceptanceTests()) {
+						Canvas acceptance = new Canvas(parent, SWT.NONE);
+						acceptance.setData("org.eclipse.swtbot.widget.key", "hexagons.acceptance." + (++id));
+						GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
+						gd.heightHint = 6;
+						acceptance.setLayoutData(gd);
+						acceptance.addPaintListener(new PaintListener() {
+							
+							@Override
+							public void paintControl(PaintEvent e) {
+								int total = accModel.getTotal();
+								int compl = accModel.getComplete();
+								Point size = acceptance.getSize();
+								int barx = size.x*compl/total;
+								GC gc = new GC(acceptance);
+								if (barx > 0) {
+									Color barColor = parent.getDisplay().getSystemColor(getColor(accModel.getStatus()));
+									gc.setBackground(barColor);
+									gc.fillRectangle(0, 0, barx, size.y);
+								}
+								if (barx < size.x) {
+									Color grey = parent.getDisplay().getSystemColor(SWT.COLOR_GRAY);
+									gc.setBackground(grey);
+									gc.fillRectangle(barx, 0, size.x-barx, size.y);
+								}
+								gc.dispose();
 							}
-							if (barx < size.x) {
-								Color grey = parent.getDisplay().getSystemColor(SWT.COLOR_GRAY);
-								gc.setBackground(grey);
-								gc.fillRectangle(barx, 0, size.x-barx, size.y);
+	
+							private int getColor(Status status) {
+								switch (status) {
+								case NONE:
+									return SWT.COLOR_GRAY;
+								case OK:
+									return SWT.COLOR_GREEN;
+								case FAILURES:
+									return SWT.COLOR_RED;
+								case SKIPPED:
+									return SWT.COLOR_YELLOW;
+								}
+								throw new RuntimeException("Cannot handle status " + status);
 							}
-							gc.dispose();
-						}
-
-						private int getColor(Status status) {
-							switch (status) {
-							case NONE:
-								return SWT.COLOR_GRAY;
-							case OK:
-								return SWT.COLOR_GREEN;
-							case FAILURES:
-								return SWT.COLOR_RED;
-							case SKIPPED:
-								return SWT.COLOR_YELLOW;
-							}
-							throw new RuntimeException("Cannot handle status " + status);
-						}
-					});
+						});
+					}
 					parent.layout();
 				}
 			}
