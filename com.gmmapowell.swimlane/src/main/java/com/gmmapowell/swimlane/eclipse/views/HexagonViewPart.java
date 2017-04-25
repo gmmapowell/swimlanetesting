@@ -162,7 +162,7 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 						for (Control c : parent.getChildren()) {
 							String okey = (String) c.getData("org.eclipse.swtbot.widget.key");
 							// This test assumes that they collate in string order, which would not be true if we are using unpadded integers 
-							if (okey != null && okey.startsWith("hexagons.acceptance.") && okey.compareTo(accId) > 0)
+							if (okey != null && okey.startsWith("hexagons.acceptance.") && okey.compareTo(accId) < 0)
 								acceptance.moveAbove(c);
 						}
 						parent.layout();

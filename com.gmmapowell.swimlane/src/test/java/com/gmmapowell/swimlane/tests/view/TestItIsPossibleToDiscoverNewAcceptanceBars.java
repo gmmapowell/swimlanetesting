@@ -15,18 +15,18 @@ public class TestItIsPossibleToDiscoverNewAcceptanceBars extends AViewTest {
 	public void testWeCanAddASecond_Later_Bar() throws Exception {
 		BarData a = a();
 		pushModel(modelWith("initial", a));
-		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.1");
+		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.11");
 		pushModel(modelWith("update", a,b()));
-		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.1", "hexagons.acceptance.2");
+		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.11", "hexagons.acceptance.10");
 	}
 	
 	@Test
 	public void testIfWeAddTheLaterBarFirstTheEarlierBarMovesUp() throws Exception {
 		BarData b = b();
 		pushModel(modelWith("initial", b));
-		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.2");
+		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.10");
 		pushModel(modelWith("update", b,a()));
-		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.1", "hexagons.acceptance.2");
+		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.11", "hexagons.acceptance.10");
 	}
 	
 	protected HexagonDataModel modelWith(String s, BarData... bars) {
@@ -44,7 +44,7 @@ public class TestItIsPossibleToDiscoverNewAcceptanceBars extends AViewTest {
 	protected BarData a() {
 		BarData a = context.mock(BarData.class, "ia");
 		context.checking(new Expectations() {{
-			allowing(a).getId(); will(returnValue("acceptance.1"));
+			allowing(a).getId(); will(returnValue("acceptance.11"));
 			allowing(a).getTotal(); will(returnValue(10));
 			allowing(a).getComplete(); will(returnValue(3));
 			allowing(a).getStatus(); will(returnValue(Status.OK));
@@ -55,7 +55,7 @@ public class TestItIsPossibleToDiscoverNewAcceptanceBars extends AViewTest {
 	protected BarData b() {
 		BarData b = context.mock(BarData.class, "ub");
 		context.checking(new Expectations() {{
-			allowing(b).getId(); will(returnValue("acceptance.2"));
+			allowing(b).getId(); will(returnValue("acceptance.10"));
 			allowing(b).getTotal(); will(returnValue(6));
 			allowing(b).getComplete(); will(returnValue(4));
 			allowing(b).getStatus(); will(returnValue(Status.FAILURES));
