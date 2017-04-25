@@ -21,6 +21,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
@@ -65,8 +66,6 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 
 //	private Canvas acceptance;
 
-	private HexagonDataModel model;
-
 	private Composite parent;
 
 	/*
@@ -108,17 +107,15 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 	}
 
 	public void setModel(HexagonDataModel model) {
-		boolean addit = this.model == null && model != null;
-		this.model = model;
 		lastBuild.getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {
 				lastBuild.setText(sdf.format(model.getBuildTime()));
-				if (addit) {
-					int id = 0;
-					for (BarData accModel : model.getAcceptanceTests()) {
+				for (BarData accModel : model.getAcceptanceTests()) {
+					String accId = "hexagons." + accModel.getId();
+					if (findBar(parent, accId) == null) {
 						Canvas acceptance = new Canvas(parent, SWT.NONE);
-						acceptance.setData("org.eclipse.swtbot.widget.key", "hexagons.acceptance." + (++id));
+						acceptance.setData("org.eclipse.swtbot.widget.key", accId);
 						GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
 						gd.heightHint = 6;
 						acceptance.setLayoutData(gd);
@@ -158,11 +155,29 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 								throw new RuntimeException("Cannot handle status " + status);
 							}
 						});
+						
+						// TODO: need to consider moving it up
+						parent.layout();
 					}
-					parent.layout();
 				}
 			}
+
 		});
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends Control> T findBar(Control c, String which) {
+		if (which.equals(c.getData("org.eclipse.swtbot.widget.key")))
+			return (T)c;
+		if (c instanceof Composite) {
+			for (Control ch : ((Composite)c).getChildren()) {
+				Control r = findBar(ch, which);
+				if (r != null)
+					return (T) r;
+			}
+				
+		}
+		return null;
 	}
 
 	@Override

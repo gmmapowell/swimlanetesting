@@ -25,7 +25,6 @@ public class TestASimpleCaseOfOneAcceptanceBar extends AViewTest {
 	@Test
 	public void testTheBuildLabelHasTheRightTime() throws Exception {
 		specifyModel(10, 0, Status.OK);
-        dumpControl("", shell);
         Label lastBuild = waitForControl(shell, "hexagons.lastBuild");
         assertEquals("042000.420", lastBuild.getText());
 	}
@@ -83,6 +82,7 @@ public class TestASimpleCaseOfOneAcceptanceBar extends AViewTest {
 		context.checking(new Expectations() {{
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
 			allowing(testModel).getAcceptanceTests(); will(returnValue(accList));
+			allowing(a).getId(); will(returnValue("acceptance.1"));
 			allowing(a).getTotal(); will(returnValue(total));
 			allowing(a).getComplete(); will(returnValue(complete));
 			allowing(a).getStatus(); will(returnValue(status));
