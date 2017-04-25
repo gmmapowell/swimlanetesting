@@ -35,6 +35,7 @@ public class TestItIsPossibleToDiscoverNewAcceptanceBars extends AViewTest {
 		for (BarData b : bars)
 			accList.add(b);
 		context.checking(new Expectations() {{
+			allowing(testModel).getHexCount(); will(returnValue(1));
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
 			allowing(testModel).getAcceptanceTests(); will(returnValue(accList));
 		}});
@@ -48,6 +49,7 @@ public class TestItIsPossibleToDiscoverNewAcceptanceBars extends AViewTest {
 			allowing(a).getTotal(); will(returnValue(10));
 			allowing(a).getComplete(); will(returnValue(3));
 			allowing(a).getStatus(); will(returnValue(Status.OK));
+			allowing(a).getMarks(); will(returnValue(1));
 		}});
 		return a;
 	}
@@ -59,6 +61,7 @@ public class TestItIsPossibleToDiscoverNewAcceptanceBars extends AViewTest {
 			allowing(b).getTotal(); will(returnValue(6));
 			allowing(b).getComplete(); will(returnValue(4));
 			allowing(b).getStatus(); will(returnValue(Status.FAILURES));
+			allowing(b).getMarks(); will(returnValue(1));
 		}});
 		return b;
 	}

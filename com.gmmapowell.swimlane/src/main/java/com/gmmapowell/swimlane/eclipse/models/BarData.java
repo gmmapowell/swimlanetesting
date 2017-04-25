@@ -7,4 +7,5 @@ public interface BarData {
 	Status getStatus();
 	int getComplete();
 	int getTotal();
+	int getMarks();
 }

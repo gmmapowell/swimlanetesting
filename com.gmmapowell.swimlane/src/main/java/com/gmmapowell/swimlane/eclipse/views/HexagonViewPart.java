@@ -110,6 +110,7 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 		lastBuild.getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {
+				parent.setLayout(new GridLayout(model.getHexCount(), false));
 				lastBuild.setText(sdf.format(model.getBuildTime()));
 				for (BarData accModel : model.getAcceptanceTests()) {
 					String accId = "hexagons." + accModel.getId();
@@ -118,6 +119,7 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 						acceptance.setData("org.eclipse.swtbot.widget.key", accId);
 						GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
 						gd.heightHint = 6;
+						gd.horizontalSpan = model.getHexCount();
 						acceptance.setLayoutData(gd);
 						acceptance.addPaintListener(new PaintListener() {
 							
@@ -125,18 +127,20 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 							public void paintControl(PaintEvent e) {
 								int total = accModel.getTotal();
 								int compl = accModel.getComplete();
+								int marks = accModel.getMarks();
 								Point size = acceptance.getSize();
-								int barx = size.x*compl/total;
+								int markedx = size.x*marks/model.getHexCount(); 
+								int barx = markedx*compl/total;
 								GC gc = new GC(acceptance);
 								if (barx > 0) {
 									Color barColor = parent.getDisplay().getSystemColor(getColor(accModel.getStatus()));
 									gc.setBackground(barColor);
 									gc.fillRectangle(0, 0, barx, size.y);
 								}
-								if (barx < size.x) {
+								if (barx < markedx) {
 									Color grey = parent.getDisplay().getSystemColor(SWT.COLOR_GRAY);
 									gc.setBackground(grey);
-									gc.fillRectangle(barx, 0, size.x-barx, size.y);
+									gc.fillRectangle(barx, 0, markedx-barx, size.y);
 								}
 								gc.dispose();
 							}
