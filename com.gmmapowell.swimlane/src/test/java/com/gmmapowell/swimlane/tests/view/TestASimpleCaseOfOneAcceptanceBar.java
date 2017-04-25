@@ -1,14 +1,13 @@
 package com.gmmapowell.swimlane.tests.view;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -24,55 +23,89 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
+import org.jmock.Expectations;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
+import com.gmmapowell.swimlane.eclipse.models.BarData;
 import com.gmmapowell.swimlane.eclipse.models.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.models.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
 import com.gmmapowell.swimlane.tests.hamcrest.DisplayHelper;
 
-public class TestASimpleCaseOfOneAcceptanceTest {
-	@ClassRule
-	public static final DisplayHelper displayHelper = new DisplayHelper();
-	private static Shell shell;
-	private static HexagonViewPart part;
+public class TestASimpleCaseOfOneAcceptanceBar {
+	@Rule
+	public final DisplayHelper displayHelper = new DisplayHelper();
+	private HexagonDataModel testModel;
+	private Shell shell;
+	private HexagonViewPart part;
 
-	@BeforeClass
-	public static void setup() throws Exception {
+	@Rule public final JUnitRuleMockery context = new JUnitRuleMockery();
+
+	@Before
+	public void setup() throws Exception {
 		shell = displayHelper.createShell();
 		part = new HexagonViewPart();
 		part.createControls(shell);
 		shell.setSize(600, 300);
 		shell.open();
 		displayHelper.flushPendingEvents();
-		part.setModel(testModel());
-		displayHelper.flushPendingEvents();
 	}
 	
 	@Test
-	public void testAllTheControlsWeWantAreThere() throws Exception{
+	public void testAllTheControlsWeWantAreThere() throws Exception {
+		specifyModel(10, 0, Status.OK);
 		assertControls(shell, "hexagons.lastBuild", "hexagons.acceptance.1");
 	}
 	
 	@Test
-	public void testTheBuildLabelHasTheRightTime() {
+	public void testTheBuildLabelHasTheRightTime() throws Exception {
+		specifyModel(10, 0, Status.OK);
         dumpControl("", shell);
-        Label lastBuild = getControl(shell, "hexagons.lastBuild");
-        assertNotNull(lastBuild);
-        assertEquals("042020.420", lastBuild.getText());
+        Label lastBuild = waitForControl(shell, "hexagons.lastBuild");
+        assertEquals("042000.420", lastBuild.getText());
 	}
 
 	@Test
-	public void testTheAcceptanceRowLooksRight() throws Exception {
-		Canvas acceptance = getControl(shell, "hexagons.acceptance.1");
-		assertNotNull("No acceptance test was found", acceptance);
+	public void testTheAcceptanceRowLooksRightWhenNoTestsHaveRun() throws Exception {
+		specifyModel(10, 0, Status.OK);
+		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
+			@Override
+			public void checkImage(ImageProxy proxy) {
+				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 5, 3);
+				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 500, 3);
+			}
+		});
+	}
+
+	@Test
+	public void testTheAcceptanceRowLooksRightWhenFiveTestsHaveRunSuccessfully() throws Exception {
+		specifyModel(10, 5, Status.OK);
+		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
 				proxy.assertColorOfPixel(SWT.COLOR_GREEN, 5, 3);
+				proxy.assertColorOfPixel(SWT.COLOR_GREEN, 292, 3);
+				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 297, 3);
 				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 500, 3);
+			}
+		});
+	}
+
+	@Test
+	public void testTheAcceptanceRowLooksRightWhenFiveTestsHaveRunWithFailures() throws Exception {
+		specifyModel(10, 5, Status.FAILURES);
+		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
+			@Override
+			public void checkImage(ImageProxy proxy) {
+				proxy.assertColorOfPixel(SWT.COLOR_RED, 290, 3);
+				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 300, 3);
 			}
 		});
 	}
@@ -116,10 +149,21 @@ public class TestASimpleCaseOfOneAcceptanceTest {
 			for (Control ch : ((Composite)c).getChildren()) {
 				assertControls(ch, list);
 			}
-				
 		}
 	}
 
+	private <T extends Control> T waitForControl(Control c, String which) {
+		for (int i=0;i<5;i++) {
+			T ret = getControl(c, which);
+			if (ret != null)
+				return ret;
+			displayHelper.flushPendingEvents();
+			try {Thread.sleep(5);} catch (InterruptedException ex) {}
+		}
+		fail("control " + which + " could not be found under " + c);
+		return null;
+	}
+	
 	@SuppressWarnings("unchecked")
 	private <T extends Control> T getControl(Control c, String which) {
 		if (which.equals(c.getData("org.eclipse.swtbot.widget.key")))
@@ -157,16 +201,34 @@ public class TestASimpleCaseOfOneAcceptanceTest {
 		}
 	}
 
-	private static HexagonDataModel testModel() {
-		HexagonDataModel hdm = new HexagonDataModel();
+	protected void specifyModel(int total, int complete, Status status) throws InterruptedException {
+		testModel = context.mock(HexagonDataModel.class);
+		ArrayList<BarData> accList = new ArrayList<BarData>();
+		BarData a = context.mock(BarData.class);
+		accList.add(a);
+		context.checking(new Expectations() {{
+			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
+			allowing(testModel).getAcceptanceTests(); will(returnValue(accList));
+			allowing(a).getTotal(); will(returnValue(total));
+			allowing(a).getComplete(); will(returnValue(complete));
+			allowing(a).getStatus(); will(returnValue(status));
+		}});
+		part.setModel(testModel);
+		shell.redraw();
+		shell.update();
+		displayHelper.flushPendingEvents();
+	}
+
+	private static Date exactDate(int yr, int mth, int day, int hr, int min, int sec, int ms) {
 		Calendar cal = Calendar.getInstance();
-		cal.set(2017, 04, 20, 4, 20, 20);
-		cal.set(Calendar.MILLISECOND, 420);
-		hdm.setBuildTime(cal.getTime());
-		return hdm;
+		cal.set(yr, mth, day, hr, min, sec);
+		cal.set(Calendar.MILLISECOND, ms);
+		return cal.getTime();
 	}
 	
-	@AfterClass
-	public static void tearDownClass() throws Exception {
+	@After
+	public void tearDownClass() throws Exception {
+//		Thread.sleep(3000);
+		displayHelper.dispose();
 	}
 }
