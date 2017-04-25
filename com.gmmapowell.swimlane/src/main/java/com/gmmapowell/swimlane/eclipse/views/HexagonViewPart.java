@@ -155,8 +155,16 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 								throw new RuntimeException("Cannot handle status " + status);
 							}
 						});
-						
-						// TODO: need to consider moving it up
+
+						// We add controls at "the end".  If that is the wrong place, weneed to consider moving it up
+						// In particular, it should go before any keys that are "acceptance.N" where N is less than our N,
+						// and certainly before any hexagons
+						for (Control c : parent.getChildren()) {
+							String okey = (String) c.getData("org.eclipse.swtbot.widget.key");
+							// This test assumes that they collate in string order, which would not be true if we are using unpadded integers 
+							if (okey != null && okey.startsWith("hexagons.acceptance.") && okey.compareTo(accId) > 0)
+								acceptance.moveAbove(c);
+						}
 						parent.layout();
 					}
 				}

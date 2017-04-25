@@ -86,6 +86,12 @@ public abstract class AViewTest {
 		assertTrue("Controls were missing: " + list, list.isEmpty());
 	}
 
+	protected void assertControlsInOrder(Control c, String... names) {
+		List<String> list = new ArrayList<String>(Arrays.asList(names));
+		assertControlsInOrder(c, list);
+		assertTrue("Controls were missing: " + list, list.isEmpty());
+	}
+
 	private void assertControls(Control c, List<String> list) {
 		String key = (String) c.getData("org.eclipse.swtbot.widget.key");
 		if (key != null && !list.remove(key))
@@ -93,6 +99,21 @@ public abstract class AViewTest {
 		if (c instanceof Composite) {
 			for (Control ch : ((Composite)c).getChildren()) {
 				assertControls(ch, list);
+			}
+		}
+	}
+
+	private void assertControlsInOrder(Control c, List<String> list) {
+		String key = (String) c.getData("org.eclipse.swtbot.widget.key");
+		if (key != null) {
+			if (list.isEmpty())
+				fail("Unexpected control: " + key);
+			String expected = list.remove(0);
+			assertEquals("controls out of order", expected, key);
+		}
+		if (c instanceof Composite) {
+			for (Control ch : ((Composite)c).getChildren()) {
+				assertControlsInOrder(ch, list);
 			}
 		}
 	}
