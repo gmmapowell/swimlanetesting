@@ -65,12 +65,20 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 		List<String> order = this.hexes.bestOrdering();
 		for (Acceptance a : compileAcceptances.values()) {
 			a.setMarks(order);
-			tmp.put(a.getId(), a);
+			// Handle an error case where because of inconsistent hex definitions, we have two
+			// different acceptance tests that think they represent the same pattern (i.e. we can't distinguish two 1s in the name in different orders)
+			// Merge these into a single test
+			Acceptance prev = tmp.get(a.getId());
+			if (prev != null) {
+				prev.merge(a);
+			} else {
+				// This is the normal non-error case
+				tmp.put(a.getId(), a);
+			}
 		}
-		// TODO: order this based on the final total ordering
-		// TODO: also name them
-		for (Acceptance a : compileAcceptances.values()) {
-			acceptances.add(a);
+		// Because we want to sort 111, 110, 101, 100, 011 ... reverse the default sorted list by adding each item on the front
+		for (Acceptance a : tmp.values()) {
+			acceptances.add(0, a);
 		}
 	}
 

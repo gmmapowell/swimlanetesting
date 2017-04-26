@@ -42,6 +42,10 @@ public class Acceptance implements BarData {
 		return marks;
 	}
 
+	public void merge(Acceptance a) {
+		testClasses.addAll(a.testClasses);
+	}
+
 	@Override
 	public Status getStatus() {
 		// TODO Auto-generated method stub

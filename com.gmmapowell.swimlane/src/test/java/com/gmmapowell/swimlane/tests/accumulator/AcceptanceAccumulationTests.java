@@ -44,6 +44,9 @@ public class AcceptanceAccumulationTests {
 		acc.analysisComplete();
 		assertEquals(2, hdm.getHexCount());
 		assertEquals(0, hdm.getErrors().size());
+		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
+		assertEquals(1, acceptanceTests.size());
+		assertEquals("acceptance.11", acceptanceTests.get(0).getId());
 	}
 	
 	@Test
@@ -54,6 +57,10 @@ public class AcceptanceAccumulationTests {
 		assertEquals(2, hdm.getHexCount());
 		assertEquals(1, hdm.getErrors().size());
 		assertEquals("There is no ordering between java.lang.Integer and java.lang.String", hdm.getErrors().get(0));
+		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
+		assertEquals(2, acceptanceTests.size());
+		assertEquals("acceptance.10", acceptanceTests.get(0).getId());
+		assertEquals("acceptance.01", acceptanceTests.get(1).getId());
 	}
 	
 	@Test
@@ -64,5 +71,8 @@ public class AcceptanceAccumulationTests {
 		assertEquals(2, hdm.getHexCount());
 		assertEquals(1, hdm.getErrors().size());
 		assertEquals("Ordering between java.lang.Integer and java.lang.String is inconsistent", hdm.getErrors().get(0));
+		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
+		assertEquals(1, acceptanceTests.size());
+		assertEquals("acceptance.11", acceptanceTests.get(0).getId());
 	}
 }
