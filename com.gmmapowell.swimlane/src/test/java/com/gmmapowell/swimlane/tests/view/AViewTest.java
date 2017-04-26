@@ -26,7 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 
-import com.gmmapowell.swimlane.eclipse.models.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
 import com.gmmapowell.swimlane.tests.hamcrest.DisplayHelper;
 

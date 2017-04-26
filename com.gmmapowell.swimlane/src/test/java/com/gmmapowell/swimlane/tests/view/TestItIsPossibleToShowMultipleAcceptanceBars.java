@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import org.jmock.Expectations;
 import org.junit.Test;
 
-import com.gmmapowell.swimlane.eclipse.models.BarData;
-import com.gmmapowell.swimlane.eclipse.models.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.models.HexagonDataModel.Status;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 
 public class TestItIsPossibleToShowMultipleAcceptanceBars extends AViewTest {
 	

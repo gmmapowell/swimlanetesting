@@ -1,16 +1,9 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
-import java.net.URLClassLoader;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -25,15 +18,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.ViewPart;
 
-import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
-import com.gmmapowell.swimlane.eclipse.models.BarData;
-import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
-import com.gmmapowell.swimlane.eclipse.models.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.models.HexagonDataModel.Status;
-import com.gmmapowell.swimlane.eclipse.popos.TestHolder;
-import com.gmmapowell.swimlane.eclipse.project.ProjectHelper;
-import com.gmmapowell.swimlane.eclipse.project.ProjectScanner;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
+import com.gmmapowell.swimlane.eclipse.project.BuildListener;
 
 
 /**
@@ -54,30 +43,18 @@ import com.gmmapowell.swimlane.eclipse.project.ProjectScanner;
  * <p>
  */
 
-public class HexagonViewPart extends ViewPart implements IResourceChangeListener {
+public class HexagonViewPart extends ViewPart implements HexagonModelListener {
 
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
 	public static final String ID = "com.gmmapowell.swimlane.views.HexagonView";
 
-	private Label lastBuild;
 	private final SimpleDateFormat sdf;
 
-//	private Canvas acceptance;
-
+	private Label lastBuild;
 	private Composite parent;
 
-	/*
-	 * The content provider class is responsible for
-	 * providing objects to the view. It can wrap
-	 * existing objects in adapters or simply return
-	 * objects as-is. These objects may be sensitive
-	 * to the current input of the view, or ignore
-	 * it and always show the same content 
-	 * (like Task List, for example).
-	 */
-	 
 	/**
 	 * The constructor.
 	 */
@@ -90,7 +67,7 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 	 * to create the viewer and initialize it.
 	 */
 	public void createPartControl(Composite parent) {
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_BUILD);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(new BuildListener(this), IResourceChangeEvent.POST_BUILD);
 		createControls(parent);
 	}
 
@@ -208,29 +185,5 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 				
 		}
 		return null;
-	}
-
-	@Override
-	public void resourceChanged(IResourceChangeEvent event) {
-		HexagonAccumulator model = new HexagonAccumulator();
-		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects(SWT.NONE);
-		for (IProject p : projects) {
-			IJavaProject jp = JavaCore.create(p);
-			if (jp != null) {
-				try {
-					ProjectHelper ph = new ProjectHelper(jp);
-					URLClassLoader cl = ph.deduceClasspath();
-					Accumulator tests = new TestHolder();
-					ProjectScanner scanner = new ProjectScanner(ph, new HexagonTestAnalyzer(cl, tests));
-					scanner.scan(jp);
-				} catch (JavaModelException e) {
-					// TODO: we should capture "problems" with the view
-					e.printStackTrace();
-				}
-			}
-		}
-
-		model.setBuildTime(new Date());
-		setModel(model);
 	}
 }

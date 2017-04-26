@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.eclipse.models;
+package com.gmmapowell.swimlane.eclipse.interfaces;
 
 import java.util.Date;
 import java.util.List;
