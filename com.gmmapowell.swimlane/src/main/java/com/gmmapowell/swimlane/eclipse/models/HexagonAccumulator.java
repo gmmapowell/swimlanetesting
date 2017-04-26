@@ -38,9 +38,15 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 		else
 			this.hexes.addAll(hexes);
 	}
+	
+	@Override
+	public void analysisComplete() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
-	public void classError(String msg) {
+	public void error(String msg) {
 		// TODO Auto-generated method stub
 		
 	}

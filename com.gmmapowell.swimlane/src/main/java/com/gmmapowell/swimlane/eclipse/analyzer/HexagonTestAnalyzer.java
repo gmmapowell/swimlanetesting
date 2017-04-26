@@ -32,7 +32,7 @@ public class HexagonTestAnalyzer implements ClassAnalyzer {
 				}
 			}
 		} catch (ClassNotFoundException e1) {
-			accumulator.classError("No such class: " + e1.getMessage());
+			accumulator.error("No such class: " + e1.getMessage());
 		}
 	}
 

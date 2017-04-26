@@ -32,7 +32,7 @@ public class BuildListener implements IResourceChangeListener {
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		Accumulator model = new HexagonAccumulator();
+		Accumulator acc = new HexagonAccumulator();
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects(SWT.NONE);
 		for (IProject p : projects) {
 			IJavaProject jp = JavaCore.create(p);
@@ -40,7 +40,7 @@ public class BuildListener implements IResourceChangeListener {
 				try {
 					ProjectHelper ph = new ProjectHelper(jp);
 					URLClassLoader cl = ph.deduceClasspath();
-					ProjectScanner scanner = new ProjectScanner(ph, new HexagonTestAnalyzer(cl, model));
+					ProjectScanner scanner = new ProjectScanner(ph, new HexagonTestAnalyzer(cl, acc));
 					scanner.scan(jp);
 				} catch (JavaModelException e) {
 					// TODO: we should capture "problems" with the view
@@ -49,8 +49,9 @@ public class BuildListener implements IResourceChangeListener {
 			}
 		}
 
-		model.setBuildTime(new Date());
+		acc.setBuildTime(new Date());
+		acc.analysisComplete();
 		for (HexagonModelListener lsnr : lsnrs)
-			lsnr.setModel((HexagonDataModel) model);
+			lsnr.setModel((HexagonDataModel) acc);
 	}
 }
