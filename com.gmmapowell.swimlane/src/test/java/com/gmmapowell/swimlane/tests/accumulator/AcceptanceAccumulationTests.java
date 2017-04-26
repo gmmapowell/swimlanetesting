@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
 
@@ -23,6 +25,7 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testNoTestsMeansNoHexes() {
 		assertEquals(0, hdm.getHexCount());
+		assertEquals(0, hdm.getAcceptanceTests().size());
 	}
 	
 	@Test
@@ -30,6 +33,9 @@ public class AcceptanceAccumulationTests {
 		acc.acceptance(String.class, new ArrayList<>());
 		acc.analysisComplete();
 		assertEquals(1, hdm.getHexCount());
+		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
+		assertEquals(1, acceptanceTests.size());
+		assertEquals("acceptance.1", acceptanceTests.get(0).getId());
 	}
 	
 	@Test

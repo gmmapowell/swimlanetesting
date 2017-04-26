@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -62,34 +63,17 @@ public class TotalOrder {
 				Order val = Order.SAME;
 				Order tij = ti.get(nj);
 				Order tji = tj.get(ni);
-//				dump();
-				System.out.print(i + " ni#" + ni + " " + ti + " " + tij + " " + j + " nj#" + nj + " " + tj + " " + tji + ": ");
-				if (j < i) {
-					System.out.print(" < ");
+				if (j < i)
 					val = assertBefore(tij, tji);
-				} else if (j > i) {
-					System.out.print(" > ");
+				else if (j > i)
 					val = assertBefore(tji, tij).invert();
-				} else
-					System.out.print(" # ");
-				System.out.println(" = " + val);
 				ti.put(nj, val);
 				tj.put(ni, val.invert());
 			}
 		}
 	}
 
-//	private void dump() {
-//		for (Entry<String, Map<String, Order>> s : ordering.entrySet()) {
-//			System.out.print(s.getKey() + ": ");
-//			for (Entry<String, Order> c : s.getValue().entrySet())
-//				System.out.print("("+c+") ");
-//			System.out.println();
-//		}
-//	}
-
 	private Order assertBefore(Order shouldBeBefore, Order shouldBeAfter) {
-		System.out.print(shouldBeBefore + " and " + shouldBeAfter);
 		if ((shouldBeBefore == Order.NONE || shouldBeBefore == Order.BEFORE) &&
 			(shouldBeAfter == Order.NONE || shouldBeAfter == Order.AFTER))
 			return Order.BEFORE;
@@ -106,7 +90,6 @@ public class TotalOrder {
 		Set<String> ret = new TreeSet<String>();
 		for (Entry<String, Map<String, Order>> r : ordering.entrySet()) {
 			for (Entry<String, Order> c : r.getValue().entrySet()) {
-				System.out.println(r.getKey() + " " + c.getKey() + " " + c.getValue());
 				String first = r.getKey();
 				String second = c.getKey();
 				if (second.compareTo(first) < 0) {
@@ -121,6 +104,37 @@ public class TotalOrder {
 				}
 			}
 		}
+		return ret;
+	}
+
+	public List<String> bestOrdering() {
+		List<String> ret = new ArrayList<String>();
+		while (ret.size() < ordering.size()) {
+			int cnt = -1;
+			String best = null;
+			for (Entry<String, Map<String, Order>> r : ordering.entrySet()) {
+				if (ret.contains(r.getKey())) // don't add things twice
+					continue;
+				int mc = countBefores(r.getValue().values());
+				if (mc > cnt) {
+					cnt = mc;
+					best = r.getKey();
+				}
+			}
+			if (cnt == -1)
+				throw new RuntimeException("That should not be possible");
+			ret.add(best);
+		}
+		if (ret.isEmpty() && haveDefault)
+			ret.add(null);
+		return ret;
+	}
+
+	private int countBefores(Collection<Order> collection) {
+		int ret = 0;
+		for (Order o : collection)
+			if (o == Order.BEFORE)
+				ret++;
 		return ret;
 	}
 }
