@@ -13,8 +13,10 @@ import org.junit.Test;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
+import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
+import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
-public class TestASimpleCaseOfOneAcceptanceBar extends AViewTest {
+public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 	
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {

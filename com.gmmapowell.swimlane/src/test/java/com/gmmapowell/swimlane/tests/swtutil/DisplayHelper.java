@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.tests.hamcrest;
+package com.gmmapowell.swimlane.tests.swtutil;
 
 import static java.util.Arrays.asList;
 

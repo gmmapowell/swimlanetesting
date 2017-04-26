@@ -9,7 +9,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 
-public class TestItIsPossibleToShowMultipleAcceptanceBars extends AViewTest {
+public class MultipleAcceptanceBars extends BaseViewTest {
 	
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {

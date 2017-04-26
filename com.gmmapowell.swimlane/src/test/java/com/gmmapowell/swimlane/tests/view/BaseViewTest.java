@@ -28,9 +28,11 @@ import org.junit.Rule;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
-import com.gmmapowell.swimlane.tests.hamcrest.DisplayHelper;
+import com.gmmapowell.swimlane.tests.swtutil.DisplayHelper;
+import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
+import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
-public abstract class AViewTest {
+public abstract class BaseViewTest {
 	@Rule public final JUnitRuleMockery context = new JUnitRuleMockery();
 	@Rule public final DisplayHelper displayHelper = new DisplayHelper();
 
@@ -47,13 +49,11 @@ public abstract class AViewTest {
 		displayHelper.flushPendingEvents();
 	}
 
-	
 	@After
 	public void tearDown() throws Exception {
 //		Thread.sleep(3000);
 		displayHelper.dispose();
 	}
-	
 
 	protected void checkSizeColors(Canvas canvas, int x, int y, ImageChecker checker) {
 		Point pt = canvas.getSize();

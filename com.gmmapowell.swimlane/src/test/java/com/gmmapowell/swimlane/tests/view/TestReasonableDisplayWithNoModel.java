@@ -4,7 +4,7 @@ import org.junit.Test;
 
 // As the name implies, we want to test what happens to the view part display
 // when there is no data model in place
-public class TestReasonableDisplayWithNoModel extends AViewTest {
+public class TestReasonableDisplayWithNoModel extends BaseViewTest {
 
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {

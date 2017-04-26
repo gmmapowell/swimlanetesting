@@ -9,7 +9,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 
-public class TestItIsPossibleToDiscoverNewAcceptanceBars extends AViewTest {
+public class DiscoveringNewAcceptanceBars extends BaseViewTest {
 	
 	@Test
 	public void testWeCanAddASecond_Later_Bar() throws Exception {
