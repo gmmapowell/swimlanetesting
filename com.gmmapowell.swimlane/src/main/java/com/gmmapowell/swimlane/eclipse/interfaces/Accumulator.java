@@ -6,4 +6,6 @@ public interface Accumulator {
 
 	void acceptance(Class<?> tc, List<Class<?>> hexes);
 
+	void classError(String msg);
+
 }

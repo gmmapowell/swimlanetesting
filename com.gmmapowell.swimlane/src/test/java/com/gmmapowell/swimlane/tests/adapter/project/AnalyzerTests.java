@@ -54,6 +54,15 @@ public class AnalyzerTests {
 		analyzer.consider(clzName);
 	}
 
+	@Test
+	public void testWeAreNotifiedIfTheClassCannotBeFound() throws Exception {
+		String clzName = "unknown";
+		context.checking(new Expectations() {{
+			oneOf(accumulator).classError("No such class: unknown");
+		}});
+		analyzer.consider(clzName);
+	}
+	
 	private Class<?> cls(String string) throws Exception {
 		return Class.forName(string, false, cl);
 	}
