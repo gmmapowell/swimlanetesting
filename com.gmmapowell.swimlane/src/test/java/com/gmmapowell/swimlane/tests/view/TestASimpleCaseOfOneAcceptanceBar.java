@@ -87,7 +87,7 @@ public class TestASimpleCaseOfOneAcceptanceBar extends AViewTest {
 			allowing(a).getTotal(); will(returnValue(total));
 			allowing(a).getComplete(); will(returnValue(complete));
 			allowing(a).getStatus(); will(returnValue(status));
-			allowing(a).getMarks(); will(returnValue(1));
+			allowing(a).getMarks(); will(returnValue(new int[] { 1 }));
 		}});
 		return testModel;
 	}

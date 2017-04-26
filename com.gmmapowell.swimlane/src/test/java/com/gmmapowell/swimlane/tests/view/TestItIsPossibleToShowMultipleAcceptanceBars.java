@@ -38,17 +38,17 @@ public class TestItIsPossibleToShowMultipleAcceptanceBars extends AViewTest {
 			allowing(a).getTotal(); will(returnValue(10));
 			allowing(a).getComplete(); will(returnValue(3));
 			allowing(a).getStatus(); will(returnValue(Status.OK));
-			allowing(a).getMarks(); will(returnValue(1));
+			allowing(a).getMarks(); will(returnValue(new int[] { 1 }));
 			allowing(b).getId(); will(returnValue("acceptance.2"));
 			allowing(b).getTotal(); will(returnValue(6));
 			allowing(b).getComplete(); will(returnValue(4));
 			allowing(b).getStatus(); will(returnValue(Status.FAILURES));
-			allowing(b).getMarks(); will(returnValue(1));
+			allowing(b).getMarks(); will(returnValue(new int[] { 1 }));
 			allowing(c).getId(); will(returnValue("acceptance.3"));
 			allowing(c).getTotal(); will(returnValue(12));
 			allowing(c).getComplete(); will(returnValue(11));
 			allowing(c).getStatus(); will(returnValue(Status.NONE));
-			allowing(c).getMarks(); will(returnValue(1));
+			allowing(c).getMarks(); will(returnValue(new int[] { 1 }));
 		}});
 		return testModel;
 	}

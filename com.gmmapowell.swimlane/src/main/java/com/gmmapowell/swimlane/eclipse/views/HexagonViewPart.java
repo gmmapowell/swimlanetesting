@@ -127,24 +127,42 @@ public class HexagonViewPart extends ViewPart implements IResourceChangeListener
 							public void paintControl(PaintEvent e) {
 								int total = accModel.getTotal();
 								int compl = accModel.getComplete();
-								int marks = accModel.getMarks();
+								int[] marks = accModel.getMarks();
 								Point size = acceptance.getSize();
-								int markedx = size.x*marks/model.getHexCount(); 
+								int segwidth = size.x/model.getHexCount();
+								int markedx = bitcount(marks)*segwidth;
 								int barx = markedx*compl/total;
 								GC gc = new GC(acceptance);
-								if (barx > 0) {
-									Color barColor = parent.getDisplay().getSystemColor(getColor(accModel.getStatus()));
-									gc.setBackground(barColor);
-									gc.fillRectangle(0, 0, barx, size.y);
-								}
-								if (barx < markedx) {
-									Color grey = parent.getDisplay().getSystemColor(SWT.COLOR_GRAY);
-									gc.setBackground(grey);
-									gc.fillRectangle(barx, 0, markedx-barx, size.y);
+								for (int i=0;i<marks.length;i++) {
+									int from = size.x*i/model.getHexCount();
+									int to = size.x*(i+1)/model.getHexCount();
+									if (marks[i] == 1) {
+										if (barx > from) {
+											Color barColor = parent.getDisplay().getSystemColor(getColor(accModel.getStatus()));
+											gc.setBackground(barColor);
+											gc.fillRectangle(from, 0, Math.min(barx-from, to-from), size.y);
+										}
+										if (barx < to) {
+											int left = Math.max(barx, from);
+											Color grey = parent.getDisplay().getSystemColor(SWT.COLOR_GRAY);
+											gc.setBackground(grey);
+											gc.fillRectangle(left, 0, Math.min(markedx-left, to-from), size.y);
+										}
+									} else {
+										barx += segwidth;
+										markedx += segwidth;
+									}
 								}
 								gc.dispose();
 							}
 	
+							private int bitcount(int[] marks) {
+								int sum = 0;
+								for (int i=0;i<marks.length;i++)
+									sum+=marks[i];
+								return sum;
+							}
+
 							private int getColor(Status status) {
 								switch (status) {
 								case NONE:
