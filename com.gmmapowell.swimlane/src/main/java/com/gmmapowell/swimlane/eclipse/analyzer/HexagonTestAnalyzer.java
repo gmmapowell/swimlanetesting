@@ -3,6 +3,7 @@ package com.gmmapowell.swimlane.eclipse.analyzer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ClassAnalyzer;
@@ -31,8 +32,15 @@ public class HexagonTestAnalyzer implements ClassAnalyzer {
 			}
 			for (Annotation y : tc.getAnnotations()) {
 				System.out.println("ann " + y + " " + y.annotationType().getName());
-				if (y.annotationType().getName().equals("com.gmmapowell.swimlane.annotations.Acceptance"))
-					accumulator.acceptance(tc);
+				if (y.annotationType().getName().equals("com.gmmapowell.swimlane.annotations.Acceptance")) {
+					try {
+						Class<?>[] hexes = (Class<?>[]) y.getClass().getMethod("value").invoke(y);
+						accumulator.acceptance(tc, Arrays.asList(hexes));
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 		} catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
