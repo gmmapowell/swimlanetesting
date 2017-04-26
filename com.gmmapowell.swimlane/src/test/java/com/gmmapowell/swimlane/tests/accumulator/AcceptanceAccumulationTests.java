@@ -49,4 +49,14 @@ public class AcceptanceAccumulationTests {
 		assertEquals(1, hdm.getErrors().size());
 		assertEquals("There is no ordering between java.lang.Integer and java.lang.String", hdm.getErrors().get(0));
 	}
+	
+	@Test
+	public void testTwoAcceptancesEachWithTwoHexesInDifferentOrdersGivesTwoHexesButComplainsAboutInconsistentOrdering() {
+		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
+		acc.acceptance(String.class, Arrays.asList(String.class, Integer.class));
+		acc.analysisComplete();
+		assertEquals(2, hdm.getHexCount());
+		assertEquals(1, hdm.getErrors().size());
+		assertEquals("Ordering between java.lang.Integer and java.lang.String is inconsistent", hdm.getErrors().get(0));
+	}
 }

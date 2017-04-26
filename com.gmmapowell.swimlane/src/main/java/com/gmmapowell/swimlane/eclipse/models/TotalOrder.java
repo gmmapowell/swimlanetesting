@@ -55,36 +55,41 @@ public class TotalOrder {
 		}
 		for (int i=0;i<names.size();i++) {
 			String ni = names.get(i);
-			Map<String, Order> t1 = ordering.get(ni);
+			Map<String, Order> ti = ordering.get(ni);
 			for (int j=0;j<names.size();j++) {
 				String nj = names.get(j);
-				Map<String, Order> t2 = ordering.get(nj);
+				Map<String, Order> tj = ordering.get(nj);
 				Order val = Order.SAME;
-				Order t1j = t1.get(nj);
-				Order t2i = t2.get(ni);
-				if (j < i)
-					val = assertBefore(t2i, t1j);
-				else if (j > i)
-					val = assertBefore(t1j, t2i);
-				System.out.println(i + " " + ni + " " + j + " " + nj + " " + t1j + " " + t2i + " " + val);
-				t1.put(nj, val);
-				t2.put(ni, val.invert());
-				dump();
+				Order tij = ti.get(nj);
+				Order tji = tj.get(ni);
+//				dump();
+				System.out.print(i + " ni#" + ni + " " + ti + " " + tij + " " + j + " nj#" + nj + " " + tj + " " + tji + ": ");
+				if (j < i) {
+					System.out.print(" < ");
+					val = assertBefore(tij, tji);
+				} else if (j > i) {
+					System.out.print(" > ");
+					val = assertBefore(tji, tij).invert();
+				} else
+					System.out.print(" # ");
+				System.out.println(" = " + val);
+				ti.put(nj, val);
+				tj.put(ni, val.invert());
 			}
 		}
 	}
 
-	private void dump() {
-		for (Entry<String, Map<String, Order>> s : ordering.entrySet()) {
-			System.out.print(s.getKey() + ": ");
-			for (Entry<String, Order> c : s.getValue().entrySet())
-				System.out.print("("+c+") ");
-			System.out.println();
-		}
-	}
+//	private void dump() {
+//		for (Entry<String, Map<String, Order>> s : ordering.entrySet()) {
+//			System.out.print(s.getKey() + ": ");
+//			for (Entry<String, Order> c : s.getValue().entrySet())
+//				System.out.print("("+c+") ");
+//			System.out.println();
+//		}
+//	}
 
 	private Order assertBefore(Order shouldBeBefore, Order shouldBeAfter) {
-		System.out.println("Asserting relation of " + shouldBeBefore + " and " + shouldBeAfter);
+		System.out.print(shouldBeBefore + " and " + shouldBeAfter);
 		if ((shouldBeBefore == Order.NONE || shouldBeBefore == Order.BEFORE) &&
 			(shouldBeAfter == Order.NONE || shouldBeAfter == Order.AFTER))
 			return Order.BEFORE;
@@ -102,15 +107,17 @@ public class TotalOrder {
 		for (Entry<String, Map<String, Order>> r : ordering.entrySet()) {
 			for (Entry<String, Order> c : r.getValue().entrySet()) {
 				System.out.println(r.getKey() + " " + c.getKey() + " " + c.getValue());
+				String first = r.getKey();
+				String second = c.getKey();
+				if (second.compareTo(first) < 0) {
+					String tmp = first;
+					first = second;
+					second = tmp;
+				}
 				if (c.getValue() == Order.NONE) {
-					String first = r.getKey();
-					String second = c.getKey();
-					if (second.compareTo(first) < 0) {
-						String tmp = first;
-						first = second;
-						second = tmp;
-					}
 					ret.add("There is no ordering between " + first + " and " + second);
+				} else if (c.getValue() == Order.INCONSISTENT) {
+					ret.add("Ordering between " + first + " and " + second + " is inconsistent");
 				}
 			}
 		}
