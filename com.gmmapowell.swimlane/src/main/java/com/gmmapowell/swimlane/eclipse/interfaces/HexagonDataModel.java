@@ -8,4 +8,5 @@ public interface HexagonDataModel {
 	public Date getBuildTime();
 	public List<BarData> getAcceptanceTests();
 	public int getHexCount();
+	public List<String> getErrors();
 }

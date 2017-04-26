@@ -3,6 +3,7 @@ package com.gmmapowell.swimlane.tests.accumulator;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.junit.Test;
 
@@ -27,6 +28,25 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testOneUnboundAcceptanceGivesOneHex() {
 		acc.acceptance(String.class, new ArrayList<>());
+		acc.analysisComplete();
 		assertEquals(1, hdm.getHexCount());
+	}
+	
+	@Test
+	public void testOneAcceptanceWithTwoHexesGivesTwoHexesAndNoErrors() {
+		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
+		acc.analysisComplete();
+		assertEquals(2, hdm.getHexCount());
+		assertEquals(0, hdm.getErrors().size());
+	}
+	
+	@Test
+	public void testTwoAcceptancesWithTwoHexesGivesTwoHexesButComplainsAboutNoTotalOrdering() {
+		acc.acceptance(String.class, Arrays.asList(Integer.class));
+		acc.acceptance(String.class, Arrays.asList(String.class));
+		acc.analysisComplete();
+		assertEquals(2, hdm.getHexCount());
+		assertEquals(1, hdm.getErrors().size());
+		assertEquals("There is no ordering between java.lang.Integer and java.lang.String", hdm.getErrors().get(0));
 	}
 }

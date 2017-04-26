@@ -12,6 +12,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 	private Date buildTime;
 	private final List<BarData> acceptances = new ArrayList<BarData>();
 	private final TotalOrder hexes = new TotalOrder();
+	private List<String> errors = new ArrayList<>();
 	
 	public void setBuildTime(Date d) {
 		this.buildTime = d;
@@ -41,13 +42,17 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 	
 	@Override
 	public void analysisComplete() {
-		// TODO Auto-generated method stub
-		
+		errors.addAll(this.hexes.ensureTotalOrdering());
 	}
 
 	@Override
 	public void error(String msg) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public List<String> getErrors() {
+		return errors;
 	}
 }
