@@ -19,9 +19,9 @@ public class AnalyzerTests {
 	@Test
 	public void testWeCanDetectTheAcceptanceAnnotationOnATestClass() throws Exception {
 		Accumulator accumulator = context.mock(Accumulator.class);
-		File root = new File("../sample-proj/bin/testclasses");
 		File anns = new File("../swimlane-annotations/bin/classes/");
-		String clzName = "com.gmmapowell.swimlane.sample.AcceptanceTest";
+		File root = new File("../swimlane-annotations/bin/testclasses");
+		String clzName = "com.gmmapowell.swimlane.samples.SampleAcceptance1";
 		URLClassLoader cl = new URLClassLoader(new URL[] { root.toURI().toURL(), anns.toURI().toURL() });
 		HexagonTestAnalyzer analyzer = new HexagonTestAnalyzer(cl, accumulator);
 		context.checking(new Expectations() {{
