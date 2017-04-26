@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.tests.view;
+package com.gmmapowell.swimlane.tests.swtutil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -19,41 +19,13 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
-import com.gmmapowell.swimlane.tests.swtutil.DisplayHelper;
-import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
-import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
-
-public abstract class BaseViewTest {
+public class TestBase {
 	@Rule public final JUnitRuleMockery context = new JUnitRuleMockery();
 	@Rule public final DisplayHelper displayHelper = new DisplayHelper();
-
-	protected Shell shell;
-	protected HexagonViewPart part;
-
-	@Before
-	public void setup() throws Exception {
-		shell = displayHelper.createShell();
-		part = new HexagonViewPart();
-		part.createControls(shell);
-		shell.setSize(600, 300);
-		shell.open();
-		displayHelper.flushPendingEvents();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-//		Thread.sleep(3000);
-		displayHelper.dispose();
-	}
 
 	protected void checkSizeColors(Canvas canvas, int x, int y, ImageChecker checker) {
 		Point pt = canvas.getSize();
@@ -129,7 +101,7 @@ public abstract class BaseViewTest {
 		fail("control " + which + " could not be found under " + c);
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private <T extends Control> T getControl(Control c, String which) {
 		if (which.equals(c.getData("org.eclipse.swtbot.widget.key")))
@@ -152,27 +124,20 @@ public abstract class BaseViewTest {
 	}
 
 	protected void dumpControl(String indent, Control c) {
-		System.out.println(indent + c + " " + c.getClass());
-		if (c.getData("org.eclipse.swtbot.widget.key") != null)
-			System.out.println(indent + " -> " + c.getData("org.eclipse.swtbot.widget.key"));
-		if (c instanceof Composite)
-			dumpComposite((Composite) c, indent + "  ");
-		// we should also specifically consider other "composite" items such as lists, trees and tables
-		if (c instanceof Table) {
-			Table t = (Table) c;
-			for (int i=0;i<t.getItemCount();i++) {
-				System.out.println(indent + "  row " + i + " " + t.getItem(i));
-//				dumpControl(indent + "    ", t.getItem(i));
+			System.out.println(indent + c + " " + c.getClass());
+			if (c.getData("org.eclipse.swtbot.widget.key") != null)
+				System.out.println(indent + " -> " + c.getData("org.eclipse.swtbot.widget.key"));
+			if (c instanceof Composite)
+				dumpComposite((Composite) c, indent + "  ");
+			// we should also specifically consider other "composite" items such as lists, trees and tables
+			if (c instanceof Table) {
+				Table t = (Table) c;
+				for (int i=0;i<t.getItemCount();i++) {
+					System.out.println(indent + "  row " + i + " " + t.getItem(i));
+	//				dumpControl(indent + "    ", t.getItem(i));
+				}
 			}
 		}
-	}
-
-	protected void pushModel(HexagonDataModel testModel) {
-		part.setModel(testModel);
-		shell.redraw();
-		shell.update();
-		displayHelper.flushPendingEvents();
-	}
 
 	protected static Date exactDate(int yr, int mth, int day, int hr, int min, int sec, int ms) {
 		Calendar cal = Calendar.getInstance();
@@ -180,4 +145,5 @@ public abstract class BaseViewTest {
 		cal.set(Calendar.MILLISECOND, ms);
 		return cal.getTime();
 	}
+
 }

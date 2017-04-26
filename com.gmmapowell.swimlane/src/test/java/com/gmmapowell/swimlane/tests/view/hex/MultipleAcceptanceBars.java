@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.tests.view;
+package com.gmmapowell.swimlane.tests.view.hex;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ public class MultipleAcceptanceBars extends BaseViewTest {
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel();
-		assertControls(shell, "hexagons.lastBuild", "hexagons.acceptance.1", "hexagons.acceptance.2", "hexagons.acceptance.3");
+		assertControls(shell, "hexagons.acceptance.1", "hexagons.acceptance.2", "hexagons.acceptance.3");
 	}
 	
 	protected void specifyModel() throws InterruptedException {

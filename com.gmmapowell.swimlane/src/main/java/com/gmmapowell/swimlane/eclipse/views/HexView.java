@@ -15,17 +15,26 @@ import org.eclipse.swt.widgets.Control;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 
-public class HexView {
+public class HexView implements HexagonModelListener {
 	private final Composite view;
 
 	public HexView(Composite parent) {
 		view = new Composite(parent, SWT.NONE);
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
 	}
 
-	public void update(HexagonDataModel model) {
+	public void setModel(HexagonDataModel model) {
+		view.getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				update(model);
+			}
+		});
+	}
+
+	private void update(HexagonDataModel model) {
 		// TODO: replace this with a dedicated layout
 		GridLayout gl = new GridLayout(model.getHexCount(), false);
 		gl.marginWidth = 0;

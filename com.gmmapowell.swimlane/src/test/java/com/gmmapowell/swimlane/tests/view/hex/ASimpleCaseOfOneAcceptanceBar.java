@@ -1,12 +1,9 @@
-package com.gmmapowell.swimlane.tests.view;
-
-import static org.junit.Assert.assertEquals;
+package com.gmmapowell.swimlane.tests.view.hex;
 
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
-import org.eclipse.swt.widgets.Label;
 import org.jmock.Expectations;
 import org.junit.Test;
 
@@ -21,16 +18,9 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel(10, 0, Status.OK);
-		assertControls(shell, "hexagons.lastBuild", "hexagons.acceptance.1");
+		assertControls(shell, "hexagons.acceptance.1");
 	}
 	
-	@Test
-	public void testTheBuildLabelHasTheRightTime() throws Exception {
-		specifyModel(10, 0, Status.OK);
-        Label lastBuild = waitForControl(shell, "hexagons.lastBuild");
-        assertEquals("042000.420", lastBuild.getText());
-	}
-
 	@Test
 	public void testTheAcceptanceRowLooksRightWhenNoTestsHaveRun() throws Exception {
 		specifyModel(10, 0, Status.OK);

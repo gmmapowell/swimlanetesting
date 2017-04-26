@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.tests.view;
+package com.gmmapowell.swimlane.tests.view.hex;
 
 import java.util.ArrayList;
 
@@ -15,18 +15,18 @@ public class DiscoveringNewAcceptanceBars extends BaseViewTest {
 	public void testWeCanAddASecond_Later_Bar() throws Exception {
 		BarData a = a();
 		pushModel(modelWith("initial", a));
-		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.11");
+		assertControlsInOrder(shell, "hexagons.acceptance.11");
 		pushModel(modelWith("update", a,b()));
-		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.11", "hexagons.acceptance.10");
+		assertControlsInOrder(shell, "hexagons.acceptance.11", "hexagons.acceptance.10");
 	}
 	
 	@Test
 	public void testIfWeAddTheLaterBarFirstTheEarlierBarMovesUp() throws Exception {
 		BarData b = b();
 		pushModel(modelWith("initial", b));
-		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.10");
+		assertControlsInOrder(shell, "hexagons.acceptance.10");
 		pushModel(modelWith("update", b,a()));
-		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.11", "hexagons.acceptance.10");
+		assertControlsInOrder(shell, "hexagons.acceptance.11", "hexagons.acceptance.10");
 	}
 	
 	protected HexagonDataModel modelWith(String s, BarData... bars) {

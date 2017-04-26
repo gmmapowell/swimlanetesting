@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.tests.view;
+package com.gmmapowell.swimlane.tests.view.hex;
 
 import org.junit.Test;
 
@@ -8,6 +8,6 @@ public class TestReasonableDisplayWithNoModel extends BaseViewTest {
 
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
-		assertControls(shell, "hexagons.lastBuild");
+		assertControls(shell);
 	}
 }

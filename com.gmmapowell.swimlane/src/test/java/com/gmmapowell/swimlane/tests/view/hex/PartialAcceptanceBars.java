@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.tests.view;
+package com.gmmapowell.swimlane.tests.view.hex;
 
 import java.util.ArrayList;
 
@@ -18,7 +18,7 @@ public class PartialAcceptanceBars extends BaseViewTest {
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel();
-		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.acceptance.111", "hexagons.acceptance.110", "hexagons.acceptance.101", "hexagons.acceptance.011");
+		assertControlsInOrder(shell, "hexagons.acceptance.111", "hexagons.acceptance.110", "hexagons.acceptance.101", "hexagons.acceptance.011");
 	}
 	
 	@Test

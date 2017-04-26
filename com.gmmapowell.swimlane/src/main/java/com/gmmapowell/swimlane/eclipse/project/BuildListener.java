@@ -21,7 +21,10 @@ import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
 public class BuildListener implements IResourceChangeListener {
 	private final List<HexagonModelListener> lsnrs = new ArrayList<>();
 
-	public BuildListener(HexagonModelListener lsnr) {
+	public BuildListener() {
+	}
+	
+	public void addListener(HexagonModelListener lsnr) {
 		lsnrs.add(lsnr);
 	}
 
