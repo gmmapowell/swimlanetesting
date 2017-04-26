@@ -15,6 +15,8 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.SWT;
 
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
+import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
 
@@ -30,7 +32,7 @@ public class BuildListener implements IResourceChangeListener {
 
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		HexagonAccumulator model = new HexagonAccumulator();
+		Accumulator model = new HexagonAccumulator();
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects(SWT.NONE);
 		for (IProject p : projects) {
 			IJavaProject jp = JavaCore.create(p);
@@ -49,6 +51,6 @@ public class BuildListener implements IResourceChangeListener {
 
 		model.setBuildTime(new Date());
 		for (HexagonModelListener lsnr : lsnrs)
-			lsnr.setModel(model);
+			lsnr.setModel((HexagonDataModel) model);
 	}
 }
