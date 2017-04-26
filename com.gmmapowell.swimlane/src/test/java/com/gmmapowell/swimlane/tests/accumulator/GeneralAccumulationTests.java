@@ -1,8 +1,9 @@
 package com.gmmapowell.swimlane.tests.accumulator;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-import java.util.ArrayList;
+import java.util.Date;
 
 import org.junit.Test;
 
@@ -15,18 +16,19 @@ import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
  * To decouple these two roles, we have two interfaces: Accumulator for input and HexagonDataModel for output;
  * here we assert that the two are coupled correctly internally.
  */
-public class AcceptanceAccumulationTests {
+public class GeneralAccumulationTests {
 	Accumulator acc = new HexagonAccumulator();
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	
 	@Test
-	public void testNoTestsMeansNoHexes() {
-		assertEquals(0, hdm.getHexCount());
+	public void testDateCanBeNull() {
+		assertNull(hdm.getBuildTime());
 	}
 	
 	@Test
-	public void testOneUnboundAcceptanceGivesOneHex() {
-		acc.acceptance(String.class, new ArrayList<>());
-		assertEquals(1, hdm.getHexCount());
+	public void testTheTrivialDateThing() {
+		Date d = new Date();
+		acc.setBuildTime(d);
+		assertEquals(d, hdm.getBuildTime());
 	}
 }
