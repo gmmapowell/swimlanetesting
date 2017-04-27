@@ -29,7 +29,8 @@ public class ScanningTests {
 		context.checking(new Expectations() {{
 			allowing(ijp).getOutputLocation(); will(returnValue(fp));
 			allowing(resolver).resolvePath(fp); will(returnValue(root));
-			oneOf(acc).consider("com.gmmapowell.swimlane.sample.AcceptanceTest");
+			oneOf(acc).consider("com.gmmapowell.swimlane.sample.tests.AcceptanceTest");
+			oneOf(acc).consider("com.gmmapowell.swimlane.sample.tests.AcceptanceTestWithThreeHexagons");
 			allowing(ijp).getRawClasspath(); will(returnValue(new IClasspathEntry[] { rce }));
 			allowing(rce).getOutputLocation(); will(returnValue(fp)); // we should have a different path to test better
 		}});
