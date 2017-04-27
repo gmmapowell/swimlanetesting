@@ -55,8 +55,10 @@ public class AcceptanceAccumulationTests {
 		acc.acceptance(String.class, Arrays.asList(String.class));
 		acc.analysisComplete();
 		assertEquals(2, hdm.getHexCount());
-		assertEquals(1, hdm.getErrors().size());
-		assertEquals("There is no ordering between java.lang.Integer and java.lang.String", hdm.getErrors().get(0));
+		assertEquals(2, hdm.getErrors().size());
+		Object[] errs = hdm.getErrors().toArray();
+		assertEquals("There is a cycle between java.lang.Integer and java.lang.String", errs[0]);
+		assertEquals("There is no ordering between java.lang.Integer and java.lang.String", errs[1]);
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
 		assertEquals(2, acceptanceTests.size());
 		assertEquals("acceptance.10", acceptanceTests.get(0).getId());
@@ -69,8 +71,10 @@ public class AcceptanceAccumulationTests {
 		acc.acceptance(String.class, Arrays.asList(String.class, Integer.class));
 		acc.analysisComplete();
 		assertEquals(2, hdm.getHexCount());
-		assertEquals(1, hdm.getErrors().size());
-		assertEquals("Ordering between java.lang.Integer and java.lang.String is inconsistent", hdm.getErrors().get(0));
+		assertEquals(2, hdm.getErrors().size());
+		Object[] errs = hdm.getErrors().toArray();
+		assertEquals("Ordering between java.lang.Integer and java.lang.String is inconsistent", errs[0]);
+		assertEquals("There is a cycle between java.lang.Integer and java.lang.String", errs[1]);
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
 		assertEquals(1, acceptanceTests.size());
 		assertEquals("acceptance.11", acceptanceTests.get(0).getId());
@@ -87,5 +91,55 @@ public class AcceptanceAccumulationTests {
 		assertEquals(2, acceptanceTests.size());
 		assertEquals("acceptance.110", acceptanceTests.get(0).getId());
 		assertEquals("acceptance.011", acceptanceTests.get(1).getId());
+	}
+
+	@Test
+	public void testTwoAcceptancesEachWithTwoOrderedHexesIsNotTotal() {
+		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class));
+		acc.acceptance(String.class, Arrays.asList(Double.class, String.class));
+		acc.analysisComplete();
+		assertEquals(3, hdm.getHexCount());
+		assertEquals(2, hdm.getErrors().size());
+		Object[] errs = hdm.getErrors().toArray();
+		assertEquals("There is a cycle between java.lang.Integer and java.lang.String", errs[0]);
+		assertEquals("There is no ordering between java.lang.Integer and java.lang.String", errs[1]);
+		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
+		assertEquals(2, acceptanceTests.size());
+		assertEquals("acceptance.101", acceptanceTests.get(0).getId());
+		assertEquals("acceptance.011", acceptanceTests.get(1).getId());
+	}
+
+	@Test
+	public void testTwoAcceptancesEachWithTwoOrderedHexesIsNotConsistent() {
+		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class));
+		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
+		acc.acceptance(String.class, Arrays.asList(String.class, Double.class));
+		acc.analysisComplete();
+		assertEquals(3, hdm.getHexCount());
+		assertEquals(3, hdm.getErrors().size());
+		Object[] errs = hdm.getErrors().toArray();
+		assertEquals("There is a cycle between java.lang.Double and java.lang.Integer", errs[0]);
+		assertEquals("There is a cycle between java.lang.Double and java.lang.String", errs[1]);
+		assertEquals("There is a cycle between java.lang.Integer and java.lang.String", errs[2]);
+		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
+		assertEquals(3, acceptanceTests.size());
+		assertEquals("acceptance.110", acceptanceTests.get(0).getId());
+		assertEquals("acceptance.101", acceptanceTests.get(1).getId());
+		assertEquals("acceptance.011", acceptanceTests.get(2).getId());
+	}
+
+	@Test
+	public void testThreeAcceptancesEachWithTwoOverlappingHexesThatMakeATotalOrderingAfterTwoPasses() {
+		acc.acceptance(String.class, Arrays.asList(Double.class, Float.class));
+		acc.acceptance(String.class, Arrays.asList(Float.class, Integer.class));
+		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
+		acc.analysisComplete();
+		assertEquals(4, hdm.getHexCount());
+		assertEquals(0, hdm.getErrors().size());
+		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
+		assertEquals(3, acceptanceTests.size());
+		assertEquals("acceptance.1100", acceptanceTests.get(0).getId());
+		assertEquals("acceptance.0110", acceptanceTests.get(1).getId());
+		assertEquals("acceptance.0011", acceptanceTests.get(2).getId());
 	}
 }

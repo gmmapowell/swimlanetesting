@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
@@ -15,7 +17,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 	private final Map<String, Acceptance> compileAcceptances = new TreeMap<String, Acceptance>();
 	private List<BarData> acceptances = new ArrayList<>();
 	private final TotalOrder hexes = new TotalOrder();
-	private List<String> errors = new ArrayList<>();
+	private Set<String> errors = new TreeSet<>();
 	
 	public void setBuildTime(Date d) {
 		this.buildTime = d;
@@ -60,9 +62,9 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 	
 	@Override
 	public void analysisComplete() {
-		errors.addAll(this.hexes.ensureTotalOrdering());
+		this.hexes.ensureTotalOrdering(errors);
 		TreeMap<String, Acceptance> tmp = new TreeMap<String, Acceptance>();
-		List<String> order = this.hexes.bestOrdering();
+		List<String> order = this.hexes.bestOrdering(errors);
 		for (Acceptance a : compileAcceptances.values()) {
 			a.setMarks(order);
 			// Handle an error case where because of inconsistent hex definitions, we have two
@@ -89,7 +91,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 	}
 
 	@Override
-	public List<String> getErrors() {
+	public Set<String> getErrors() {
 		return errors;
 	}
 }

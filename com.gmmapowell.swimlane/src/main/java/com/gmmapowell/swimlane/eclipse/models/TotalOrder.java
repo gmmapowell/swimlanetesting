@@ -86,8 +86,7 @@ public class TotalOrder {
 		return haveDefault?1:0;
 	}
 
-	public Set<? extends String> ensureTotalOrdering() {
-		Set<String> ret = new TreeSet<String>();
+	public void ensureTotalOrdering(Set<String> ret) {
 		Set<String> none = new TreeSet<String>();
 
 		// Perform a transitive closure while there are no errors
@@ -113,21 +112,25 @@ public class TotalOrder {
 							String xk = x.getKey();
 							if (xk.equals(rk) || xk.equals(ck)) // don't consider r & c
 								continue;
-							System.out.println(rk + " " + xk + " " + ck + " " + r.getValue().get(xk) + " " + x.getValue().get(rk));
+							System.out.println(rk + " " + xk + " " + ck + " " + r.getValue().get(xk) + " " + x.getValue().get(ck) + " so far = " + outcome);
 							Order mine = Order.NONE;
-							if (r.getValue().get(xk) == Order.AFTER && x.getValue().get(rk) == Order.BEFORE)
+							if (r.getValue().get(xk) == Order.AFTER && x.getValue().get(ck) == Order.AFTER)
 								mine = Order.AFTER;
-							else if (r.getValue().get(xk) == Order.BEFORE && x.getValue().get(rk) == Order.AFTER)
+							else if (r.getValue().get(xk) == Order.BEFORE && x.getValue().get(ck) == Order.BEFORE)
 								mine = Order.BEFORE;
-							if (outcome == Order.NONE && mine != Order.NONE)
-								outcome = mine;
-							else if (outcome != mine)
-								ret.add("Ordering between " + first + " and " + second + " is inconsistent");
+							if (mine != Order.NONE) {
+								if (outcome == Order.NONE) {
+									outcome = mine;
+								}
+								else if (outcome != mine) {
+									ret.add("Ordering between " + first + " and " + second + " is inconsistent");
+								}
+							}
 						}
 						if (outcome != Order.NONE) {
 							r.getValue().put(ck, outcome);
 							ordering.get(ck).put(rk, outcome.invert());
-							dump();
+							nchanged++;
 						} else
 							none.add("There is no ordering between " + first + " and " + second);
 					} else if (c.getValue() == Order.INCONSISTENT) {
@@ -139,10 +142,9 @@ public class TotalOrder {
 				break;
 		}
 		ret.addAll(none);
-		return ret;
 	}
 
-	public List<String> bestOrdering() {
+	public List<String> bestOrdering(Set<String> errors) {
 		List<String> ret = new ArrayList<String>();
 		while (ret.size() < ordering.size()) {
 			int cnt = -1;
@@ -154,6 +156,8 @@ public class TotalOrder {
 				if (mc > cnt) {
 					cnt = mc;
 					best = r.getKey();
+				} else if (mc == cnt) {
+					errors.add("There is a cycle between " + best + " and " + r.getKey());
 				}
 			}
 			if (cnt == -1)
