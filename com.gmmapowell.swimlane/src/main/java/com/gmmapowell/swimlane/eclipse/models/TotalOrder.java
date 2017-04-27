@@ -88,22 +88,57 @@ public class TotalOrder {
 
 	public Set<? extends String> ensureTotalOrdering() {
 		Set<String> ret = new TreeSet<String>();
-		for (Entry<String, Map<String, Order>> r : ordering.entrySet()) {
-			for (Entry<String, Order> c : r.getValue().entrySet()) {
-				String first = r.getKey();
-				String second = c.getKey();
-				if (second.compareTo(first) < 0) {
-					String tmp = first;
-					first = second;
-					second = tmp;
-				}
-				if (c.getValue() == Order.NONE) {
-					ret.add("There is no ordering between " + first + " and " + second);
-				} else if (c.getValue() == Order.INCONSISTENT) {
-					ret.add("Ordering between " + first + " and " + second + " is inconsistent");
+		Set<String> none = new TreeSet<String>();
+
+		// Perform a transitive closure while there are no errors
+		while (ret.isEmpty()) {
+			int nchanged = 0;
+			none.clear();
+			for (Entry<String, Map<String, Order>> r : ordering.entrySet()) {
+				for (Entry<String, Order> c : r.getValue().entrySet()) {
+					String rk = r.getKey();
+					String ck = c.getKey();
+					// We only collect these to get consistent error messages
+					String first = rk;
+					String second = ck;
+					if (second.compareTo(first) < 0) {
+						String tmp = first;
+						first = second;
+						second = tmp;
+					}
+					if (c.getValue() == Order.NONE) {
+						// see if we can figure it out based on all the other possible entries
+						Order outcome = Order.NONE;
+						for (Entry<String, Map<String, Order>> x : ordering.entrySet()) {
+							String xk = x.getKey();
+							if (xk.equals(rk) || xk.equals(ck)) // don't consider r & c
+								continue;
+							System.out.println(rk + " " + xk + " " + ck + " " + r.getValue().get(xk) + " " + x.getValue().get(rk));
+							Order mine = Order.NONE;
+							if (r.getValue().get(xk) == Order.AFTER && x.getValue().get(rk) == Order.BEFORE)
+								mine = Order.AFTER;
+							else if (r.getValue().get(xk) == Order.BEFORE && x.getValue().get(rk) == Order.AFTER)
+								mine = Order.BEFORE;
+							if (outcome == Order.NONE && mine != Order.NONE)
+								outcome = mine;
+							else if (outcome != mine)
+								ret.add("Ordering between " + first + " and " + second + " is inconsistent");
+						}
+						if (outcome != Order.NONE) {
+							r.getValue().put(ck, outcome);
+							ordering.get(ck).put(rk, outcome.invert());
+							dump();
+						} else
+							none.add("There is no ordering between " + first + " and " + second);
+					} else if (c.getValue() == Order.INCONSISTENT) {
+						ret.add("Ordering between " + first + " and " + second + " is inconsistent");
+					}
 				}
 			}
+			if (nchanged == 0)
+				break;
 		}
+		ret.addAll(none);
 		return ret;
 	}
 
@@ -136,5 +171,11 @@ public class TotalOrder {
 			if (o == Order.BEFORE)
 				ret++;
 		return ret;
+	}
+	
+	public void dump() {
+		for (Entry<String, Map<String, Order>> r : ordering.entrySet()) {
+			System.out.println(r.getKey() + ": " + r.getValue());
+		}
 	}
 }

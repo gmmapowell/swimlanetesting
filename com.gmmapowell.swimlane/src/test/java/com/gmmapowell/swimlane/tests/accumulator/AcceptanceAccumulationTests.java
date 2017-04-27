@@ -75,4 +75,17 @@ public class AcceptanceAccumulationTests {
 		assertEquals(1, acceptanceTests.size());
 		assertEquals("acceptance.11", acceptanceTests.get(0).getId());
 	}
+	
+	@Test
+	public void testTwoAcceptancesEachWithTwoOverlappingHexesThatMakeATotalOrderingOfThreeHexes() {
+		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class));
+		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
+		acc.analysisComplete();
+		assertEquals(3, hdm.getHexCount());
+		assertEquals(0, hdm.getErrors().size());
+		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
+		assertEquals(2, acceptanceTests.size());
+		assertEquals("acceptance.110", acceptanceTests.get(0).getId());
+		assertEquals("acceptance.011", acceptanceTests.get(1).getId());
+	}
 }
