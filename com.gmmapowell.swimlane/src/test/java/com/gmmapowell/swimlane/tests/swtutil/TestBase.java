@@ -20,6 +20,8 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 
@@ -124,20 +126,47 @@ public class TestBase {
 	}
 
 	protected void dumpControl(String indent, Control c) {
-			System.out.println(indent + c + " " + c.getClass());
-			if (c.getData("org.eclipse.swtbot.widget.key") != null)
-				System.out.println(indent + " -> " + c.getData("org.eclipse.swtbot.widget.key"));
-			if (c instanceof Composite)
-				dumpComposite((Composite) c, indent + "  ");
-			// we should also specifically consider other "composite" items such as lists, trees and tables
-			if (c instanceof Table) {
-				Table t = (Table) c;
-				for (int i=0;i<t.getItemCount();i++) {
-					System.out.println(indent + "  row " + i + " " + t.getItem(i));
-	//				dumpControl(indent + "    ", t.getItem(i));
-				}
+		if (c == null) {
+			System.out.println(indent + "null");
+			return;
+		}
+		System.out.println(indent + c + " " + c.getClass());
+		if (c.getData("org.eclipse.swtbot.widget.key") != null)
+			System.out.println(indent + " -> " + c.getData("org.eclipse.swtbot.widget.key"));
+		if (c instanceof Composite)
+			dumpComposite((Composite) c, indent + "  ");
+		// we should also specifically consider other "composite" items such as lists, trees and tables
+		if (c instanceof Table) {
+			Table t = (Table) c;
+			for (int i=0;i<t.getItemCount();i++) {
+				System.out.println(indent + "  row " + i + " " + t.getItem(i));
+//				dumpControl(indent + "    ", t.getItem(i));
 			}
 		}
+		if (c instanceof ToolBar) {
+			ToolBar tb = (ToolBar) c;
+			ToolItem[] items = tb.getItems();
+			String ind = indent + "  ";
+			int item = 0;
+			for (ToolItem ti : items) {
+				System.out.println(ind + "Item " + (item++));
+				if (ti.getText() != null)
+					System.out.println(ind + "  text - " + ti.getText());
+				if (ti.getToolTipText() != null)
+					System.out.println(ind + "  tip  - " + ti.getToolTipText());
+				if (ti.getData("org.eclipse.swtbot.widget.key") != null)
+					System.out.println(ind + " -> " + ti.getData("org.eclipse.swtbot.widget.key"));
+			}
+		}
+	}
+
+	protected void assertToolBarTipsInOrder(ToolBar tb, String... tips) {
+		assertEquals("The number of tools was not correct", tips.length, tb.getItems().length);
+		for (int i=0;i<tips.length;i++) {
+			ToolItem ti = tb.getItem(i);
+			assertEquals("The tip for item " + i + " was wrong", tips[i], ti.getToolTipText());
+		}
+	}
 
 	protected static Date exactDate(int yr, int mth, int day, int hr, int min, int sec, int ms) {
 		Calendar cal = Calendar.getInstance();

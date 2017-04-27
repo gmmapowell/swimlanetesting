@@ -2,6 +2,8 @@ package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -23,20 +25,44 @@ import com.gmmapowell.swimlane.eclipse.project.BuildListener;
  */
 public class HexagonViewPart extends ViewPart {
 	public static final String ID = "com.gmmapowell.swimlane.views.HexagonView";
+	public static final String RunAllID = "com.gmmapowell.swimlane.actions.RunAllTests";
 
 	private BuildListener bl;
 	private InfoBar infoBar;
 	private HexView hexView;
 
 	public void createPartControl(Composite parent) {
-		bl = new BuildListener();
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
 		parent.setLayout(new GridLayout(1, false));
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		infoBar = new InfoBar(parent);
 		hexView = new HexView(parent);
-		bl.addListener(infoBar);
-		bl.addListener(hexView);
+		configureToolbar(getViewSite().getActionBars().getToolBarManager());
+		try {
+			bl = new BuildListener();
+			bl.addListener(infoBar);
+			bl.addListener(hexView);
+			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
+		} catch (IllegalStateException ex) {
+			// Unit tests will find the workspace closed, so cannot do this; this is OK in that case
+			// TODO: how do we tell?
+			bl = null;
+		}
+	}
+
+	public void configureToolbar(IToolBarManager toolBar) {
+		System.out.println("Toolbar Manager is: " + toolBar.getClass());
+		Action runAll = new Action() {
+			@Override
+			public String getId() {
+				return RunAllID;
+			}
+			public void run() {
+				System.out.println("Run All");
+			};
+		};
+		runAll.setText("Run All");
+		runAll.setToolTipText("Run All Tests");
+		toolBar.add(runAll);
 	}
 
 	public void dispose() {

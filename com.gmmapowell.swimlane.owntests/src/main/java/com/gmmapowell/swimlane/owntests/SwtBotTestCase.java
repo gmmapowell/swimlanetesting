@@ -10,9 +10,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCanvas;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -70,7 +70,7 @@ public class SwtBotTestCase {
 	@Test
 	public void step10_findAndPushTheRunTestsButton() {
 		Date runTestsAt = new Date();
-		SWTBotButton runTests = bot.buttonWithId("hexagons.action.runall");
+		SWTBotToolbarButton runTests = bot.toolbarButtonWithTooltip("Run All Tests");
 		runTests.click();
 		SWTBotLabel testsComplete = bot.labelWithId("hexagons.testsComplete");
 		bot.waitUntil(ext.labelAfterDate(testsComplete, runTestsAt));
