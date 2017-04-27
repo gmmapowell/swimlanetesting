@@ -58,7 +58,9 @@ public class HexView implements HexagonModelListener {
 						Point size = acceptance.getSize();
 						int segwidth = size.x/model.getHexCount();
 						int markedx = bitcount(marks)*segwidth;
-						int barx = markedx*compl/total;
+						int barx = 0;
+						if (total > 0)
+							barx = markedx*compl/total;
 						GC gc = new GC(acceptance);
 						for (int i=0;i<marks.length;i++) {
 							int from = size.x*i/model.getHexCount();
