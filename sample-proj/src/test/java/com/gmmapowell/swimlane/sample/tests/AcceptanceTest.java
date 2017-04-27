@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.sample;
+package com.gmmapowell.swimlane.sample.tests;
 
 import static org.junit.Assert.*;
 
