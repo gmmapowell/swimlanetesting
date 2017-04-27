@@ -2,7 +2,6 @@ package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -50,19 +49,7 @@ public class HexagonViewPart extends ViewPart {
 	}
 
 	public void configureToolbar(IToolBarManager toolBar) {
-		System.out.println("Toolbar Manager is: " + toolBar.getClass());
-		Action runAll = new Action() {
-			@Override
-			public String getId() {
-				return RunAllID;
-			}
-			public void run() {
-				System.out.println("Run All");
-			};
-		};
-		runAll.setText("Run All");
-		runAll.setToolTipText("Run All Tests");
-		toolBar.add(runAll);
+		toolBar.add(new RunAllTestsAction());
 	}
 
 	public void dispose() {
