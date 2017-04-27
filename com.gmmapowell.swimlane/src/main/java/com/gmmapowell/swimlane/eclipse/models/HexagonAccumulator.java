@@ -14,6 +14,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 
 public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 	private Date buildTime;
+	private Date testsCompleteTime;
 	private final Map<String, Acceptance> compileAcceptances = new TreeMap<String, Acceptance>();
 	private List<BarData> acceptances = new ArrayList<>();
 	private final TotalOrder hexes = new TotalOrder();
@@ -29,9 +30,13 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 	}
 	
 	@Override
+	public void testsCompleted(Date d) {
+		this.testsCompleteTime = d;
+	}
+
+	@Override
 	public Date getTestCompleteTime() {
-		// TODO Auto-generated method stub
-		return null;
+		return testsCompleteTime;
 	}
 
 	@Override

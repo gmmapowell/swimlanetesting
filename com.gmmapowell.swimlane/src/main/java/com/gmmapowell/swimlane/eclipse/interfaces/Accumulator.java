@@ -5,6 +5,7 @@ import java.util.List;
 
 public interface Accumulator {
 	void setBuildTime(Date date);
+	void testsCompleted(Date date);
 	void acceptance(Class<?> tc, List<Class<?>> hexes);
 	void error(String msg);
 	void analysisComplete();

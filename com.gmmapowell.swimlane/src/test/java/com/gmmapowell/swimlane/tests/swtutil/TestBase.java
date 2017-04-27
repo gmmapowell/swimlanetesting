@@ -168,6 +168,13 @@ public class TestBase {
 		}
 	}
 
+	protected ToolItem getItem(ToolBar toolBar, String tooltip) {
+		for (ToolItem ti : toolBar.getItems())
+			if (tooltip.equals(ti.getToolTipText()))
+				return ti;
+		throw new RuntimeException("No tool with tip '" + tooltip + "' could be found");
+	}
+
 	protected static Date exactDate(int yr, int mth, int day, int hr, int min, int sec, int ms) {
 		Calendar cal = Calendar.getInstance();
 		cal.set(yr, mth, day, hr, min, sec);

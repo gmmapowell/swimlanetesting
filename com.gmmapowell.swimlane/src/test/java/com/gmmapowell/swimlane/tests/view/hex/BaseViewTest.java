@@ -6,20 +6,20 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.models.HexagonModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.models.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.views.HexView;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public abstract class BaseViewTest extends TestBase {
 	public Shell shell;
 	public HexView hv;
-	private HexagonModelDispatcher hmd;
+	private ModelDispatcher hmd;
 
 	@Before
 	public void setup() throws Exception {
 		shell = displayHelper.createShell();
 		shell.setLayout(new GridLayout(1, false));
-		hmd = new HexagonModelDispatcher();
+		hmd = new ModelDispatcher();
 		hv = new HexView(shell, hmd);
 		shell.setSize(600, 300);
 		shell.open();

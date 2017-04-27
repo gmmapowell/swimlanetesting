@@ -9,7 +9,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import com.gmmapowell.swimlane.eclipse.models.HexagonModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.models.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.project.BuildListener;
 
 /* We are really looking at a pipeline here.
@@ -28,11 +28,12 @@ public class HexagonViewPart extends ViewPart {
 	public static final String RunAllID = "com.gmmapowell.swimlane.actions.RunAllTests";
 
 	private BuildListener bl;
+	private ModelDispatcher lsnrs;
 
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		HexagonModelDispatcher lsnrs = new HexagonModelDispatcher();
+		lsnrs = new ModelDispatcher();
 		new InfoBar(parent, lsnrs);
 		new HexView(parent, lsnrs);
 		configureToolbar(getViewSite().getActionBars().getToolBarManager(), lsnrs);
@@ -46,9 +47,9 @@ public class HexagonViewPart extends ViewPart {
 		}
 	}
 
-	public void configureToolbar(IToolBarManager toolBar, HexagonModelDispatcher lsnrs) {
+	public void configureToolbar(IToolBarManager toolBar, ModelDispatcher lsnrs) {
 		RunAllTestsAction rata = new RunAllTestsAction();
-		lsnrs.add(rata);
+		lsnrs.addAccumulator(rata);
 		toolBar.add(rata);
 	}
 
