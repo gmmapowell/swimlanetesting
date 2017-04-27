@@ -14,18 +14,21 @@ import org.junit.Test;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
+import com.gmmapowell.swimlane.eclipse.models.HexagonModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.views.InfoBar;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public class InfoBarTests extends TestBase {
 	protected Shell shell;
-	protected InfoBar part;
+	protected InfoBar bar;
+	private HexagonModelDispatcher hmd;
 
 	@Before
 	public void setup() throws Exception {
 		shell = displayHelper.createShell();
 		shell.setLayout(new GridLayout(1, false));
-		part = new InfoBar(shell);
+		hmd = new HexagonModelDispatcher();
+		bar = new InfoBar(shell, hmd);
 		shell.setSize(600, 300);
 		shell.open();
 		displayHelper.flushPendingEvents();
@@ -68,7 +71,7 @@ public class InfoBarTests extends TestBase {
 	}
 	
 	protected void pushModel(HexagonDataModel testModel) {
-		part.setModel(testModel);
+		hmd.setModel(testModel);
 		shell.redraw();
 		shell.update();
 		displayHelper.flushPendingEvents();

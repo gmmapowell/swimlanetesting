@@ -16,13 +16,15 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
+import com.gmmapowell.swimlane.eclipse.models.HexagonModelDispatcher;
 
 public class HexView implements HexagonModelListener {
 	private final Composite view;
 
-	public HexView(Composite parent) {
+	public HexView(Composite parent, HexagonModelDispatcher lsnrs) {
 		view = new Composite(parent, SWT.NONE);
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		lsnrs.add(this);
 	}
 
 	public void setModel(HexagonDataModel model) {

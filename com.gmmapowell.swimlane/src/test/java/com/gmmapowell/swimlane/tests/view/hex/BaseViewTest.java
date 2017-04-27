@@ -6,18 +6,21 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.models.HexagonModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.views.HexView;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public abstract class BaseViewTest extends TestBase {
 	public Shell shell;
-	public HexView part;
+	public HexView hv;
+	private HexagonModelDispatcher hmd;
 
 	@Before
 	public void setup() throws Exception {
 		shell = displayHelper.createShell();
 		shell.setLayout(new GridLayout(1, false));
-		part = new HexView(shell);
+		hmd = new HexagonModelDispatcher();
+		hv = new HexView(shell, hmd);
 		shell.setSize(600, 300);
 		shell.open();
 		displayHelper.flushPendingEvents();
@@ -30,7 +33,7 @@ public abstract class BaseViewTest extends TestBase {
 	}
 
 	protected void pushModel(HexagonDataModel testModel) {
-		part.setModel(testModel);
+		hmd.setModel(testModel);
 		shell.redraw();
 		shell.update();
 		displayHelper.flushPendingEvents();

@@ -1,9 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.project;
 
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeEvent;
@@ -17,19 +15,16 @@ import org.eclipse.swt.SWT;
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
+import com.gmmapowell.swimlane.eclipse.models.HexagonModelDispatcher;
 
 public class BuildListener implements IResourceChangeListener {
-	private final List<HexagonModelListener> lsnrs = new ArrayList<>();
+	private final HexagonModelDispatcher lsnrs;
 
-	public BuildListener() {
+	public BuildListener(HexagonModelDispatcher lsnrs) {
+		this.lsnrs = lsnrs;
 	}
 	
-	public void addListener(HexagonModelListener lsnr) {
-		lsnrs.add(lsnr);
-	}
-
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
 		Accumulator acc = new HexagonAccumulator();
@@ -51,7 +46,6 @@ public class BuildListener implements IResourceChangeListener {
 
 		acc.setBuildTime(new Date());
 		acc.analysisComplete();
-		for (HexagonModelListener lsnr : lsnrs)
-			lsnr.setModel((HexagonDataModel) acc);
+		lsnrs.setModel((HexagonDataModel) acc);
 	}
 }

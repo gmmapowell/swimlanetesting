@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.gmmapowell.swimlane.eclipse.models.HexagonModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
@@ -25,7 +26,7 @@ public class ToolBarTests extends TestBase {
 		toolBar = mgr.createControl(shell);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		part = new HexagonViewPart();
-		part.configureToolbar(mgr);
+		part.configureToolbar(mgr, new HexagonModelDispatcher());
 		mgr.update(false);
 		shell.setSize(600, 300);
 		shell.open();

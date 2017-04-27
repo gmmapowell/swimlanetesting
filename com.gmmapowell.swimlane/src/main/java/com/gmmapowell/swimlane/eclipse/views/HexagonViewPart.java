@@ -9,6 +9,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import com.gmmapowell.swimlane.eclipse.models.HexagonModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.project.BuildListener;
 
 /* We are really looking at a pipeline here.
@@ -27,19 +28,16 @@ public class HexagonViewPart extends ViewPart {
 	public static final String RunAllID = "com.gmmapowell.swimlane.actions.RunAllTests";
 
 	private BuildListener bl;
-	private InfoBar infoBar;
-	private HexView hexView;
 
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		infoBar = new InfoBar(parent);
-		hexView = new HexView(parent);
-		configureToolbar(getViewSite().getActionBars().getToolBarManager());
+		HexagonModelDispatcher lsnrs = new HexagonModelDispatcher();
+		new InfoBar(parent, lsnrs);
+		new HexView(parent, lsnrs);
+		configureToolbar(getViewSite().getActionBars().getToolBarManager(), lsnrs);
 		try {
-			bl = new BuildListener();
-			bl.addListener(infoBar);
-			bl.addListener(hexView);
+			bl = new BuildListener(lsnrs);
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
 		} catch (IllegalStateException ex) {
 			// Unit tests will find the workspace closed, so cannot do this; this is OK in that case
@@ -48,8 +46,10 @@ public class HexagonViewPart extends ViewPart {
 		}
 	}
 
-	public void configureToolbar(IToolBarManager toolBar) {
-		toolBar.add(new RunAllTestsAction());
+	public void configureToolbar(IToolBarManager toolBar, HexagonModelDispatcher lsnrs) {
+		RunAllTestsAction rata = new RunAllTestsAction();
+		lsnrs.add(rata);
+		toolBar.add(rata);
 	}
 
 	public void dispose() {

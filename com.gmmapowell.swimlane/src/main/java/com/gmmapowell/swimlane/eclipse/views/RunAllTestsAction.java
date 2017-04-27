@@ -2,7 +2,10 @@ package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.jface.action.Action;
 
-public class RunAllTestsAction extends Action {
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
+
+public class RunAllTestsAction extends Action implements HexagonModelListener {
 	@Override
 	public String getId() {
 		return HexagonViewPart.RunAllID;
