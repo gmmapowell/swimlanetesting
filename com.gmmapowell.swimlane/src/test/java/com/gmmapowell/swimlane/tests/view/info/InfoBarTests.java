@@ -34,7 +34,7 @@ public class InfoBarTests extends TestBase {
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel(10, 0, Status.OK);
-		assertControlsInOrder(shell, "hexagons.lastBuild");
+		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.testsComplete");
 	}
 	
 	@Test
@@ -42,6 +42,13 @@ public class InfoBarTests extends TestBase {
 		specifyModel(10, 0, Status.OK);
         Label lastBuild = waitForControl(shell, "hexagons.lastBuild");
         assertEquals("042000.420", lastBuild.getText());
+	}
+
+	@Test
+	public void testTheTestCompleteLabelHasTheRightTime() throws Exception {
+		specifyModel(10, 0, Status.OK);
+        Label tc = waitForControl(shell, "hexagons.testsComplete");
+        assertEquals("162000.420", tc.getText());
 	}
 
 	protected void specifyModel(int total, int complete, Status status) throws InterruptedException {
@@ -54,6 +61,7 @@ public class InfoBarTests extends TestBase {
 		context.checking(new Expectations() {{
 			allowing(testModel).getHexCount(); will(returnValue(0));
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
+			allowing(testModel).getTestCompleteTime(); will(returnValue(exactDate(2017, 04, 20, 16, 20, 00, 420)));
 			allowing(testModel).getAcceptanceTests(); will(returnValue(accList));
 		}});
 		return testModel;

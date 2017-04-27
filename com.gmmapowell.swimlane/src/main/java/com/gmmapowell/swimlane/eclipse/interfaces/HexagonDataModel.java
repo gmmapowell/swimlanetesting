@@ -7,6 +7,7 @@ import java.util.Set;
 public interface HexagonDataModel {
 	enum Status { NONE, OK, FAILURES, SKIPPED }; 
 	public Date getBuildTime();
+	public Date getTestCompleteTime();
 	public List<BarData> getAcceptanceTests();
 	public int getHexCount();
 	public Set<String> getErrors();

@@ -14,6 +14,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 public class InfoBar implements HexagonModelListener {
 	private final SimpleDateFormat sdf;
 	private final Label lastBuild;
+	private final Label testsComplete;
 
 	public InfoBar(Composite parent) {
 		sdf = new SimpleDateFormat("HHmmss.SSS");
@@ -24,6 +25,9 @@ public class InfoBar implements HexagonModelListener {
 		lastBuild = new Label(infoBar, SWT.NONE);
 		lastBuild.setData("org.eclipse.swtbot.widget.key", "hexagons.lastBuild");
 		lastBuild.setText("none");
+		testsComplete = new Label(infoBar, SWT.NONE);
+		testsComplete.setData("org.eclipse.swtbot.widget.key", "hexagons.testsComplete");
+		testsComplete.setText("none");
 	}
 
 	public void setModel(HexagonDataModel model) {
@@ -31,6 +35,7 @@ public class InfoBar implements HexagonModelListener {
 			@Override
 			public void run() {
 				lastBuild.setText(sdf.format(model.getBuildTime()));
+				testsComplete.setText(sdf.format(model.getTestCompleteTime()));
 			}
 		});
 	}

@@ -23,10 +23,17 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 		this.buildTime = d;
 	}
 	
+	@Override
 	public Date getBuildTime() {
 		return this.buildTime;
 	}
 	
+	@Override
+	public Date getTestCompleteTime() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@Override
 	public int getHexCount() {
 		return hexes.count();
