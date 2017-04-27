@@ -142,4 +142,35 @@ public class AcceptanceAccumulationTests {
 		assertEquals("acceptance.0110", acceptanceTests.get(1).getId());
 		assertEquals("acceptance.0011", acceptanceTests.get(2).getId());
 	}
+	
+	@Test
+	public void testThreeAcceptancesWithATotalOfThreeHexesCanBeConsistentWithOneCoveringAllThree() {
+		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class, String.class));
+		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class));
+		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
+		acc.analysisComplete();
+		assertEquals(3, hdm.getHexCount());
+		assertEquals(0, hdm.getErrors().size());
+		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
+		assertEquals(3, acceptanceTests.size());
+		assertEquals("acceptance.111", acceptanceTests.get(0).getId());
+		assertEquals("acceptance.110", acceptanceTests.get(1).getId());
+		assertEquals("acceptance.011", acceptanceTests.get(2).getId());
+	}
+	
+	@Test
+	public void testThreeAcceptancesWithATotalOfThreeHexesCanBeInonsistentWithOneCoveringAllThreeIfInADifferentOrder() {
+		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class, String.class));
+		acc.acceptance(String.class, Arrays.asList(Integer.class, Double.class));
+		acc.analysisComplete();
+		assertEquals(3, hdm.getHexCount());
+		assertEquals(2, hdm.getErrors().size());
+		Object[] errs = hdm.getErrors().toArray();
+		assertEquals("Ordering between java.lang.Double and java.lang.Integer is inconsistent", errs[0]);
+		assertEquals("There is a cycle between java.lang.Double and java.lang.Integer", errs[1]);
+		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
+		assertEquals(2, acceptanceTests.size());
+		assertEquals("acceptance.111", acceptanceTests.get(0).getId());
+		assertEquals("acceptance.011", acceptanceTests.get(1).getId());
+	}
 }

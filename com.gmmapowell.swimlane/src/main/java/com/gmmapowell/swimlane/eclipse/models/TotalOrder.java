@@ -112,7 +112,6 @@ public class TotalOrder {
 							String xk = x.getKey();
 							if (xk.equals(rk) || xk.equals(ck)) // don't consider r & c
 								continue;
-							System.out.println(rk + " " + xk + " " + ck + " " + r.getValue().get(xk) + " " + x.getValue().get(ck) + " so far = " + outcome);
 							Order mine = Order.NONE;
 							if (r.getValue().get(xk) == Order.AFTER && x.getValue().get(ck) == Order.AFTER)
 								mine = Order.AFTER;
