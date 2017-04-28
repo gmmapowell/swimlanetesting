@@ -49,7 +49,7 @@ public class HexagonViewPart extends ViewPart {
 	}
 
 	public void configureToolbar(IToolBarManager toolBar, ModelDispatcher lsnrs) {
-		RunAllTestsAction rata = new RunAllTestsAction();
+		RunAllTestsAction rata = new RunAllTestsAction(lsnrs);
 		lsnrs.addAccumulator(rata);
 		toolBar.add(rata);
 	}
