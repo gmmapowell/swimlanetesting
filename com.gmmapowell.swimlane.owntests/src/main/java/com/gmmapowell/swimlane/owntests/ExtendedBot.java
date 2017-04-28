@@ -74,6 +74,7 @@ public class ExtendedBot {
 	public ICondition labelAfterDate(SWTBotLabel field, Date wantAfter) {
 		return new ICondition() {
 			private SimpleDateFormat sdf;
+			private String failureText;
 
 			@Override
 			public void init(SWTBot bot) {
@@ -96,8 +97,11 @@ public class ExtendedBot {
 					cal.set(copy, c1.get(copy));
 					Date d = cal.getTime();
 					System.out.println("Parsed out " + d);
+					if (!d.after(wantAfter))
+						failureText = "Label time " + d + " is before " + wantAfter;
 					return d.after(wantAfter);
 				} catch (Exception ex) {
+					failureText = "Error parsing " + text;
 					System.out.println("Error parsing " + text + ": " + ex);
 					return false;
 				}
@@ -105,7 +109,7 @@ public class ExtendedBot {
 			
 			@Override
 			public String getFailureMessage() {
-				return "not implemented";
+				return failureText;
 			}
 		};
 	}
