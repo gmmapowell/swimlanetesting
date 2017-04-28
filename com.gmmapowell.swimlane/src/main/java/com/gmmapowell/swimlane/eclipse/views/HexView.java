@@ -16,7 +16,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
-import com.gmmapowell.swimlane.eclipse.models.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 
 public class HexView implements HexagonModelListener {
 	private final Composite view;

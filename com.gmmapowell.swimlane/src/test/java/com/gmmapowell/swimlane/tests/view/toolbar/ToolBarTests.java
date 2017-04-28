@@ -14,7 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
-import com.gmmapowell.swimlane.eclipse.models.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
@@ -22,7 +23,7 @@ public class ToolBarTests extends TestBase {
 	protected Shell shell;
 	protected HexagonViewPart part;
 	private ToolBar toolBar;
-	private ModelDispatcher hmd = new ModelDispatcher();
+	private ModelDispatcher md = new SolidModelDispatcher();
 
 	@Before
 	public void setup() throws Exception {
@@ -32,7 +33,7 @@ public class ToolBarTests extends TestBase {
 		toolBar = mgr.createControl(shell);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		part = new HexagonViewPart();
-		part.configureToolbar(mgr, hmd);
+		part.configureToolbar(mgr, md);
 		mgr.update(false);
 		shell.setSize(600, 300);
 		shell.open();
@@ -54,7 +55,7 @@ public class ToolBarTests extends TestBase {
 	public void testTheRunAllButtonIsEnabledOnceThereIsAModel() throws Exception {
 		ToolItem ti = getItem(toolBar, "Run All Tests");
 		Accumulator hex = context.mock(Accumulator.class);
-		hmd.setModel(hex);
+		md.setModel(hex);
 		assertTrue("The run item was not enabled after setting the model", ti.getEnabled());
 	}
 }

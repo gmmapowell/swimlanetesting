@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
 import java.text.SimpleDateFormat;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -9,7 +10,7 @@ import org.eclipse.swt.widgets.Label;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
-import com.gmmapowell.swimlane.eclipse.models.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 
 public class InfoBar implements HexagonModelListener {
 	private final SimpleDateFormat sdf;

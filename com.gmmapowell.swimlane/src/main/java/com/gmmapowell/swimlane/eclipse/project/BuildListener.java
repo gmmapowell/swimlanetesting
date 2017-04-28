@@ -15,8 +15,8 @@ import org.eclipse.swt.SWT;
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
-import com.gmmapowell.swimlane.eclipse.models.ModelDispatcher;
 
 public class BuildListener implements IResourceChangeListener {
 	private final ModelDispatcher lsnrs;

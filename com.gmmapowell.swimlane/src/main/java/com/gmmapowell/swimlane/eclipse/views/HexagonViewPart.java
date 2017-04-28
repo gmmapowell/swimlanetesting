@@ -9,7 +9,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
-import com.gmmapowell.swimlane.eclipse.models.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.project.BuildListener;
 
 /* We are really looking at a pipeline here.
@@ -33,7 +34,7 @@ public class HexagonViewPart extends ViewPart {
 	public void createPartControl(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		lsnrs = new ModelDispatcher();
+		lsnrs = new SolidModelDispatcher();
 		new InfoBar(parent, lsnrs);
 		new HexView(parent, lsnrs);
 		configureToolbar(getViewSite().getActionBars().getToolBarManager(), lsnrs);
