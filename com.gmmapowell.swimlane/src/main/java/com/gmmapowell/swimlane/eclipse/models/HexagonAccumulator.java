@@ -48,6 +48,15 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 	public List<BarData> getAcceptanceTests() {
 		return acceptances;
 	}
+	
+	@Override
+	public List<TestGroup> getAllTestClasses() {
+		ArrayList<TestGroup> al = new ArrayList<TestGroup>();
+		TestGroup grp = new TestGroup("");
+		grp.addTest("");
+		al.add(grp);
+		return al;
+	}
 
 	@Override
 	public void acceptance(Class<?> tc, List<Class<?>> hexes) {

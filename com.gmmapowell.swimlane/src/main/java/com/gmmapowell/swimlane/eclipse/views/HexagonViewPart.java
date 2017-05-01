@@ -10,8 +10,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.project.BuildListener;
+import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
 
 /* We are really looking at a pipeline here.
  * This view part "listens" to post build events and then uses that to collect a (static) description of all the system's tests,
@@ -37,7 +39,7 @@ public class HexagonViewPart extends ViewPart {
 		lsnrs = new SolidModelDispatcher();
 		new InfoBar(parent, lsnrs);
 		new HexView(parent, lsnrs);
-		configureToolbar(getViewSite().getActionBars().getToolBarManager(), lsnrs);
+		configureToolbar(new RemoteJUnitTestRunner(), getViewSite().getActionBars().getToolBarManager(), lsnrs);
 		try {
 			bl = new BuildListener(lsnrs);
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
@@ -48,8 +50,8 @@ public class HexagonViewPart extends ViewPart {
 		}
 	}
 
-	public void configureToolbar(IToolBarManager toolBar, ModelDispatcher lsnrs) {
-		RunAllTestsAction rata = new RunAllTestsAction(lsnrs);
+	public void configureToolbar(TestRunner tr, IToolBarManager toolBar, ModelDispatcher lsnrs) {
+		RunAllTestsAction rata = new RunAllTestsAction(tr, lsnrs);
 		lsnrs.addAccumulator(rata);
 		toolBar.add(rata);
 	}

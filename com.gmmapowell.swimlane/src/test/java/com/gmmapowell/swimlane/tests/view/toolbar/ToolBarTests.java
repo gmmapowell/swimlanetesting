@@ -15,6 +15,7 @@ import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
@@ -24,6 +25,7 @@ public class ToolBarTests extends TestBase {
 	protected HexagonViewPart part;
 	private ToolBar toolBar;
 	private ModelDispatcher md = new SolidModelDispatcher();
+	private TestRunner tr = null;
 
 	@Before
 	public void setup() throws Exception {
@@ -33,7 +35,7 @@ public class ToolBarTests extends TestBase {
 		toolBar = mgr.createControl(shell);
 		toolBar.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		part = new HexagonViewPart();
-		part.configureToolbar(mgr, md);
+		part.configureToolbar(tr, mgr, md);
 		mgr.update(false);
 		shell.setSize(600, 300);
 		shell.open();

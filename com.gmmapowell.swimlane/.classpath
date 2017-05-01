@@ -4,6 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" output="bin/testclasses" path="src/test/java"/>
+	<classpathentry kind="src" path="src/sample/java"/>
 	<classpathentry kind="lib" path="lib/jmock-2.8.2.jar"/>
 	<classpathentry kind="lib" path="lib/jmock-junit4-2.8.2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>

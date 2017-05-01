@@ -7,12 +7,16 @@ import org.eclipse.jface.action.Action;
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.AccumulatorListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
+import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 
 public class RunAllTestsAction extends Action implements AccumulatorListener {
+	private final TestRunner tr;
 	private final ModelDispatcher lsnrs;
 	private Accumulator model;
 
-	public RunAllTestsAction(ModelDispatcher lsnrs) {
+	public RunAllTestsAction(TestRunner tr, ModelDispatcher lsnrs) {
+		this.tr = tr;
 		this.lsnrs = lsnrs;
 		setId(HexagonViewPart.RunAllID);
 		setText("Run All");
@@ -21,6 +25,9 @@ public class RunAllTestsAction extends Action implements AccumulatorListener {
 	}
 
 	public void run() {
+		for (TestGroup g : this.model.getAllTestClasses()) {
+			tr.runClass(g.getClassPath(), g.getClasses());
+		}
 		System.out.println("Run All");
 		this.model.testsCompleted(new Date());
 		lsnrs.setModel(this.model);
