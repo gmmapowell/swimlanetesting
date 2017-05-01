@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
@@ -63,6 +64,7 @@ public class SwtBotTestCase {
 		Point ws = ext.getSize(acc123.widget);
 		ext.assertPct(ws.x, viewSize.x, 95, 100);
 		assertEquals(6, ws.y);
+		ext.assertColor(acc123, SWT.COLOR_GRAY, ws.x/2, 3);
 	}
 	
 	// TODO: when we have "auto-run" unit tests in the sample project we should be able to check that they DID run as part of the post-build
@@ -74,6 +76,14 @@ public class SwtBotTestCase {
 		runTests.click();
 		SWTBotLabel testsComplete = bot.labelWithId("hexagons.testsComplete");
 		bot.waitUntil(ext.labelAfterDate(testsComplete, runTestsAt));
+	}
+	
+	@Test
+	public void step11_testThatTheAcceptanceBarIsNowGreen() {
+		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
+		assertTrue(acc123.isVisible());
+		Point ws = ext.getSize(acc123.widget);
+		ext.assertColor(acc123, SWT.COLOR_GREEN, ws.x/2, ws.y/2);
 	}
 	
 	@AfterClass

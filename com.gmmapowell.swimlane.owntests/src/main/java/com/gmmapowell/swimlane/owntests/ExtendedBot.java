@@ -10,9 +10,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -22,6 +28,7 @@ import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotCanvas;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
@@ -220,5 +227,26 @@ public class ExtendedBot {
 		if (pct >= min && pct <= max)
 			return;
 		fail(pct + " was not between " + min + " and " + max);
+	}
+
+	public void assertColor(SWTBotCanvas acc123, int swtColor, int x, int y) {
+		Display display = acc123.display;
+		display.syncExec(new Runnable() {
+			@Override
+			public void run() {
+				Color color = display.getSystemColor(swtColor);
+				GC gc = new GC(acc123.widget);
+				Image image = new Image(display, 1, 1);
+				PaletteData palette = image.getImageData().palette;
+				gc.copyArea(image, x, y);
+				RGB actual = palette.getRGB(image.getImageData().getPixel(0, 0));
+				boolean match = 
+					actual.red >= color.getRed()-5 && actual.red <= color.getRed() + 5 &&
+					actual.green >= color.getGreen()-5 && actual.green <= color.getGreen() + 5 &&
+					actual.blue >= color.getBlue()-5 && actual.blue <= color.getBlue() + 5;
+				if (!match)
+					fail("Color " + actual + " was not close enough to SWT " + swtColor + " " + color.getRGB());
+			}
+		});
 	}
 }
