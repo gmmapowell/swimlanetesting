@@ -82,6 +82,8 @@ public class TestResultAnalyzer {
 			cfail.failed();
 		} else if (s.startsWith("%TRACES") || s.startsWith("%ACTUALS") || s.startsWith("%EXPECTS")) {
 			capture = new ArrayList<String>();
+		} else if (s.startsWith("%TESTS")) {
+			// I don't think we need to do anything unless we want to estimate time-per-test
 		} else if (s.startsWith("%TESTE")) {
 			s = s.substring(8);
 			String[] parts = s.split(",");
@@ -94,7 +96,8 @@ public class TestResultAnalyzer {
 		} else if (s.startsWith("%RUNTIME")) {
 			s = s.substring(8);
 			sink.testRuntime(Integer.parseInt(s));
-		}
+		} else
+			System.err.println("Encountered unexpected msg from test runner: " + s);
 	}
 
 	private String simplify(String name) {
