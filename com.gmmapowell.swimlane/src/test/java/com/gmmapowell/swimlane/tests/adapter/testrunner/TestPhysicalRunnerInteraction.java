@@ -15,6 +15,7 @@ public class TestPhysicalRunnerInteraction extends TestBase {
 		RemoteJUnitTestRunner runner = new RemoteJUnitTestRunner();
 		TestResultReporter sink = context.mock(TestResultReporter.class);
 		context.checking(new Expectations() {{
+			oneOf(sink).testCount(2);
 			oneOf(sink).testSuccess("com.gmmapowell.swimlane.sample.TestPasses", "testPasses");
 		}});
 		runner.runClass(sink, cp, "com.gmmapowell.swimlane.sample.TestPasses");

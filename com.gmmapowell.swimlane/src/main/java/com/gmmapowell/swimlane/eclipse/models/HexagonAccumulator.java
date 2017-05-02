@@ -118,6 +118,12 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	}
 
 	@Override
+	public void testCount(int cnt) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void testSuccess(String testClass, String testFunction) {
 		// TODO Auto-generated method stub
 		
