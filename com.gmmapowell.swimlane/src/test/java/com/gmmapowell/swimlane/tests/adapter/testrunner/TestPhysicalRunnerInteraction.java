@@ -3,6 +3,7 @@ package com.gmmapowell.swimlane.tests.adapter.testrunner;
 import org.jmock.Expectations;
 import org.junit.Test;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
 import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
@@ -18,7 +19,7 @@ public class TestPhysicalRunnerInteraction extends TestBase {
 		TestResultReporter sink = context.mock(TestResultReporter.class);
 		context.checking(new Expectations() {{
 			oneOf(sink).tree(with(any(Tree.class)));
-			oneOf(sink).testSuccess("com.gmmapowell.swimlane.sample.TestPasses", "testPasses");
+			exactly(2).of(sink).testSuccess(with(any(TestInfo.class)));
 		}});
 		runner.runClass(sink, cp, "com.gmmapowell.swimlane.sample.TestPasses");
 	}
@@ -30,7 +31,8 @@ public class TestPhysicalRunnerInteraction extends TestBase {
 		TestResultReporter sink = context.mock(TestResultReporter.class);
 		context.checking(new Expectations() {{
 			oneOf(sink).tree(with(any(Tree.class)));
-			oneOf(sink).testSuccess("com.gmmapowell.swimlane.sample.TestPasses", "testPasses");
+			exactly(2).of(sink).testSuccess(with(any(TestInfo.class)));
+			exactly(1).of(sink).testFailure(with(any(TestInfo.class)));
 		}});
 		runner.runClass(sink, cp, "com.gmmapowell.swimlane.sample.TestPasses", "com.gmmapowell.swimlane.sample.TestFails");
 	}

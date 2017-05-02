@@ -23,7 +23,7 @@ public class TreeMatcher extends BaseMatcher<Tree<TestInfo>> {
 	}
 
 	protected boolean compareTrees(Tree<TestInfo> expected, Tree<TestInfo> actual) {
-		if (!expected.me().testName().equals(actual.me().testName()))
+		if (!TestInfoMatcher.of(expected.me(), false).matches(actual.me()))
 			return false;
 		if (expected.children().size() != actual.children().size())
 			return false;

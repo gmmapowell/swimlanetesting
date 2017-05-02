@@ -1,7 +1,9 @@
 package com.gmmapowell.swimlane.eclipse.testrunner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
@@ -20,6 +22,7 @@ public class TestResultAnalyzer {
 	}
 	private final TestResultReporter sink;
 	private final List<PendingNode> pending = new ArrayList<>();
+	private final Map<Integer, TestInfo> tests = new HashMap<Integer, TestInfo>();
 
 	public TestResultAnalyzer(TestResultReporter sink) {
 		this.sink = sink;
@@ -40,7 +43,10 @@ public class TestResultAnalyzer {
 				throw new RuntimeException("The orchard dried up - more tests than expected");
 			s = s.substring(8);
 			String[] parts = s.split(",");
-			Tree<TestInfo> node = new SimpleTree<TestInfo>(new TestCaseInfo(simplify(parts[1])));
+			int tc = Integer.parseInt(parts[0]);
+			TestCaseInfo tci = new TestCaseInfo(simplify(parts[1]));
+			tests.put(tc, tci);
+			Tree<TestInfo> node = new SimpleTree<TestInfo>(tci);
 			pending.get(pending.size()-1).node.add(node);
 			if ("true".equals(parts[2])) { // this node is a suite
 				pending.add(new PendingNode(Integer.parseInt(parts[3]), node));
@@ -56,9 +62,23 @@ public class TestResultAnalyzer {
 				if (pending.isEmpty())
 					sink.tree(top);
 			}
+		} else if (s.startsWith("%FAILED")) {
+			s = s.substring(8);
+			String[] parts = s.split(",");
+			int tc = Integer.parseInt(parts[0]);
+			tests.get(tc).failed();
+		} else if (s.startsWith("%TESTE")) {
+			s = s.substring(8);
+			String[] parts = s.split(",");
+			int tc = Integer.parseInt(parts[0]);
+			TestInfo ti = tests.get(tc);
+			if (ti.hasFailed())
+				sink.testFailure(ti);
+			else
+				sink.testSuccess(ti);
 		}
-		if (s.startsWith("%RUNTIME"))
-			sink.testSuccess("com.gmmapowell.swimlane.sample.TestPasses", "testPasses");
+//		if (s.startsWith("%RUNTIME"))
+//			sink.testSuccess("com.gmmapowell.swimlane.sample.TestPasses", "testPasses");
 	}
 
 	private String simplify(String name) {
