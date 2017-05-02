@@ -4,4 +4,6 @@ package com.gmmapowell.swimlane.eclipse.interfaces;
 // not the one doing the reporting
 public interface TestResultReporter {
 
+	void testSuccess(String testClass, String testFunction);
+
 }

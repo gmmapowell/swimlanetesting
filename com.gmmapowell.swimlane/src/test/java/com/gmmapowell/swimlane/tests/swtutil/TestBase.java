@@ -16,10 +16,13 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.junit.Rule;
 
 public class TestBase {
-	@Rule public final JUnitRuleMockery context = new JUnitRuleMockery();
+	@Rule public final JUnitRuleMockery context = new JUnitRuleMockery() {{
+		setThreadingPolicy(new Synchroniser());
+	}};
 	@Rule public final DisplayHelper displayHelper = new DisplayHelper();
 
 	protected void assertControls(Control c, String... names) {

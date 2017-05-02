@@ -11,8 +11,9 @@ import java.util.TreeSet;
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 
-public class HexagonAccumulator implements HexagonDataModel, Accumulator {
+public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestResultReporter {
 	private Date buildTime;
 	private Date testsCompleteTime;
 	private final Map<String, Acceptance> compileAcceptances = new TreeMap<String, Acceptance>();
@@ -114,5 +115,11 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator {
 	@Override
 	public Set<String> getErrors() {
 		return errors;
+	}
+
+	@Override
+	public void testSuccess(String testClass, String testFunction) {
+		// TODO Auto-generated method stub
+		
 	}
 }
