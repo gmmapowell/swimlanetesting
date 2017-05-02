@@ -40,7 +40,7 @@ public class TestResultAnalyzer {
 				throw new RuntimeException("The orchard dried up - more tests than expected");
 			s = s.substring(8);
 			String[] parts = s.split(",");
-			Tree<TestInfo> node = new SimpleTree<TestInfo>(new TestCaseInfo(parts[1]));
+			Tree<TestInfo> node = new SimpleTree<TestInfo>(new TestCaseInfo(simplify(parts[1])));
 			pending.get(pending.size()-1).node.add(node);
 			if ("true".equals(parts[2])) { // this node is a suite
 				pending.add(new PendingNode(Integer.parseInt(parts[3]), node));
@@ -59,6 +59,14 @@ public class TestResultAnalyzer {
 		}
 		if (s.startsWith("%RUNTIME"))
 			sink.testSuccess("com.gmmapowell.swimlane.sample.TestPasses", "testPasses");
+	}
+
+	private String simplify(String name) {
+		int idx = name.indexOf("(");
+		if (idx == -1)
+			return name;
+		else
+			return name.substring(0, idx);
 	}
 
 }

@@ -19,14 +19,14 @@ public class TestAnalyzerTreeBuilding extends TestBase {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo("Top"));
-		TestInfo me = new TestCaseInfo("test2(com.gmmapowell.swimlane.sample.TestPasses)");
+		TestInfo me = new TestCaseInfo("test1");
 		Tree<TestInfo> tree = new SimpleTree<TestInfo>(me);
 		top.add(tree);
 		context.checking(new Expectations() {{
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 		}});
 		tra.push("%TESTC  1 v2");
-		tra.push("%TSTTREE1,test2(com.gmmapowell.swimlane.sample.TestPasses),false,1");
+		tra.push("%TSTTREE1,test1(com.gmmapowell.swimlane.sample.TestPasses),false,1");
 	}
 
 	@Test
@@ -37,7 +37,7 @@ public class TestAnalyzerTreeBuilding extends TestBase {
 		TestInfo sme = new TestCaseInfo("com.gmmapowell.swimlane.sample.TestPasses");
 		Tree<TestInfo> suite = new SimpleTree<TestInfo>(sme);
 		top.add(suite);
-		TestInfo me = new TestCaseInfo("test2(com.gmmapowell.swimlane.sample.TestPasses)");
+		TestInfo me = new TestCaseInfo("test1");
 		Tree<TestInfo> tc = new SimpleTree<TestInfo>(me);
 		suite.add(tc);
 		context.checking(new Expectations() {{
@@ -45,7 +45,25 @@ public class TestAnalyzerTreeBuilding extends TestBase {
 		}});
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,com.gmmapowell.swimlane.sample.TestPasses,true,1");
-		tra.push("%TSTTREE2,test2(com.gmmapowell.swimlane.sample.TestPasses),false,1");
+		tra.push("%TSTTREE2,test1(com.gmmapowell.swimlane.sample.TestPasses),false,1");
 	}
 
+	@Test
+	public void testThatTwoTestsInAClassMakesATree() {
+		TestResultReporter trr = context.mock(TestResultReporter.class);
+		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo("Top"));
+		TestInfo sme = new TestCaseInfo("com.gmmapowell.swimlane.sample.TestPasses");
+		Tree<TestInfo> suite = new SimpleTree<TestInfo>(sme);
+		top.add(suite);
+		suite.add(new SimpleTree<TestInfo>(new TestCaseInfo("test1")));
+		suite.add(new SimpleTree<TestInfo>(new TestCaseInfo("test2")));
+		context.checking(new Expectations() {{
+			oneOf(trr).tree(with(TreeMatcher.of(top)));
+		}});
+		tra.push("%TESTC  2 v2");
+		tra.push("%TSTTREE1,com.gmmapowell.swimlane.sample.TestPasses,true,2");
+		tra.push("%TSTTREE2,test1(com.gmmapowell.swimlane.sample.TestPasses),false,1");
+		tra.push("%TSTTREE2,test2(com.gmmapowell.swimlane.sample.TestPasses),false,1");
+	}
 }
