@@ -66,4 +66,35 @@ public class TestAnalyzerTreeBuilding extends TestBase {
 		tra.push("%TSTTREE2,test1(com.gmmapowell.swimlane.sample.TestPasses),false,1");
 		tra.push("%TSTTREE2,test2(com.gmmapowell.swimlane.sample.TestPasses),false,1");
 	}
+
+	@Test
+	public void testThatFiveTestsAcrossTwoClassesMakeATree() {
+		TestResultReporter trr = context.mock(TestResultReporter.class);
+		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo("Top"));
+		{
+			TestInfo sme = new TestCaseInfo("com.gmmapowell.swimlane.sample.TestPasses");
+			Tree<TestInfo> suite = new SimpleTree<TestInfo>(sme);
+			top.add(suite);
+			suite.add(new SimpleTree<TestInfo>(new TestCaseInfo("test1")));
+			suite.add(new SimpleTree<TestInfo>(new TestCaseInfo("test2")));
+		}
+		{
+			TestInfo sme = new TestCaseInfo("com.gmmapowell.swimlane.sample.TestFails");
+			Tree<TestInfo> suite = new SimpleTree<TestInfo>(sme);
+			top.add(suite);
+			suite.add(new SimpleTree<TestInfo>(new TestCaseInfo("fail1")));
+			suite.add(new SimpleTree<TestInfo>(new TestCaseInfo("fail2")));
+		}
+		context.checking(new Expectations() {{
+			oneOf(trr).tree(with(TreeMatcher.of(top)));
+		}});
+		tra.push("%TESTC  4 v2");
+		tra.push("%TSTTREE1,com.gmmapowell.swimlane.sample.TestPasses,true,2");
+		tra.push("%TSTTREE2,test1(com.gmmapowell.swimlane.sample.TestPasses),false,1");
+		tra.push("%TSTTREE3,test2(com.gmmapowell.swimlane.sample.TestPasses),false,1");
+		tra.push("%TSTTREE4,com.gmmapowell.swimlane.sample.TestFails,true,2");
+		tra.push("%TSTTREE5,fail1(com.gmmapowell.swimlane.sample.TestFails),false,1");
+		tra.push("%TSTTREE6,fail2(com.gmmapowell.swimlane.sample.TestFails),false,1");
+	}
 }
