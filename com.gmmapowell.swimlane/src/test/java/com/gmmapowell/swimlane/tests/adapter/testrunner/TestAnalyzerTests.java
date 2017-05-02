@@ -1,7 +1,5 @@
 package com.gmmapowell.swimlane.tests.adapter.testrunner;
 
-import static org.junit.Assert.*;
-
 import org.jmock.Expectations;
 import org.junit.Test;
 
@@ -19,6 +17,16 @@ public class TestAnalyzerTests extends TestBase {
 			oneOf(trr).testCount(2);
 		}});
 		tra.push("%TESTC  2 v2");
+	}
+
+	@Test
+	public void testThatV3IsNotSupported() {
+		TestResultReporter trr = context.mock(TestResultReporter.class);
+		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		context.checking(new Expectations() {{
+			oneOf(trr).testError("Cannot handle protocol v3");
+		}});
+		tra.push("%TESTC  2 v3");
 	}
 
 }

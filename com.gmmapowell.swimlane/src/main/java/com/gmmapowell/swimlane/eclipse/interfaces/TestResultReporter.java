@@ -5,4 +5,5 @@ package com.gmmapowell.swimlane.eclipse.interfaces;
 public interface TestResultReporter {
 	void testCount(int cnt);
 	void testSuccess(String testClass, String testFunction);
+	void testError(String msg);
 }
