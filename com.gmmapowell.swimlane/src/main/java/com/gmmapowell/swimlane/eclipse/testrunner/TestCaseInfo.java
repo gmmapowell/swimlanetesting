@@ -13,4 +13,9 @@ public class TestCaseInfo implements TestInfo {
 	public String testName() {
 		return testname;
 	}
+	
+	@Override
+	public String toString() {
+		return "TC[" + testname + "]";
+	}
 }
