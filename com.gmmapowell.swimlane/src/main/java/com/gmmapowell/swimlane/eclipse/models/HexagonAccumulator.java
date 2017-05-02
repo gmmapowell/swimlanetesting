@@ -11,7 +11,9 @@ import java.util.TreeSet;
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
+import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
 
 public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestResultReporter {
 	private Date buildTime;
@@ -117,8 +119,9 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		return errors;
 	}
 
+
 	@Override
-	public void testCount(int cnt) {
+	public void tree(Tree<TestInfo> tree) {
 		// TODO Auto-generated method stub
 		
 	}

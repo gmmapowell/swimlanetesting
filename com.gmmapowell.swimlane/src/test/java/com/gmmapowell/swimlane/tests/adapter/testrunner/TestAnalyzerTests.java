@@ -10,16 +10,6 @@ import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 public class TestAnalyzerTests extends TestBase {
 
 	@Test
-	public void testThatATESTCCommandMapsToTestCount() {
-		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
-		context.checking(new Expectations() {{
-			oneOf(trr).testCount(2);
-		}});
-		tra.push("%TESTC  2 v2");
-	}
-
-	@Test
 	public void testThatV3IsNotSupported() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
