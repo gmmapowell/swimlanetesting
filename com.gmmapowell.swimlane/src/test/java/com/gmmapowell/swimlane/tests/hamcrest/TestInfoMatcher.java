@@ -21,8 +21,14 @@ public class TestInfoMatcher extends BaseMatcher<TestInfo> {
 		TestInfo actual = (TestInfo) item;
 		if (!expected.testName().equals(actual.testName()))
 			return false;
-		if (crs && expected.hasFailed() != actual.hasFailed())
-			return false;
+		if (crs) { // check run-time status
+			if (expected.hasFailed() != actual.hasFailed())
+				return false;
+			if (expected.stack() == null && actual.stack() == null)
+				; // that's OK
+			else if (expected.stack() == null || !expected.stack().equals(actual.stack()))
+				return false;
+		}
 		return true;
 	}
 

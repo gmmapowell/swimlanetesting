@@ -1,5 +1,7 @@
 package com.gmmapowell.swimlane.tests.adapter.testrunner;
 
+import java.util.Arrays;
+
 import org.jmock.Expectations;
 import org.junit.Test;
 
@@ -64,6 +66,35 @@ public class TestAnalyzerTests extends TestBase {
 		tra.push("%TSTTREE1,fail1(com.gmmapowell.swimlane.sample.TestFails),false,1");
 		tra.push("%TESTS  1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
 		tra.push("%FAILED 1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
+		tra.push("%TESTE  1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
+	}
+
+	@Test
+	public void testWeCaptureTheStackTrace() {
+		TestResultReporter trr = context.mock(TestResultReporter.class);
+		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo("Top"));
+		TestCaseInfo t1;
+		{
+			t1 = new TestCaseInfo("fail1");
+			t1.failed();
+			t1.stack(Arrays.asList("java.lang.Exception: ", "  frame 1", "  frame 2"));
+			top.add(new SimpleTree<TestInfo>(t1));
+		}
+		context.checking(new Expectations() {{
+			oneOf(trr).tree(with(TreeMatcher.of(top)));
+			oneOf(trr).testFailure(with(TestInfoMatcher.of(t1)));
+		}});
+		tra.push("%TESTC  1 v2");
+		tra.push("%TSTTREE1,fail1(com.gmmapowell.swimlane.sample.TestFails),false,1");
+		tra.push("%TESTS  1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
+		tra.push("%FAILED 1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
+		tra.push("%FAILED 1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
+		tra.push("%TRACES");
+		tra.push("java.lang.Exception: ");
+		tra.push("  frame 1");
+		tra.push("  frame 2");
+		tra.push("%TRACEE");
 		tra.push("%TESTE  1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
 	}
 }

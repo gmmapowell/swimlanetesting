@@ -22,7 +22,9 @@ public class TestResultAnalyzer {
 	}
 	private final TestResultReporter sink;
 	private final List<PendingNode> pending = new ArrayList<>();
-	private final Map<Integer, TestInfo> tests = new HashMap<Integer, TestInfo>();
+	private final Map<Integer, TestCaseInfo> tests = new HashMap<Integer, TestCaseInfo>();
+	private List<String> capture = null;
+	private TestCaseInfo cfail = null;
 
 	public TestResultAnalyzer(TestResultReporter sink) {
 		this.sink = sink;
@@ -30,7 +32,12 @@ public class TestResultAnalyzer {
 
 	public void push(String s) {
 		System.out.println("Tester sent: " + s);
-		if (s.startsWith("%TESTC")) {
+		if (s.startsWith("%TRACEE")) {
+			cfail.stack(capture);
+			capture = null;
+		} else if (capture != null) {
+			capture.add(s);
+		} else if (s.startsWith("%TESTC")) {
 			s = s.substring(8);
 			String[] codes = s.split(" ");
 			if (!"v2".equals(codes[1])) {
@@ -66,7 +73,10 @@ public class TestResultAnalyzer {
 			s = s.substring(8);
 			String[] parts = s.split(",");
 			int tc = Integer.parseInt(parts[0]);
-			tests.get(tc).failed();
+			cfail = tests.get(tc);
+			cfail.failed();
+		} else if (s.startsWith("%TRACES")) {
+			capture = new ArrayList<String>();
 		} else if (s.startsWith("%TESTE")) {
 			s = s.substring(8);
 			String[] parts = s.split(",");
