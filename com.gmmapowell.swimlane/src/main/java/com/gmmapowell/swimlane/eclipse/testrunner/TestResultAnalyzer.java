@@ -91,9 +91,10 @@ public class TestResultAnalyzer {
 				sink.testFailure(ti);
 			else
 				sink.testSuccess(ti);
+		} else if (s.startsWith("%RUNTIME")) {
+			s = s.substring(8);
+			sink.testRuntime(Integer.parseInt(s));
 		}
-//		if (s.startsWith("%RUNTIME"))
-//			sink.testSuccess("com.gmmapowell.swimlane.sample.TestPasses", "testPasses");
 	}
 
 	private String simplify(String name) {

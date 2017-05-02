@@ -20,6 +20,7 @@ public class TestPhysicalRunnerInteraction extends TestBase {
 		context.checking(new Expectations() {{
 			oneOf(sink).tree(with(any(Tree.class)));
 			exactly(2).of(sink).testSuccess(with(any(TestInfo.class)));
+			oneOf(sink).testRuntime(with(any(Integer.class)));
 		}});
 		runner.runClass(sink, cp, "com.gmmapowell.swimlane.sample.TestPasses");
 	}
@@ -33,6 +34,7 @@ public class TestPhysicalRunnerInteraction extends TestBase {
 			oneOf(sink).tree(with(any(Tree.class)));
 			exactly(2).of(sink).testSuccess(with(any(TestInfo.class)));
 			exactly(2).of(sink).testFailure(with(any(TestInfo.class)));
+			oneOf(sink).testRuntime(with(any(Integer.class)));
 		}});
 		runner.runClass(sink, cp, "com.gmmapowell.swimlane.sample.TestPasses", "com.gmmapowell.swimlane.sample.TestFails");
 	}

@@ -128,4 +128,26 @@ public class TestAnalyzerTests extends TestBase {
 		tra.push("%ACTUALE");
 		tra.push("%TESTE  1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
 	}
+
+	@Test
+	public void testWeReportTheRuntime() {
+		TestResultReporter trr = context.mock(TestResultReporter.class);
+		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo("Top"));
+		TestCaseInfo t1;
+		{
+			t1 = new TestCaseInfo("test1");
+			top.add(new SimpleTree<TestInfo>(t1));
+		}
+		context.checking(new Expectations() {{
+			oneOf(trr).tree(with(TreeMatcher.of(top)));
+			oneOf(trr).testSuccess(with(TestInfoMatcher.of(t1)));
+			oneOf(trr).testRuntime(420);
+		}});
+		tra.push("%TESTC  1 v2");
+		tra.push("%TSTTREE1,test1(com.gmmapowell.swimlane.sample.TestSuccess),false,1");
+		tra.push("%TESTS  1,test1(com.gmmapowell.swimlane.sample.TestSuccess)");
+		tra.push("%TESTE  1,test1(com.gmmapowell.swimlane.sample.TestSuccess)");
+		tra.push("%RUNTIME420");
+	}
 }

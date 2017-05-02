@@ -7,4 +7,5 @@ public interface TestResultReporter {
 	void testSuccess(TestInfo test);
 	void testFailure(TestInfo test);
 	void testError(String msg);
+	void testRuntime(int ms);
 }
