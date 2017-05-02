@@ -44,8 +44,7 @@ public class SingleRunner {
 		ProcessBuilder builder = new ProcessBuilder(cmdarray);
 		builder.inheritIO();
 		Process proc = builder.start();
-		int exitCode = proc.waitFor();
-		System.out.println("Exit code was " + exitCode);
+		proc.waitFor();
 
 		trr.done();
 		thr.interrupt();

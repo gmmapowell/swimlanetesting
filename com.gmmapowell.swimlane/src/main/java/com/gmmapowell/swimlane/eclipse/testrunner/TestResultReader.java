@@ -39,7 +39,6 @@ public class TestResultReader implements Runnable {
 		try {
 			sock = new ServerSocket(0);
 			port = new AtomicInteger(sock.getLocalPort());
-			System.out.println("port = " + port);
 			latch.countDown();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -49,7 +48,6 @@ public class TestResultReader implements Runnable {
 		while (!done && !sock.isClosed()) {
 			Socket conn = null;
 			try {
-				System.out.println("Accepting connection on " + port);
 				conn = sock.accept();
 			} catch (IOException ex) {
 				if (sock.isClosed())
@@ -58,7 +56,6 @@ public class TestResultReader implements Runnable {
 				continue;
 			}
 			try {
-				System.out.println("Have connection on " + port);
 				open.add(conn);
 				InputStream is = conn.getInputStream();
 				InputStreamReader r = new InputStreamReader(is);
@@ -68,7 +65,6 @@ public class TestResultReader implements Runnable {
 					analyzer.push(s);
 				}
 				lnr.close();
-				System.out.println("Completed normally");
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
@@ -94,7 +90,6 @@ public class TestResultReader implements Runnable {
 	public void done() throws IOException {
 		this.done = true;
 		sock.close();
-		System.out.println("Closing " + open.size() + " open connections");
 		for (Socket s : open)
 			s.close();
 	}

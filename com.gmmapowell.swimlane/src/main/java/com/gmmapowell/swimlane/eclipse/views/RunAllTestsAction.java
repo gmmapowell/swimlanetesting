@@ -29,7 +29,6 @@ public class RunAllTestsAction extends Action implements AccumulatorListener {
 		for (TestGroup g : this.model.getAllTestClasses()) {
 			tr.runClass((TestResultReporter)model, g.getClassPath(), g.getClasses());
 		}
-		System.out.println("Run All");
 		this.model.testsCompleted(new Date());
 		lsnrs.setModel(this.model);
 	}

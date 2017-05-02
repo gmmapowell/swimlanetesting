@@ -31,9 +31,14 @@ public class TestResultAnalyzer {
 	}
 
 	public void push(String s) {
-		System.out.println("Tester sent: " + s);
 		if (s.startsWith("%TRACEE")) {
 			cfail.stack(capture);
+			capture = null;
+		} else if (s.startsWith("%EXPECTE")) {
+			cfail.expectedValue(String.join("\n", capture));
+			capture = null;
+		} else if (s.startsWith("%ACTUALE")) {
+			cfail.actualValue(String.join("\n", capture));
 			capture = null;
 		} else if (capture != null) {
 			capture.add(s);
@@ -75,7 +80,7 @@ public class TestResultAnalyzer {
 			int tc = Integer.parseInt(parts[0]);
 			cfail = tests.get(tc);
 			cfail.failed();
-		} else if (s.startsWith("%TRACES")) {
+		} else if (s.startsWith("%TRACES") || s.startsWith("%ACTUALS") || s.startsWith("%EXPECTS")) {
 			capture = new ArrayList<String>();
 		} else if (s.startsWith("%TESTE")) {
 			s = s.substring(8);

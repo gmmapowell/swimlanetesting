@@ -6,4 +6,6 @@ public interface TestInfo {
 	String testName();
 	boolean hasFailed();
 	List<String> stack();
+	String getExpected();
+	String getActual();
 }

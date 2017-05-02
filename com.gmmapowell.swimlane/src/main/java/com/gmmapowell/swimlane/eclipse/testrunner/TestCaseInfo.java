@@ -8,6 +8,8 @@ public class TestCaseInfo implements TestInfo {
 	private final String testname;
 	private boolean isFailed;
 	private List<String> stack;
+	private String expected;
+	private String actual;
 
 	public TestCaseInfo(String testname) {
 		this.testname = testname;
@@ -35,9 +37,25 @@ public class TestCaseInfo implements TestInfo {
 	public List<String> stack() {
 		return stack;
 	}
+	
+	public void expectedValue(String expected) {
+		this.expected = expected;
+	}
+	
+	public void actualValue(String actual) {
+		this.actual = actual;
+	}
+	
+	public String getExpected() {
+		return expected;
+	}
+
+	public String getActual() {
+		return actual;
+	}
 
 	@Override
 	public String toString() {
-		return "TC[" + testname + (isFailed?" failed":"") + (stack != null?" " +stack.size():"") + "]";
+		return "TC[" + testname + (isFailed?" failed":"") + (stack != null?" " +stack.size():"") + (expected != null ? " " + expected + " != " + actual : "") + "]";
 	}
 }

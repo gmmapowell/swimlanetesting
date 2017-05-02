@@ -28,6 +28,14 @@ public class TestInfoMatcher extends BaseMatcher<TestInfo> {
 				; // that's OK
 			else if (expected.stack() == null || !expected.stack().equals(actual.stack()))
 				return false;
+			if (expected.getExpected() == null && actual.getExpected() == null)
+				;
+			else if (expected.getExpected() == null || !expected.getExpected().equals(actual.getExpected()))
+				return false;
+			if (expected.getActual() == null && actual.getActual() == null)
+				;
+			else if (expected.getActual() == null || !expected.getActual().equals(actual.getActual()))
+				return false;
 		}
 		return true;
 	}
