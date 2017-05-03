@@ -27,7 +27,7 @@ public class BuildListener implements IResourceChangeListener {
 	
 	@Override
 	public void resourceChanged(IResourceChangeEvent event) {
-		Accumulator acc = new HexagonAccumulator();
+		Accumulator acc = new HexagonAccumulator(lsnrs);
 		IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects(SWT.NONE);
 		for (IProject p : projects) {
 			IJavaProject jp = JavaCore.create(p);

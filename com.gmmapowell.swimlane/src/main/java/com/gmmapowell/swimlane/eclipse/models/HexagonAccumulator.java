@@ -11,11 +11,13 @@ import java.util.TreeSet;
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
 
 public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestResultReporter {
+	private final ModelDispatcher dispatcher;
 	private Date buildTime;
 	private Date testsCompleteTime;
 	private final Map<String, Acceptance> compileAcceptances = new TreeMap<String, Acceptance>();
@@ -23,6 +25,10 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	private final TotalOrder hexes = new TotalOrder();
 	private Set<String> errors = new TreeSet<>();
 	
+	public HexagonAccumulator(ModelDispatcher dispatcher) {
+		this.dispatcher = dispatcher;
+	}
+
 	public void setBuildTime(Date d) {
 		this.buildTime = d;
 	}
@@ -128,8 +134,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public void testSuccess(TestInfo test) {
-		// TODO Auto-generated method stub
-		
+		dispatcher.barChanged(acceptances.get(0));
 	}
 
 	@Override

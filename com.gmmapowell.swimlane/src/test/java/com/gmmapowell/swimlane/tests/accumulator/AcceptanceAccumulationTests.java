@@ -11,7 +11,9 @@ import org.junit.Test;
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
+import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 
 /* The purpose of the accumulator is to take input in one form (what we discover)
  * and to build a stable model out of it.
@@ -19,7 +21,8 @@ import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
  * here we assert that the two are coupled correctly internally.
  */
 public class AcceptanceAccumulationTests {
-	Accumulator acc = new HexagonAccumulator();
+	ModelDispatcher md = new SolidModelDispatcher();
+	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	
 	@Test
