@@ -2,7 +2,6 @@ package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
@@ -30,10 +29,8 @@ public class HexView implements HexagonModelListener {
 	}
 
 	private void update(HexagonDataModel model) {
-		// TODO: replace this with a dedicated layout
-		GridLayout gl = new GridLayout(model.getHexCount(), false);
-		gl.marginWidth = 0;
-		view.setLayout(gl);
+		HexagonLayout layout = new HexagonLayout(model);
+		view.setLayout(layout);
 		for (BarData accModel : model.getAcceptanceTests()) {
 			String accId = "hexagons." + accModel.getId();
 			if (findBar(view, accId) == null)
