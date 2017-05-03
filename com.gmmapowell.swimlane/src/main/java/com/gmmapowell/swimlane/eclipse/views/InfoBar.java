@@ -30,7 +30,7 @@ public class InfoBar implements HexagonModelListener {
 		testsComplete.setData("org.eclipse.swtbot.widget.key", "hexagons.testsComplete");
 		testsComplete.setText("none");
 
-		lsnrs.addHMD(this);
+		lsnrs.addHexagonModelListener(this);
 	}
 
 	public void setModel(HexagonDataModel model) {

@@ -26,7 +26,7 @@ import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 public abstract class BaseViewTest extends TestBase {
 	public Shell shell;
 	public HexView hv;
-	private ModelDispatcher md;
+	protected ModelDispatcher md;
 
 	@Before
 	public void setup() throws Exception {
@@ -59,20 +59,30 @@ public abstract class BaseViewTest extends TestBase {
 		GC gc = new GC(canvas);
 		Image image = new Image(canvas.getDisplay(), pt.x, pt.y);
 		PaletteData palette = image.getImageData().palette;
-		gc.copyArea(image, 0, 0);
-		checker.checkImage(new ImageProxy() {
-			@Override
-			public void assertColorOfPixel(int swtColor, int x, int y) {
-				Color color = displayHelper.getDisplay().getSystemColor(swtColor);
-				RGB actual = palette.getRGB(image.getImageData().getPixel(x, y));
-				boolean match = 
-					actual.red >= color.getRed()-5 && actual.red <= color.getRed() + 5 &&
-					actual.green >= color.getGreen()-5 && actual.green <= color.getGreen() + 5 &&
-					actual.blue >= color.getBlue()-5 && actual.blue <= color.getBlue() + 5;
-				if (!match)
-					fail("Color " + actual + " was not close enough to SWT " + swtColor + " " + color.getRGB());
+		for (int i=0;i<5;i++) {
+			try {
+				gc.copyArea(image, 0, 0);
+				checker.checkImage(new ImageProxy() {
+					@Override
+					public void assertColorOfPixel(int swtColor, int x, int y) {
+						Color color = displayHelper.getDisplay().getSystemColor(swtColor);
+						RGB actual = palette.getRGB(image.getImageData().getPixel(x, y));
+						boolean match = 
+							actual.red >= color.getRed()-5 && actual.red <= color.getRed() + 5 &&
+							actual.green >= color.getGreen()-5 && actual.green <= color.getGreen() + 5 &&
+							actual.blue >= color.getBlue()-5 && actual.blue <= color.getBlue() + 5;
+						if (!match)
+							fail("Color " + actual + " was not close enough to SWT " + swtColor + " " + color.getRGB());
+					}
+				});
+				break;
+			} catch (AssertionError ex) {
+				if (i == 4)
+					throw ex;
+				try { Thread.sleep(100); } catch (InterruptedException e2) { }
+				displayHelper.flushPendingEvents();
 			}
-		});
+		}
 		image.dispose();
 		gc.dispose();
 	}

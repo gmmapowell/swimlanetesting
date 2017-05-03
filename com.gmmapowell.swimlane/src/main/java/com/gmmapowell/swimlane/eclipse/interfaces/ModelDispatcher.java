@@ -2,10 +2,11 @@ package com.gmmapowell.swimlane.eclipse.interfaces;
 
 public interface ModelDispatcher {
 
-	void addHMD(HexagonModelListener lsnr);
-
+	void addHexagonModelListener(HexagonModelListener lsnr);
+	void addBarListener(BarDataListener lsnr);
 	void addAccumulator(AccumulatorListener lsnr);
 
 	void setModel(Object model);
+	void barChanged(BarData bar);
 
 }

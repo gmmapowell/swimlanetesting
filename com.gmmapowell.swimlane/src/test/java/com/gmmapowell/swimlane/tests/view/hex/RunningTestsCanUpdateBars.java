@@ -38,7 +38,7 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 			}
 		});
 		progress.become("halfway");
-		acceptance.redraw();
+		md.barChanged(a);
 		displayHelper.flushPendingEvents();
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
@@ -49,7 +49,7 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 			}
 		});
 		progress.become("complete");
-		acceptance.redraw();
+		md.barChanged(a);
 		displayHelper.flushPendingEvents();
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override

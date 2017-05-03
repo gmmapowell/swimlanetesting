@@ -5,17 +5,25 @@ import java.util.List;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.AccumulatorListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 
 public class SolidModelDispatcher implements ModelDispatcher {
-	private List<HexagonModelListener> hmdLsnrs = new ArrayList<>();
+	private List<HexagonModelListener> modelLsnrs = new ArrayList<>();
+	private List<BarDataListener> barLsnrs = new ArrayList<>();
 	private List<AccumulatorListener> accLsnrs = new ArrayList<>();
 	
 	@Override
-	public void addHMD(HexagonModelListener lsnr) {
-		hmdLsnrs.add(lsnr);
+	public void addHexagonModelListener(HexagonModelListener lsnr) {
+		modelLsnrs.add(lsnr);
+	}
+
+	@Override
+	public void addBarListener(BarDataListener lsnr) {
+		barLsnrs.add(lsnr);
 	}
 
 	@Override
@@ -26,7 +34,7 @@ public class SolidModelDispatcher implements ModelDispatcher {
 	@Override
 	public void setModel(Object model) {
 		if (model instanceof HexagonDataModel) {
-			for (HexagonModelListener lsnr : hmdLsnrs) {
+			for (HexagonModelListener lsnr : modelLsnrs) {
 				lsnr.setModel((HexagonDataModel) model);
 			}
 		}
@@ -37,4 +45,9 @@ public class SolidModelDispatcher implements ModelDispatcher {
 		}
 	}
 
+	@Override
+	public void barChanged(BarData bar) {
+		for (BarDataListener l : barLsnrs)
+			l.barChanged(bar);
+	}
 }

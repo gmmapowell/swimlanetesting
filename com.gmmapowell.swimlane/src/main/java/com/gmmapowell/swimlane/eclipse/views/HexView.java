@@ -12,11 +12,13 @@ import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 
 public class HexView implements HexagonModelListener {
 	private final Composite view;
+	private final ModelDispatcher dispatcher;
 
-	public HexView(Composite parent, ModelDispatcher lsnrs) {
+	public HexView(Composite parent, ModelDispatcher dispatcher) {
+		this.dispatcher = dispatcher;
 		view = new Composite(parent, SWT.NONE);
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		lsnrs.addHMD(this);
+		dispatcher.addHexagonModelListener(this);
 	}
 
 	public void setModel(HexagonDataModel model) {
@@ -39,7 +41,7 @@ public class HexView implements HexagonModelListener {
 	}
 
 	protected BarControl createBar(HexagonDataModel model, BarData accModel, String accId) {
-		BarControl bc = new BarControl(view, model, accModel, accId);
+		BarControl bc = new BarControl(dispatcher, view, model, accModel, accId);
 
 		// By default, the bar will have been added at "the end".  If that is the wrong place, we need to consider moving it up
 		// In particular, it should go before any keys that are "acceptance.N" where N is less than our N,
