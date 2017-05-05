@@ -8,4 +8,5 @@ public interface TestInfo {
 	List<String> stack();
 	String getExpected();
 	String getActual();
+	String classUnderTest();
 }

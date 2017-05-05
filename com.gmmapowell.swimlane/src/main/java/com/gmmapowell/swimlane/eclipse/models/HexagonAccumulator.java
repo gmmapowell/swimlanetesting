@@ -2,6 +2,7 @@ package com.gmmapowell.swimlane.eclipse.models;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,6 +25,8 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	private List<BarData> acceptances = new ArrayList<>();
 	private final TotalOrder hexes = new TotalOrder();
 	private Set<String> errors = new TreeSet<>();
+	private Map<String, BarData> barsFor = new HashMap<>();
+	private List<String> order;
 	
 	public HexagonAccumulator(ModelDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
@@ -51,6 +54,10 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	@Override
 	public int getHexCount() {
 		return hexes.count();
+	}
+
+	public List<String> getHexes() {
+		return order;
 	}
 
 	@Override
@@ -94,7 +101,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	public void analysisComplete() {
 		this.hexes.ensureTotalOrdering(errors);
 		TreeMap<String, Acceptance> tmp = new TreeMap<String, Acceptance>();
-		List<String> order = this.hexes.bestOrdering(errors);
+		order = this.hexes.bestOrdering(errors);
 		for (Acceptance a : compileAcceptances.values()) {
 			a.setMarks(order);
 			// Handle an error case where because of inconsistent hex definitions, we have two
@@ -111,6 +118,8 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		// Because we want to sort 111, 110, 101, 100, 011 ... reverse the default sorted list by adding each item on the front
 		for (Acceptance a : tmp.values()) {
 			acceptances.add(0, a);
+			for (String c : a.classesUnderTest())
+				barsFor.put(c, a);
 		}
 	}
 
@@ -128,19 +137,18 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public void tree(Tree<TestInfo> tree) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void testSuccess(TestInfo test) {
 		dispatcher.barChanged(acceptances.get(0));
 	}
 
 	@Override
+	public void testSuccess(TestInfo test) {
+		String forClz = test.classUnderTest();
+		dispatcher.barChanged(barsFor.get(forClz));
+	}
+
+	@Override
 	public void testFailure(TestInfo test) {
-		// TODO Auto-generated method stub
-		
+		dispatcher.barChanged(acceptances.get(0));
 	}
 
 	@Override

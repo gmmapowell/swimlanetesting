@@ -85,21 +85,27 @@ public class AcceptanceAccumulationTests {
 	
 	@Test
 	public void testTwoAcceptancesEachWithTwoOverlappingHexesThatMakeATotalOrderingOfThreeHexes() {
-		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class));
-		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
+		acc.acceptance(Long.class, Arrays.asList(Double.class, Integer.class));
+		acc.acceptance(Float.class, Arrays.asList(Integer.class, String.class));
 		acc.analysisComplete();
 		assertEquals(3, hdm.getHexCount());
 		assertEquals(0, hdm.getErrors().size());
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
 		assertEquals(2, acceptanceTests.size());
-		assertEquals("acceptance.110", acceptanceTests.get(0).getId());
-		assertEquals("acceptance.011", acceptanceTests.get(1).getId());
+		BarData acc0 = acceptanceTests.get(0);
+		assertEquals("acceptance.110", acc0.getId());
+		assertEquals(1, acc0.classesUnderTest().size());
+		assertEquals(Long.class.getName(), acc0.classesUnderTest().get(0));
+		BarData acc1 = acceptanceTests.get(1);
+		assertEquals("acceptance.011", acc1.getId());
+		assertEquals(1, acc1.classesUnderTest().size());
+		assertEquals(Float.class.getName(), acc1.classesUnderTest().get(0));
 	}
 
 	@Test
 	public void testTwoAcceptancesEachWithTwoOrderedHexesIsNotTotal() {
 		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class));
-		acc.acceptance(String.class, Arrays.asList(Double.class, String.class));
+		acc.acceptance(Long.class, Arrays.asList(Double.class, String.class));
 		acc.analysisComplete();
 		assertEquals(3, hdm.getHexCount());
 		assertEquals(2, hdm.getErrors().size());
@@ -108,15 +114,15 @@ public class AcceptanceAccumulationTests {
 		assertEquals("There is no ordering between java.lang.Integer and java.lang.String", errs[1]);
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
 		assertEquals(2, acceptanceTests.size());
-		assertEquals("acceptance.101", acceptanceTests.get(0).getId());
-		assertEquals("acceptance.011", acceptanceTests.get(1).getId());
+		assertEquals("acceptance.110", acceptanceTests.get(0).getId());
+		assertEquals("acceptance.101", acceptanceTests.get(1).getId());
 	}
 
 	@Test
 	public void testTwoAcceptancesEachWithTwoOrderedHexesIsNotConsistent() {
 		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class));
-		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
-		acc.acceptance(String.class, Arrays.asList(String.class, Double.class));
+		acc.acceptance(Long.class, Arrays.asList(Integer.class, String.class));
+		acc.acceptance(Float.class, Arrays.asList(String.class, Double.class));
 		acc.analysisComplete();
 		assertEquals(3, hdm.getHexCount());
 		assertEquals(3, hdm.getErrors().size());
@@ -174,6 +180,6 @@ public class AcceptanceAccumulationTests {
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
 		assertEquals(2, acceptanceTests.size());
 		assertEquals("acceptance.111", acceptanceTests.get(0).getId());
-		assertEquals("acceptance.011", acceptanceTests.get(1).getId());
+		assertEquals("acceptance.110", acceptanceTests.get(1).getId());
 	}
 }

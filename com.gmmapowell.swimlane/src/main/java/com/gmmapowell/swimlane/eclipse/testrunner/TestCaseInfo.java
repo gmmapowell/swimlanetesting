@@ -5,14 +5,21 @@ import java.util.List;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 
 public class TestCaseInfo implements TestInfo {
+	private final String classUnderTest;
 	private final String testname;
 	private boolean isFailed;
 	private List<String> stack;
 	private String expected;
 	private String actual;
 
-	public TestCaseInfo(String testname) {
-		this.testname = testname;
+	public TestCaseInfo(String classUnderTest, String testName) {
+		this.classUnderTest = classUnderTest;
+		this.testname = testName;
+	}
+
+	@Override
+	public String classUnderTest() {
+		return classUnderTest;
 	}
 
 	@Override
@@ -56,6 +63,6 @@ public class TestCaseInfo implements TestInfo {
 
 	@Override
 	public String toString() {
-		return "TC[" + testname + (isFailed?" failed":"") + (stack != null?" " +stack.size():"") + (expected != null ? " " + expected + " != " + actual : "") + "]";
+		return "TC[" + classUnderTest + "." + testname + (isFailed?" failed":"") + (stack != null?" " +stack.size():"") + (expected != null ? " " + expected + " != " + actual : "") + "]";
 	}
 }

@@ -19,6 +19,8 @@ public class TestInfoMatcher extends BaseMatcher<TestInfo> {
 		if (!(item instanceof TestInfo))
 			return false;
 		TestInfo actual = (TestInfo) item;
+		if (!expected.classUnderTest().equals(actual.classUnderTest()))
+			return false;
 		if (!expected.testName().equals(actual.testName()))
 			return false;
 		if (crs) { // check run-time status

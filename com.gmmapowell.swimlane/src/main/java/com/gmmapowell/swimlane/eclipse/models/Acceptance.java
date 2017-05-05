@@ -25,6 +25,10 @@ public class Acceptance implements BarData {
 		testClasses.add(tc.getName());
 	}
 
+	public List<String> classesUnderTest() {
+		return testClasses;
+	}
+
 	public void setMarks(List<String> order) {
 		StringBuilder sb = new StringBuilder("acceptance.");
 		marks = new int[order.size()];
@@ -62,5 +66,10 @@ public class Acceptance implements BarData {
 	public int getTotal() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	@Override
+	public String toString() {
+		return "Acceptance" + testClasses;
 	}
 }

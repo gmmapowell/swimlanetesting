@@ -171,7 +171,7 @@ public class TotalOrder {
 	private int countBefores(Collection<Order> collection) {
 		int ret = 0;
 		for (Order o : collection)
-			if (o == Order.BEFORE)
+			if (o == Order.AFTER)
 				ret++;
 		return ret;
 	}
