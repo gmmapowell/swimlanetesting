@@ -31,10 +31,10 @@ public class TestAnalyzerTests extends TestBase {
 	public void testSimpleSuccessIsReported() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo("", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestCaseInfo t1;
 		{
-			t1 = new TestCaseInfo("com.gmmapowell.swimlane.sample.TestPasses", "test1");
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestPasses", "test1");
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		context.checking(new Expectations() {{
@@ -51,10 +51,10 @@ public class TestAnalyzerTests extends TestBase {
 	public void testSimpleFailureIsReported() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo("", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestCaseInfo t1;
 		{
-			t1 = new TestCaseInfo("com.gmmapowell.swimlane.sample.TestFails", "fail1");
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestFails", "fail1");
 			t1.failed();
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
@@ -73,10 +73,10 @@ public class TestAnalyzerTests extends TestBase {
 	public void testWeCaptureTheStackTrace() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo("", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestCaseInfo t1;
 		{
-			t1 = new TestCaseInfo("com.gmmapowell.swimlane.sample.TestFails", "fail1");
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestFails", "fail1");
 			t1.failed();
 			t1.stack(Arrays.asList("java.lang.Exception: ", "  frame 1", "  frame 2"));
 			top.add(new SimpleTree<TestInfo>(t1));
@@ -102,10 +102,10 @@ public class TestAnalyzerTests extends TestBase {
 	public void testWeCaptureExpectedActualText() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo("", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestCaseInfo t1;
 		{
-			t1 = new TestCaseInfo("com.gmmapowell.swimlane.sample.TestFails", "fail1");
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestFails", "fail1");
 			t1.failed();
 			t1.expectedValue("hello");
 			t1.actualValue("goodbye");
@@ -133,10 +133,10 @@ public class TestAnalyzerTests extends TestBase {
 	public void testWeReportTheRuntime() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo("", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestCaseInfo t1;
 		{
-			t1 = new TestCaseInfo("com.gmmapowell.swimlane.sample.TestSuccess", "test1");
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestSuccess", "test1");
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		context.checking(new Expectations() {{

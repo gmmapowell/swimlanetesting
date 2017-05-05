@@ -3,11 +3,14 @@ package com.gmmapowell.swimlane.eclipse.models;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
@@ -137,18 +140,51 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public void tree(Tree<TestInfo> tree) {
-		dispatcher.barChanged(acceptances.get(0));
+		// It's possible that actually collecting a list of the test names would be more useful
+		Map<String, AtomicInteger> classCounts = new HashMap<>();
+		traverseTree(classCounts, tree);
+		Set<BarData> changed = new HashSet<>();
+		for (Entry<String, AtomicInteger> e : classCounts.entrySet()) {
+			BarData bar = barsFor.get(e.getKey());
+			if (bar == null) {
+				System.out.println("There is no bar for test class " + e.getKey() +"; how did it get run?");
+				continue;
+			}
+			((Acceptance)bar).casesForClass(e.getKey(), e.getValue().get());
+			changed.add(bar);
+		}
+		for (BarData bd : changed)
+			dispatcher.barChanged(bd);
+	}
+
+	private void traverseTree(Map<String, AtomicInteger> classCounts, Tree<TestInfo> tree) {
+		TestInfo ti = tree.me();
+		if (ti.type().isTestCase()) {
+			AtomicInteger cnt = classCounts.get(ti.classUnderTest());
+			if (cnt == null) {
+				cnt = new AtomicInteger(0);
+				classCounts.put(ti.classUnderTest(), cnt);
+			}
+			cnt.incrementAndGet();
+		}
+		for (Tree<TestInfo> c : tree.children())
+			traverseTree(classCounts, c);
 	}
 
 	@Override
 	public void testSuccess(TestInfo test) {
 		String forClz = test.classUnderTest();
-		dispatcher.barChanged(barsFor.get(forClz));
+		BarData bar = barsFor.get(forClz);
+		((Acceptance)bar).passed(forClz);
+		dispatcher.barChanged(bar);
 	}
 
 	@Override
 	public void testFailure(TestInfo test) {
-		dispatcher.barChanged(acceptances.get(0));
+		String forClz = test.classUnderTest();
+		BarData bar = barsFor.get(forClz);
+		((Acceptance)bar).failed(forClz);
+		dispatcher.barChanged(bar);
 	}
 
 	@Override

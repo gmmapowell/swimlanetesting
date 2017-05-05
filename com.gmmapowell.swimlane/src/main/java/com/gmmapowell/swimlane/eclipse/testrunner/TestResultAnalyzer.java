@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo.Type;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
 import com.gmmapowell.swimlane.eclipse.models.SimpleTree;
@@ -49,18 +50,19 @@ public class TestResultAnalyzer {
 				sink.testError("Cannot handle protocol " + codes[1]);
 				return;
 			}
-			pending.add(new PendingNode(Integer.parseInt(codes[0]), new SimpleTree<TestInfo>(new TestCaseInfo("", "Top"))));
+			pending.add(new PendingNode(Integer.parseInt(codes[0]), new SimpleTree<TestInfo>(new TestCaseInfo(Type.META, "", "Top"))));
 		} else if (s.startsWith("%TSTTREE")) {
 			if (pending.isEmpty())
 				throw new RuntimeException("The orchard dried up - more tests than expected");
 			s = s.substring(8);
 			String[] parts = s.split(",");
 			int tc = Integer.parseInt(parts[0]);
-			TestCaseInfo tci = new TestCaseInfo(extractClassName(parts[1]), extractTestName(parts[1]));
+			boolean isSuite = "true".equals(parts[2]);
+			TestCaseInfo tci = new TestCaseInfo(isSuite?Type.SUITE:Type.TEST, extractClassName(parts[1]), extractTestName(parts[1]));
 			tests.put(tc, tci);
 			Tree<TestInfo> node = new SimpleTree<TestInfo>(tci);
 			pending.get(pending.size()-1).node.add(node);
-			if ("true".equals(parts[2])) { // this node is a suite
+			if (isSuite) { // this node is a suite
 				pending.add(new PendingNode(Integer.parseInt(parts[3]), node));
 			} else {
 				Tree<TestInfo> top = pending.get(0).node;
