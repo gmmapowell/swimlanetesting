@@ -96,6 +96,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		}
 		if (!allTestClasses.contains(grp))
 			allTestClasses.add(grp);
+		grp.addTest(tc.getName());
 		ca.addCase(tc);
 	}
 	

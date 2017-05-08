@@ -30,5 +30,7 @@ public class AccumulationOfClassesTests extends TestBase {
 		acc.acceptance(grp, Integer.class, Arrays.asList());
 		List<TestGroup> groups = acc.getAllTestClasses();
 		assertEquals(1, groups.size());
+		assertEquals(1, groups.get(0).getClasses().length);
+		assertEquals("java.lang.Integer", groups.get(0).getClasses()[0]);
 	}
 }

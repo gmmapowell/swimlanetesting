@@ -42,6 +42,8 @@ public class AcceptanceAccumulationTests extends TestBase {
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
 		assertEquals(1, acceptanceTests.size());
 		assertEquals("acceptance.1", acceptanceTests.get(0).getId());
+		assertEquals(1, grp.getClasses().length);
+		assertEquals(String.class.getName(), grp.getClasses()[0]);
 	}
 	
 	@Test
@@ -57,7 +59,7 @@ public class AcceptanceAccumulationTests extends TestBase {
 	
 	@Test
 	public void testTwoAcceptancesWithTwoHexesGivesTwoHexesButComplainsAboutNoTotalOrdering() {
-		acc.acceptance(grp, String.class, Arrays.asList(Integer.class));
+		acc.acceptance(grp, Integer.class, Arrays.asList(Integer.class));
 		acc.acceptance(grp, String.class, Arrays.asList(String.class));
 		acc.analysisComplete();
 		assertEquals(2, hdm.getHexCount());
@@ -69,6 +71,9 @@ public class AcceptanceAccumulationTests extends TestBase {
 		assertEquals(2, acceptanceTests.size());
 		assertEquals("acceptance.10", acceptanceTests.get(0).getId());
 		assertEquals("acceptance.01", acceptanceTests.get(1).getId());
+		assertEquals(2, grp.getClasses().length);
+		assertEquals(Integer.class.getName(), grp.getClasses()[0]);
+		assertEquals(String.class.getName(), grp.getClasses()[1]);
 	}
 	
 	@Test
@@ -122,7 +127,7 @@ public class AcceptanceAccumulationTests extends TestBase {
 	}
 
 	@Test
-	public void testTwoAcceptancesEachWithTwoOrderedHexesIsNotConsistent() {
+	public void testThreeAcceptancesEachWithTwoOrderedHexesIsNotConsistent() {
 		acc.acceptance(grp, String.class, Arrays.asList(Double.class, Integer.class));
 		acc.acceptance(grp, Long.class, Arrays.asList(Integer.class, String.class));
 		acc.acceptance(grp, Float.class, Arrays.asList(String.class, Double.class));
@@ -138,6 +143,10 @@ public class AcceptanceAccumulationTests extends TestBase {
 		assertEquals("acceptance.110", acceptanceTests.get(0).getId());
 		assertEquals("acceptance.101", acceptanceTests.get(1).getId());
 		assertEquals("acceptance.011", acceptanceTests.get(2).getId());
+		assertEquals(3, grp.getClasses().length);
+		assertEquals(String.class.getName(), grp.getClasses()[0]);
+		assertEquals(Long.class.getName(), grp.getClasses()[1]);
+		assertEquals(Float.class.getName(), grp.getClasses()[2]);
 	}
 
 	@Test
