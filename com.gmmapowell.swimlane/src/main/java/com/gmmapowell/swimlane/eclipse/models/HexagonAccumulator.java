@@ -126,10 +126,12 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		}
 	}
 
+	/* These errors relate to static analysis errors, such as hexagons in the wrong order.
+	 * These methods are here because we override the (mocked) interface Accumulator and its tests demand that errors be reported
+	 */
 	@Override
 	public void error(String msg) {
-		// TODO Auto-generated method stub
-		
+		// We currently don't have a mechanism to display this, so there is no point capturing or processing it
 	}
 
 	@Override
@@ -189,13 +191,12 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public void testRuntime(int ms) {
-		// TODO Auto-generated method stub
-		
+		// We currently don't have a mechanism to display this, so there is no point capturing or processing it
 	}
 
+	/* These errors are for individual test failures */
 	@Override
 	public void testError(String msg) {
-		// TODO Auto-generated method stub
-		
+		// We currently don't have a mechanism to display this, so there is no point capturing or processing it
 	}
 }
