@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
@@ -37,9 +38,15 @@ public class InfoBar implements HexagonModelListener {
 		lastBuild.getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {
-				lastBuild.setText(sdf.format(model.getBuildTime()));
-				testsComplete.setText(sdf.format(model.getTestCompleteTime()));
+				lastBuild.setText(formatDate(model.getBuildTime()));
+				testsComplete.setText(formatDate(model.getTestCompleteTime()));
 			}
 		});
+	}
+
+	protected String formatDate(Date tmp) {
+		if (tmp == null)
+			return "";
+		return sdf.format(tmp);
 	}
 }

@@ -28,6 +28,11 @@ public class BarControl implements BarDataListener {
 
 	@Override
 	public void barChanged(BarData bar) {
-		canvas.redraw();
+		canvas.getDisplay().asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				canvas.redraw();
+			}
+		});
 	}
 }
