@@ -53,6 +53,7 @@ public class ProjectHelper implements ProjectSimplifier {
 			if (tmp != null && !classpath.contains(tmp))
 				classpath.add(tmp);
 		}
+		classpath.addAll(eclipse.getJunitRunnerClasspathEntries());
 		return classpath;
 	}
     

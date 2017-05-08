@@ -15,4 +15,5 @@ public interface EclipseAbstractor {
 
 	File resolvePath(IJavaProject jp, IPath path);
 
+	List<File> getJunitRunnerClasspathEntries();
 }

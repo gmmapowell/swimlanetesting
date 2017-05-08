@@ -16,8 +16,8 @@ public class TestGroup {
 		StringBuilder sb = new StringBuilder();
 		String sep = "";
 		for (File s : cp) {
-			sb.append(s.getPath());
 			sb.append(sep);
+			sb.append(s.getPath());
 			sep = ":";
 		}
 		return sb.toString();
