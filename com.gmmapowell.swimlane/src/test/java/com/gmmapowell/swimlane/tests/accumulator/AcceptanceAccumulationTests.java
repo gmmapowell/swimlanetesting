@@ -14,16 +14,19 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.models.TestGroup;
+import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 /* The purpose of the accumulator is to take input in one form (what we discover)
  * and to build a stable model out of it.
  * To decouple these two roles, we have two interfaces: Accumulator for input and HexagonDataModel for output;
  * here we assert that the two are coupled correctly internally.
  */
-public class AcceptanceAccumulationTests {
+public class AcceptanceAccumulationTests extends TestBase {
 	ModelDispatcher md = new SolidModelDispatcher();
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
+	TestGroup grp = new TestGroup(null);
 	
 	@Test
 	public void testNoTestsMeansNoHexes() {
@@ -33,7 +36,7 @@ public class AcceptanceAccumulationTests {
 	
 	@Test
 	public void testOneUnboundAcceptanceGivesOneHex() {
-		acc.acceptance(String.class, new ArrayList<>());
+		acc.acceptance(grp, String.class, new ArrayList<>());
 		acc.analysisComplete();
 		assertEquals(1, hdm.getHexCount());
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
@@ -43,7 +46,7 @@ public class AcceptanceAccumulationTests {
 	
 	@Test
 	public void testOneAcceptanceWithTwoHexesGivesTwoHexesAndNoErrors() {
-		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Integer.class, String.class));
 		acc.analysisComplete();
 		assertEquals(2, hdm.getHexCount());
 		assertEquals(0, hdm.getErrors().size());
@@ -54,8 +57,8 @@ public class AcceptanceAccumulationTests {
 	
 	@Test
 	public void testTwoAcceptancesWithTwoHexesGivesTwoHexesButComplainsAboutNoTotalOrdering() {
-		acc.acceptance(String.class, Arrays.asList(Integer.class));
-		acc.acceptance(String.class, Arrays.asList(String.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Integer.class));
+		acc.acceptance(grp, String.class, Arrays.asList(String.class));
 		acc.analysisComplete();
 		assertEquals(2, hdm.getHexCount());
 		assertEquals(2, hdm.getErrors().size());
@@ -70,8 +73,8 @@ public class AcceptanceAccumulationTests {
 	
 	@Test
 	public void testTwoAcceptancesEachWithTwoHexesInDifferentOrdersGivesTwoHexesButComplainsAboutInconsistentOrdering() {
-		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
-		acc.acceptance(String.class, Arrays.asList(String.class, Integer.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Integer.class, String.class));
+		acc.acceptance(grp, String.class, Arrays.asList(String.class, Integer.class));
 		acc.analysisComplete();
 		assertEquals(2, hdm.getHexCount());
 		assertEquals(2, hdm.getErrors().size());
@@ -85,8 +88,8 @@ public class AcceptanceAccumulationTests {
 	
 	@Test
 	public void testTwoAcceptancesEachWithTwoOverlappingHexesThatMakeATotalOrderingOfThreeHexes() {
-		acc.acceptance(Long.class, Arrays.asList(Double.class, Integer.class));
-		acc.acceptance(Float.class, Arrays.asList(Integer.class, String.class));
+		acc.acceptance(grp, Long.class, Arrays.asList(Double.class, Integer.class));
+		acc.acceptance(grp, Float.class, Arrays.asList(Integer.class, String.class));
 		acc.analysisComplete();
 		assertEquals(3, hdm.getHexCount());
 		assertEquals(0, hdm.getErrors().size());
@@ -104,8 +107,8 @@ public class AcceptanceAccumulationTests {
 
 	@Test
 	public void testTwoAcceptancesEachWithTwoOrderedHexesIsNotTotal() {
-		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class));
-		acc.acceptance(Long.class, Arrays.asList(Double.class, String.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Double.class, Integer.class));
+		acc.acceptance(grp, Long.class, Arrays.asList(Double.class, String.class));
 		acc.analysisComplete();
 		assertEquals(3, hdm.getHexCount());
 		assertEquals(2, hdm.getErrors().size());
@@ -120,9 +123,9 @@ public class AcceptanceAccumulationTests {
 
 	@Test
 	public void testTwoAcceptancesEachWithTwoOrderedHexesIsNotConsistent() {
-		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class));
-		acc.acceptance(Long.class, Arrays.asList(Integer.class, String.class));
-		acc.acceptance(Float.class, Arrays.asList(String.class, Double.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Double.class, Integer.class));
+		acc.acceptance(grp, Long.class, Arrays.asList(Integer.class, String.class));
+		acc.acceptance(grp, Float.class, Arrays.asList(String.class, Double.class));
 		acc.analysisComplete();
 		assertEquals(3, hdm.getHexCount());
 		assertEquals(3, hdm.getErrors().size());
@@ -139,9 +142,9 @@ public class AcceptanceAccumulationTests {
 
 	@Test
 	public void testThreeAcceptancesEachWithTwoOverlappingHexesThatMakeATotalOrderingAfterTwoPasses() {
-		acc.acceptance(String.class, Arrays.asList(Double.class, Float.class));
-		acc.acceptance(String.class, Arrays.asList(Float.class, Integer.class));
-		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Double.class, Float.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Float.class, Integer.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Integer.class, String.class));
 		acc.analysisComplete();
 		assertEquals(4, hdm.getHexCount());
 		assertEquals(0, hdm.getErrors().size());
@@ -154,9 +157,9 @@ public class AcceptanceAccumulationTests {
 	
 	@Test
 	public void testThreeAcceptancesWithATotalOfThreeHexesCanBeConsistentWithOneCoveringAllThree() {
-		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class, String.class));
-		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class));
-		acc.acceptance(String.class, Arrays.asList(Integer.class, String.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Double.class, Integer.class, String.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Double.class, Integer.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Integer.class, String.class));
 		acc.analysisComplete();
 		assertEquals(3, hdm.getHexCount());
 		assertEquals(0, hdm.getErrors().size());
@@ -169,8 +172,8 @@ public class AcceptanceAccumulationTests {
 	
 	@Test
 	public void testThreeAcceptancesWithATotalOfThreeHexesCanBeInonsistentWithOneCoveringAllThreeIfInADifferentOrder() {
-		acc.acceptance(String.class, Arrays.asList(Double.class, Integer.class, String.class));
-		acc.acceptance(String.class, Arrays.asList(Integer.class, Double.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Double.class, Integer.class, String.class));
+		acc.acceptance(grp, String.class, Arrays.asList(Integer.class, Double.class));
 		acc.analysisComplete();
 		assertEquals(3, hdm.getHexCount());
 		assertEquals(2, hdm.getErrors().size());

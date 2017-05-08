@@ -21,6 +21,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
 import com.gmmapowell.swimlane.eclipse.models.SimpleTree;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
@@ -29,10 +30,11 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestResultReporter trr = (TestResultReporter) acc;
+	TestGroup grp = new TestGroup(null);
 
 	@Test
 	public void whenTheTreeArrivesWeAreNotifiedOfTheNumberOfTests() {
-		acc.acceptance(String.class, new ArrayList<>());
+		acc.acceptance(grp, String.class, new ArrayList<>());
 		acc.analysisComplete();
 		List<BarData> bars = hdm.getAcceptanceTests();
 		assertEquals(1, bars.size());
@@ -50,7 +52,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 
 	@Test
 	public void reportingTestSuccessFiresBarDataListener() {
-		acc.acceptance(String.class, new ArrayList<>());
+		acc.acceptance(grp, String.class, new ArrayList<>());
 		acc.analysisComplete();
 		List<BarData> bars = hdm.getAcceptanceTests();
 		assertEquals(1, bars.size());
@@ -71,7 +73,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 
 	@Test
 	public void reportingTestFailureFiresBarDataListener() {
-		acc.acceptance(String.class, new ArrayList<>());
+		acc.acceptance(grp, String.class, new ArrayList<>());
 		acc.analysisComplete();
 		List<BarData> bars = hdm.getAcceptanceTests();
 		assertEquals(1, bars.size());
@@ -92,9 +94,9 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 
 	@Test
 	public void weCorrectlyIdentifyTheCorrectBarForTheTestNamedInteger() {
-		acc.acceptance(Integer.class, Arrays.asList(String.class, Float.class));
-		acc.acceptance(String.class, Arrays.asList(String.class));
-		acc.acceptance(Double.class, Arrays.asList(Float.class));
+		acc.acceptance(grp, Integer.class, Arrays.asList(String.class, Float.class));
+		acc.acceptance(grp, String.class, Arrays.asList(String.class));
+		acc.acceptance(grp, Double.class, Arrays.asList(Float.class));
 		acc.analysisComplete();
 		assertEquals(0, hdm.getErrors().size());
 		List<BarData> bars = hdm.getAcceptanceTests();
@@ -113,9 +115,9 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 
 	@Test
 	public void weCorrectlyIdentifyTheCorrectBarForTheTestNamedString() {
-		acc.acceptance(Integer.class, Arrays.asList(String.class, Float.class));
-		acc.acceptance(String.class, Arrays.asList(String.class));
-		acc.acceptance(Double.class, Arrays.asList(Float.class));
+		acc.acceptance(grp, Integer.class, Arrays.asList(String.class, Float.class));
+		acc.acceptance(grp, String.class, Arrays.asList(String.class));
+		acc.acceptance(grp, Double.class, Arrays.asList(Float.class));
 		acc.analysisComplete();
 		assertEquals(0, hdm.getErrors().size());
 		List<BarData> bars = hdm.getAcceptanceTests();
@@ -139,9 +141,9 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 
 	@Test
 	public void weCorrectlyIdentifyTheCorrectBarForAFailingTestNamedString() {
-		acc.acceptance(Integer.class, Arrays.asList(String.class, Float.class));
-		acc.acceptance(String.class, Arrays.asList(String.class));
-		acc.acceptance(Double.class, Arrays.asList(Float.class));
+		acc.acceptance(grp, Integer.class, Arrays.asList(String.class, Float.class));
+		acc.acceptance(grp, String.class, Arrays.asList(String.class));
+		acc.acceptance(grp, Double.class, Arrays.asList(Float.class));
 		acc.analysisComplete();
 		assertEquals(0, hdm.getErrors().size());
 		List<BarData> bars = hdm.getAcceptanceTests();

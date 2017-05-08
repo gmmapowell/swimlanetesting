@@ -56,7 +56,7 @@ public class ProjectHelper implements ProjectSimplifier {
 		return classpath;
 	}
     
-	private URL[] urlsFrom(List<File> classpath) {
+	public URL[] urlsFrom(List<File> classpath) {
 		URL[] ret = new URL[classpath.size()];
 		for (int i = 0; i < classpath.size(); i++) {
 			try {

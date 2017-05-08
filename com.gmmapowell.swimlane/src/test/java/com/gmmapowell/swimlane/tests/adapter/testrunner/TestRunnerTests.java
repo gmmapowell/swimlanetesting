@@ -1,6 +1,8 @@
 package com.gmmapowell.swimlane.tests.adapter.testrunner;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -28,14 +30,13 @@ public class TestRunnerTests extends TestBase {
 		RunAllTestsAction action = new RunAllTestsAction(tr, md);
 		HexAcc hex = context.mock(HexAcc.class);
 		action.setModel(hex);
-		String cp = "a:b:c";
 		List<TestGroup> tcs = new ArrayList<>();
-		TestGroup tg = new TestGroup(cp);
+		TestGroup tg = new TestGroup(Arrays.asList(new File("a"), new File("b"), new File("c")));
 		tcs.add(tg);
 		tg.addTest("com.foo");
 		context.checking(new Expectations() {{
 			oneOf(hex).getAllTestClasses(); will(returnValue(tcs));
-			oneOf(tr).runClass(hex, cp, "com.foo");
+			oneOf(tr).runClass(hex, tg.getClassPath(), "com.foo");
 			oneOf(md).setModel(hex);
 			oneOf(hex).testsCompleted(with(any(Date.class)));
 		}});

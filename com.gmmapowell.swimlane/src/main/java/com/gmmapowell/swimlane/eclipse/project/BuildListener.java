@@ -1,5 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.project;
 
+import java.io.File;
 import java.net.URLClassLoader;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
+import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 
 public class BuildListener implements IResourceChangeListener {
 	private final ModelDispatcher lsnrs;
@@ -35,8 +37,9 @@ public class BuildListener implements IResourceChangeListener {
 			if (jp != null) {
 				try {
 					ProjectHelper ph = new ProjectHelper(eclipse, jp);
-					URLClassLoader cl = ph.deduceClasspath();
-					ProjectScanner scanner = new ProjectScanner(ph, new HexagonTestAnalyzer(cl, acc));
+					List<File> cp = ph.retrieveClasspath();
+					URLClassLoader cl = new URLClassLoader(ph.urlsFrom(cp));
+					ProjectScanner scanner = new ProjectScanner(ph, new HexagonTestAnalyzer(new TestGroup(cp), cl, acc));
 					scanner.scan(jp);
 				} catch (JavaModelException e) {
 					// TODO: we should capture "problems" with the view

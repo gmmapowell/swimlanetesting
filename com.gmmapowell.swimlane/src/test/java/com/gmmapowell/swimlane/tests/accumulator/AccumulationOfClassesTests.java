@@ -12,10 +12,12 @@ import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
+import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
-public class AccumulationOfClassesTests {
+public class AccumulationOfClassesTests extends TestBase {
 	ModelDispatcher md = new SolidModelDispatcher();
 	Accumulator acc = new HexagonAccumulator(md);
+	TestGroup grp = new TestGroup(null);
 
 	@Test
 	public void ifWeDontPutAnythingInWeGetNothingOut() {
@@ -25,7 +27,7 @@ public class AccumulationOfClassesTests {
 
 	@Test
 	public void ifWePutOneAcceptanceClassInWeGetItOut() {
-		acc.acceptance(Integer.class, Arrays.asList());
+		acc.acceptance(grp, Integer.class, Arrays.asList());
 		List<TestGroup> groups = acc.getAllTestClasses();
 		assertEquals(1, groups.size());
 	}

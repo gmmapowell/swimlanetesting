@@ -71,14 +71,11 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	
 	@Override
 	public List<TestGroup> getAllTestClasses() {
-//		TestGroup grp = new TestGroup("");
-//		grp.addTest("");
-//		allTestClasses.add(grp);
 		return allTestClasses;
 	}
 
 	@Override
-	public void acceptance(Class<?> tc, List<Class<?>> hexes) {
+	public void acceptance(TestGroup grp, Class<?> tc, List<Class<?>> hexes) {
 		if (hexes == null || hexes.isEmpty())
 			this.hexes.haveDefault();
 		else
@@ -97,6 +94,8 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			ca = new Acceptance(names);
 			compileAcceptances.put(an, ca);
 		}
+		if (!allTestClasses.contains(grp))
+			allTestClasses.add(grp);
 		ca.addCase(tc);
 	}
 	

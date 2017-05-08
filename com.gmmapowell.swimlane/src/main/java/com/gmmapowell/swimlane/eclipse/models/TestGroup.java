@@ -1,18 +1,26 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestGroup {
-	private final String cp;
+	private final List<File> cp;
 	private final List<String> tcs = new ArrayList<>();
 
-	public TestGroup(String cp) {
+	public TestGroup(List<File> cp) {
 		this.cp = cp;
 	}
 
 	public String getClassPath() {
-		return cp;
+		StringBuilder sb = new StringBuilder();
+		String sep = "";
+		for (File s : cp) {
+			sb.append(s.getPath());
+			sb.append(sep);
+			sep = ":";
+		}
+		return sb.toString();
 	}
 
 	public String[] getClasses() {
