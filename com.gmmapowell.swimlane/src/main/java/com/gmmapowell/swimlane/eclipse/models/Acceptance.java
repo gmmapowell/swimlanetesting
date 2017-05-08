@@ -30,6 +30,7 @@ public class Acceptance implements BarData {
 	private Map<String, Tracking> testClasses = new TreeMap<>();
 	private String id;
 	private int[] marks;
+	private Status stat = Status.OK;
 	
 	public Acceptance(List<String> hexs) {
 		this.hexs = hexs;
@@ -85,6 +86,7 @@ public class Acceptance implements BarData {
 
 	public void failed(String forClz) {
 		testClasses.get(forClz).failed++;
+		stat = Status.FAILURES;
 	}
 
 	@Override
@@ -105,8 +107,7 @@ public class Acceptance implements BarData {
 
 	@Override
 	public Status getStatus() {
-		// TODO Auto-generated method stub
-		return null;
+		return stat ;
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
@@ -42,7 +43,9 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 			oneOf(bl).barChanged(bar);
 		}});
 		issueTree();
-		assertEquals(1, bar.getTotal());
+		assertEquals(4, bar.getTotal());
+		assertEquals(0, bar.getComplete());
+		assertEquals(Status.OK, bar.getStatus());
 	}
 
 	@Test
@@ -57,9 +60,13 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		md.addBarListener(bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
-			oneOf(bl).barChanged(bar);
+			exactly(2).of(bl).barChanged(bar);
 		}});
+		issueTree();
 		trr.testSuccess(test);
+		assertEquals(4, bar.getTotal());
+		assertEquals(1, bar.getComplete());
+		assertEquals(Status.OK, bar.getStatus());
 	}
 
 	@Test
@@ -74,9 +81,13 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		md.addBarListener(bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
-			oneOf(bl).barChanged(bar);
+			exactly(2).of(bl).barChanged(bar);
 		}});
+		issueTree();
 		trr.testFailure(test);
+		assertEquals(4, bar.getTotal());
+		assertEquals(1, bar.getComplete());
+		assertEquals(Status.FAILURES, bar.getStatus());
 	}
 
 	@Test
@@ -121,8 +132,9 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		issueTree();
 		trr.testSuccess(test);
 		assertEquals(1, bar.classesUnderTest().size());
-		assertEquals(1, bar.getTotal());
+		assertEquals(4, bar.getTotal());
 		assertEquals(1, bar.getComplete());
+		assertEquals(Status.OK, bar.getStatus());
 	}
 
 	@Test
@@ -148,21 +160,30 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		issueTree();
 		trr.testFailure(test);
 		assertEquals(1, bar.classesUnderTest().size());
-		assertEquals(1, bar.getTotal());
+		assertEquals(4, bar.getTotal());
 		assertEquals(1, bar.getComplete());
+		assertEquals(Status.FAILURES, bar.getStatus());
 	}
 
 	protected void issueTree() {
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		{
-			Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
-			TestCaseInfo t1;
-			{
-				t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, String.class.getName(), "fail1");
-				t1.failed();
-				top.add(new SimpleTree<TestInfo>(t1));
-			}
-			trr.tree(top);
+			TestCaseInfo t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, String.class.getName(), "test1");
+			top.add(new SimpleTree<TestInfo>(t1));
 		}
+		{
+			TestCaseInfo t2 = new TestCaseInfo(TestCaseInfo.Type.TEST, String.class.getName(), "test2");
+			top.add(new SimpleTree<TestInfo>(t2));
+		}
+		{
+			TestCaseInfo t3 = new TestCaseInfo(TestCaseInfo.Type.TEST, String.class.getName(), "test3");
+			top.add(new SimpleTree<TestInfo>(t3));
+		}
+		{
+			TestCaseInfo t4 = new TestCaseInfo(TestCaseInfo.Type.TEST, String.class.getName(), "test4");
+			top.add(new SimpleTree<TestInfo>(t4));
+		}
+		trr.tree(top);
 	}
 
 	protected BarData findBar(List<BarData> bars, String name) {
