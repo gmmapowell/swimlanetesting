@@ -19,14 +19,17 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.ProjectSimplifier;
 import com.gmmapowell.swimlane.eclipse.project.ProjectHelper;
+import com.gmmapowell.swimlane.eclipse.views.RealEclipseAbstractor;
 
 public class GeneralProjectTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 
 	@Test
 	public void testThatWeCanConstructTheClassPathCorrectly() throws JavaModelException {
+		EclipseAbstractor eclipse = context.mock(EclipseAbstractor.class);
 		IJavaProject ijp = context.mock(IJavaProject.class);
 		IClasspathEntry ic1 = context.mock(IClasspathEntry.class, "ic1");
 		IPath odir = context.mock(IPath.class, "odir");
@@ -39,7 +42,7 @@ public class GeneralProjectTests {
 		File jfile = new File("../sample-proj/lib/foo.jar");
 
 		ProjectSimplifier resolver = context.mock(ProjectSimplifier.class);
-		ProjectHelper ph = new ProjectHelper(ijp, resolver);
+		ProjectHelper ph = new ProjectHelper(eclipse, ijp, resolver);
 		context.checking(new Expectations() {{
 			allowing(ijp).getResolvedClasspath(true); will(returnValue(new IClasspathEntry[] { ic1, ic2, ic3 }));
 			allowing(ic1).getEntryKind(); will(returnValue(IClasspathEntry.CPE_SOURCE));
@@ -62,8 +65,9 @@ public class GeneralProjectTests {
 
 	@Test
 	public void testThatPathResolutionWorks() throws Exception {
+		EclipseAbstractor eclipse = new RealEclipseAbstractor();
 		IJavaProject ijp = context.mock(IJavaProject.class);
-		ProjectHelper ph = new ProjectHelper(ijp);
+		ProjectHelper ph = new ProjectHelper(eclipse, ijp);
 		IProject ip = context.mock(IProject.class);
 		IWorkspace ws = context.mock(IWorkspace.class);
 		IWorkspaceRoot wr = context.mock(IWorkspaceRoot.class);

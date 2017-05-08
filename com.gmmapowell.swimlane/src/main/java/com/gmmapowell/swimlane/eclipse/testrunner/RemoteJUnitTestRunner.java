@@ -1,5 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.testrunner;
 
+import java.util.Arrays;
+
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 
@@ -10,6 +12,7 @@ public class RemoteJUnitTestRunner implements TestRunner {
 
 	@Override
 	public void runClass(TestResultReporter sink, String classpath, String... classesUnderTest) {
+		System.out.println("Running tests " + Arrays.asList(classesUnderTest) + " in classpath " + classpath);
 		// TODO: put this on a queue for later execution and use an IProgressMonitor to track it ...
 		SingleRunner runner = null;
 		try {

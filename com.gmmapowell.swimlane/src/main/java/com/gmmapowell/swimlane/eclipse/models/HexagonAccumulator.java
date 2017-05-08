@@ -30,6 +30,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	private Set<String> errors = new TreeSet<>();
 	private Map<String, BarData> barsFor = new HashMap<>();
 	private List<String> order;
+	private final ArrayList<TestGroup> allTestClasses = new ArrayList<TestGroup>();
 	
 	public HexagonAccumulator(ModelDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
@@ -70,11 +71,10 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	
 	@Override
 	public List<TestGroup> getAllTestClasses() {
-		ArrayList<TestGroup> al = new ArrayList<TestGroup>();
-		TestGroup grp = new TestGroup("");
-		grp.addTest("");
-		al.add(grp);
-		return al;
+//		TestGroup grp = new TestGroup("");
+//		grp.addTest("");
+//		allTestClasses.add(grp);
+		return allTestClasses;
 	}
 
 	@Override

@@ -34,6 +34,7 @@ public class HexagonViewPart extends ViewPart {
 	private ModelDispatcher lsnrs;
 
 	public void createPartControl(Composite parent) {
+		RealEclipseAbstractor eclipse = new RealEclipseAbstractor();
 		parent.setLayout(new GridLayout(1, false));
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		lsnrs = new SolidModelDispatcher();
@@ -41,7 +42,7 @@ public class HexagonViewPart extends ViewPart {
 		new HexView(parent, lsnrs);
 		configureToolbar(new RemoteJUnitTestRunner(), getViewSite().getActionBars().getToolBarManager(), lsnrs);
 		try {
-			bl = new BuildListener(lsnrs);
+			bl = new BuildListener(lsnrs, eclipse);
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
 		} catch (IllegalStateException ex) {
 			// Unit tests will find the workspace closed, so cannot do this; this is OK in that case

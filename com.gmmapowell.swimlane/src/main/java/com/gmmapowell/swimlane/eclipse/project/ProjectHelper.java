@@ -12,18 +12,22 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.ProjectSimplifier;
 
 public class ProjectHelper implements ProjectSimplifier {
+	private final EclipseAbstractor eclipse;
 	private final IJavaProject jp;
 	private final ProjectSimplifier ph;
 
-	public ProjectHelper(IJavaProject jp) {
+	public ProjectHelper(EclipseAbstractor eclipse, IJavaProject jp) {
+		this.eclipse = eclipse;
 		this.jp = jp;
 		this.ph = this;
 	}
 
-	public ProjectHelper(IJavaProject jp, ProjectSimplifier resolver) {
+	public ProjectHelper(EclipseAbstractor eclipse, IJavaProject jp, ProjectSimplifier resolver) {
+		this.eclipse = eclipse;
 		this.jp = jp;
 		this.ph = resolver;
 	}
@@ -67,6 +71,6 @@ public class ProjectHelper implements ProjectSimplifier {
 	
 	@Override
 	public File resolvePath(IPath path) {
-		return jp.getProject().getWorkspace().getRoot().getFolder(path).getRawLocation().toFile();
+		return eclipse.resolvePath(jp, path);
 	}
 }
