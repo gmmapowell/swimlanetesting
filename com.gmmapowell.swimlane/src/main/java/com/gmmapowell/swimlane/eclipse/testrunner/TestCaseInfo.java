@@ -9,6 +9,7 @@ public class TestCaseInfo implements TestInfo {
 	private final String classUnderTest;
 	private final String testname;
 	private boolean isFailed;
+	private boolean isError;
 	private List<String> stack;
 	private String expected;
 	private String actual;
@@ -37,10 +38,14 @@ public class TestCaseInfo implements TestInfo {
 	public void failed() {
 		isFailed = true;
 	}
+
+	public void error() {
+		isError = true;
+	}
 	
 	@Override
 	public boolean hasFailed() {
-		return isFailed;
+		return isFailed || isError;
 	}
 	
 	public void stack(List<String> stack) {
@@ -70,6 +75,6 @@ public class TestCaseInfo implements TestInfo {
 
 	@Override
 	public String toString() {
-		return "TC[" + classUnderTest + "." + testname + (isFailed?" failed":"") + (stack != null?" " +stack.size():"") + (expected != null ? " " + expected + " != " + actual : "") + "]";
+		return "TC[" + classUnderTest + "." + testname + (isError?" error":isFailed?" failed":"") + (stack != null?" " +stack.size():"") + (expected != null ? " " + expected + " != " + actual : "") + "]";
 	}
 }

@@ -32,7 +32,6 @@ public class TestResultAnalyzer {
 	}
 
 	public void push(String s) {
-		System.out.println("TestResult: " + s);
 		if (s.startsWith("%TRACEE")) {
 			cfail.stack(capture);
 			capture = null;
@@ -83,6 +82,12 @@ public class TestResultAnalyzer {
 			int tc = Integer.parseInt(parts[0]);
 			cfail = tests.get(tc);
 			cfail.failed();
+		} else if (s.startsWith("%ERROR")) {
+			s = s.substring(8);
+			String[] parts = s.split(",");
+			int tc = Integer.parseInt(parts[0]);
+			cfail = tests.get(tc);
+			cfail.error();
 		} else if (s.startsWith("%TRACES") || s.startsWith("%ACTUALS") || s.startsWith("%EXPECTS")) {
 			capture = new ArrayList<String>();
 		} else if (s.startsWith("%TESTS")) {
@@ -100,7 +105,7 @@ public class TestResultAnalyzer {
 			s = s.substring(8);
 			sink.testRuntime(Integer.parseInt(s));
 		} else
-			System.err.println("Encountered unexpected msg from test runner: " + s);
+			throw new RuntimeException("Encountered unexpected msg from test runner: " + s);
 	}
 
 	private String extractTestName(String name) {

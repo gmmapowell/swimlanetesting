@@ -70,6 +70,28 @@ public class TestAnalyzerTests extends TestBase {
 	}
 
 	@Test
+	public void testAnErrorCaseIsReportedCorrectly() {
+		TestResultReporter trr = context.mock(TestResultReporter.class);
+		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
+		TestCaseInfo t1;
+		{
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestError", "err1");
+			t1.failed();
+			top.add(new SimpleTree<TestInfo>(t1));
+		}
+		context.checking(new Expectations() {{
+			oneOf(trr).tree(with(TreeMatcher.of(top)));
+			oneOf(trr).testFailure(with(TestInfoMatcher.of(t1)));
+		}});
+		tra.push("%TESTC  1 v2");
+		tra.push("%TSTTREE1,err1(com.gmmapowell.swimlane.sample.TestError),false,1");
+		tra.push("%TESTS  1,err1(com.gmmapowell.swimlane.sample.TestError)");
+		tra.push("%ERROR  1,err1(com.gmmapowell.swimlane.sample.TestError)");
+		tra.push("%TESTE  1,err1(com.gmmapowell.swimlane.sample.TestError)");
+	}
+
+	@Test
 	public void testWeCaptureTheStackTrace() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
