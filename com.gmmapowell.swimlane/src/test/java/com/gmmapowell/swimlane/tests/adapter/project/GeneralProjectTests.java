@@ -54,6 +54,7 @@ public class GeneralProjectTests {
 			allowing(ic3).getEntryKind(); will(returnValue(IClasspathEntry.CPE_LIBRARY));
 			allowing(ic3).getPath(); will(returnValue(lp2));
 			allowing(lp2).toFile(); will(returnValue(jfile));
+			allowing(eclipse).getJunitRunnerClasspathEntries();
 		}});
 		URLClassLoader cl = ph.deduceClasspath();
 		URL[] urls = cl.getURLs();

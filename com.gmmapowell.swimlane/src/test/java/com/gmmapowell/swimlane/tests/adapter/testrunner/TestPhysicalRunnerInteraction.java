@@ -3,10 +3,12 @@ package com.gmmapowell.swimlane.tests.adapter.testrunner;
 import org.jmock.Expectations;
 import org.junit.Test;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
 import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
+import com.gmmapowell.swimlane.fakes.FakeEclipseAbstractor;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public class TestPhysicalRunnerInteraction extends TestBase {
@@ -15,7 +17,8 @@ public class TestPhysicalRunnerInteraction extends TestBase {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testThatWeCanInvokeOneClassWithJustTwoSuccessfulTests() {
-		RemoteJUnitTestRunner runner = new RemoteJUnitTestRunner();
+		EclipseAbstractor eclipse = new FakeEclipseAbstractor();
+		RemoteJUnitTestRunner runner = new RemoteJUnitTestRunner(eclipse);
 		TestResultReporter sink = context.mock(TestResultReporter.class);
 		context.checking(new Expectations() {{
 			oneOf(sink).tree(with(any(Tree.class)));
@@ -28,7 +31,8 @@ public class TestPhysicalRunnerInteraction extends TestBase {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testThatWeCanInvokeTwoClassesWithJustThreeTotalTests() {
-		RemoteJUnitTestRunner runner = new RemoteJUnitTestRunner();
+		EclipseAbstractor eclipse = new FakeEclipseAbstractor();
+		RemoteJUnitTestRunner runner = new RemoteJUnitTestRunner(eclipse );
 		TestResultReporter sink = context.mock(TestResultReporter.class);
 		context.checking(new Expectations() {{
 			oneOf(sink).tree(with(any(Tree.class)));

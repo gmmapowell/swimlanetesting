@@ -64,6 +64,7 @@ public class ScanningTests {
 			allowing(ijp).getRawClasspath(); will(returnValue(new IClasspathEntry[] { rce }));
 			allowing(rce).getOutputLocation(); will(returnValue(fp)); // we should have a different path to test better
 			oneOf(lsnrs).setModel(with(any(HexagonAccumulator.class)));
+			allowing(eclipse).getJunitRunnerClasspathEntries();
 		}});
 		bl.resourceChanged(null);
 	}

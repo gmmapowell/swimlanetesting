@@ -15,6 +15,8 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.jobs.IJobFunction;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.osgi.framework.Bundle;
@@ -67,6 +69,11 @@ public class RealEclipseAbstractor implements EclipseAbstractor {
 		}
 		return ret;
 	}
-	
-	
+
+	@Override
+	public void backgroundWithProgress(IJobFunction jf) {
+		Job job = Job.create("do I need this?", jf);
+		job.setUser(true);
+		job.schedule();
+	}
 }

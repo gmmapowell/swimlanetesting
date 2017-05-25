@@ -1,5 +1,6 @@
 package com.gmmapowell.swimlane.tests.adapter.testrunner;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.jmock.Expectations;
 import org.junit.Test;
 
@@ -17,14 +18,16 @@ public class TestAnalyzerTreeBuilding extends TestBase {
 	@Test
 	public void testThatASimpleTestIsATree() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestInfo me = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestPasses", "test1");
 		Tree<TestInfo> tree = new SimpleTree<TestInfo>(me);
 		top.add(tree);
 		context.checking(new Expectations() {{
+			allowing(monitor);
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 		}});
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,test1(com.gmmapowell.swimlane.sample.TestPasses),false,1");
 	}
@@ -32,7 +35,7 @@ public class TestAnalyzerTreeBuilding extends TestBase {
 	@Test
 	public void testThatASimpleTestInAClassIsATree() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestInfo sme = new TestCaseInfo(TestCaseInfo.Type.SUITE, "com.gmmapowell.swimlane.sample.TestPasses", "com.gmmapowell.swimlane.sample.TestPasses");
 		Tree<TestInfo> suite = new SimpleTree<TestInfo>(sme);
@@ -41,8 +44,10 @@ public class TestAnalyzerTreeBuilding extends TestBase {
 		Tree<TestInfo> tc = new SimpleTree<TestInfo>(me);
 		suite.add(tc);
 		context.checking(new Expectations() {{
+			allowing(monitor);
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 		}});
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,com.gmmapowell.swimlane.sample.TestPasses,true,1");
 		tra.push("%TSTTREE2,test1(com.gmmapowell.swimlane.sample.TestPasses),false,1");
@@ -51,7 +56,7 @@ public class TestAnalyzerTreeBuilding extends TestBase {
 	@Test
 	public void testThatTwoTestsInAClassMakesATree() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestInfo sme = new TestCaseInfo(TestCaseInfo.Type.SUITE, "com.gmmapowell.swimlane.sample.TestPasses", "com.gmmapowell.swimlane.sample.TestPasses");
 		Tree<TestInfo> suite = new SimpleTree<TestInfo>(sme);
@@ -59,8 +64,10 @@ public class TestAnalyzerTreeBuilding extends TestBase {
 		suite.add(new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestPasses", "test1")));
 		suite.add(new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestPasses", "test2")));
 		context.checking(new Expectations() {{
+			allowing(monitor);
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 		}});
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
 		tra.push("%TESTC  2 v2");
 		tra.push("%TSTTREE1,com.gmmapowell.swimlane.sample.TestPasses,true,2");
 		tra.push("%TSTTREE2,test1(com.gmmapowell.swimlane.sample.TestPasses),false,1");
@@ -70,7 +77,7 @@ public class TestAnalyzerTreeBuilding extends TestBase {
 	@Test
 	public void testThatFiveTestsAcrossTwoClassesMakeATree() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		{
 			TestInfo sme = new TestCaseInfo(TestCaseInfo.Type.SUITE, "com.gmmapowell.swimlane.sample.TestPasses", "com.gmmapowell.swimlane.sample.TestPasses");
@@ -87,8 +94,10 @@ public class TestAnalyzerTreeBuilding extends TestBase {
 			suite.add(new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestFails", "fail2")));
 		}
 		context.checking(new Expectations() {{
+			allowing(monitor);
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 		}});
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
 		tra.push("%TESTC  4 v2");
 		tra.push("%TSTTREE1,com.gmmapowell.swimlane.sample.TestPasses,true,2");
 		tra.push("%TSTTREE2,test1(com.gmmapowell.swimlane.sample.TestPasses),false,1");

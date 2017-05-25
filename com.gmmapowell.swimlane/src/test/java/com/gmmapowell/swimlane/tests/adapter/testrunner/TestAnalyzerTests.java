@@ -2,6 +2,7 @@ package com.gmmapowell.swimlane.tests.adapter.testrunner;
 
 import java.util.Arrays;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.jmock.Expectations;
 import org.junit.Test;
 
@@ -20,17 +21,19 @@ public class TestAnalyzerTests extends TestBase {
 	@Test
 	public void testThatV3IsNotSupported() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
 		context.checking(new Expectations() {{
+			allowing(monitor);
 			oneOf(trr).testError("Cannot handle protocol v3");
 		}});
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
 		tra.push("%TESTC  2 v3");
 	}
 
 	@Test
 	public void testSimpleSuccessIsReported() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestCaseInfo t1;
 		{
@@ -38,9 +41,12 @@ public class TestAnalyzerTests extends TestBase {
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		context.checking(new Expectations() {{
+			allowing(monitor).beginTask("", 1000);
+			allowing(monitor).isCanceled(); will(returnValue(false));
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 			oneOf(trr).testSuccess(with(TestInfoMatcher.of(t1)));
 		}});
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,test1(com.gmmapowell.swimlane.sample.TestPasses),false,1");
 		tra.push("%TESTS  1,test1(com.gmmapowell.swimlane.sample.TestPasses)");
@@ -50,7 +56,7 @@ public class TestAnalyzerTests extends TestBase {
 	@Test
 	public void testSimpleFailureIsReported() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestCaseInfo t1;
 		{
@@ -59,9 +65,12 @@ public class TestAnalyzerTests extends TestBase {
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		context.checking(new Expectations() {{
+			allowing(monitor).beginTask("", 1000);
+			allowing(monitor).isCanceled(); will(returnValue(false));
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 			oneOf(trr).testFailure(with(TestInfoMatcher.of(t1)));
 		}});
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,fail1(com.gmmapowell.swimlane.sample.TestFails),false,1");
 		tra.push("%TESTS  1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
@@ -72,7 +81,7 @@ public class TestAnalyzerTests extends TestBase {
 	@Test
 	public void testAnErrorCaseIsReportedCorrectly() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestCaseInfo t1;
 		{
@@ -81,9 +90,12 @@ public class TestAnalyzerTests extends TestBase {
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		context.checking(new Expectations() {{
+			allowing(monitor).beginTask("", 1000);
+			allowing(monitor).isCanceled(); will(returnValue(false));
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 			oneOf(trr).testFailure(with(TestInfoMatcher.of(t1)));
 		}});
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,err1(com.gmmapowell.swimlane.sample.TestError),false,1");
 		tra.push("%TESTS  1,err1(com.gmmapowell.swimlane.sample.TestError)");
@@ -94,7 +106,7 @@ public class TestAnalyzerTests extends TestBase {
 	@Test
 	public void testWeCaptureTheStackTrace() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestCaseInfo t1;
 		{
@@ -104,9 +116,12 @@ public class TestAnalyzerTests extends TestBase {
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		context.checking(new Expectations() {{
+			allowing(monitor).beginTask("", 1000);
+			allowing(monitor).isCanceled(); will(returnValue(false));
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 			oneOf(trr).testFailure(with(TestInfoMatcher.of(t1)));
 		}});
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,fail1(com.gmmapowell.swimlane.sample.TestFails),false,1");
 		tra.push("%TESTS  1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
@@ -123,7 +138,7 @@ public class TestAnalyzerTests extends TestBase {
 	@Test
 	public void testWeCaptureExpectedActualText() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestCaseInfo t1;
 		{
@@ -134,9 +149,12 @@ public class TestAnalyzerTests extends TestBase {
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		context.checking(new Expectations() {{
+			allowing(monitor).beginTask("", 1000);
+			allowing(monitor).isCanceled(); will(returnValue(false));
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 			oneOf(trr).testFailure(with(TestInfoMatcher.of(t1)));
 		}});
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,fail1(com.gmmapowell.swimlane.sample.TestFails),false,1");
 		tra.push("%TESTS  1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
@@ -154,7 +172,7 @@ public class TestAnalyzerTests extends TestBase {
 	@Test
 	public void testWeReportTheRuntime() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
-		TestResultAnalyzer tra = new TestResultAnalyzer(trr);
+		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		TestCaseInfo t1;
 		{
@@ -162,10 +180,13 @@ public class TestAnalyzerTests extends TestBase {
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		context.checking(new Expectations() {{
+			allowing(monitor).beginTask("", 1000);
+			allowing(monitor).isCanceled(); will(returnValue(false));
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 			oneOf(trr).testSuccess(with(TestInfoMatcher.of(t1)));
 			oneOf(trr).testRuntime(420);
 		}});
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,test1(com.gmmapowell.swimlane.sample.TestSuccess),false,1");
 		tra.push("%TESTS  1,test1(com.gmmapowell.swimlane.sample.TestSuccess)");

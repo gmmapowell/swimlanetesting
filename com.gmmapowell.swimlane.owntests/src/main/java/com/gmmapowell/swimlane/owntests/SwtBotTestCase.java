@@ -58,7 +58,7 @@ public class SwtBotTestCase {
 	}
 	
 	@Test
-	public void step02_testThatItFoundTheAcceptanceTest() {
+	public void step02_testThatItFoundTheAcceptanceBar() {
 		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
 		assertTrue(acc123.isVisible());
 		Point ws = ext.getSize(acc123.widget);

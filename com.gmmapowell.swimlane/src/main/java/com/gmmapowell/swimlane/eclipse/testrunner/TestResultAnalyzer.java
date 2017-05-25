@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.SubMonitor;
+
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo.Type;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
@@ -21,13 +25,15 @@ public class TestResultAnalyzer {
 			this.node = node;
 		}
 	}
+	private final SubMonitor monitor;
 	private final TestResultReporter sink;
 	private final List<PendingNode> pending = new ArrayList<>();
 	private final Map<Integer, TestCaseInfo> tests = new HashMap<Integer, TestCaseInfo>();
 	private List<String> capture = null;
 	private TestCaseInfo cfail = null;
 
-	public TestResultAnalyzer(TestResultReporter sink) {
+	public TestResultAnalyzer(IProgressMonitor monitor, TestResultReporter sink) {
+		this.monitor = SubMonitor.convert(monitor);
 		this.sink = sink;
 	}
 
@@ -50,7 +56,9 @@ public class TestResultAnalyzer {
 				sink.testError("Cannot handle protocol " + codes[1]);
 				return;
 			}
-			pending.add(new PendingNode(Integer.parseInt(codes[0]), new SimpleTree<TestInfo>(new TestCaseInfo(Type.META, "", "Top"))));
+			int ntests = Integer.parseInt(codes[0]);
+			monitor.setWorkRemaining(ntests);
+			pending.add(new PendingNode(ntests, new SimpleTree<TestInfo>(new TestCaseInfo(Type.META, "", "Top"))));
 		} else if (s.startsWith("%TSTTREE")) {
 			if (pending.isEmpty())
 				throw new RuntimeException("The orchard dried up - more tests than expected");
@@ -91,7 +99,9 @@ public class TestResultAnalyzer {
 		} else if (s.startsWith("%TRACES") || s.startsWith("%ACTUALS") || s.startsWith("%EXPECTS")) {
 			capture = new ArrayList<String>();
 		} else if (s.startsWith("%TESTS")) {
-			// I don't think we need to do anything unless we want to estimate time-per-test
+			monitor.newChild(1);
+			if (monitor.isCanceled())
+				throw new OperationCanceledException();
 		} else if (s.startsWith("%TESTE")) {
 			s = s.substring(8);
 			String[] parts = s.split(",");
@@ -104,6 +114,7 @@ public class TestResultAnalyzer {
 		} else if (s.startsWith("%RUNTIME")) {
 			s = s.substring(8);
 			sink.testRuntime(Integer.parseInt(s));
+			monitor.setWorkRemaining(0);
 		} else
 			throw new RuntimeException("Encountered unexpected msg from test runner: " + s);
 	}

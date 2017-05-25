@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.jobs.IJobFunction;
 import org.eclipse.jdt.core.IJavaProject;
 
 public interface EclipseAbstractor {
@@ -16,4 +17,6 @@ public interface EclipseAbstractor {
 	File resolvePath(IJavaProject jp, IPath path);
 
 	List<File> getJunitRunnerClasspathEntries();
+
+	void backgroundWithProgress(IJobFunction job);
 }

@@ -40,7 +40,7 @@ public class HexagonViewPart extends ViewPart {
 		lsnrs = new SolidModelDispatcher();
 		new InfoBar(parent, lsnrs);
 		new HexView(parent, lsnrs);
-		configureToolbar(new RemoteJUnitTestRunner(), getViewSite().getActionBars().getToolBarManager(), lsnrs);
+		configureToolbar(new RemoteJUnitTestRunner(eclipse), getViewSite().getActionBars().getToolBarManager(), lsnrs);
 		try {
 			bl = new BuildListener(lsnrs, eclipse);
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
