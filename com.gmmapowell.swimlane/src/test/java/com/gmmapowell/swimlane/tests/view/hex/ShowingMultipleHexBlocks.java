@@ -12,6 +12,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
@@ -102,6 +103,7 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 			if (nhex > 0) {
 				allowing(hexagons.get(0)).getId(); will(returnValue("hex.1"));
 				allowing(hexagons.get(0)).getBar(); will(returnValue(bars.get(0)));
+				allowing(hexagons.get(0)).getPorts(); will(returnValue(new ArrayList<PortData>()));
 				allowing(bars.get(0)).getTotal(); will(returnValue(total));
 				allowing(bars.get(0)).getComplete(); will(returnValue(complete));
 				allowing(bars.get(0)).getStatus(); will(returnValue(status));
@@ -110,6 +112,7 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 			if (nhex > 1) {
 				allowing(hexagons.get(1)).getId(); will(returnValue("hex.2"));
 				allowing(hexagons.get(1)).getBar(); will(returnValue(bars.get(1)));
+				allowing(hexagons.get(1)).getPorts(); will(returnValue(new ArrayList<PortData>()));
 				allowing(bars.get(1)).getTotal(); will(returnValue(total));
 				allowing(bars.get(1)).getComplete(); will(returnValue(complete));
 				allowing(bars.get(1)).getStatus(); will(returnValue(status));
@@ -118,6 +121,7 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 			if (nhex > 2) {
 				allowing(hexagons.get(2)).getId(); will(returnValue("hex.3"));
 				allowing(hexagons.get(2)).getBar(); will(returnValue(bars.get(2)));
+				allowing(hexagons.get(2)).getPorts(); will(returnValue(new ArrayList<PortData>()));
 				allowing(bars.get(2)).getTotal(); will(returnValue(total));
 				allowing(bars.get(2)).getComplete(); will(returnValue(complete));
 				allowing(bars.get(2)).getStatus(); will(returnValue(status));

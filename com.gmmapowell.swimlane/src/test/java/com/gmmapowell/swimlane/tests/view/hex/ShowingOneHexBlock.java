@@ -12,6 +12,7 @@ import org.junit.Test;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
@@ -109,6 +110,7 @@ public class ShowingOneHexBlock extends BaseViewTest {
 			allowing(testModel).getHexagons(); will(returnValue(hexagons));
 			allowing(hd).getId(); will(returnValue("hex.1"));
 			allowing(hd).getBar(); will(returnValue(bd));
+			allowing(hd).getPorts(); will(returnValue(new ArrayList<PortData>()));
 			allowing(bd).getTotal(); will(returnValue(total));
 			allowing(bd).getComplete(); will(returnValue(complete)); when(mode.is("initial"));
 			allowing(bd).getComplete(); will(returnValue(complete+5)); when(mode.is("plus5"));

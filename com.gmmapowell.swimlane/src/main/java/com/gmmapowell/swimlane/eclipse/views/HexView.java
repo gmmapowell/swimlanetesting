@@ -99,7 +99,7 @@ public class HexView implements HexagonModelListener {
 	}
 
 	protected HexagonControl createHexagon(HexData hexModel, String hexId) {
-		HexagonControl hex = new HexagonControl(dispatcher, view, hexModel.getBar(), hexId);
+		HexagonControl hex = new HexagonControl(dispatcher, view, hexId, hexModel.getBar(), hexModel.getPorts());
 
 		// Move the hex bar above any backgrounds
 		// The background is automatically added at the end
