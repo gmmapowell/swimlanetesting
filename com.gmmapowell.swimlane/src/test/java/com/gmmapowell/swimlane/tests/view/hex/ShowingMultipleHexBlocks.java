@@ -18,13 +18,13 @@ import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 public class ShowingMultipleHexBlocks extends BaseViewTest {
 	
 	@Test
-	public void testAllTheControlsWeWantAreThere() throws Exception {
+	public void testAllTheControlsWeWantAreThereForTwoHexagons() throws Exception {
 		specifyModel(2, 10, 0, Status.NONE);
 		assertControls(shell, "hexagons.hex.1.bg", "hexagons.hex.1.bar", "hexagons.hex.2.bg", "hexagons.hex.2.bar");
 	}
 	
 	@Test
-	public void testTheHexagonHasAHexBackgroundBeforeWeStart() throws Exception {
+	public void testTheLeftOfTwoHexagonsHasAHexBackgroundBeforeWeStart() throws Exception {
 		specifyModel(2, 10, 0, Status.NONE);
 		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
 		checkSizeColors(hexagon, 295, 290, new ImageChecker() {
@@ -73,6 +73,12 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 		});
 	}
 
+	@Test
+	public void testAllTheControlsWeWantAreThereForThreeHexagons() throws Exception {
+		specifyModel(3, 10, 0, Status.NONE);
+		assertControls(shell, "hexagons.hex.1.bg", "hexagons.hex.1.bar", "hexagons.hex.2.bg", "hexagons.hex.2.bar", "hexagons.hex.3.bg", "hexagons.hex.3.bar");
+	}
+	
 	protected void specifyModel(int nhex, int total, int complete, Status status) throws InterruptedException {
 		pushModel(defineModel(nhex, total, complete, status));
 	}
@@ -93,18 +99,30 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
 			allowing(testModel).getAcceptanceTests(); will(returnValue(accList));
 			allowing(testModel).getHexagons(); will(returnValue(hexagons));
-			allowing(hexagons.get(0)).getId(); will(returnValue("hex.1"));
-			allowing(hexagons.get(0)).getBar(); will(returnValue(bars.get(0)));
-			allowing(hexagons.get(1)).getId(); will(returnValue("hex.2"));
-			allowing(hexagons.get(1)).getBar(); will(returnValue(bars.get(1)));
-			allowing(bars.get(0)).getTotal(); will(returnValue(total));
-			allowing(bars.get(0)).getComplete(); will(returnValue(complete));
-			allowing(bars.get(0)).getStatus(); will(returnValue(status));
-			allowing(bars.get(0)).getMarks(); will(returnValue(new int[] { 1 }));
-			allowing(bars.get(1)).getTotal(); will(returnValue(total));
-			allowing(bars.get(1)).getComplete(); will(returnValue(complete));
-			allowing(bars.get(1)).getStatus(); will(returnValue(status));
-			allowing(bars.get(1)).getMarks(); will(returnValue(new int[] { 1 }));
+			if (nhex > 0) {
+				allowing(hexagons.get(0)).getId(); will(returnValue("hex.1"));
+				allowing(hexagons.get(0)).getBar(); will(returnValue(bars.get(0)));
+				allowing(bars.get(0)).getTotal(); will(returnValue(total));
+				allowing(bars.get(0)).getComplete(); will(returnValue(complete));
+				allowing(bars.get(0)).getStatus(); will(returnValue(status));
+				allowing(bars.get(0)).getMarks(); will(returnValue(new int[] { 1 }));
+			}
+			if (nhex > 1) {
+				allowing(hexagons.get(1)).getId(); will(returnValue("hex.2"));
+				allowing(hexagons.get(1)).getBar(); will(returnValue(bars.get(1)));
+				allowing(bars.get(1)).getTotal(); will(returnValue(total));
+				allowing(bars.get(1)).getComplete(); will(returnValue(complete));
+				allowing(bars.get(1)).getStatus(); will(returnValue(status));
+				allowing(bars.get(1)).getMarks(); will(returnValue(new int[] { 1 }));
+			}
+			if (nhex > 2) {
+				allowing(hexagons.get(2)).getId(); will(returnValue("hex.3"));
+				allowing(hexagons.get(2)).getBar(); will(returnValue(bars.get(2)));
+				allowing(bars.get(2)).getTotal(); will(returnValue(total));
+				allowing(bars.get(2)).getComplete(); will(returnValue(complete));
+				allowing(bars.get(2)).getStatus(); will(returnValue(status));
+				allowing(bars.get(2)).getMarks(); will(returnValue(new int[] { 1 }));
+			}
 		}});
 		return testModel;
 	}
