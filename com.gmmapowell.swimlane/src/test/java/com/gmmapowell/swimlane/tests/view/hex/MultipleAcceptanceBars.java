@@ -6,6 +6,7 @@ import org.jmock.Expectations;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 
@@ -34,6 +35,7 @@ public class MultipleAcceptanceBars extends BaseViewTest {
 			allowing(testModel).getHexCount(); will(returnValue(1));
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
 			allowing(testModel).getAcceptanceTests(); will(returnValue(accList));
+			allowing(testModel).getHexagons(); will(returnValue(new ArrayList<HexData>()));
 			allowing(a).getId(); will(returnValue("acceptance.1"));
 			allowing(a).getTotal(); will(returnValue(10));
 			allowing(a).getComplete(); will(returnValue(3));

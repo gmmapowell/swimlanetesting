@@ -67,6 +67,16 @@ public class SwtBotTestCase {
 		ext.assertColor(acc123, SWT.COLOR_GRAY, ws.x/2, 3);
 	}
 	
+	@Test
+	public void step03_testThatItFoundOneOfTheHexagons() {
+		SWTBotCanvas hex1 = bot.canvasWithId("hexagons.hexagon.1");
+		assertTrue(hex1.isVisible());
+		Point ws = ext.getSize(hex1.widget);
+		ext.assertPct(ws.x, viewSize.x, 30, 35);
+		assertEquals(6, ws.y);
+		ext.assertColor(hex1, SWT.COLOR_GRAY, ws.x/2, ws.y/2);
+	}
+	
 	// TODO: when we have "auto-run" unit tests in the sample project we should be able to check that they DID run as part of the post-build
 	
 	@Test

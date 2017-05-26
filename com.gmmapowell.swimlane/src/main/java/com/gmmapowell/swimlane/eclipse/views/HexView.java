@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
@@ -37,6 +38,11 @@ public class HexView implements HexagonModelListener {
 			String accId = "hexagons." + accModel.getId();
 			if (findBar(view, accId) == null)
 				createBar(model, accModel, accId);
+		}
+		for (HexData hexModel : model.getHexagons()) {
+			String hexId = "hexagons." + hexModel.getId();
+			if (findHexagon(view, hexId) == null)
+				createHexagon(model, hexModel, hexId);
 		}
 	}
 
@@ -71,4 +77,37 @@ public class HexView implements HexagonModelListener {
 		}
 		return null;
 	}
+
+	private HexagonControl findHexagon(Control c, String which) {
+		if (which.equals(c.getData("org.eclipse.swtbot.widget.key")))
+			return (HexagonControl) c.getData("com.gmmapowell.swimlane.hex");
+		if (c instanceof Composite) {
+			for (Control ch : ((Composite)c).getChildren()) {
+				HexagonControl r = findHexagon(ch, which);
+				if (r != null)
+					return r;
+			}
+				
+		}
+		return null;
+	}
+
+	protected HexagonControl createHexagon(HexagonDataModel model, HexData hexModel, String hexId) {
+		HexagonControl hex = new HexagonControl(/*dispatcher, */ view, /* model, accModel,*/ hexId);
+//
+//		// By default, the bar will have been added at "the end".  If that is the wrong place, we need to consider moving it up
+//		// In particular, it should go before any keys that are "acceptance.N" where N is less than our N,
+//		// and certainly before any hexagons
+//		// TODO: this code is not currently general enough to handle more than just acceptance bars
+//		// TODO: we should probably refactor the ordering out into a separate piece of logic
+//		for (Control c : view.getChildren()) {
+//			String okey = (String) c.getData("org.eclipse.swtbot.widget.key");
+//			// This test assumes that they collate in string order, which would not be true if we are using unpadded integers 
+//			if (okey != null && okey.startsWith("hexagons.acceptance.") && okey.compareTo(accId) < 0)
+//				bc.getCanvas().moveAbove(c);
+//		}
+//		view.layout();
+		return hex;
+	}
+
 }
