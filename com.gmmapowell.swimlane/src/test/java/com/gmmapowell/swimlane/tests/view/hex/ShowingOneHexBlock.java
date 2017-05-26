@@ -6,6 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Canvas;
 import org.jmock.Expectations;
+import org.jmock.States;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
@@ -16,6 +17,8 @@ import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
 public class ShowingOneHexBlock extends BaseViewTest {
+	States mode = context.states("mode").startsAs("initial");
+	private BarData bd;
 	
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
@@ -69,6 +72,25 @@ public class ShowingOneHexBlock extends BaseViewTest {
 		});
 	}
 
+	@Test
+	public void testTheHexagonsBarChangesColorAfterUpdate() throws Exception {
+		specifyModel(10, 0, Status.NONE);
+		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
+		mode.become("plus5");
+		md.barChanged(bd);
+		displayHelper.flushPendingEvents();
+		checkSizeColors(hexagon, 590, 290, new ImageChecker() {
+			@Override
+			public void checkImage(ImageProxy proxy) {
+				int mx = 295, my = 145;
+
+				// in the bar
+				proxy.assertColorOfPixel(SWT.COLOR_GREEN, mx-5, my); // left hand half
+				proxy.assertColorOfPixel(SWT.COLOR_GRAY, mx+5, my); // right hand half
+			}
+		});
+	}
+
 	protected void specifyModel(int total, int complete, Status status) throws InterruptedException {
 		pushModel(defineModel(total, complete, status));
 	}
@@ -79,7 +101,7 @@ public class ShowingOneHexBlock extends BaseViewTest {
 		ArrayList<HexData> hexagons = new ArrayList<HexData>();
 		HexData hd = context.mock(HexData.class);
 		hexagons.add(hd);
-		BarData bd = context.mock(BarData.class);
+		bd = context.mock(BarData.class);
 		context.checking(new Expectations() {{
 			allowing(testModel).getHexCount(); will(returnValue(1));
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
@@ -88,8 +110,10 @@ public class ShowingOneHexBlock extends BaseViewTest {
 			allowing(hd).getId(); will(returnValue("hex.1"));
 			allowing(hd).getBar(); will(returnValue(bd));
 			allowing(bd).getTotal(); will(returnValue(total));
-			allowing(bd).getComplete(); will(returnValue(complete));
-			allowing(bd).getStatus(); will(returnValue(status));
+			allowing(bd).getComplete(); will(returnValue(complete)); when(mode.is("initial"));
+			allowing(bd).getComplete(); will(returnValue(complete+5)); when(mode.is("plus5"));
+			allowing(bd).getStatus(); will(returnValue(status)); when(mode.is("initial"));
+			allowing(bd).getStatus(); will(returnValue(Status.OK)); when(mode.is("plus5"));
 			allowing(bd).getMarks(); will(returnValue(new int[] { 1 }));
 		}});
 		return testModel;
