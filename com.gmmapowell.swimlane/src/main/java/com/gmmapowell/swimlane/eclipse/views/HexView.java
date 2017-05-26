@@ -94,18 +94,15 @@ public class HexView implements HexagonModelListener {
 
 	protected HexagonControl createHexagon(HexagonDataModel model, HexData hexModel, String hexId) {
 		HexagonControl hex = new HexagonControl(/*dispatcher, */ view, /* model, accModel,*/ hexId);
-//
-//		// By default, the bar will have been added at "the end".  If that is the wrong place, we need to consider moving it up
-//		// In particular, it should go before any keys that are "acceptance.N" where N is less than our N,
-//		// and certainly before any hexagons
-//		// TODO: this code is not currently general enough to handle more than just acceptance bars
-//		// TODO: we should probably refactor the ordering out into a separate piece of logic
-//		for (Control c : view.getChildren()) {
-//			String okey = (String) c.getData("org.eclipse.swtbot.widget.key");
-//			// This test assumes that they collate in string order, which would not be true if we are using unpadded integers 
-//			if (okey != null && okey.startsWith("hexagons.acceptance.") && okey.compareTo(accId) < 0)
-//				bc.getCanvas().moveAbove(c);
-//		}
+
+		// Move the background up above any bars
+		for (Control c : view.getChildren()) {
+			String type = (String) c.getData("com.gmmapowell.swimlane.type");
+			if (type == null || !type.equals("hex")) {
+				hex.getBackground().moveAbove(c);
+				break;
+			}
+		}
 		view.layout();
 		return hex;
 	}

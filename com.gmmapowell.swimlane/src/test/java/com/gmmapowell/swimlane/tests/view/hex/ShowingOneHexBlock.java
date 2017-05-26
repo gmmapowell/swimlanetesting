@@ -26,12 +26,6 @@ public class ShowingOneHexBlock extends BaseViewTest {
 	public void testTheHexagonHasAHexBackgroundBeforeWeStart() throws Exception {
 		specifyModel();
 		Canvas hexagon = waitForControl(shell, "hexagons.hex.1");
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		checkSizeColors(hexagon, 590, 290, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {

@@ -16,7 +16,7 @@ public class HexagonControl {
 //		dispatcher.addBarListener(this);
 	}
 
-	public Canvas getCanvas() {
+	public Canvas getBackground() {
 		return canvas;
 	}
 //
