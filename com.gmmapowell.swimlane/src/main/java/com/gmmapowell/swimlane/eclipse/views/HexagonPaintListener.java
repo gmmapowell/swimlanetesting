@@ -18,13 +18,23 @@ public class HexagonPaintListener implements PaintListener {
 	public void paintControl(PaintEvent e) {
 		int mx = canvas.getSize().x/2;
 		int my = canvas.getSize().y/2;
+		System.out.println("mid = " + mx + " " + my);
+		int a = figureA(mx, my);
+		int h = (int) (Math.sqrt(3)*a);
+		int ty = my-h, by = my+h;
+		
 		Color c = new Color(canvas.getDisplay(), 220, 220, 170);
 		GC gc = new GC(canvas);
 		gc.setBackground(c);
 		gc.setForeground(canvas.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		gc.fillRectangle(mx-20, my-20, 41, 41);
+		gc.fillPolygon(new int[] { mx-2*a, my, mx-a, ty, mx+a, ty, mx+2*a, my, mx+a, by, mx-a, by });
 		gc.dispose();
 		c.dispose();
+	}
+
+	// TODO: much more logic and more testing
+	public int figureA(int mx, int my) {
+		return 69;
 	}
 
 }

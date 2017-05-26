@@ -26,12 +26,47 @@ public class ShowingOneHexBlock extends BaseViewTest {
 	public void testTheHexagonHasAHexBackgroundBeforeWeStart() throws Exception {
 		specifyModel();
 		Canvas hexagon = waitForControl(shell, "hexagons.hex.1");
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		checkSizeColors(hexagon, 590, 290, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
-				Color expected = new Color(displayHelper.getDisplay(), 220, 220, 170); 
-				proxy.assertColorOfPixel(expected, 295, 147);
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 500, 3);
+				int mx = 295, my = 145, h = 240/2;
+				int a = (int) (h/Math.sqrt(3)); // around 69
+				int lx = mx-2*a;
+				int rx = mx+2*a;
+				int ty = my-h;
+				int by = my+h;
+
+				// outside the hexagon
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, 10); // top left
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 580, 10); // top right
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, 280); // bottom left
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 580, 280); // bottom right
+				
+				// outside the corners
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx-a-5, ty); // top left corner
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx-a-5, by); // bottom left corner
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx+a+5, ty); // top right corner
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx+a+5, by); // bottom right corner
+				
+				// inside the hexagon
+				Color expected = new Color(displayHelper.getDisplay(), 220, 220, 170);
+				proxy.assertColorOfPixel(expected, mx, my); // middle
+				proxy.assertColorOfPixel(expected, lx+5, my); // middle left
+				proxy.assertColorOfPixel(expected, rx-5, my); // middle right
+				proxy.assertColorOfPixel(expected, mx, ty+5); // top middle
+				proxy.assertColorOfPixel(expected, mx, by-5); // top middle
+				
+				// corners
+				proxy.assertColorOfPixel(expected, mx-a, ty+5); // top left corner
+				proxy.assertColorOfPixel(expected, mx-a, by-5); // bottom left corner
+				proxy.assertColorOfPixel(expected, mx+a, ty+5); // top right corner
+				proxy.assertColorOfPixel(expected, mx+a, by-5); // bottom right corner
 				expected.dispose();
 			}
 		});
