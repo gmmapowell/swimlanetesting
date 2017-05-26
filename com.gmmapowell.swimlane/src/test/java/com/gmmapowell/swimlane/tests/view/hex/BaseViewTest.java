@@ -77,7 +77,7 @@ public abstract class BaseViewTest extends TestBase {
 							actual.green >= color.getGreen()-5 && actual.green <= color.getGreen() + 5 &&
 							actual.blue >= color.getBlue()-5 && actual.blue <= color.getBlue() + 5;
 						if (!match)
-							fail("Color " + actual + " was not close enough to " + color.getRGB());
+							fail("Color " + actual + " was not close enough to " + color.getRGB() + " at " + x + " " + y);
 					}
 				});
 				break;

@@ -15,33 +15,37 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
-public class ShowingOneHexBlock extends BaseViewTest {
+public class ShowingMultipleHexBlocks extends BaseViewTest {
 	
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
-		specifyModel(10, 0, Status.NONE);
-		assertControls(shell, "hexagons.hex.1.bg", "hexagons.hex.1.bar");
+		specifyModel(2, 10, 0, Status.NONE);
+		assertControls(shell, "hexagons.hex.1.bg", "hexagons.hex.1.bar", "hexagons.hex.2.bg", "hexagons.hex.2.bar");
 	}
 	
 	@Test
 	public void testTheHexagonHasAHexBackgroundBeforeWeStart() throws Exception {
-		specifyModel(10, 0, Status.NONE);
+		specifyModel(2, 10, 0, Status.NONE);
 		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
-		checkSizeColors(hexagon, 590, 290, new ImageChecker() {
+		checkSizeColors(hexagon, 295, 290, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
-				int mx = 295, my = 145, h = 240/2;
-				int a = (int) (h/Math.sqrt(3)); // around 69
+				int mx = 147, my = 145, a = 58;
+				int h = (int) (a*Math.sqrt(3));
 				int lx = mx-2*a;
 				int rx = mx+2*a;
 				int ty = my-h;
 				int by = my+h;
 
+				// check for daylight between the hexagons
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, my); // mid left
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 290, my); // mid right
+
 				// outside the hexagon
 				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, 10); // top left
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 580, 10); // top right
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 290, 10); // top right
 				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, 280); // bottom left
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 580, 280); // bottom right
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 290, 280); // bottom right
 				
 				// outside the corners
 				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx-a-5, ty); // top left corner
@@ -69,28 +73,38 @@ public class ShowingOneHexBlock extends BaseViewTest {
 		});
 	}
 
-	protected void specifyModel(int total, int complete, Status status) throws InterruptedException {
-		pushModel(defineModel(total, complete, status));
+	protected void specifyModel(int nhex, int total, int complete, Status status) throws InterruptedException {
+		pushModel(defineModel(nhex, total, complete, status));
 	}
 
-	protected HexagonDataModel defineModel(int total, int complete, Status status) {
+	protected HexagonDataModel defineModel(int nhex, int total, int complete, Status status) {
 		HexagonDataModel testModel = context.mock(HexagonDataModel.class);
 		ArrayList<BarData> accList = new ArrayList<BarData>();
 		ArrayList<HexData> hexagons = new ArrayList<HexData>();
-		HexData hd = context.mock(HexData.class);
-		hexagons.add(hd);
-		BarData bd = context.mock(BarData.class);
+		ArrayList<BarData> bars = new ArrayList<BarData>();
+		for (int i=0;i<nhex;i++) {
+			HexData hd = context.mock(HexData.class, "hex" + i);
+			hexagons.add(hd);
+			BarData bd = context.mock(BarData.class, "hb" + i);
+			bars.add(bd);
+		}
 		context.checking(new Expectations() {{
 			allowing(testModel).getHexCount(); will(returnValue(1));
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
 			allowing(testModel).getAcceptanceTests(); will(returnValue(accList));
 			allowing(testModel).getHexagons(); will(returnValue(hexagons));
-			allowing(hd).getId(); will(returnValue("hex.1"));
-			allowing(hd).getBar(); will(returnValue(bd));
-			allowing(bd).getTotal(); will(returnValue(total));
-			allowing(bd).getComplete(); will(returnValue(complete));
-			allowing(bd).getStatus(); will(returnValue(status));
-			allowing(bd).getMarks(); will(returnValue(new int[] { 1 }));
+			allowing(hexagons.get(0)).getId(); will(returnValue("hex.1"));
+			allowing(hexagons.get(0)).getBar(); will(returnValue(bars.get(0)));
+			allowing(hexagons.get(1)).getId(); will(returnValue("hex.2"));
+			allowing(hexagons.get(1)).getBar(); will(returnValue(bars.get(1)));
+			allowing(bars.get(0)).getTotal(); will(returnValue(total));
+			allowing(bars.get(0)).getComplete(); will(returnValue(complete));
+			allowing(bars.get(0)).getStatus(); will(returnValue(status));
+			allowing(bars.get(0)).getMarks(); will(returnValue(new int[] { 1 }));
+			allowing(bars.get(1)).getTotal(); will(returnValue(total));
+			allowing(bars.get(1)).getComplete(); will(returnValue(complete));
+			allowing(bars.get(1)).getStatus(); will(returnValue(status));
+			allowing(bars.get(1)).getMarks(); will(returnValue(new int[] { 1 }));
 		}});
 		return testModel;
 	}

@@ -32,7 +32,7 @@ public class HexView implements HexagonModelListener {
 	}
 
 	private void update(HexagonDataModel model) {
-		HexagonLayout layout = new HexagonLayout(model);
+		HexagonLayout layout = new HexagonLayout();
 		view.setLayout(layout);
 		for (BarData accModel : model.getAcceptanceTests()) {
 			String accId = "hexagons." + accModel.getId();
@@ -55,10 +55,16 @@ public class HexView implements HexagonModelListener {
 		// TODO: this code is not currently general enough to handle more than just acceptance bars
 		// TODO: we should probably refactor the ordering out into a separate piece of logic
 		for (Control c : view.getChildren()) {
+			String type = (String) c.getData("com.gmmapowell.swimlane.type");
 			String okey = (String) c.getData("org.eclipse.swtbot.widget.key");
-			// This test assumes that they collate in string order, which would not be true if we are using unpadded integers 
-			if (okey != null && okey.startsWith("hexagons.acceptance.") && okey.compareTo(accId) < 0)
+			// This test assumes that they collate in string order, which would not be true if we are using unpadded integers
+			if (type != null && type.equals("hexbg")) { // move it before a bg
 				bc.getCanvas().moveAbove(c);
+				break;
+			} else if (okey != null && okey.startsWith("hexagons.acceptance.") && okey.compareTo(accId) < 0) {
+				bc.getCanvas().moveAbove(c);
+				break;
+			}
 		}
 		view.layout();
 		return bc;
@@ -95,12 +101,12 @@ public class HexView implements HexagonModelListener {
 	protected HexagonControl createHexagon(HexData hexModel, String hexId) {
 		HexagonControl hex = new HexagonControl(dispatcher, view, hexModel.getBar(), hexId);
 
-		// Move the background up above any bars
+		// Move the hex bar above any backgrounds
+		// The background is automatically added at the end
 		for (Control c : view.getChildren()) {
 			String type = (String) c.getData("com.gmmapowell.swimlane.type");
-			if (type == null || !type.equals("hexbg")) {
-				hex.getBackground().moveAbove(c);
-				hex.getBar().moveAbove(hex.getBackground());
+			if (type != null && type.equals("hexbg")) {
+				hex.getBar().moveAbove(c);
 				break;
 			}
 		}

@@ -26,7 +26,6 @@ public final class BarPaintListener implements PaintListener {
 		int compl = barModel.getComplete();
 		int[] marks = barModel.getMarks();
 		Point size = canvas.getSize();
-		System.out.println("Painting bar of size " + size);
 		int hexCount = marks.length;
 		int segwidth = size.x/hexCount;
 		int markedx = bitcount(marks)*segwidth;
