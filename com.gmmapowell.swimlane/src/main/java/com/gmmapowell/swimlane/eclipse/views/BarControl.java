@@ -16,6 +16,7 @@ public class BarControl implements BarDataListener {
 
 	public BarControl(ModelDispatcher dispatcher, Composite view, HexagonDataModel model, BarData bar, String accId) {
 		canvas = new Canvas(view, SWT.NONE);
+		canvas.setData("com.gmmapowell.swimlane.type", "fullbar"); // I think this will need to be a parameter in the fullness of time
 		canvas.setData("com.gmmapowell.swimlane.bar", this);
 		canvas.setData("org.eclipse.swtbot.widget.key", accId);
 		canvas.addPaintListener(new BarPaintListener(canvas, model, bar));

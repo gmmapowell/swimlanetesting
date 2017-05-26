@@ -106,7 +106,7 @@ public class HexView implements HexagonModelListener {
 //			if (okey != null && okey.startsWith("hexagons.acceptance.") && okey.compareTo(accId) < 0)
 //				bc.getCanvas().moveAbove(c);
 //		}
-//		view.layout();
+		view.layout();
 		return hex;
 	}
 
