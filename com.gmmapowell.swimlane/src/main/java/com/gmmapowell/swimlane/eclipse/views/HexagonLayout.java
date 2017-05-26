@@ -19,25 +19,33 @@ public class HexagonLayout extends Layout {
 
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
-		int mx = composite.getSize().x;
+		int xmax = composite.getSize().x;
 		int ymax = composite.getSize().y;
+		int hexAt = 0;
         for (Control c : composite.getChildren()) {
         	String type = (String) c.getData("com.gmmapowell.swimlane.type");
-        	if (type.equals("fullbar"))
-        		ymax -= 10; // allow 10px for the bar, even though it only shows 8
+        	System.out.println(type);
+        	if (type.equals("accbar")) {
+        		ymax -= 10; // allow 10px for the bar, even though it only shows 6, allowing 2 for margin on both sides
+        		hexAt += 10;
+        	}
         }
         if (ymax < 100)
         	ymax = 100; // if they've shrunk the window down too much, just add scrolling
         int ypos = 0;
         for (Control c : composite.getChildren()) {
         	String type = (String) c.getData("com.gmmapowell.swimlane.type");
-        	if (type.equals("fullbar")) {
-        		c.setBounds(0, ypos, mx, 6);
-        		ypos += 9;
-        	} else if (type.equals("hex")) {
-        		c.setBounds(0, ypos, mx, ymax); // remaining space
-        		ypos += ymax;
-        	}
+        	if (type.equals("accbar")) {
+        		c.setBounds(0, ypos+2, xmax, 6);
+        		ypos += 10;
+        	} else if (type.equals("hexbg")) {
+        		c.setBounds(0, hexAt, xmax, ymax); // remaining space
+        	} else if (type.equals("businessbar")) {
+        		int a = HexagonPaintListener.figureA(xmax, ymax);
+        		c.setBounds((xmax-3*a)/2, hexAt+ymax/2-3, 3*a, 6);
+        		System.out.println("Set bounds to " + c.getBounds());
+        	} else
+        		System.out.println("Don't lay out " + type);
         }
 	}
 

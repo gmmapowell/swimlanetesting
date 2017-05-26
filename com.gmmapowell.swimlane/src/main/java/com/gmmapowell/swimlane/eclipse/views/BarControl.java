@@ -6,7 +6,6 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 
 // An object that combines the business logic of being aware of the idea of tests
@@ -14,13 +13,14 @@ import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 public class BarControl implements BarDataListener {
 	private final Canvas canvas;
 
-	public BarControl(ModelDispatcher dispatcher, Composite view, HexagonDataModel model, BarData bar, String accId) {
+	public BarControl(ModelDispatcher dispatcher, Composite view, BarData bar, String type, String barId) {
 		canvas = new Canvas(view, SWT.NONE);
-		canvas.setData("com.gmmapowell.swimlane.type", "fullbar"); // I think this will need to be a parameter in the fullness of time
+		canvas.setData("com.gmmapowell.swimlane.type", type);
 		canvas.setData("com.gmmapowell.swimlane.bar", this);
-		canvas.setData("org.eclipse.swtbot.widget.key", accId);
-		canvas.addPaintListener(new BarPaintListener(canvas, model, bar));
-		dispatcher.addBarListener(this);
+		canvas.setData("org.eclipse.swtbot.widget.key", barId);
+		canvas.addPaintListener(new BarPaintListener(canvas, bar));
+		if (dispatcher != null)
+			dispatcher.addBarListener(this);
 	}
 
 	public Canvas getCanvas() {

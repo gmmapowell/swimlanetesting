@@ -42,12 +42,12 @@ public class HexView implements HexagonModelListener {
 		for (HexData hexModel : model.getHexagons()) {
 			String hexId = "hexagons." + hexModel.getId();
 			if (findHexagon(view, hexId) == null)
-				createHexagon(model, hexModel, hexId);
+				createHexagon(hexModel, hexId);
 		}
 	}
 
 	protected BarControl createBar(HexagonDataModel model, BarData accModel, String accId) {
-		BarControl bc = new BarControl(dispatcher, view, model, accModel, accId);
+		BarControl bc = new BarControl(dispatcher, view, accModel, "accbar", accId);
 
 		// By default, the bar will have been added at "the end".  If that is the wrong place, we need to consider moving it up
 		// In particular, it should go before any keys that are "acceptance.N" where N is less than our N,
@@ -92,14 +92,15 @@ public class HexView implements HexagonModelListener {
 		return null;
 	}
 
-	protected HexagonControl createHexagon(HexagonDataModel model, HexData hexModel, String hexId) {
-		HexagonControl hex = new HexagonControl(/*dispatcher, */ view, /* model, accModel,*/ hexId);
+	protected HexagonControl createHexagon(HexData hexModel, String hexId) {
+		HexagonControl hex = new HexagonControl(dispatcher, view, hexModel.getBar(), hexId);
 
 		// Move the background up above any bars
 		for (Control c : view.getChildren()) {
 			String type = (String) c.getData("com.gmmapowell.swimlane.type");
-			if (type == null || !type.equals("hex")) {
+			if (type == null || !type.equals("hexbg")) {
 				hex.getBackground().moveAbove(c);
+				hex.getBar().moveAbove(hex.getBackground());
 				break;
 			}
 		}

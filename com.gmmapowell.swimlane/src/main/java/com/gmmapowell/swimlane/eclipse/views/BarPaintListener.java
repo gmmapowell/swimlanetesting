@@ -9,38 +9,37 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 
 public final class BarPaintListener implements PaintListener {
-	private HexagonDataModel model;
-	private BarData accModel;
-	private Canvas canvas;
+	private final BarData barModel;
+	private final Canvas canvas;
 
-	public BarPaintListener(Canvas canvas, HexagonDataModel model, BarData accModel) {
+	public BarPaintListener(Canvas canvas, BarData accModel) {
 		this.canvas = canvas;
-		this.model = model;
-		this.accModel = accModel;
+		this.barModel = accModel;
 	}
 
 	@Override
 	public void paintControl(PaintEvent e) {
-		int total = accModel.getTotal();
-		int compl = accModel.getComplete();
-		int[] marks = accModel.getMarks();
+		int total = barModel.getTotal();
+		int compl = barModel.getComplete();
+		int[] marks = barModel.getMarks();
 		Point size = canvas.getSize();
-		int segwidth = size.x/model.getHexCount();
+		System.out.println("Painting bar of size " + size);
+		int hexCount = marks.length;
+		int segwidth = size.x/hexCount;
 		int markedx = bitcount(marks)*segwidth;
 		int barx = 0;
 		if (total > 0)
 			barx = markedx*compl/total;
 		GC gc = new GC(canvas);
 		for (int i=0;i<marks.length;i++) {
-			int from = size.x*i/model.getHexCount();
-			int to = size.x*(i+1)/model.getHexCount();
+			int from = size.x*i/hexCount;
+			int to = size.x*(i+1)/hexCount;
 			if (marks[i] == 1) {
 				if (barx > from) {
-					Color barColor = canvas.getDisplay().getSystemColor(getColor(accModel.getStatus()));
+					Color barColor = canvas.getDisplay().getSystemColor(getColor(barModel.getStatus()));
 					gc.setBackground(barColor);
 					gc.fillRectangle(from, 0, Math.min(barx-from, to-from), size.y);
 				}

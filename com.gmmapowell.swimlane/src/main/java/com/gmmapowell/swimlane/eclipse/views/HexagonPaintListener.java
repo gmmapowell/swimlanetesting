@@ -18,11 +18,9 @@ public class HexagonPaintListener implements PaintListener {
 	public void paintControl(PaintEvent e) {
 		int mx = canvas.getSize().x/2;
 		int my = canvas.getSize().y/2;
-		System.out.println("mid = " + mx + " " + my);
 		int a = figureA(canvas.getSize().x, canvas.getSize().y);
 		int h = (int) (Math.sqrt(3)*a);
 		int ty = my-h, by = my+h;
-		System.out.println("a = " + a + " h = " + h);
 		
 		Color c = new Color(canvas.getDisplay(), 220, 220, 170);
 		GC gc = new GC(canvas);
@@ -33,8 +31,7 @@ public class HexagonPaintListener implements PaintListener {
 		c.dispose();
 	}
 
-	// TODO: much more logic and more testing
-	public int figureA(int wx, int hy) {
+	public static int figureA(int wx, int hy) {
 		int ya = hy*6/25;
 		int xa = wx/5;
 		return Math.min(xa, ya);
