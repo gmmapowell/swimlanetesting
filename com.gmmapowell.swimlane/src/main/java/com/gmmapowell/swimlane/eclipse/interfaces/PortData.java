@@ -5,6 +5,6 @@ import java.util.Collection;
 public interface PortData {
 
 	PortLocation getLocation();
-	Collection<AdapterData> getAdapters();
+	Collection<BarData> getAdapters();
 
 }

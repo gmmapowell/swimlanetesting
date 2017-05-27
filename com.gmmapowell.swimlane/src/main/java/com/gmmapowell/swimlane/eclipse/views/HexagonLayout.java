@@ -19,6 +19,7 @@ public class HexagonLayout extends Layout {
 	protected void layout(Composite composite, boolean flushCache) {
 		int xmax = composite.getSize().x;
 		int ymax = composite.getSize().y;
+		// TODO: refactor this into an attribute on generation
 		int hexAt = 0;
 		int nhexes = 0;
         for (Control c : composite.getChildren()) {
@@ -33,6 +34,7 @@ public class HexagonLayout extends Layout {
         if (ymax < 100)
         	ymax = 100; // if they've shrunk the window down too much, just add scrolling
         int ypos = 0;
+        // TODO: refactor these into attributes on generation like we do with ports and adapters
         int hex = 0;
         int hbar = 0;
         for (Control c : composite.getChildren()) {
@@ -64,6 +66,26 @@ public class HexagonLayout extends Layout {
         		int x1 = midx + pl.x(3*a/2);
         		int x2 = x1 + pl.x(a/2+10);
         		Rectangle r = new Rectangle(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1-x2), Math.abs(y1-y2));
+        		c.setBounds(r);
+        	} else if (type.equals("adapterbar")) {
+        		int hexn = (int)c.getData("com.gmmapowell.swimlane.hexagon")-1;
+        		int midx = xmax*hexn/nhexes + xmax/2/nhexes;
+        		int midy = hexAt+ymax/2;
+        		int a = figureA(xmax/nhexes, ymax);
+        		PortLocation pl = (PortLocation)c.getData("com.gmmapowell.swimlane.location");
+        		int an = (int)c.getData("com.gmmapowell.swimlane.adapterPos");
+        		int atot = (int)c.getData("com.gmmapowell.swimlane.adapterTotal");
+        		// Each bar has 10 allocated, but 6 used, so total vertical space is 10*total-4
+        		int totY = 10*atot-4;
+        		// find a point halfwqy up the port (see y1 and y2 above)
+        		int median = midy + pl.y((int) (Math.sqrt(3)*3*a/4));
+        		// first is "above" median line, so take half this off (this is never reflected based on location)
+        		int first = median - totY/2;
+        		// and now add (an-1)*10 back on for the ones above (an is offset 1, hence -1)
+        		int y1 = first + (an-1)*10;
+        		int x1 = midx + pl.x(2*a+10);
+        		int x2 = x1 + pl.x(a/2);
+        		Rectangle r = new Rectangle(Math.min(x1, x2), y1, Math.abs(x1-x2), 6);
         		c.setBounds(r);
         	} else
         		System.out.println("Don't lay out " + type);

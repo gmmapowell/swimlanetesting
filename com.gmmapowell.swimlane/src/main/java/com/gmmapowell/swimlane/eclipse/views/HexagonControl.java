@@ -8,7 +8,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
@@ -29,8 +28,13 @@ public class HexagonControl {
 			// should we keep track of these somehow?
 			this.ports.add(new PortControl(view, hexId+".port."+p.getLocation().toString(), hex, p.getLocation()));
 			int j=1;
-			for (AdapterData ad : p.getAdapters()) {
-				new AdapterControl(view, hexId +".adapter."+p.getLocation().toString()+"." + j);
+			int total = p.getAdapters().size();
+			for (BarData ad : p.getAdapters()) {
+				BarControl bc = new BarControl(dispatcher, view, ad, "adapterbar", hexId +".adapter."+p.getLocation().toString()+"." + j);
+				bc.getCanvas().setData("com.gmmapowell.swimlane.hexagon", hex);
+				bc.getCanvas().setData("com.gmmapowell.swimlane.location", p.getLocation());
+				bc.getCanvas().setData("com.gmmapowell.swimlane.adapterPos", j);
+				bc.getCanvas().setData("com.gmmapowell.swimlane.adapterTotal", total);
 				j++;
 			}
 		}

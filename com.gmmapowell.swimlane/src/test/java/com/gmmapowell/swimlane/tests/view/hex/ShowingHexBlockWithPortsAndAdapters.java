@@ -8,10 +8,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Canvas;
 import org.jmock.Expectations;
-import org.jmock.States;
 import org.junit.Test;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
@@ -22,7 +20,6 @@ import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
 public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
-	States mode = context.states("mode").startsAs("initial");
 	private BarData bd;
 	
 	@Test
@@ -59,31 +56,34 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 	@Test
 	public void testWeCanFindTheTopAdapter() throws Exception {
 		specifyModel();
-		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
-		System.out.println(hexagon.getBounds());
 		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.1");
-		try { Thread.sleep(5000); } catch (Exception ex) {}
-		assertEquals(148, adapter.getBounds().x);
-		assertEquals(26, adapter.getBounds().y);
-		/*
-		checkSizeColors(hexagon, 44, 60, new ImageChecker() {
+		assertEquals(113, adapter.getBounds().x);
+		assertEquals(48, adapter.getBounds().y);
+		checkSizeColors(adapter, 34, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
-				// outside
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 0, 0); // top left
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 32, 0); // top right
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 43, 59); // bottom right
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 12, 59); // bottom left
-				
-				// inside
-				Color expected = new Color(displayHelper.getDisplay(), 200, 200, 155);
-				proxy.assertColorOfPixel(expected, 17, 35); // middle
-				proxy.assertColorOfPixel(expected, 42, 1); // top right
-				proxy.assertColorOfPixel(expected, 1, 58); // bottom left
-				expected.dispose();
+				proxy.assertColorOfPixel(SWT.COLOR_GREEN, 3, 3); // left
+				proxy.assertColorOfPixel(SWT.COLOR_GREEN, 7, 3); // end of done
+				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 10, 3); // start of missing
+				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 30, 3); // right
 			}
 		});
-		*/
+	}
+
+	@Test
+	public void testWeCanFindTheBottomAdapter() throws Exception {
+		specifyModel();
+		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.2");
+		assertEquals(113, adapter.getBounds().x);
+		assertEquals(58, adapter.getBounds().y);
+		checkSizeColors(adapter, 34, 6, new ImageChecker() {
+			@Override
+			public void checkImage(ImageProxy proxy) {
+				proxy.assertColorOfPixel(SWT.COLOR_RED, 3, 3); // left
+				proxy.assertColorOfPixel(SWT.COLOR_RED, 26, 3); // end of done
+				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 30, 3); // right
+			}
+		});
 	}
 
 	protected void specifyModel() throws InterruptedException {
@@ -99,12 +99,12 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 		hexagons.add(hd);
 		PortData pd = context.mock(PortData.class);
 		portList.add(pd);
-		ArrayList<AdapterData> adapterList = new ArrayList<AdapterData>();
-		AdapterData a1 = context.mock(AdapterData.class, "a1");
-		AdapterData a2 = context.mock(AdapterData.class, "a2");
+		ArrayList<BarData> adapterList = new ArrayList<>();
+		BarData a1 = context.mock(BarData.class, "a1");
+		BarData a2 = context.mock(BarData.class, "a2");
 		adapterList.add(a1);
 		adapterList.add(a2);
-		bd = context.mock(BarData.class);
+		bd = context.mock(BarData.class, "bd");
 		context.checking(new Expectations() {{
 			allowing(testModel).getHexCount(); will(returnValue(1));
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
@@ -114,11 +114,17 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 			allowing(hd).getBar(); will(returnValue(bd));
 			allowing(hd).getPorts(); will(returnValue(portList));
 			allowing(bd).getTotal(); will(returnValue(10));
-			allowing(bd).getComplete(); will(returnValue(0)); when(mode.is("initial"));
-			allowing(bd).getComplete(); will(returnValue(5)); when(mode.is("plus5"));
-			allowing(bd).getStatus(); will(returnValue(Status.NONE)); when(mode.is("initial"));
-			allowing(bd).getStatus(); will(returnValue(Status.OK)); when(mode.is("plus5"));
+			allowing(bd).getComplete(); will(returnValue(0));
+			allowing(bd).getStatus(); will(returnValue(Status.NONE));
 			allowing(bd).getMarks(); will(returnValue(new int[] { 1 }));
+			allowing(a1).getTotal(); will(returnValue(20));
+			allowing(a1).getComplete(); will(returnValue(5));
+			allowing(a1).getStatus(); will(returnValue(Status.OK));
+			allowing(a1).getMarks(); will(returnValue(new int[] { 1 }));
+			allowing(a2).getTotal(); will(returnValue(5));
+			allowing(a2).getComplete(); will(returnValue(4));
+			allowing(a2).getStatus(); will(returnValue(Status.FAILURES));
+			allowing(a2).getMarks(); will(returnValue(new int[] { 1 }));
 			allowing(pd).getLocation(); will(returnValue(PortLocation.NORTHWEST));
 			allowing(pd).getAdapters(); will(returnValue(adapterList));
 		}});
