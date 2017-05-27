@@ -6,6 +6,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
+
 public class HexagonLayout extends Layout {
 
 	@Override
@@ -50,6 +52,18 @@ public class HexagonLayout extends Layout {
         		Rectangle r = new Rectangle(mid-3*a/2, hexAt+ymax/2-3, 3*a, 6);
         		c.setBounds(r);
         		hbar++;
+        	} else if (type.equals("port")) {
+        		int hexn = (int)c.getData("com.gmmapowell.swimlane.hexagon")-1;
+        		PortLocation pl = (PortLocation)c.getData("com.gmmapowell.swimlane.location");
+        		int midx = xmax*hexn/nhexes + xmax/2/nhexes;
+        		int midy = hexAt+ymax/2;
+        		int a = HexagonPaintListener.figureA(xmax/nhexes, ymax);
+        		int y1 = midy + pl.y((int) (Math.sqrt(3)*a));
+        		int y2 = midy + pl.y((int) (Math.sqrt(3)*a/2));
+        		int x1 = midx + pl.x(3*a/2);
+        		int x2 = x1 + pl.x(a/2+10);
+        		Rectangle r = new Rectangle(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1-x2), Math.abs(y1-y2));
+        		c.setBounds(r);
         	} else
         		System.out.println("Don't lay out " + type);
         }

@@ -1,7 +1,12 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Canvas;
 import org.jmock.Expectations;
 import org.jmock.States;
 import org.junit.Test;
@@ -10,9 +15,11 @@ import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
+import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
+import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
 public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 	States mode = context.states("mode").startsAs("initial");
@@ -24,20 +31,32 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 		assertControls(shell, "hexagons.hex.1.bg", "hexagons.hex.1.bar", "hexagons.hex.1.port.nw", "hexagons.hex.1.adapter.nw.1", "hexagons.hex.1.adapter.nw.2");
 	}
 	
-	/*
 	@Test
 	public void testWeCanFindThePort() throws Exception {
 		specifyModel();
 		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.port.nw");
-		checkSizeColors(hexagon, 60, 6, new ImageChecker() {
+//		try { Thread.sleep(5000); } catch (Exception ex) {}
+		assertEquals(148, hexagon.getBounds().x);
+		assertEquals(26, hexagon.getBounds().y);
+		checkSizeColors(hexagon, 44, 60, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
-				int mx = 40, my = 3, h = 240/2;
-				proxy.assertColorOfPixel(SWT.COLOR_GRAY, mx, my); // middle
+				// outside
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 0, 0); // top left
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 32, 0); // top right
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 43, 59); // bottom right
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 12, 59); // bottom left
+				
+				// inside
+				Color expected = new Color(displayHelper.getDisplay(), 200, 200, 155);
+				proxy.assertColorOfPixel(expected, 17, 35); // middle
+				proxy.assertColorOfPixel(expected, 42, 1); // top right
+				proxy.assertColorOfPixel(expected, 1, 58); // bottom left
+				expected.dispose();
 			}
 		});
 	}
-
+	/*
 	@Test
 	public void testTheHexagonsBarChangesColorAfterUpdate() throws Exception {
 		specifyModel();

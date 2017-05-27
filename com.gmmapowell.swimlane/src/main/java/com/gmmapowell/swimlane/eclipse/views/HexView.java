@@ -39,10 +39,12 @@ public class HexView implements HexagonModelListener {
 			if (findBar(view, accId) == null)
 				createBar(model, accModel, accId);
 		}
+		int hexn = 1;
 		for (HexData hexModel : model.getHexagons()) {
 			String hexId = "hexagons." + hexModel.getId();
 			if (findHexagon(view, hexId) == null)
-				createHexagon(hexModel, hexId);
+				createHexagon(hexModel, hexn, hexId);
+			hexn++;
 		}
 	}
 
@@ -98,8 +100,8 @@ public class HexView implements HexagonModelListener {
 		return null;
 	}
 
-	protected HexagonControl createHexagon(HexData hexModel, String hexId) {
-		HexagonControl hex = new HexagonControl(dispatcher, view, hexId, hexModel.getBar(), hexModel.getPorts());
+	protected HexagonControl createHexagon(HexData hexModel, int hexn, String hexId) {
+		HexagonControl hex = new HexagonControl(dispatcher, view, hexn, hexId, hexModel.getBar(), hexModel.getPorts());
 
 		// Move the hex bar above any backgrounds
 		// The background is automatically added at the end
@@ -107,6 +109,8 @@ public class HexView implements HexagonModelListener {
 			String type = (String) c.getData("com.gmmapowell.swimlane.type");
 			if (type != null && type.equals("hexbg")) {
 				hex.getBar().moveAbove(c);
+				for (PortControl pc : hex.getPorts())
+					pc.getCanvas().moveAbove(c);
 				break;
 			}
 		}
