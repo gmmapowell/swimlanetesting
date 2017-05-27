@@ -34,11 +34,10 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 	@Test
 	public void testWeCanFindThePort() throws Exception {
 		specifyModel();
-		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.port.nw");
-//		try { Thread.sleep(5000); } catch (Exception ex) {}
-		assertEquals(148, hexagon.getBounds().x);
-		assertEquals(26, hexagon.getBounds().y);
-		checkSizeColors(hexagon, 44, 60, new ImageChecker() {
+		Canvas port = waitForControl(shell, "hexagons.hex.1.port.nw");
+		assertEquals(148, port.getBounds().x);
+		assertEquals(26, port.getBounds().y);
+		checkSizeColors(port, 44, 60, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
 				// outside
@@ -56,29 +55,37 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 			}
 		});
 	}
-	/*
+
 	@Test
-	public void testTheHexagonsBarChangesColorAfterUpdate() throws Exception {
+	public void testWeCanFindTheTopAdapter() throws Exception {
 		specifyModel();
 		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
-		mode.become("plus5");
-		md.barChanged(bd);
-		for (int i=0;i<10;i++) {
-			try { Thread.sleep(100); } catch (Exception ex) {}
-			displayHelper.flushPendingEvents();
-		}
-		checkSizeColors(hexagon, 590, 290, new ImageChecker() {
+		System.out.println(hexagon.getBounds());
+		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.1");
+		try { Thread.sleep(5000); } catch (Exception ex) {}
+		assertEquals(148, adapter.getBounds().x);
+		assertEquals(26, adapter.getBounds().y);
+		/*
+		checkSizeColors(hexagon, 44, 60, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
-				int mx = 295, my = 145;
-
-				// in the bar
-				proxy.assertColorOfPixel(SWT.COLOR_GREEN, mx-5, my); // left hand half
-				proxy.assertColorOfPixel(SWT.COLOR_GRAY, mx+5, my); // right hand half
+				// outside
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 0, 0); // top left
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 32, 0); // top right
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 43, 59); // bottom right
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 12, 59); // bottom left
+				
+				// inside
+				Color expected = new Color(displayHelper.getDisplay(), 200, 200, 155);
+				proxy.assertColorOfPixel(expected, 17, 35); // middle
+				proxy.assertColorOfPixel(expected, 42, 1); // top right
+				proxy.assertColorOfPixel(expected, 1, 58); // bottom left
+				expected.dispose();
 			}
 		});
+		*/
 	}
-*/
+
 	protected void specifyModel() throws InterruptedException {
 		pushModel(defineModel());
 	}

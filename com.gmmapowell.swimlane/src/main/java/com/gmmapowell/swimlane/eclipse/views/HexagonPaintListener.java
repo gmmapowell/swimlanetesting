@@ -18,7 +18,7 @@ public class HexagonPaintListener implements PaintListener {
 	public void paintControl(PaintEvent e) {
 		int mx = canvas.getSize().x/2;
 		int my = canvas.getSize().y/2;
-		int a = figureA(canvas.getSize().x, canvas.getSize().y);
+		int a = mx/2; // because we have sized to 4a x R(3)*2
 		int h = (int) (Math.sqrt(3)*a);
 		int ty = my-h, by = my+h;
 		
@@ -29,12 +29,6 @@ public class HexagonPaintListener implements PaintListener {
 		gc.fillPolygon(new int[] { mx-2*a, my, mx-a, ty, mx+a, ty, mx+2*a, my, mx+a, by, mx-a, by });
 		gc.dispose();
 		c.dispose();
-	}
-
-	public static int figureA(int wx, int hy) {
-		int ya = hy*6/25;
-		int xa = wx/5;
-		return Math.min(xa, ya);
 	}
 
 }

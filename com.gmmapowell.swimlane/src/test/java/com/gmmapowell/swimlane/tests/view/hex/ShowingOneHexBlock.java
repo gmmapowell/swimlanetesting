@@ -31,10 +31,10 @@ public class ShowingOneHexBlock extends BaseViewTest {
 	public void testTheHexagonHasAHexBackgroundBeforeWeStart() throws Exception {
 		specifyModel(10, 0, Status.NONE);
 		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
-		checkSizeColors(hexagon, 590, 290, new ImageChecker() {
+		checkSizeColors(hexagon, 276, 238, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
-				int mx = 295, my = 145, h = 240/2;
+				int mx = 138, my = 119, h = 238/2;
 				int a = (int) (h/Math.sqrt(3)); // around 69
 				int lx = mx-2*a;
 				int rx = mx+2*a;
@@ -43,15 +43,15 @@ public class ShowingOneHexBlock extends BaseViewTest {
 
 				// outside the hexagon
 				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, 10); // top left
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 580, 10); // top right
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, 280); // bottom left
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 580, 280); // bottom right
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 270, 10); // top right
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, 230); // bottom left
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 270, 230); // bottom right
 				
 				// outside the corners
 				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx-a-5, ty); // top left corner
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx-a-5, by); // bottom left corner
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx-a-5, by-1); // bottom left corner
 				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx+a+5, ty); // top right corner
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx+a+5, by); // bottom right corner
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx+a+5, by-1); // bottom right corner
 				
 				// inside the hexagon
 				Color expected = new Color(displayHelper.getDisplay(), 220, 220, 170);
@@ -80,10 +80,10 @@ public class ShowingOneHexBlock extends BaseViewTest {
 		mode.become("plus5");
 		md.barChanged(bd);
 		displayHelper.flushPendingEvents();
-		checkSizeColors(hexagon, 590, 290, new ImageChecker() {
+		checkSizeColors(hexagon, 276, 238, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
-				int mx = 295, my = 145;
+				int mx = 138, my = 119;
 
 				// in the bar
 				proxy.assertColorOfPixel(SWT.COLOR_GREEN, mx-5, my); // left hand half

@@ -28,25 +28,21 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 	public void testTheLeftOfTwoHexagonsHasAHexBackgroundBeforeWeStart() throws Exception {
 		specifyModel(2, 10, 0, Status.NONE);
 		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
-		checkSizeColors(hexagon, 295, 290, new ImageChecker() {
+		checkSizeColors(hexagon, 236, 204, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
-				int mx = 147, my = 145, a = 58;
+				int mx = 118, my = 102, a = 58;
 				int h = (int) (a*Math.sqrt(3));
 				int lx = mx-2*a;
 				int rx = mx+2*a;
 				int ty = my-h;
 				int by = my+h;
 
-				// check for daylight between the hexagons
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, my); // mid left
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 290, my); // mid right
-
 				// outside the hexagon
 				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, 10); // top left
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 290, 10); // top right
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, 280); // bottom left
-				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 290, 280); // bottom right
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 230, 10); // top right
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 10, 200); // bottom left
+				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, 230, 200); // bottom right
 				
 				// outside the corners
 				proxy.assertColorOfPixel(SWT.COLOR_WIDGET_BACKGROUND, mx-a-5, ty); // top left corner

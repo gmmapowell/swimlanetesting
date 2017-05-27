@@ -41,14 +41,15 @@ public class HexagonLayout extends Layout {
         		c.setBounds(0, ypos+2, xmax, 6);
         		ypos += 10;
         	} else if (type.equals("hexbg")) {
-        		int left = xmax*hex/nhexes;
-				int right = xmax*(hex+1)/nhexes;
-				Rectangle r = new Rectangle(left, hexAt, right-left, ymax);
+        		int midx = xmax*(2*hex+1)/nhexes/2;
+        		int a = figureA(xmax/nhexes, ymax);
+        		int h = (int)(a*Math.sqrt(3));
+				Rectangle r = new Rectangle(midx-2*a, hexAt+ymax/2-h, 4*a, 2*h);
 				c.setBounds(r);
         		hex++;
         	} else if (type.equals("businessbar")) {
         		int mid = xmax*hbar/nhexes + xmax/2/nhexes;
-        		int a = HexagonPaintListener.figureA(xmax/nhexes, ymax);
+        		int a = figureA(xmax/nhexes, ymax);
         		Rectangle r = new Rectangle(mid-3*a/2, hexAt+ymax/2-3, 3*a, 6);
         		c.setBounds(r);
         		hbar++;
@@ -57,7 +58,7 @@ public class HexagonLayout extends Layout {
         		PortLocation pl = (PortLocation)c.getData("com.gmmapowell.swimlane.location");
         		int midx = xmax*hexn/nhexes + xmax/2/nhexes;
         		int midy = hexAt+ymax/2;
-        		int a = HexagonPaintListener.figureA(xmax/nhexes, ymax);
+        		int a = figureA(xmax/nhexes, ymax);
         		int y1 = midy + pl.y((int) (Math.sqrt(3)*a));
         		int y2 = midy + pl.y((int) (Math.sqrt(3)*a/2));
         		int x1 = midx + pl.x(3*a/2);
@@ -67,6 +68,12 @@ public class HexagonLayout extends Layout {
         	} else
         		System.out.println("Don't lay out " + type);
         }
+	}
+
+	public static int figureA(int wx, int hy) {
+		int ya = hy*6/25;
+		int xa = wx/5;
+		return Math.min(xa, ya);
 	}
 
 }

@@ -39,16 +39,6 @@ public class HexagonControl {
 	public Canvas getBackground() {
 		return canvas;
 	}
-//
-//	@Override
-//	public void barChanged(BarData bar) {
-//		canvas.getDisplay().asyncExec(new Runnable() {
-//			@Override
-//			public void run() {
-//				canvas.redraw();
-//			}
-//		});
-//	}
 
 	public Canvas getBar() {
 		return bar.getCanvas();
