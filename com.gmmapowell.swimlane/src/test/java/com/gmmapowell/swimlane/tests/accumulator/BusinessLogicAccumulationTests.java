@@ -20,6 +20,7 @@ public class BusinessLogicAccumulationTests {
 	Class<?> testCase1 = String.class;
 	Class<?> testCase2 = Character.class;
 	Class<?> hexClass1 = Integer.class;
+	Class<?> hexClass2 = Comparable.class;
 	Class<?> portClass1 = Long.class;
 	Class<?> portClass2 = Float.class;
 	Class<?> portClass3 = Double.class;
@@ -53,5 +54,29 @@ public class BusinessLogicAccumulationTests {
 		acc.logic(grp, testCase1, hexClass1);
 		acc.analysisComplete();
 		assertNotNull(hdm.getHexagons().get(0).getBar());
+	}
+
+	@Test
+	public void testThatOneTestMakesOneEntryInTheBar() {
+		acc.logic(grp, testCase1, hexClass1);
+		acc.analysisComplete();
+		assertEquals(1, hdm.getHexagons().get(0).getBar().classesUnderTest().size());
+	}
+
+	@Test
+	public void testThatTwoTestsMakeTwoEntriesInTheBar() {
+		acc.logic(grp, testCase1, hexClass1);
+		acc.logic(grp, testCase2, hexClass1);
+		acc.analysisComplete();
+		assertEquals(2, hdm.getHexagons().get(0).getBar().classesUnderTest().size());
+	}
+
+	@Test
+	public void testThatTwoTestsInSeparateHexesAreKeptDistinct() {
+		acc.logic(grp, testCase1, hexClass1);
+		acc.logic(grp, testCase2, hexClass2);
+		acc.analysisComplete();
+		assertEquals(1, hdm.getHexagons().get(0).getBar().classesUnderTest().size());
+		assertEquals(1, hdm.getHexagons().get(1).getBar().classesUnderTest().size());
 	}
 }
