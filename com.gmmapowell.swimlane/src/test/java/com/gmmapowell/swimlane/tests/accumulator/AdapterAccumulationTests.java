@@ -2,6 +2,7 @@ package com.gmmapowell.swimlane.tests.accumulator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -39,16 +40,23 @@ public class AdapterAccumulationTests {
 	}
 
 	@Test
-	public void testThatIfWeCanSupportDefaultHexagonsWithAnAdapterTest() {
+	public void testThatWeCanSupportDefaultHexagonsWithAnAdapterTest() {
 		acc.adapter(grp, testCase1, null, portClass);
 		acc.analysisComplete();
 		assertEquals(1, hdm.getHexCount());
 		assertNotNull(hdm.getHexagons().get(0));
-		assertEquals("", hdm.getHexagons().get(0).getId());
+		assertEquals("-default-", hdm.getHexagons().get(0).getId());
 	}
 
-	// Need to test that we can't have default (null) hexagon and a named one - or at least, we get an error when we try
-	
+	@Test
+	public void testThatItIsAnErrorToHaveMultipleHexagonsAndADefault() {
+		acc.adapter(grp, testCase1, hexClass, portClass);
+		acc.adapter(grp, testCase1, null, portClass);
+		acc.analysisComplete();
+		System.out.println(hdm.getErrors());
+		assertTrue(hdm.getErrors().contains("Cannot use both a default hex and a non-default hex"));
+	}
+
 	@Test
 	public void testThatIfWeAccumulateOneAdapterTestWithAPortTheModelMustHaveThePortForTheHexagon() {
 		acc.adapter(grp, testCase1, hexClass, portClass);

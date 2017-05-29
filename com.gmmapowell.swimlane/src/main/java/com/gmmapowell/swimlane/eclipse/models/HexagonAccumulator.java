@@ -117,7 +117,11 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	}
 
 	private HexInfo inithex(Class<?> hex) {
-		String name = hex == null ? "" : hex.getName();
+		if (hex == null && !hexesFor.isEmpty())
+			errors.add("Cannot use both a default hex and a non-default hex");
+		else if (hex != null && hexesFor.containsKey("-default-"))
+			errors.add("Cannot use both a default hex and a non-default hex");
+		String name = hex == null ? "-default-" : hex.getName();
 		if (hexesFor.containsKey(name)) {
 			return hexesFor.get(name);
 		}
@@ -169,7 +173,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	 */
 	@Override
 	public void error(String msg) {
-		// We currently don't have a mechanism to display this, so there is no point capturing or processing it
+		errors.add(msg);
 	}
 
 	@Override
