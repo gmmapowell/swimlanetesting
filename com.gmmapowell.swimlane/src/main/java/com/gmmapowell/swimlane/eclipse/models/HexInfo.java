@@ -32,6 +32,11 @@ public class HexInfo implements HexData {
 	}
 
 	public void requirePort(Class<?> port) {
+		String name = port.getName();
+		for (PortData pd : ports) {
+			if (pd.getName().equals(name))
+				return;
+		}
 		PortInfo pi = new PortInfo(port);
 		ports.add(pi);
 	}

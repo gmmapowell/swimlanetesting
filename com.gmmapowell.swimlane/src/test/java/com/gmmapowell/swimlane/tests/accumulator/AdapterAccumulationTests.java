@@ -23,20 +23,25 @@ public class AdapterAccumulationTests {
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestGroup grp = new TestGroup(null);
-	Class<?> tc = String.class;
+	Class<?> testCase1 = String.class;
+	Class<?> testCase2 = Character.class;
+	Class<?> hexClass = Integer.class;
+	Class<?> portClass = Long.class;
 
 	@Test
 	public void testThatIfWeAccumulateOneAdapterTestTheModelMustHaveTheHexagonForIt() {
-		acc.adapter(grp, tc, Integer.class, Long.class);
+		acc.adapter(grp, testCase1, hexClass, portClass);
 		acc.analysisComplete();
 		assertEquals(1, hdm.getHexCount());
 		assertNotNull(hdm.getHexagons().get(0));
-		assertEquals(Integer.class.getName(), hdm.getHexagons().get(0).getId());
+		assertEquals(hexClass.getName(), hdm.getHexagons().get(0).getId());
 	}
 
+	// test there is a bar associated with the hex for business rules
+	// test that it can have multiple tes
 	@Test
 	public void testThatIfWeAccumulateOneAdapterTestWithAPortTheModelMustHaveThePortForTheHexagon() {
-		acc.adapter(grp, tc, Integer.class, Long.class);
+		acc.adapter(grp, testCase1, hexClass, portClass);
 		acc.analysisComplete();
 		HexData hd = hdm.getHexagons().get(0);
 		assertEquals(1, hd.getPorts().size());
@@ -44,5 +49,14 @@ public class AdapterAccumulationTests {
 		assertEquals(Long.class.getName(), pd.getName());
 	}
 
-
+	@Test
+	public void testWeCanAccumulateTwoAdapterTestsForTheSameAdapter() {
+		acc.adapter(grp, testCase1, hexClass, portClass);
+		acc.adapter(grp, testCase2, hexClass, portClass);
+		acc.analysisComplete();
+		HexData hd = hdm.getHexagons().get(0);
+		assertEquals(1, hd.getPorts().size());
+		PortData pd = hd.getPorts().get(0);
+		assertEquals(Long.class.getName(), pd.getName());
+	}
 }
