@@ -104,6 +104,8 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	@Override
 	public void logic(TestGroup grp, Class<?> tc, Class<?> hex) {
 		HexInfo hi = inithex(hex);
+		BarInfo bar = hi.ensureBar();
+		collectCase(bar, grp, tc);
 	}
 
 	@Override

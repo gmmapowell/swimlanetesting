@@ -12,7 +12,8 @@ import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 public class HexInfo implements HexData {
 	private final Accumulator acc;
 	private final String id;
-	private List<PortData> ports = new ArrayList<PortData>();
+	private final List<PortData> ports = new ArrayList<PortData>();
+	private LogicInfo bar;
 	
 	public HexInfo(Accumulator acc, String id) {
 		this.acc = acc;
@@ -26,13 +27,18 @@ public class HexInfo implements HexData {
 
 	@Override
 	public BarData getBar() {
-		// TODO Auto-generated method stub
-		return null;
+		return bar;
 	}
 
 	@Override
 	public List<PortData> getPorts() {
 		return ports;
+	}
+
+	public BarInfo ensureBar() {
+		if (bar == null)
+			bar = new LogicInfo(id +".logic");
+		return bar;
 	}
 
 	public void setPortLocation(Class<?> port, PortLocation loc) {

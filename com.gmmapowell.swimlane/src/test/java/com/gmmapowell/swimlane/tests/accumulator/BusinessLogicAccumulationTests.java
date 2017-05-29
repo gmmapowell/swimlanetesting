@@ -2,9 +2,7 @@ package com.gmmapowell.swimlane.tests.accumulator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import org.junit.Ignore;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
@@ -43,5 +41,17 @@ public class BusinessLogicAccumulationTests {
 		assertEquals(hexClass1.getName(), hdm.getHexagons().get(0).getId());
 	}
 
+	@Test
+	public void testThatIfWeDontAccumulateAnyLogicTestsThereIsNoBar() {
+		acc.adapter(grp, testCase1, hexClass1, Long.class, Exception.class);
+		acc.analysisComplete();
+		assertNull(hdm.getHexagons().get(0).getBar());
+	}
 
+	@Test
+	public void testThatIfWeAccumulateAnyLogicTestsThereWillBeABar() {
+		acc.logic(grp, testCase1, hexClass1);
+		acc.analysisComplete();
+		assertNotNull(hdm.getHexagons().get(0).getBar());
+	}
 }
