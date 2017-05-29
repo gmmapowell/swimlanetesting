@@ -35,15 +35,33 @@ public class HexInfo implements HexData {
 		return ports;
 	}
 
+	public void setPortLocation(Class<?> port, PortLocation loc) {
+		PortInfo pi = requirePort(port);
+		for (PortData pd : ports) {
+			if (pd != pi && pd.getLocation() == loc) {
+				acc.error("Cannot place multiple ports in the " + loc);
+				return;
+			}
+		}
+		pi.setLocation(loc);
+	}
+
 	public PortInfo requirePort(Class<?> port) {
+		PortInfo pi = hasPort(port);
+		if (pi != null)
+			return pi;
+		pi = new PortInfo(acc, port);
+		ports.add(pi);
+		return pi;
+	}
+
+	protected PortInfo hasPort(Class<?> port) {
 		String name = port.getName();
 		for (PortData pd : ports) {
 			if (pd.getName().equals(name))
 				return (PortInfo) pd;
 		}
-		PortInfo pi = new PortInfo(acc, port);
-		ports.add(pi);
-		return pi;
+		return null;
 	}
 
 	public void analysisComplete() {

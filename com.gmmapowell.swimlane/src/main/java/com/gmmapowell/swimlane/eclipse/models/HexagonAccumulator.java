@@ -113,7 +113,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	@Override
 	public void portLocation(Class<?> hex, Class<?> port, PortLocation loc) {
 		HexInfo hi = inithex(hex);
-		hi.requirePort(port).setLocation(loc);
+		hi.setPortLocation(port, loc);
 	}
 
 	private HexInfo inithex(Class<?> hex) {

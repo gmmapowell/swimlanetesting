@@ -105,7 +105,16 @@ public class AdapterAccumulationTests {
 		PortData pd = hd.getPorts().get(0);
 		assertEquals(PortLocation.SOUTHEAST, pd.getLocation());
 	}
-	// likewise can't have two in the same place ...
+
+	@Test
+	public void testWeCannotSpecifyTwoAdaptersInTheSamePortLocation() {
+		acc.adapter(grp, testCase1, hexClass1, portClass1);
+		acc.portLocation(hexClass1, portClass1, PortLocation.SOUTHEAST);
+		acc.adapter(grp, testCase2, hexClass1, portClass2);
+		acc.portLocation(hexClass1, portClass2, PortLocation.SOUTHEAST);
+		acc.analysisComplete();
+		assertTrue(hdm.getErrors().contains("Cannot place multiple ports in the se"));
+	}
 
 	@Test
 	public void testOnePortWillDefaultToNorthWestPlacement() {
@@ -116,7 +125,21 @@ public class AdapterAccumulationTests {
 		PortData pd = hd.getPorts().get(0);
 		assertEquals(PortLocation.NORTHWEST, pd.getLocation());
 	}
-	// can mix default and explicit placements ....
+
+	@Test
+	public void testWeCanMixExplicitAndDefaultPlacements() {
+		acc.adapter(grp, testCase1, hexClass1, portClass1);
+		acc.portLocation(hexClass1, portClass1, PortLocation.SOUTHEAST);
+		acc.adapter(grp, testCase2, hexClass1, portClass2);
+		acc.analysisComplete();
+		assertEquals(0, hdm.getErrors().size());
+		HexData hd = hdm.getHexagons().get(0);
+		assertEquals(2, hd.getPorts().size());
+		PortData p1 = hd.getPorts().get(0);
+		assertEquals(PortLocation.SOUTHEAST, p1.getLocation());
+		PortData p2 = hd.getPorts().get(1);
+		assertEquals(PortLocation.NORTHWEST, p2.getLocation());
+	}
 
 	// test port location
 	// test bar is created
