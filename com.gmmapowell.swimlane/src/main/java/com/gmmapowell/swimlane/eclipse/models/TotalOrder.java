@@ -39,8 +39,7 @@ public class TotalOrder {
 		haveDefault = true;
 	}
 
-	public void add(Class<?> hex) {
-		String name = hex.getName();
+	public void add(String name) {
 		if (ordering.containsKey(name))
 			return;
 		if (!ordering.containsKey(name)) {
@@ -58,7 +57,7 @@ public class TotalOrder {
 		List<String> names = new ArrayList<String>();
 		for (Class<?> cls : hexes) {
 			names.add(cls.getName());
-			add(cls);
+			add(cls.getName());
 		}
 		for (int i=0;i<names.size();i++) {
 			String ni = names.get(i);

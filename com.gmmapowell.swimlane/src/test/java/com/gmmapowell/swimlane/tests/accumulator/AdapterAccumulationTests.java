@@ -39,6 +39,17 @@ public class AdapterAccumulationTests {
 	}
 
 	@Test
+	public void testThatIfWeCanSupportDefaultHexagonsWithAnAdapterTest() {
+		acc.adapter(grp, testCase1, null, portClass);
+		acc.analysisComplete();
+		assertEquals(1, hdm.getHexCount());
+		assertNotNull(hdm.getHexagons().get(0));
+		assertEquals("", hdm.getHexagons().get(0).getId());
+	}
+
+	// Need to test that we can't have default (null) hexagon and a named one - or at least, we get an error when we try
+	
+	@Test
 	public void testThatIfWeAccumulateOneAdapterTestWithAPortTheModelMustHaveThePortForTheHexagon() {
 		acc.adapter(grp, testCase1, hexClass, portClass);
 		acc.analysisComplete();
@@ -71,6 +82,17 @@ public class AdapterAccumulationTests {
 		PortData pd = hd.getPorts().get(0);
 		assertEquals(PortLocation.SOUTHEAST, pd.getLocation());
 	}
+
+	@Test
+	public void testOnePortWillDefaultToNorthWestPlacement() {
+		acc.adapter(grp, testCase1, hexClass, portClass);
+		acc.analysisComplete();
+		HexData hd = hdm.getHexagons().get(0);
+		assertEquals(1, hd.getPorts().size());
+		PortData pd = hd.getPorts().get(0);
+		assertEquals(PortLocation.NORTHWEST, pd.getLocation());
+	}
+
 	// test port location
 	// test bar is created
 	// test bar has the relevant cases from the groups

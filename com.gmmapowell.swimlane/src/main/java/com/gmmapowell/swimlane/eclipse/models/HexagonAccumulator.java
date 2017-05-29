@@ -76,10 +76,13 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public void acceptance(TestGroup grp, Class<?> tc, List<Class<?>> hexes) {
-		if (hexes == null || hexes.isEmpty())
+		if (hexes == null || hexes.isEmpty()) {
 			this.hexorder.haveDefault();
-		else
+			inithex(null);
+		} else
 			this.hexorder.addAll(hexes);
+		for (Class<?> h : hexes)
+			inithex(h);
 		List<String> names = new ArrayList<String>();
 		StringBuilder sb = new StringBuilder();
 		for (Class<?> c : hexes) {
@@ -114,13 +117,13 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	}
 
 	private HexInfo inithex(Class<?> hex) {
-		String name = hex.getName();
-		if (hexesFor.containsKey(hex.getName())) {
+		String name = hex == null ? "" : hex.getName();
+		if (hexesFor.containsKey(name)) {
 			return hexesFor.get(name);
 		}
-		this.hexorder.add(hex);
-		HexInfo hi = new HexInfo(hex.getName());
-		hexesFor.put(hex.getName(), hi);
+		this.hexorder.add(name);
+		HexInfo hi = new HexInfo(name);
+		hexesFor.put(name, hi);
 		return hi;
 	}
 
@@ -150,7 +153,9 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		}
 		
 		for (String s : order) {
-			hexagons.add(hexesFor.get(s));
+			HexInfo hex = hexesFor.get(s);
+			hex.analysisComplete();
+			hexagons.add(hex);
 		}
 	}
 

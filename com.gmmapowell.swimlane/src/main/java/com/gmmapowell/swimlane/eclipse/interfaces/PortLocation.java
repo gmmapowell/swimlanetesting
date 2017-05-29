@@ -1,22 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.interfaces;
 
 public enum PortLocation {
-	NORTHEAST {
-		@Override
-		public String toString() {
-			return "ne";
-		}
-
-		@Override
-		public int x(int x) {
-			return x;
-		}
-
-		@Override
-		public int y(int y) {
-			return -y;
-		}
-	},
 	NORTHWEST {
 		@Override
 		public String toString() {
@@ -26,6 +10,22 @@ public enum PortLocation {
 		@Override
 		public int x(int x) {
 			return -x;
+		}
+
+		@Override
+		public int y(int y) {
+			return -y;
+		}
+	},
+	NORTHEAST {
+		@Override
+		public String toString() {
+			return "ne";
+		}
+
+		@Override
+		public int x(int x) {
+			return x;
 		}
 
 		@Override
