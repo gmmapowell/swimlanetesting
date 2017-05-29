@@ -14,6 +14,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface BusinessLogic {
-	Class<?> value();
-	Class<?> hexagon() default Object.class;
+	Class<?> value() default Object.class;
 }

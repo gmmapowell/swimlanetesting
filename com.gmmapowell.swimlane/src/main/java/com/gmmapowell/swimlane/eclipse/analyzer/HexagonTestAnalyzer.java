@@ -24,10 +24,22 @@ public class HexagonTestAnalyzer implements ClassAnalyzer {
 		try {
 			Class<?> tc = Class.forName(clzName, false, cl);
 			for (Annotation y : tc.getAnnotations()) {
-				if (y.annotationType().getName().equals("com.gmmapowell.swimlane.annotations.Acceptance")) {
+				String aname = y.annotationType().getName();
+				if (aname.equals("com.gmmapowell.swimlane.annotations.Acceptance")) {
 					try {
 						Class<?>[] hexes = (Class<?>[]) y.getClass().getMethod("value").invoke(y);
 						accumulator.acceptance(grp, tc, Arrays.asList(hexes));
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else if (aname.equals("com.gmmapowell.swimlane.annotations.BusinessLogic")) {
+					try {
+						Class<?> hex = null;
+						Class<?> tmp = (Class<?>) y.getClass().getMethod("value").invoke(y);
+						if (!tmp.equals(Object.class))
+							hex = tmp;
+						accumulator.logic(grp, tc, hex);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

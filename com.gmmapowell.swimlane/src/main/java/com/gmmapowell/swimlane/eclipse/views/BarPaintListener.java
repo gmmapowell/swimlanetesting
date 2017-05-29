@@ -22,9 +22,16 @@ public final class BarPaintListener implements PaintListener {
 
 	@Override
 	public void paintControl(PaintEvent e) {
-		int total = barModel.getTotal();
-		int compl = barModel.getComplete();
-		int[] marks = barModel.getMarks();
+		int total = 0;
+		int compl = 0;
+		int[] marks = new int[1];
+		Status stat = Status.NONE;
+		if (barModel != null) {
+			total = barModel.getTotal();
+			compl = barModel.getComplete();
+			marks = barModel.getMarks();
+			stat = barModel.getStatus();
+		}
 		Point size = canvas.getSize();
 		int hexCount = marks.length;
 		int segwidth = size.x/hexCount;
@@ -38,7 +45,7 @@ public final class BarPaintListener implements PaintListener {
 			int to = size.x*(i+1)/hexCount;
 			if (marks[i] == 1) {
 				if (barx > from) {
-					Color barColor = canvas.getDisplay().getSystemColor(getColor(barModel.getStatus()));
+					Color barColor = canvas.getDisplay().getSystemColor(getColor(stat));
 					gc.setBackground(barColor);
 					gc.fillRectangle(from, 0, Math.min(barx-from, to-from), size.y);
 				}
