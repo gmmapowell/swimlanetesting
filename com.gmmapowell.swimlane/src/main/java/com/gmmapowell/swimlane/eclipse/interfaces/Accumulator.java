@@ -11,7 +11,8 @@ public interface Accumulator {
 	void acceptance(TestGroup grp, Class<?> tc, List<Class<?>> hexes);
 	void logic(TestGroup grp, Class<?> testCase1, Class<?> hexClass1);
 	void adapter(TestGroup grp, Class<?> tc, Class<?> hex, Class<?> port, Class<?> adapter);
-	void portLocation(Class<?> hexClass, Class<?> portClass, PortLocation northwest);
+	void portLocation(Class<?> hexClass, Class<?> portClass, PortLocation loc);
+	void utility(TestGroup grp, Class<?> testCase1);
 	void error(String msg);
 	void analysisComplete();
 	List<TestGroup> getAllTestClasses();

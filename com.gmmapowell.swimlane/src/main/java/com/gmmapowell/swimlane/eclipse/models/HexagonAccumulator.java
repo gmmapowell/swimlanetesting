@@ -35,6 +35,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	private Set<String> errors = new TreeSet<>();
 	private Map<String, BarData> barsFor = new HashMap<>();
 	private final ArrayList<TestGroup> allTestClasses = new ArrayList<TestGroup>();
+	private LogicInfo uteBar;
 	
 	public HexagonAccumulator(ModelDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
@@ -117,6 +118,13 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	}
 	
 	@Override
+	public void utility(TestGroup grp, Class<?> tc) {
+		if (uteBar == null)
+			uteBar = new LogicInfo("utility");
+		collectCase(uteBar, grp, tc);
+	}
+
+	@Override
 	public void portLocation(Class<?> hex, Class<?> port, PortLocation loc) {
 		HexInfo hi = inithex(hex);
 		hi.setPortLocation(port, loc);
@@ -179,6 +187,11 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	@Override
 	public List<HexData> getHexagons() {
 		return hexagons;
+	}
+
+	@Override
+	public BarData getUtilityBar() {
+		return uteBar;
 	}
 
 	/* These errors relate to static analysis errors, such as hexagons in the wrong order.

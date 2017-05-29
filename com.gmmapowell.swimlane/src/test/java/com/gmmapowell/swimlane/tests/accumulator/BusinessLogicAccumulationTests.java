@@ -21,18 +21,7 @@ public class BusinessLogicAccumulationTests {
 	Class<?> testCase2 = Character.class;
 	Class<?> hexClass1 = Integer.class;
 	Class<?> hexClass2 = Comparable.class;
-	Class<?> portClass1 = Long.class;
-	Class<?> portClass2 = Float.class;
-	Class<?> portClass3 = Double.class;
-	Class<?> portClass4 = Short.class;
-	Class<?> portClass5 = Number.class;
-	Class<?> adapterClass1 = Exception.class;
-	Class<?> adapterClass2 = RuntimeException.class;
 
-	// Need to create tests that test that we can add business-logic tests to one or more hexagons
-	// that it creates one bar per hexagon
-	// that said bar can have many test case objects, possibly across multiple groups
-	
 	@Test
 	public void testThatIfWeAccumulateOneLogicTestTheModelMustHaveTheHexagonForIt() {
 		acc.logic(grp, testCase1, hexClass1);
