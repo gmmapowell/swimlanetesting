@@ -10,6 +10,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 
 public class HexInfo implements HexData {
 
+	private final String id;
 	private Collection<PortData> ports = new ArrayList<PortData>();
 	{
 		ports.add(new PortData() {
@@ -28,10 +29,13 @@ public class HexInfo implements HexData {
 		});
 	}
 	
+	public HexInfo(String id) {
+		this.id = id;
+	}
+	
 	@Override
 	public String getId() {
-		// TODO Auto-generated method stub
-		return null;
+		return id;
 	}
 
 	@Override

@@ -135,7 +135,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	@Override
 	public List<HexData> getHexagons() {
 		ArrayList<HexData> arrayList = new ArrayList<HexData>();
-		arrayList.add(new HexInfo());
+		arrayList.add(new HexInfo(Integer.class.getName()));
 		return arrayList;
 	}
 
