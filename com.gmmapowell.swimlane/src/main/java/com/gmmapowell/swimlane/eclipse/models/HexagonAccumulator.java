@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
@@ -101,6 +102,11 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	}
 	
 	@Override
+	public void adapter(TestGroup grp, Class<?> tc, Class<?> hex, Class<?> port) {
+		this.hexes.add(hex);
+	}
+	
+	@Override
 	public void analysisComplete() {
 		this.hexes.ensureTotalOrdering(errors);
 		TreeMap<String, Acceptance> tmp = new TreeMap<String, Acceptance>();
@@ -124,6 +130,13 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			for (String c : a.classesUnderTest())
 				barsFor.put(c, a);
 		}
+	}
+
+	@Override
+	public List<HexData> getHexagons() {
+		ArrayList<HexData> arrayList = new ArrayList<HexData>();
+		arrayList.add(new HexInfo());
+		return arrayList;
 	}
 
 	/* These errors relate to static analysis errors, such as hexagons in the wrong order.

@@ -69,7 +69,7 @@ public class SwtBotTestCase {
 	
 	@Test
 	public void step03_testThatItFoundOneOfTheHexagons() {
-		SWTBotCanvas hex1 = bot.canvasWithId("hexagons.hexagon.1");
+		SWTBotCanvas hex1 = bot.canvasWithId("hexagons.hex.1.bg");
 		assertTrue(hex1.isVisible());
 		Point ws = ext.getSize(hex1.widget);
 		ext.assertPct(ws.x, viewSize.x, 30, 35);

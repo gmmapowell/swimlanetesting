@@ -39,20 +39,26 @@ public class TotalOrder {
 		haveDefault = true;
 	}
 
+	public void add(Class<?> hex) {
+		String name = hex.getName();
+		if (ordering.containsKey(name))
+			return;
+		if (!ordering.containsKey(name)) {
+			TreeMap<String, Order> map = new TreeMap<>();
+			map.put(name, Order.SAME);
+			for (String n : ordering.keySet()) {
+				map.put(n, Order.NONE);
+				ordering.get(n).put(name, Order.NONE);
+			}
+			ordering.put(name, map);
+		}
+	}
+
 	public void addAll(List<Class<?>> hexes) {
 		List<String> names = new ArrayList<String>();
 		for (Class<?> cls : hexes) {
-			String name = cls.getName();
-			names.add(name);
-			if (!ordering.containsKey(name)) {
-				TreeMap<String, Order> map = new TreeMap<>();
-				map.put(name, Order.SAME);
-				for (String n : ordering.keySet()) {
-					map.put(n, Order.NONE);
-					ordering.get(n).put(name, Order.NONE);
-				}
-				ordering.put(name, map);
-			}
+			names.add(cls.getName());
+			add(cls);
 		}
 		for (int i=0;i<names.size();i++) {
 			String ni = names.get(i);
