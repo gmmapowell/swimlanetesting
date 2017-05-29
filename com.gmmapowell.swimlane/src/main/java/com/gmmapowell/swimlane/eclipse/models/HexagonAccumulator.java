@@ -102,6 +102,11 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	}
 
 	@Override
+	public void logic(TestGroup grp, Class<?> tc, Class<?> hex) {
+		HexInfo hi = inithex(hex);
+	}
+
+	@Override
 	public void adapter(TestGroup grp, Class<?> tc, Class<?> hex, Class<?> port, Class<?> adapter) {
 		HexInfo hi = inithex(hex);
 		PortInfo pi = hi.requirePort(port);

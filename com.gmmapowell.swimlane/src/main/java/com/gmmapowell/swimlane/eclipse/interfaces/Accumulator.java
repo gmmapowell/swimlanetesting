@@ -9,6 +9,7 @@ public interface Accumulator {
 	void setBuildTime(Date date);
 	void testsCompleted(Date date);
 	void acceptance(TestGroup grp, Class<?> tc, List<Class<?>> hexes);
+	void logic(TestGroup grp, Class<?> testCase1, Class<?> hexClass1);
 	void adapter(TestGroup grp, Class<?> tc, Class<?> hex, Class<?> port, Class<?> adapter);
 	void portLocation(Class<?> hexClass, Class<?> portClass, PortLocation northwest);
 	void error(String msg);
