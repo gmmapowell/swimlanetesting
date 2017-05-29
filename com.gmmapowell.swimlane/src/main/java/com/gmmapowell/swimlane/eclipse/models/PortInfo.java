@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
@@ -10,6 +11,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 public class PortInfo implements PortData {
 	private final Accumulator acc;
 	private final Class<?> portClass;
+	private final List<Adapter> bars = new ArrayList<>();
 	private PortLocation loc;
 
 	public PortInfo(Accumulator acc, Class<?> port) {
@@ -27,10 +29,10 @@ public class PortInfo implements PortData {
 		return loc;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public Collection<BarData> getAdapters() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<BarData> getAdapters() {
+		return (List)bars;
 	}
 
 	public void setLocation(PortLocation loc) {
@@ -39,6 +41,16 @@ public class PortInfo implements PortData {
 			return;
 		}
 		this.loc = loc;
+	}
+
+	public Adapter addAdapter(Class<?> adapter) {
+		for (Adapter ai : bars) {
+			if (ai.forAdapter(adapter))
+				return ai;
+		}
+		Adapter ret = new Adapter(adapter);
+		bars.add(ret);
+		return ret;
 	}
 
 }

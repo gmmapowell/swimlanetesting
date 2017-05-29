@@ -98,16 +98,15 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			ca = new Acceptance(names);
 			compileAcceptances.put(an, ca);
 		}
-		if (!allTestClasses.contains(grp))
-			allTestClasses.add(grp);
-		grp.addTest(tc.getName());
-		ca.addCase(tc);
+		collectCase(ca, grp, tc);
 	}
-	
+
 	@Override
-	public void adapter(TestGroup grp, Class<?> tc, Class<?> hex, Class<?> port) {
+	public void adapter(TestGroup grp, Class<?> tc, Class<?> hex, Class<?> port, Class<?> adapter) {
 		HexInfo hi = inithex(hex);
-		hi.requirePort(port);
+		PortInfo pi = hi.requirePort(port);
+		Adapter bar = pi.addAdapter(adapter);
+		collectCase(bar, grp, tc);
 	}
 	
 	@Override
@@ -163,6 +162,13 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		}
 	}
 
+	protected void collectCase(BarInfo ca, TestGroup grp, Class<?> tc) {
+		if (!allTestClasses.contains(grp))
+			allTestClasses.add(grp);
+		grp.addTest(tc.getName());
+		ca.addCase(tc);
+	}
+	
 	@Override
 	public List<HexData> getHexagons() {
 		return hexagons;

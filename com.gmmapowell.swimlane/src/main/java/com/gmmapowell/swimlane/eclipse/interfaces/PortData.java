@@ -1,9 +1,9 @@
 package com.gmmapowell.swimlane.eclipse.interfaces;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface PortData {
 	String getName();
 	PortLocation getLocation();
-	Collection<BarData> getAdapters();
+	List<BarData> getAdapters();
 }
