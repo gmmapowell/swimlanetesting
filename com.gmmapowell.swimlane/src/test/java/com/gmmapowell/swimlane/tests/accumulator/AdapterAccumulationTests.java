@@ -10,6 +10,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
@@ -37,8 +38,6 @@ public class AdapterAccumulationTests {
 		assertEquals(hexClass.getName(), hdm.getHexagons().get(0).getId());
 	}
 
-	// test there is a bar associated with the hex for business rules
-	// test that it can have multiple tes
 	@Test
 	public void testThatIfWeAccumulateOneAdapterTestWithAPortTheModelMustHaveThePortForTheHexagon() {
 		acc.adapter(grp, testCase1, hexClass, portClass);
@@ -59,4 +58,21 @@ public class AdapterAccumulationTests {
 		PortData pd = hd.getPorts().get(0);
 		assertEquals(Long.class.getName(), pd.getName());
 	}
+	
+	// test what happens if we DON'T specify a port location (i.e. it should lay them out)
+	// test what happens if we specify CONFLICTING port locations (it should raise errors)
+	@Test
+	public void testWeCanSpecifyTheAdapterPortLocation() {
+		acc.adapter(grp, testCase1, hexClass, portClass);
+		acc.portLocation(hexClass, portClass, PortLocation.SOUTHEAST);
+		acc.analysisComplete();
+		HexData hd = hdm.getHexagons().get(0);
+		assertEquals(1, hd.getPorts().size());
+		PortData pd = hd.getPorts().get(0);
+		assertEquals(PortLocation.SOUTHEAST, pd.getLocation());
+	}
+	// test port location
+	// test bar is created
+	// test bar has the relevant cases from the groups
+	
 }

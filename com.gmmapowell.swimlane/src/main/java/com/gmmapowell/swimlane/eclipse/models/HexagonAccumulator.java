@@ -17,6 +17,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
@@ -102,16 +103,22 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	
 	@Override
 	public void adapter(TestGroup grp, Class<?> tc, Class<?> hex, Class<?> port) {
-		this.hexorder.add(hex);
 		HexInfo hi = inithex(hex);
 		hi.requirePort(port);
 	}
 	
+	@Override
+	public void portLocation(Class<?> hex, Class<?> port, PortLocation loc) {
+		HexInfo hi = inithex(hex);
+		hi.requirePort(port).setLocation(loc);
+	}
+
 	private HexInfo inithex(Class<?> hex) {
 		String name = hex.getName();
 		if (hexesFor.containsKey(hex.getName())) {
 			return hexesFor.get(name);
 		}
+		this.hexorder.add(hex);
 		HexInfo hi = new HexInfo(hex.getName());
 		hexesFor.put(hex.getName(), hi);
 		return hi;

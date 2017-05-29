@@ -10,6 +10,7 @@ public interface Accumulator {
 	void testsCompleted(Date date);
 	void acceptance(TestGroup grp, Class<?> tc, List<Class<?>> hexes);
 	void adapter(TestGroup grp, Class<?> tc, Class<?> hex, Class<?> port);
+	void portLocation(Class<?> hexClass, Class<?> portClass, PortLocation northwest);
 	void error(String msg);
 	void analysisComplete();
 	List<TestGroup> getAllTestClasses();
