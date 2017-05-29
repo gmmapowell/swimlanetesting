@@ -9,6 +9,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
@@ -39,6 +40,8 @@ public class AdapterAccumulationTests {
 		acc.analysisComplete();
 		HexData hd = hdm.getHexagons().get(0);
 		assertEquals(1, hd.getPorts().size());
+		PortData pd = hd.getPorts().get(0);
+		assertEquals(Long.class.getName(), pd.getName());
 	}
 
 

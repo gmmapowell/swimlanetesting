@@ -103,13 +103,18 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	@Override
 	public void adapter(TestGroup grp, Class<?> tc, Class<?> hex, Class<?> port) {
 		this.hexorder.add(hex);
-		inithex(hex);
+		HexInfo hi = inithex(hex);
+		hi.requirePort(port);
 	}
 	
-	private void inithex(Class<?> hex) {
-		if (hexesFor.containsKey(hex.getName()))
-			return;
-		hexesFor.put(hex.getName(), new HexInfo(hex.getName()));
+	private HexInfo inithex(Class<?> hex) {
+		String name = hex.getName();
+		if (hexesFor.containsKey(hex.getName())) {
+			return hexesFor.get(name);
+		}
+		HexInfo hi = new HexInfo(hex.getName());
+		hexesFor.put(hex.getName(), hi);
+		return hi;
 	}
 
 	@Override

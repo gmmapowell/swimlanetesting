@@ -1,9 +1,9 @@
 package com.gmmapowell.swimlane.eclipse.interfaces;
 
-import java.util.Collection;
+import java.util.List;
 
 public interface HexData {
 	String getId();
 	BarData getBar();
-	Collection<PortData> getPorts();
+	List<PortData> getPorts();
 }
