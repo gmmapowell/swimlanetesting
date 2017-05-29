@@ -126,7 +126,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			return hexesFor.get(name);
 		}
 		this.hexorder.add(name);
-		HexInfo hi = new HexInfo(name);
+		HexInfo hi = new HexInfo(this, name);
 		hexesFor.put(name, hi);
 		return hi;
 	}

@@ -27,21 +27,25 @@ public class AdapterAccumulationTests {
 	TestGroup grp = new TestGroup(null);
 	Class<?> testCase1 = String.class;
 	Class<?> testCase2 = Character.class;
-	Class<?> hexClass = Integer.class;
-	Class<?> portClass = Long.class;
+	Class<?> hexClass1 = Integer.class;
+	Class<?> portClass1 = Long.class;
+	Class<?> portClass2 = Float.class;
+	Class<?> portClass3 = Double.class;
+	Class<?> portClass4 = Short.class;
+	Class<?> portClass5 = Number.class;
 
 	@Test
 	public void testThatIfWeAccumulateOneAdapterTestTheModelMustHaveTheHexagonForIt() {
-		acc.adapter(grp, testCase1, hexClass, portClass);
+		acc.adapter(grp, testCase1, hexClass1, portClass1);
 		acc.analysisComplete();
 		assertEquals(1, hdm.getHexCount());
 		assertNotNull(hdm.getHexagons().get(0));
-		assertEquals(hexClass.getName(), hdm.getHexagons().get(0).getId());
+		assertEquals(hexClass1.getName(), hdm.getHexagons().get(0).getId());
 	}
 
 	@Test
 	public void testThatWeCanSupportDefaultHexagonsWithAnAdapterTest() {
-		acc.adapter(grp, testCase1, null, portClass);
+		acc.adapter(grp, testCase1, null, portClass1);
 		acc.analysisComplete();
 		assertEquals(1, hdm.getHexCount());
 		assertNotNull(hdm.getHexagons().get(0));
@@ -50,16 +54,15 @@ public class AdapterAccumulationTests {
 
 	@Test
 	public void testThatItIsAnErrorToHaveMultipleHexagonsAndADefault() {
-		acc.adapter(grp, testCase1, hexClass, portClass);
-		acc.adapter(grp, testCase1, null, portClass);
+		acc.adapter(grp, testCase1, hexClass1, portClass1);
+		acc.adapter(grp, testCase1, null, portClass1);
 		acc.analysisComplete();
-		System.out.println(hdm.getErrors());
 		assertTrue(hdm.getErrors().contains("Cannot use both a default hex and a non-default hex"));
 	}
 
 	@Test
 	public void testThatIfWeAccumulateOneAdapterTestWithAPortTheModelMustHaveThePortForTheHexagon() {
-		acc.adapter(grp, testCase1, hexClass, portClass);
+		acc.adapter(grp, testCase1, hexClass1, portClass1);
 		acc.analysisComplete();
 		HexData hd = hdm.getHexagons().get(0);
 		assertEquals(1, hd.getPorts().size());
@@ -69,8 +72,8 @@ public class AdapterAccumulationTests {
 
 	@Test
 	public void testWeCanAccumulateTwoAdapterTestsForTheSameAdapter() {
-		acc.adapter(grp, testCase1, hexClass, portClass);
-		acc.adapter(grp, testCase2, hexClass, portClass);
+		acc.adapter(grp, testCase1, hexClass1, portClass1);
+		acc.adapter(grp, testCase2, hexClass1, portClass1);
 		acc.analysisComplete();
 		HexData hd = hdm.getHexagons().get(0);
 		assertEquals(1, hd.getPorts().size());
@@ -78,12 +81,10 @@ public class AdapterAccumulationTests {
 		assertEquals(Long.class.getName(), pd.getName());
 	}
 	
-	// test what happens if we DON'T specify a port location (i.e. it should lay them out)
-	// test what happens if we specify CONFLICTING port locations (it should raise errors)
 	@Test
 	public void testWeCanSpecifyTheAdapterPortLocation() {
-		acc.adapter(grp, testCase1, hexClass, portClass);
-		acc.portLocation(hexClass, portClass, PortLocation.SOUTHEAST);
+		acc.adapter(grp, testCase1, hexClass1, portClass1);
+		acc.portLocation(hexClass1, portClass1, PortLocation.SOUTHEAST);
 		acc.analysisComplete();
 		HexData hd = hdm.getHexagons().get(0);
 		assertEquals(1, hd.getPorts().size());
@@ -92,14 +93,30 @@ public class AdapterAccumulationTests {
 	}
 
 	@Test
+	public void testWeCannotSpecifyConflictingAdapterPortLocations() {
+		acc.adapter(grp, testCase1, hexClass1, portClass1);
+		acc.portLocation(hexClass1, portClass1, PortLocation.SOUTHEAST);
+		acc.adapter(grp, testCase2, hexClass1, portClass1);
+		acc.portLocation(hexClass1, portClass1, PortLocation.SOUTHWEST);
+		acc.analysisComplete();
+		assertTrue(hdm.getErrors().contains("Cannot specify multiple locations for port " + portClass1.getName()));
+		HexData hd = hdm.getHexagons().get(0);
+		assertEquals(1, hd.getPorts().size());
+		PortData pd = hd.getPorts().get(0);
+		assertEquals(PortLocation.SOUTHEAST, pd.getLocation());
+	}
+	// likewise can't have two in the same place ...
+
+	@Test
 	public void testOnePortWillDefaultToNorthWestPlacement() {
-		acc.adapter(grp, testCase1, hexClass, portClass);
+		acc.adapter(grp, testCase1, hexClass1, portClass1);
 		acc.analysisComplete();
 		HexData hd = hdm.getHexagons().get(0);
 		assertEquals(1, hd.getPorts().size());
 		PortData pd = hd.getPorts().get(0);
 		assertEquals(PortLocation.NORTHWEST, pd.getLocation());
 	}
+	// can mix default and explicit placements ....
 
 	// test port location
 	// test bar is created
