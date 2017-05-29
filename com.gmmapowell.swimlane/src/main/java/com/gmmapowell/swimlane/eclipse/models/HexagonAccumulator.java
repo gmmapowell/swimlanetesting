@@ -27,10 +27,12 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	private Date testsCompleteTime;
 	private final Map<String, Acceptance> compileAcceptances = new TreeMap<String, Acceptance>();
 	private List<BarData> acceptances = new ArrayList<>();
-	private final TotalOrder hexes = new TotalOrder();
+	private final TotalOrder hexorder = new TotalOrder();
+	private List<String> order;
+	private final Map<String, HexInfo> hexesFor = new HashMap<String, HexInfo>();
+	private final List<HexData> hexagons = new ArrayList<>();
 	private Set<String> errors = new TreeSet<>();
 	private Map<String, BarData> barsFor = new HashMap<>();
-	private List<String> order;
 	private final ArrayList<TestGroup> allTestClasses = new ArrayList<TestGroup>();
 	
 	public HexagonAccumulator(ModelDispatcher dispatcher) {
@@ -58,11 +60,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public int getHexCount() {
-		return hexes.count();
-	}
-
-	public List<String> getHexes() {
-		return order;
+		return hexorder.count();
 	}
 
 	@Override
@@ -78,13 +76,14 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	@Override
 	public void acceptance(TestGroup grp, Class<?> tc, List<Class<?>> hexes) {
 		if (hexes == null || hexes.isEmpty())
-			this.hexes.haveDefault();
+			this.hexorder.haveDefault();
 		else
-			this.hexes.addAll(hexes);
+			this.hexorder.addAll(hexes);
 		List<String> names = new ArrayList<String>();
 		StringBuilder sb = new StringBuilder();
 		for (Class<?> c : hexes) {
 			names.add(c.getName());
+			inithex(c);
 			if (sb.length() > 0)
 				sb.append("||");
 			sb.append(c.getName());
@@ -103,14 +102,21 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	
 	@Override
 	public void adapter(TestGroup grp, Class<?> tc, Class<?> hex, Class<?> port) {
-		this.hexes.add(hex);
+		this.hexorder.add(hex);
+		inithex(hex);
 	}
 	
+	private void inithex(Class<?> hex) {
+		if (hexesFor.containsKey(hex.getName()))
+			return;
+		hexesFor.put(hex.getName(), new HexInfo(hex.getName()));
+	}
+
 	@Override
 	public void analysisComplete() {
-		this.hexes.ensureTotalOrdering(errors);
+		this.hexorder.ensureTotalOrdering(errors);
 		TreeMap<String, Acceptance> tmp = new TreeMap<String, Acceptance>();
-		order = this.hexes.bestOrdering(errors);
+		order = this.hexorder.bestOrdering(errors);
 		for (Acceptance a : compileAcceptances.values()) {
 			a.setMarks(order);
 			// Handle an error case where because of inconsistent hex definitions, we have two
@@ -130,13 +136,15 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			for (String c : a.classesUnderTest())
 				barsFor.put(c, a);
 		}
+		
+		for (String s : order) {
+			hexagons.add(hexesFor.get(s));
+		}
 	}
 
 	@Override
 	public List<HexData> getHexagons() {
-		ArrayList<HexData> arrayList = new ArrayList<HexData>();
-		arrayList.add(new HexInfo(Integer.class.getName()));
-		return arrayList;
+		return hexagons;
 	}
 
 	/* These errors relate to static analysis errors, such as hexagons in the wrong order.

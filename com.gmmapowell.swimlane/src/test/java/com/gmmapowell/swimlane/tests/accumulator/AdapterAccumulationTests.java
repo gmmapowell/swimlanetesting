@@ -27,6 +27,7 @@ public class AdapterAccumulationTests {
 	@Test
 	public void testThatIfWeAccumulateOneAdapterTestTheModelMustHaveTheHexagonForIt() {
 		acc.adapter(grp, tc, Integer.class, Long.class);
+		acc.analysisComplete();
 		assertEquals(1, hdm.getHexCount());
 		assertNotNull(hdm.getHexagons().get(0));
 		assertEquals(Integer.class.getName(), hdm.getHexagons().get(0).getId());
@@ -35,6 +36,7 @@ public class AdapterAccumulationTests {
 	@Test
 	public void testThatIfWeAccumulateOneAdapterTestWithAPortTheModelMustHaveThePortForTheHexagon() {
 		acc.adapter(grp, tc, Integer.class, Long.class);
+		acc.analysisComplete();
 		HexData hd = hdm.getHexagons().get(0);
 		assertEquals(1, hd.getPorts().size());
 	}
