@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -233,30 +234,33 @@ public class ExtendedBot {
 
 	public void assertColor(SWTBotCanvas acc123, int swtColor, int x, int y) {
 		Display display = acc123.display;
-		for (int i=0;i<10;i++) {
-			try {
-				display.syncExec(new Runnable() {
-					@Override
-					public void run() {
-						Color color = display.getSystemColor(swtColor);
-						GC gc = new GC(acc123.widget);
-						Image image = new Image(display, 1, 1);
-						PaletteData palette = image.getImageData().palette;
-						gc.copyArea(image, x, y);
-						RGB actual = palette.getRGB(image.getImageData().getPixel(0, 0));
-						boolean match = 
-							actual.red >= color.getRed()-5 && actual.red <= color.getRed() + 5 &&
-							actual.green >= color.getGreen()-5 && actual.green <= color.getGreen() + 5 &&
-							actual.blue >= color.getBlue()-5 && actual.blue <= color.getBlue() + 5;
-						if (!match)
-							fail("Color " + actual + " was not close enough to SWT " + swtColor + " " + color.getRGB());
+		AtomicBoolean passed = new AtomicBoolean(false);
+		List<String> error = new ArrayList<>();
+		for (int i=0;i<10 && !passed.get();i++) {
+			display.syncExec(new Runnable() {
+				@Override
+				public void run() {
+					Color color = display.getSystemColor(swtColor);
+					GC gc = new GC(acc123.widget);
+					Image image = new Image(display, 1, 1);
+					PaletteData palette = image.getImageData().palette;
+					gc.copyArea(image, x, y);
+					RGB actual = palette.getRGB(image.getImageData().getPixel(0, 0));
+					boolean match = 
+						actual.red >= color.getRed()-5 && actual.red <= color.getRed() + 5 &&
+						actual.green >= color.getGreen()-5 && actual.green <= color.getGreen() + 5 &&
+						actual.blue >= color.getBlue()-5 && actual.blue <= color.getBlue() + 5;
+					if (match)
+						passed.set(true);
+					else {
+						error.clear();
+						error.add("Color " + actual + " was not close enough to SWT " + swtColor + " " + color.getRGB());
 					}
-				});
-			} catch (SWTException ex) {
-				if (i == 9)
-					throw ex;
-				try { Thread.sleep(250); } catch (InterruptedException e2) {}
-			}
+				}
+			});
+			try { Thread.sleep(250); } catch (InterruptedException e2) {}
 		}
+		if (!passed.get())
+			fail(error.get(0));
 	}
 }

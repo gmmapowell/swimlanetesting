@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.owntests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -10,6 +11,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCanvas;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
@@ -68,14 +70,23 @@ public class SwtBotTestCase {
 	}
 	
 	@Test
-	public void step03_testThatItFoundOneOfTheHexagons() {
-		ext.dumpView(hexView);
+	public void step03a_testThatItFoundOneOfTheHexagons() {
 		SWTBotCanvas hex1 = bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.bg");
 		assertTrue(hex1.isVisible());
 		Point ws = ext.getSize(hex1.widget);
-		ext.assertPct(ws.x, viewSize.x, 30, 35);
-		assertEquals(6, ws.y);
-		ext.assertColor(hex1, SWT.COLOR_GRAY, ws.x/2, ws.y/2);
+		ext.assertPct(ws.x, viewSize.x, 18, 22);
+		ext.assertPct(ws.y, ws.x, 85, 89);
+	}
+
+	// This depends on whether or not we add any business logic tests for hex1 ... I suggest for the purposes of testing we
+	// add some to some hexes and not to others ...
+	@Test(expected=WidgetNotFoundException.class)
+	public void step03b_testTheHexagonBarIsInvisibleWithNoBusinessLogic() {
+		bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.bar");
+//		Point ws = ext.getSize(bar1.widget);
+//		ext.assertPct(ws.x, viewSize.x, 14, 16);
+//		assertEquals(6, ws.y);
+//		ext.assertColor(bar1, SWT.COLOR_GRAY, ws.x/2, ws.y/2);
 	}
 	
 	// TODO: when we have "auto-run" unit tests in the sample project we should be able to check that they DID run as part of the post-build
