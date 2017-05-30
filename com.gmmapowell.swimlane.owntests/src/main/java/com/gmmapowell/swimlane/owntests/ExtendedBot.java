@@ -198,7 +198,8 @@ public class ExtendedBot {
 	}
 
 	protected void dumpControl(String indent, Control c) {
-		System.out.println(indent + c + " " + c.getClass());
+		String key = (String) c.getData("org.eclipse.swtbot.widget.key");
+		System.out.println(indent + c + " " + c.getClass() + (key != null ? " " + key : ""));
 		if (c instanceof Composite)
 			dumpComposite((Composite) c, indent + "  ");
 		// we should also specifically consider other "composite" items such as lists, trees and tables

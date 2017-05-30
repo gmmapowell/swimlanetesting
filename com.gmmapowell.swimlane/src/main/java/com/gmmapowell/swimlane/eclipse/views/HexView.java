@@ -18,6 +18,7 @@ public class HexView implements HexagonModelListener {
 	public HexView(Composite parent, ModelDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		view = new Composite(parent, SWT.NONE);
+		view.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		dispatcher.addHexagonModelListener(this);
 	}
