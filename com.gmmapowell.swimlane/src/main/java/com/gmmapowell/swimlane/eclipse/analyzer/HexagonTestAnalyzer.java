@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ClassAnalyzer;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 
 public class HexagonTestAnalyzer implements ClassAnalyzer {
@@ -61,6 +62,14 @@ public class HexagonTestAnalyzer implements ClassAnalyzer {
 								port = tmp;
 						}
 						accumulator.adapter(grp, tc, hex, port, adapter);
+						{
+							Object tmp = y.getClass().getMethod("location").invoke(y);
+							String loc = tmp.toString();
+							if (!"NONE".equals(loc)) {
+								PortLocation pl = PortLocation.valueOf(loc);
+								accumulator.portLocation(adapter, pl);
+							}
+						}
 						foundSomething = true;
 					} catch (Exception e) {
 						accumulator.error(e.getMessage());

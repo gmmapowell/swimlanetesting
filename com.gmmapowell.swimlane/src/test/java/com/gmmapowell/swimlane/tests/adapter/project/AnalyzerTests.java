@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.tests.hamcrest.ClassMatcher;
 
@@ -102,6 +103,18 @@ public class AnalyzerTests {
 		String clzName = "com.gmmapowell.swimlane.samples.SampleAdapter3";
 		context.checking(new Expectations() {{
 			oneOf(accumulator).adapter(with(grp), with(ClassMatcher.named(clzName)), with(aNull(Class.class)), with(port1), with(adapter1));
+		}});
+		analyzer.consider(clzName);
+	}
+
+//	@SuppressWarnings({"rawtypes","unchecked"})
+	@Test
+	public void testWeCanDetectWhenAnAdapterTestSpecifiesALocationForItsPortRelativeToTheHexagon() throws Exception {
+		String clzName = "com.gmmapowell.swimlane.samples.SampleAdapter4";
+//		Object loc = Enum.valueOf((Class)Class.forName("com.gmmapowell.swimlane.annotations.Location", false, cl), "NORTHWEST");
+		context.checking(new Expectations() {{
+			oneOf(accumulator).adapter(with(grp), with(ClassMatcher.named(clzName)), with(aNull(Class.class)), with(aNull(Class.class)), with(adapter1));
+			oneOf(accumulator).portLocation(adapter1, PortLocation.NORTHWEST);
 		}});
 		analyzer.consider(clzName);
 	}
