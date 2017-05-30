@@ -32,6 +32,7 @@ public class BarControl implements BarDataListener {
 		canvas.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
+				canvas.setVisible(bar != null && bar.getTotal() > 0);
 				canvas.redraw();
 			}
 		});

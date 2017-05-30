@@ -51,4 +51,8 @@ public class HexagonControl {
 	public List<PortControl> getPorts() {
 		return ports;
 	}
+
+	public void setBarVisibility(boolean b) {
+		bar.getCanvas().setVisible(b);
+	}
 }

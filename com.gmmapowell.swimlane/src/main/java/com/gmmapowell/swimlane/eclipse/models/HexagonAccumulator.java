@@ -319,7 +319,11 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	public void testSuccess(TestInfo test) {
 		String forClz = test.classUnderTest();
 		BarData bar = barsFor.get(forClz);
-		((Acceptance)bar).passed(forClz);
+		if (bar == null) {
+			error("the class " + forClz + " was run but did not have a bar defined for it");
+			return;
+		}
+		((BarInfo)bar).passed(forClz);
 		dispatcher.barChanged(bar);
 	}
 
@@ -327,7 +331,11 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	public void testFailure(TestInfo test) {
 		String forClz = test.classUnderTest();
 		BarData bar = barsFor.get(forClz);
-		((Acceptance)bar).failed(forClz);
+		if (bar == null) {
+			error("the class " + forClz + " was run but did not have a bar defined for it");
+			return;
+		}
+		((BarInfo)bar).failed(forClz);
 		dispatcher.barChanged(bar);
 	}
 
