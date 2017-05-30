@@ -35,6 +35,12 @@ public class HexInfo implements HexData {
 		return ports;
 	}
 
+	public void setBar(LogicInfo bar) {
+		if (this.bar != null)
+			throw new RuntimeException("Cannot overwrite a created bar");
+		this.bar = bar;
+	}
+
 	public BarInfo ensureBar() {
 		if (bar == null)
 			bar = new LogicInfo(id +".logic");

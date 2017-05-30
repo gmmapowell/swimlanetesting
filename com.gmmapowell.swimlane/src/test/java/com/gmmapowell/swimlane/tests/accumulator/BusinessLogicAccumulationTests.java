@@ -3,6 +3,10 @@ package com.gmmapowell.swimlane.tests.accumulator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
@@ -19,6 +23,8 @@ public class BusinessLogicAccumulationTests {
 	TestGroup grp = new TestGroup(null);
 	Class<?> testCase1 = String.class;
 	Class<?> testCase2 = Character.class;
+	Class<?> testCase3 = Double.class;
+	Class<?> accCase = Float.class;
 	Class<?> hexClass1 = Integer.class;
 	Class<?> hexClass2 = Comparable.class;
 
@@ -29,6 +35,38 @@ public class BusinessLogicAccumulationTests {
 		assertEquals(1, hdm.getHexCount());
 		assertNotNull(hdm.getHexagons().get(0));
 		assertEquals(hexClass1.getName(), hdm.getHexagons().get(0).getId());
+	}
+
+	@Test
+	public void testWeCanAssociateTestsWithTheDefaultHexagon() {
+		acc.logic(grp, testCase1, null);
+		acc.analysisComplete();
+		assertEquals(1, hdm.getHexCount());
+		assertNotNull(hdm.getHexagons().get(0));
+		assertEquals("-default-", hdm.getHexagons().get(0).getId());
+	}
+
+	@Test
+	public void testWeCanAssociateTestsWithTheDefaultHexagonAndNameIt() {
+		acc.logic(grp, testCase1, null);
+		acc.logic(grp, testCase2, hexClass2);
+		acc.analysisComplete();
+		assertEquals(1, hdm.getHexCount());
+		assertNotNull(hdm.getHexagons().get(0));
+		assertEquals(hexClass2.getName(), hdm.getHexagons().get(0).getId());
+	}
+
+	@Test
+	public void testWeCannotAssociateTestsWithTheDefaultHexagonAndAlsoHaveASecondHexagon() {
+		acc.acceptance(grp, accCase, Arrays.asList(hexClass1, hexClass2));
+		acc.logic(grp, testCase1, null);
+//		acc.logic(grp, testCase2, hexClass1);
+//		acc.logic(grp, testCase3, hexClass2);
+		acc.analysisComplete();
+		System.out.println(hdm.getErrors());
+		assertEquals(1, hdm.getErrors().size());
+		assertTrue(hdm.getErrors().contains("cannot use @BusinessLogic with default hexagon in java.lang.String since there are multiple hexagons"));
+		assertEquals(2, hdm.getHexCount());
 	}
 
 	@Test

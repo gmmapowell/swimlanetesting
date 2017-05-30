@@ -40,6 +40,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	private Map<Class<?>, Class<?>> adapterPort = new HashMap<>();
 	private Map<Class<?>, String> portHex = new HashMap<>();
 	private Map<Class<?>, Adapter> adapters = new HashMap<>();
+	private LogicInfo defaultLogic;
 	
 	public HexagonAccumulator(ModelDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
@@ -107,8 +108,15 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public void logic(TestGroup grp, Class<?> tc, Class<?> hex) {
-		HexInfo hi = inithex(hex);
-		BarInfo bar = hi.ensureBar();
+		BarInfo bar;
+		if (hex == null) {
+			if (defaultLogic == null)
+				defaultLogic = new LogicInfo("-default-");
+			bar = defaultLogic;
+		} else {
+			HexInfo hi = inithex(hex);
+			bar = hi.ensureBar();
+		}
 		collectCase(bar, grp, tc);
 	}
 
@@ -171,7 +179,9 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public void analysisComplete() {
-		if (!adapterPort.isEmpty() && portHex.isEmpty())
+		if (defaultLogic != null)
+			this.hexorder.haveDefault();
+		else if (!adapterPort.isEmpty() && portHex.isEmpty())
 			this.hexorder.haveDefault();
 		this.hexorder.ensureTotalOrdering(errors);
 		TreeMap<String, Acceptance> tmp = new TreeMap<String, Acceptance>();
@@ -196,13 +206,16 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 				barsFor.put(c, a);
 		}
 
-		// Make sure all the hexes got created (I think this is only an issue if -default- is needed
-		for (String s : order) {
-			if (!hexesFor.containsKey(s)) {
-				hexesFor.put(s, new HexInfo(this, s));
-			}
+		if (order.contains("-default-")) {
+			HexInfo hi = new HexInfo(this, "-default-");
+			hexesFor.put(hi.getId(), hi);
+			if (defaultLogic != null)
+				hi.setBar(defaultLogic);
+		} else if (defaultLogic != null) {
+			for (String c : defaultLogic.classesUnderTest())
+				error("cannot use @BusinessLogic with default hexagon in " + c + " since there are multiple hexagons");
 		}
-
+		
 		// define links from all ports to default hex if appropriate
 		if (portHex.isEmpty()) {
 			for (Class<?> q : adapterPort.values()) {
