@@ -145,6 +145,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			bar = new Adapter(adapter);
 			adapters.put(adapter, bar);
 		}
+		barsFor.put(tc.getName(), bar);
 		collectCase(bar, grp, tc);
 	}
 	
@@ -152,6 +153,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	public void utility(TestGroup grp, Class<?> tc) {
 		if (uteBar == null)
 			uteBar = new LogicInfo("utility");
+		barsFor.put(tc.getName(), uteBar);
 		collectCase(uteBar, grp, tc);
 	}
 
@@ -294,7 +296,6 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	public Set<String> getErrors() {
 		return errors;
 	}
-
 
 	@Override
 	public void tree(Tree<TestInfo> tree) {

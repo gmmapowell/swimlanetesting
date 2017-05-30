@@ -186,6 +186,42 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		assertEquals(Status.OK, bar.getStatus());
 	}
 
+	@Test
+	public void utilityTestsAreNotifiedOfTheNumberOfTests() {
+		acc.utility(grp, String.class);
+		acc.analysisComplete();
+		List<HexData> hexes = hdm.getHexagons();
+		assertEquals(0, hexes.size());
+		BarData bar = hdm.getUtilityBar();
+		BarDataListener bl = context.mock(BarDataListener.class);
+		md.addBarListener(bl);
+		context.checking(new Expectations() {{
+			oneOf(bl).barChanged(bar);
+		}});
+		issueTree();
+		assertEquals(4, bar.getTotal());
+		assertEquals(0, bar.getComplete());
+		assertEquals(Status.OK, bar.getStatus());
+	}
+
+	@Test
+	public void adapterTestsAreNotifiedOfTheNumberOfTests() {
+		acc.adapter(grp, String.class, null, Integer.class, Float.class);
+		acc.analysisComplete();
+		List<HexData> hexes = hdm.getHexagons();
+		assertEquals(1, hexes.size());
+		BarData bar = hexes.get(0).getPorts().get(0).getAdapters().get(0);
+		BarDataListener bl = context.mock(BarDataListener.class);
+		md.addBarListener(bl);
+		context.checking(new Expectations() {{
+			oneOf(bl).barChanged(bar);
+		}});
+		issueTree();
+		assertEquals(4, bar.getTotal());
+		assertEquals(0, bar.getComplete());
+		assertEquals(Status.OK, bar.getStatus());
+	}
+
 	protected void issueTree() {
 		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
 		{
