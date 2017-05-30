@@ -169,7 +169,7 @@ public class TotalOrder {
 			ret.add(best);
 		}
 		if (ret.isEmpty() && haveDefault)
-			ret.add(null);
+			ret.add("-default-");
 		return ret;
 	}
 

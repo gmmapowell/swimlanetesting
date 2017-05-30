@@ -43,14 +43,14 @@ public class PortInfo implements PortData {
 		this.loc = loc;
 	}
 
-	public Adapter addAdapter(Class<?> adapter) {
+	public void setAdapter(Class<?> cls, Adapter adapter) {
 		for (Adapter ai : bars) {
-			if (ai.forAdapter(adapter))
-				return ai;
+			if (ai.forAdapter(cls)) {
+				acc.error("Duplicate adapter for " + cls.getName());
+				return;
+			}
 		}
-		Adapter ret = new Adapter(adapter);
-		bars.add(ret);
-		return ret;
+		bars.add(adapter);
 	}
 
 }

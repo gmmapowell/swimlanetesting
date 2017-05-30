@@ -36,6 +36,10 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	private Map<String, BarData> barsFor = new HashMap<>();
 	private final ArrayList<TestGroup> allTestClasses = new ArrayList<TestGroup>();
 	private LogicInfo uteBar;
+	private Map<Class<?>, PortLocation> adapterLocations = new HashMap<>();
+	private Map<Class<?>, Class<?>> adapterPort = new HashMap<>();
+	private Map<Class<?>, String> portHex = new HashMap<>();
+	private Map<Class<?>, Adapter> adapters = new HashMap<>();
 	
 	public HexagonAccumulator(ModelDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
@@ -79,7 +83,6 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	public void acceptance(TestGroup grp, Class<?> tc, List<Class<?>> hexes) {
 		if (hexes == null || hexes.isEmpty()) {
 			this.hexorder.haveDefault();
-			inithex(null);
 		} else
 			this.hexorder.addAll(hexes);
 		for (Class<?> h : hexes)
@@ -111,9 +114,28 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public void adapter(TestGroup grp, Class<?> tc, Class<?> hex, Class<?> port, Class<?> adapter) {
-		HexInfo hi = inithex(hex);
-		PortInfo pi = hi.requirePort(port);
-		Adapter bar = pi.addAdapter(adapter);
+		if (port != null) {
+			if (adapterPort.containsKey(adapter)) {
+				if (!adapterPort.get(adapter).equals(port))
+					error("cannot bind adapter " + adapter.getName() + " to both " + port.getName() + " and " + adapterPort.get(adapter).getName());
+			} else
+				adapterPort.put(adapter, port);
+			if (hex != null) {
+				if (portHex.containsKey(port)) {
+					if (!portHex.get(port).equals(hex.getName()))
+						error("cannot bind port " + port.getName() + " to both " + hex.getName() + " and " + portHex.get(port));
+				} else
+					portHex.put(port, hex.getName());
+			}
+		}
+		if (hex != null) {
+			inithex(hex);
+		}
+		Adapter bar = adapters.get(adapter);
+		if (bar == null) {
+			bar = new Adapter(adapter);
+			adapters.put(adapter, bar);
+		}
 		collectCase(bar, grp, tc);
 	}
 	
@@ -125,17 +147,19 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	}
 
 	@Override
-	public void portLocation(Class<?> hex, Class<?> port, PortLocation loc) {
-		HexInfo hi = inithex(hex);
-		hi.setPortLocation(port, loc);
+	public void portLocation(Class<?> adapter, PortLocation loc) {
+		if (adapterLocations.containsKey(adapter)) {
+			if (!adapterLocations.get(adapter).equals(loc))
+				error("cannot assign locations " + adapterLocations.get(adapter) + " and " + loc + " to adapter " + adapter.getName());
+			return;
+		}
+		adapterLocations.put(adapter, loc);
 	}
 
 	private HexInfo inithex(Class<?> hex) {
-		if (hex == null && !hexesFor.isEmpty())
-			errors.add("Cannot use both a default hex and a non-default hex");
-		else if (hex != null && hexesFor.containsKey("-default-"))
-			errors.add("Cannot use both a default hex and a non-default hex");
-		String name = hex == null ? "-default-" : hex.getName();
+		if (hex == null)
+			throw new RuntimeException("Shouldn't do that");
+		String name = hex.getName();
 		if (hexesFor.containsKey(name)) {
 			return hexesFor.get(name);
 		}
@@ -147,6 +171,8 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public void analysisComplete() {
+		if (!adapterPort.isEmpty() && portHex.isEmpty())
+			this.hexorder.haveDefault();
 		this.hexorder.ensureTotalOrdering(errors);
 		TreeMap<String, Acceptance> tmp = new TreeMap<String, Acceptance>();
 		order = this.hexorder.bestOrdering(errors);
@@ -169,7 +195,55 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			for (String c : a.classesUnderTest())
 				barsFor.put(c, a);
 		}
+
+		// Make sure all the hexes got created (I think this is only an issue if -default- is needed
+		for (String s : order) {
+			if (!hexesFor.containsKey(s)) {
+				hexesFor.put(s, new HexInfo(this, s));
+			}
+		}
+
+		// define links from all ports to default hex if appropriate
+		if (portHex.isEmpty()) {
+			for (Class<?> q : adapterPort.values()) {
+				portHex.put(q, "-default-");
+			}
+		}
 		
+		// bind ports to hexes
+		Map<Class<?>, PortInfo> ports = new HashMap<>();
+		for (Entry<Class<?>, String> q : portHex.entrySet()) {
+			HexInfo hex = hexesFor.get(q.getValue());
+			if (hex == null)
+				throw new RuntimeException("Didn't find hex for " + q.getValue());
+			PortInfo pi = hex.requirePort(q.getKey());
+			ports.put(q.getKey(), pi);
+		}
+		
+		// bind adapters to ports
+		for (Entry<Class<?>, Class<?>> q : adapterPort.entrySet()) {
+			Class<?> adClz = q.getKey();
+			Adapter adapter = adapters.remove(adClz);
+			Class<?> port = q.getValue();
+			PortInfo pi = ports.get(port);
+			if (pi == null) {
+				error("port " + port.getName() + " was not bound to a hexagon");
+				continue;
+			}
+			pi.setAdapter(adClz, adapter);
+			PortLocation loc = adapterLocations.get(adClz);
+			if (loc != null) {
+				HexInfo hi = hexesFor.get(portHex.get(port));
+				hi.setPortLocation(port, loc);
+			}
+		}
+		
+		// assert we used all the adapters
+		for (Class<?> rem : adapters.keySet()) {
+			error("did not bind adapter " + rem.getName() + " to a port");
+		}
+		
+		// Wrap up
 		for (String s : order) {
 			HexInfo hex = hexesFor.get(s);
 			hex.analysisComplete();
