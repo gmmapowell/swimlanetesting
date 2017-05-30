@@ -46,6 +46,25 @@ public class HexagonTestAnalyzer implements ClassAnalyzer {
 					} catch (Exception e) {
 						accumulator.error(e.getMessage());
 					}
+				} else if (aname.equals("com.gmmapowell.swimlane.annotations.Adapter")) {
+					try {
+						Class<?> adapter = (Class<?>) y.getClass().getMethod("value").invoke(y);
+						Class<?> hex = null, port = null;
+						{
+							Class<?> tmp = (Class<?>) y.getClass().getMethod("hexagon").invoke(y);
+							if (!tmp.equals(Object.class))
+								hex = tmp;
+						}
+						{
+							Class<?> tmp = (Class<?>) y.getClass().getMethod("port").invoke(y);
+							if (!tmp.equals(Object.class))
+								port = tmp;
+						}
+						accumulator.adapter(grp, tc, hex, port, adapter);
+						foundSomething = true;
+					} catch (Exception e) {
+						accumulator.error(e.getMessage());
+					}
 				} else if (aname.equals("com.gmmapowell.swimlane.annotations.Utility")) {
 					try {
 						accumulator.utility(grp, tc);

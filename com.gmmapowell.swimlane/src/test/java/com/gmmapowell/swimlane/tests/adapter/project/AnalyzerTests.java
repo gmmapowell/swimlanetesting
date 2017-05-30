@@ -24,6 +24,7 @@ public class AnalyzerTests {
 	private URLClassLoader cl;
 	private TestGroup grp = new TestGroup(null);
 	private Class<?> hex1, hex2;
+	private Class<?> adapter1, port1;
 
 	@Before
 	public void setup() throws Exception {
@@ -34,6 +35,8 @@ public class AnalyzerTests {
 		analyzer = new HexagonTestAnalyzer(grp, cl, accumulator);
 		hex1 = cls("com.gmmapowell.swimlane.samples.Hexagon1");
 		hex2 = cls("com.gmmapowell.swimlane.samples.Hexagon2");
+		adapter1 = cls("com.gmmapowell.swimlane.samples.Hex1Port1Adapter1");
+		port1 = cls("com.gmmapowell.swimlane.samples.Hex1Port1");
 	}
 
 	@Test
@@ -72,6 +75,33 @@ public class AnalyzerTests {
 		String clzName = "com.gmmapowell.swimlane.samples.SampleBusinessWithHex";
 		context.checking(new Expectations() {{
 			oneOf(accumulator).logic(with(grp), with(ClassMatcher.named(clzName)), with(hex1));
+		}});
+		analyzer.consider(clzName);
+	}
+
+	@Test
+	public void testWeCanDetectWhenAnAdapterTestIsIndicated() throws Exception {
+		String clzName = "com.gmmapowell.swimlane.samples.SampleAdapter1";
+		context.checking(new Expectations() {{
+			oneOf(accumulator).adapter(with(grp), with(ClassMatcher.named(clzName)), with(aNull(Class.class)), with(aNull(Class.class)), with(adapter1));
+		}});
+		analyzer.consider(clzName);
+	}
+
+	@Test
+	public void testWeCanDetectWhenAnAdapterTestIsIndicatedWithAHexagon() throws Exception {
+		String clzName = "com.gmmapowell.swimlane.samples.SampleAdapter2";
+		context.checking(new Expectations() {{
+			oneOf(accumulator).adapter(with(grp), with(ClassMatcher.named(clzName)), with(hex1), with(aNull(Class.class)), with(adapter1));
+		}});
+		analyzer.consider(clzName);
+	}
+
+	@Test
+	public void testWeCanDetectWhenAnAdapterTestIsIndicatedWithAPort() throws Exception {
+		String clzName = "com.gmmapowell.swimlane.samples.SampleAdapter3";
+		context.checking(new Expectations() {{
+			oneOf(accumulator).adapter(with(grp), with(ClassMatcher.named(clzName)), with(aNull(Class.class)), with(port1), with(adapter1));
 		}});
 		analyzer.consider(clzName);
 	}
