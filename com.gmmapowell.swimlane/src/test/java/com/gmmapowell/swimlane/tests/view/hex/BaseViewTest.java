@@ -45,11 +45,12 @@ public abstract class BaseViewTest extends TestBase {
 		displayHelper.dispose();
 	}
 
-	protected void pushModel(HexagonDataModel testModel) {
+	protected HexagonDataModel pushModel(HexagonDataModel testModel) {
 		md.setModel(testModel);
 		shell.redraw();
 		shell.update();
 		displayHelper.flushPendingEvents();
+		return testModel;
 	}
 
 	protected void checkSizeColors(Canvas canvas, int x, int y, ImageChecker checker) {

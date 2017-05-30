@@ -43,8 +43,10 @@ public class HexView implements HexagonModelListener {
 		int hexn = 1;
 		for (HexData hexModel : model.getHexagons()) {
 			String hexId = "hexagons." + hexModel.getId();
-			if (findHexagon(view, hexId) == null)
-				createHexagon(hexModel, hexn, hexId);
+			HexagonControl hc = findHexagon(view, hexId + ".bg");
+			if (hc == null)
+				hc = createHexagon(hexModel, hexn, hexId);
+			hc.setBarVisibility(hexModel.getBar() != null && hexModel.getBar().getTotal() > 0);
 			hexn++;
 		}
 	}
@@ -118,5 +120,4 @@ public class HexView implements HexagonModelListener {
 		view.layout();
 		return hex;
 	}
-
 }
