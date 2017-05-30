@@ -117,6 +117,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			HexInfo hi = inithex(hex);
 			bar = hi.ensureBar();
 		}
+		barsFor.put(tc.getName(), bar);
 		collectCase(bar, grp, tc);
 	}
 
@@ -307,7 +308,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 				System.out.println("There is no bar for test class " + e.getKey() +"; how did it get run?");
 				continue;
 			}
-			((Acceptance)bar).casesForClass(e.getKey(), e.getValue().get());
+			((BarInfo)bar).casesForClass(e.getKey(), e.getValue().get());
 			changed.add(bar);
 		}
 		for (BarData bd : changed)

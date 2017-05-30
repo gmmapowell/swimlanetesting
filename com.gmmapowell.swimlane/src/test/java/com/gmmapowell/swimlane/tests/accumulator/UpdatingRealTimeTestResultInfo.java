@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
@@ -165,6 +166,24 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		assertEquals(4, bar.getTotal());
 		assertEquals(1, bar.getComplete());
 		assertEquals(Status.FAILURES, bar.getStatus());
+	}
+
+	@Test
+	public void businessLogicTestsAreNotifiedOfTheNumberOfTests() {
+		acc.logic(grp, String.class, null);
+		acc.analysisComplete();
+		List<HexData> hexes = hdm.getHexagons();
+		assertEquals(1, hexes.size());
+		BarData bar = hexes.get(0).getBar();
+		BarDataListener bl = context.mock(BarDataListener.class);
+		md.addBarListener(bl);
+		context.checking(new Expectations() {{
+			oneOf(bl).barChanged(bar);
+		}});
+		issueTree();
+		assertEquals(4, bar.getTotal());
+		assertEquals(0, bar.getComplete());
+		assertEquals(Status.OK, bar.getStatus());
 	}
 
 	protected void issueTree() {

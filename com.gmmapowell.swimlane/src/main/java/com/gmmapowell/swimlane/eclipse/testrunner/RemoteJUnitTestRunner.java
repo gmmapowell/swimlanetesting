@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.testrunner;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -23,7 +24,7 @@ public class RemoteJUnitTestRunner implements TestRunner {
 
 	@Override
 	public void runClass(TestResultReporter sink, String classpath, String... classesUnderTest) {
-		System.out.println("Running tests " + Arrays.asList(classesUnderTest) + " in classpath " + classpath);
+		System.out.println(new Date() + " Running tests " + Arrays.asList(classesUnderTest) + " in classpath " + classpath);
 		eclipse.backgroundWithProgress(new IJobFunction() {
 			
 			@Override

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,6 +39,7 @@ public class SingleRunner {
 	}
 	
 	public void exec() throws Exception {
+		System.out.println(new Date() + " starting to run tests");
 		TestResultReader trr = new TestResultReader(analyzer);
 		Thread thr = new Thread(trr);
 		thr.start();
@@ -51,6 +53,7 @@ public class SingleRunner {
 		trr.done();
 		thr.interrupt();
 		thr.join();
+		System.out.println(new Date() + " finished running tests");
 	}
 
 
