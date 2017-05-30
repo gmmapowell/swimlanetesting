@@ -77,6 +77,15 @@ public class AnalyzerTests {
 	}
 
 	@Test
+	public void testWeCanDetectWhenAUtilityTestIsIndicated() throws Exception {
+		String clzName = "com.gmmapowell.swimlane.samples.SampleUtility";
+		context.checking(new Expectations() {{
+			oneOf(accumulator).utility(with(grp), with(ClassMatcher.named(clzName)));
+		}});
+		analyzer.consider(clzName);
+	}
+
+	@Test
 	public void testWeCanDetectTestsThatHaventBeenAnnotated() throws Exception {
 		String clzName = "com.gmmapowell.swimlane.samples.UnlabelledTest";
 		context.checking(new Expectations() {{

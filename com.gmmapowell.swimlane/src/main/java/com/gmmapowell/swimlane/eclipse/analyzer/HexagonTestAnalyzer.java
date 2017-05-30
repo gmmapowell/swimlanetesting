@@ -46,6 +46,13 @@ public class HexagonTestAnalyzer implements ClassAnalyzer {
 					} catch (Exception e) {
 						accumulator.error(e.getMessage());
 					}
+				} else if (aname.equals("com.gmmapowell.swimlane.annotations.Utility")) {
+					try {
+						accumulator.utility(grp, tc);
+						foundSomething = true;
+					} catch (Exception e) {
+						accumulator.error(e.getMessage());
+					}
 				}
 			}
 			if (!foundSomething) {
