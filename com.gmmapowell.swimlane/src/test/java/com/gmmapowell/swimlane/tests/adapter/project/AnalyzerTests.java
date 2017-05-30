@@ -76,7 +76,15 @@ public class AnalyzerTests {
 		analyzer.consider(clzName);
 	}
 
-	// test that we comment on classes that have @Test but none of our annotations
+	@Test
+	public void testWeCanDetectTestsThatHaventBeenAnnotated() throws Exception {
+		String clzName = "com.gmmapowell.swimlane.samples.UnlabelledTest";
+		context.checking(new Expectations() {{
+			oneOf(accumulator).error(clzName + " has @Test annotations but no swimlane annotations");
+		}});
+		analyzer.consider(clzName);
+	}
+
 	@Test
 	public void testWeAreNotifiedIfTheClassCannotBeFound() throws Exception {
 		String clzName = "unknown";

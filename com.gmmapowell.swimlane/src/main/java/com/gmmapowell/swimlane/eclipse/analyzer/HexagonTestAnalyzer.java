@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.analyzer;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 
@@ -22,6 +23,7 @@ public class HexagonTestAnalyzer implements ClassAnalyzer {
 	@Override
 	public void consider(String clzName) {
 		try {
+			boolean foundSomething = false;
 			Class<?> tc = Class.forName(clzName, false, cl);
 			for (Annotation y : tc.getAnnotations()) {
 				String aname = y.annotationType().getName();
@@ -29,9 +31,9 @@ public class HexagonTestAnalyzer implements ClassAnalyzer {
 					try {
 						Class<?>[] hexes = (Class<?>[]) y.getClass().getMethod("value").invoke(y);
 						accumulator.acceptance(grp, tc, Arrays.asList(hexes));
+						foundSomething = true;
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						accumulator.error(e.getMessage());
 					}
 				} else if (aname.equals("com.gmmapowell.swimlane.annotations.BusinessLogic")) {
 					try {
@@ -40,10 +42,18 @@ public class HexagonTestAnalyzer implements ClassAnalyzer {
 						if (!tmp.equals(Object.class))
 							hex = tmp;
 						accumulator.logic(grp, tc, hex);
+						foundSomething = true;
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						accumulator.error(e.getMessage());
 					}
+				}
+			}
+			if (!foundSomething) {
+				for (Method m : tc.getMethods()) {
+					for (Annotation y : m.getAnnotations())
+						if (y.annotationType().getName().equals("org.junit.Test")) {
+							accumulator.error(clzName + " has @Test annotations but no swimlane annotations");
+						}
 				}
 			}
 		} catch (ClassNotFoundException e1) {
