@@ -72,7 +72,7 @@ public class RealEclipseAbstractor implements EclipseAbstractor {
 
 	@Override
 	public void backgroundWithProgress(IJobFunction jf) {
-		Job job = Job.create("do I need this?", jf);
+		Job job = Job.create("Running Tests ...", jf);
 		job.setUser(true);
 		job.schedule();
 	}

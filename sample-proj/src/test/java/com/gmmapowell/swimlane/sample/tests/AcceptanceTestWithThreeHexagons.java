@@ -1,6 +1,6 @@
 package com.gmmapowell.swimlane.sample.tests;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -13,8 +13,9 @@ import com.gmmapowell.swimlane.sample.code.Hexagon3;
 public class AcceptanceTestWithThreeHexagons {
 
 	@Test
-	public void test() {
-		assertNotNull("Not yet implemented");
+	public void test() throws InterruptedException {
+		Thread.sleep(1000);
+		assertEquals(42, 6*7);
 	}
 
 }

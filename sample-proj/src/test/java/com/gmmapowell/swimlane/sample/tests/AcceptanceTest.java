@@ -10,7 +10,8 @@ import com.gmmapowell.swimlane.annotations.Acceptance;
 public class AcceptanceTest {
 
 	@Test
-	public void test() {
+	public void test() throws Exception {
+		Thread.sleep(2000);
 		assertTrue(true);
 	}
 

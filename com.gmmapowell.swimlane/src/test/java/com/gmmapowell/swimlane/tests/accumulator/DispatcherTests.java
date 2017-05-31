@@ -1,7 +1,5 @@
 package com.gmmapowell.swimlane.tests.accumulator;
 
-import static org.junit.Assert.*;
-
 import org.jmock.Expectations;
 import org.junit.Test;
 
