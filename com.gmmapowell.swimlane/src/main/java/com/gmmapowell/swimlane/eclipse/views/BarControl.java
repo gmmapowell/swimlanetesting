@@ -19,8 +19,7 @@ public class BarControl implements BarDataListener {
 		canvas.setData("com.gmmapowell.swimlane.bar", this);
 		canvas.setData("org.eclipse.swtbot.widget.key", barId);
 		canvas.addPaintListener(new BarPaintListener(canvas, bar));
-		if (dispatcher != null)
-			dispatcher.addBarListener(bar, this);
+		dispatcher.addBarListener(bar, this);
 	}
 
 	public Canvas getCanvas() {

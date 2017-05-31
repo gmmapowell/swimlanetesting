@@ -42,6 +42,7 @@ public class UpdatingDoesNotCreateNewHexes extends BaseViewTest {
 			allowing(hd).getId(); will(returnValue("hex.1"));
 			allowing(hd).getBar(); will(returnValue(bd));
 			allowing(hd).getPorts(); will(returnValue(new ArrayList<PortData>()));
+			allowing(bd).getId(); will(returnValue("bar1"));
 			allowing(bd).getTotal(); will(returnValue(total));
 			allowing(bd).getComplete(); will(returnValue(complete)); when(mode.is("initial"));
 			allowing(bd).getComplete(); will(returnValue(complete+5)); when(mode.is("plus5"));

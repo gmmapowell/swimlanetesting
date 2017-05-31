@@ -100,6 +100,7 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 				allowing(hexagons.get(0)).getId(); will(returnValue("hex.1"));
 				allowing(hexagons.get(0)).getBar(); will(returnValue(bars.get(0)));
 				allowing(hexagons.get(0)).getPorts(); will(returnValue(new ArrayList<PortData>()));
+				allowing(bars.get(0)).getId(); will(returnValue("bar1"));
 				allowing(bars.get(0)).getTotal(); will(returnValue(total));
 				allowing(bars.get(0)).getComplete(); will(returnValue(complete));
 				allowing(bars.get(0)).getStatus(); will(returnValue(status));
@@ -109,6 +110,7 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 				allowing(hexagons.get(1)).getId(); will(returnValue("hex.2"));
 				allowing(hexagons.get(1)).getBar(); will(returnValue(bars.get(1)));
 				allowing(hexagons.get(1)).getPorts(); will(returnValue(new ArrayList<PortData>()));
+				allowing(bars.get(1)).getId(); will(returnValue("bar2"));
 				allowing(bars.get(1)).getTotal(); will(returnValue(total));
 				allowing(bars.get(1)).getComplete(); will(returnValue(complete));
 				allowing(bars.get(1)).getStatus(); will(returnValue(status));
@@ -118,6 +120,7 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 				allowing(hexagons.get(2)).getId(); will(returnValue("hex.3"));
 				allowing(hexagons.get(2)).getBar(); will(returnValue(bars.get(2)));
 				allowing(hexagons.get(2)).getPorts(); will(returnValue(new ArrayList<PortData>()));
+				allowing(bars.get(2)).getId(); will(returnValue("bar3"));
 				allowing(bars.get(2)).getTotal(); will(returnValue(total));
 				allowing(bars.get(2)).getComplete(); will(returnValue(complete));
 				allowing(bars.get(2)).getStatus(); will(returnValue(status));
