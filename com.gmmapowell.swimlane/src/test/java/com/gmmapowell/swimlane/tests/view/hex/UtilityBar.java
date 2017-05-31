@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
 import org.jmock.Expectations;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
@@ -38,7 +37,6 @@ public class UtilityBar extends BaseViewTest {
 	}
 
 	@Test
-	@Ignore
 	public void testTheUtilityBarLooksRightWhenFiveTestsHaveRunSuccessfully() throws Exception {
 		specifyModel(10, 5, Status.OK);
 		Canvas acceptance = waitForControl(shell, "hexagons.utility");
@@ -54,7 +52,6 @@ public class UtilityBar extends BaseViewTest {
 	}
 
 	@Test
-	@Ignore
 	public void testTheUtilityBarLooksRightWhenFiveTestsHaveRunWithFailures() throws Exception {
 		specifyModel(10, 5, Status.FAILURES);
 		Canvas acceptance = waitForControl(shell, "hexagons.utility");
