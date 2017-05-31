@@ -1,16 +1,44 @@
 package com.gmmapowell.swimlane.tests.accumulator;
 
+import static org.junit.Assert.*;
+
 import org.jmock.Expectations;
 import org.junit.Test;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.AccumulatorListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public class DispatcherTests extends TestBase {
 	SolidModelDispatcher md = new SolidModelDispatcher();
 	
+	@Test
+	public void testThatTheDispatcherNotifiesAccumulatorListenersWhenTheModelChanges() throws Exception {
+		AccumulatorListener lsnr = context.mock(AccumulatorListener.class);
+		Accumulator model = context.mock(Accumulator.class);
+		context.checking(new Expectations() {{
+			oneOf(lsnr).setModel(model);
+		}});
+		md.addAccumulator(lsnr);
+		md.setModel(model);
+	}
+
+	@Test
+	public void testThatTheDispatcherNotifiesHMDListenersWhenTheModelChanges() throws Exception {
+		HexagonModelListener lsnr = context.mock(HexagonModelListener.class);
+		HexagonDataModel model = context.mock(HexagonDataModel.class);
+		context.checking(new Expectations() {{
+			oneOf(lsnr).setModel(model);
+		}});
+		md.addHexagonModelListener(lsnr);
+		md.setModel(model);
+	}
+
 	@Test
 	public void testThatTheDispatcherForwardsASimpleBarToAListener() {
 		BarDataListener lsnr = context.mock(BarDataListener.class);
