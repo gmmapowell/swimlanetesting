@@ -40,6 +40,7 @@ public class UpdatingDoesNotCreateNewHexes extends BaseViewTest {
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
 			allowing(testModel).getAcceptanceTests(); will(returnValue(accList));
 			allowing(testModel).getHexagons(); will(returnValue(hexagons));
+			allowing(testModel).getUtilityBar(); will(returnValue(null));
 			allowing(hd).getId(); will(returnValue("hex.1"));
 			allowing(hd).getBar(); will(returnValue(bd));
 			allowing(hd).getPorts(); will(returnValue(new ArrayList<PortData>()));

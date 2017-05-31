@@ -30,7 +30,6 @@ public class SolidModelDispatcher implements ModelDispatcher {
 		if (bar == null)
 			return;
 		String id = bar.getId();
-		System.out.println("Adding listener for bar " + id);
 		if (!barLsnrs.containsKey(id))
 			barLsnrs.put(id, new HashSet<>());
 		barLsnrs.get(id).add(lsnr);
@@ -59,7 +58,6 @@ public class SolidModelDispatcher implements ModelDispatcher {
 	public void barChanged(BarData bar) {
 		String id = bar.getId();
 		Set<BarDataListener> lsnrs = barLsnrs.get(id);
-		System.out.println("Bar " + id + " changed: updating " + lsnrs);
 		if (lsnrs != null)
 			for (BarDataListener l : lsnrs)
 				l.barChanged(bar);

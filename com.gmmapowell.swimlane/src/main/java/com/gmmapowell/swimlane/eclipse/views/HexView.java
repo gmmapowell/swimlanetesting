@@ -49,6 +49,12 @@ public class HexView implements HexagonModelListener {
 			hc.setBarVisibility(hexModel.getBar() != null && hexModel.getBar().getTotal() > 0);
 			hexn++;
 		}
+		BarData bd = model.getUtilityBar();
+		if (bd != null) {
+			String id = "hexagons." + bd.getId();
+			if (findBar(view, id) == null)
+				createBar(model, bd, id);
+		}
 	}
 
 	protected BarControl createBar(HexagonDataModel model, BarData accModel, String accId) {

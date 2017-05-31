@@ -41,6 +41,7 @@ public class DiscoveringNewAcceptanceBars extends BaseViewTest {
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
 			allowing(testModel).getAcceptanceTests(); will(returnValue(accList));
 			allowing(testModel).getHexagons(); will(returnValue(new ArrayList<HexData>()));
+			allowing(testModel).getUtilityBar(); will(returnValue(null));
 		}});
 		return testModel;
 	}

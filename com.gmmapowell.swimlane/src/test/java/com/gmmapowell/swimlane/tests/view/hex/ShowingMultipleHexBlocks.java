@@ -97,6 +97,7 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
 			allowing(testModel).getAcceptanceTests(); will(returnValue(accList));
 			allowing(testModel).getHexagons(); will(returnValue(hexagons));
+			allowing(testModel).getUtilityBar(); will(returnValue(null));
 			if (nhex > 0) {
 				allowing(hexagons.get(0)).getId(); will(returnValue("hex.1"));
 				allowing(hexagons.get(0)).getBar(); will(returnValue(bars.get(0)));

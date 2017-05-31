@@ -175,9 +175,14 @@ public class AdapterAccumulationTests {
 		HexData hd = hdm.getHexagons().get(0);
 		assertEquals(2, hd.getPorts().size());
 		PortData p1 = hd.getPorts().get(0);
-		assertEquals(PortLocation.SOUTHEAST, p1.getLocation());
 		PortData p2 = hd.getPorts().get(1);
-		assertEquals(PortLocation.NORTHWEST, p2.getLocation());
+		if (p1.getName().equals(portClass1.getName())) {
+			assertEquals(PortLocation.SOUTHEAST, p1.getLocation());
+			assertEquals(PortLocation.NORTHWEST, p2.getLocation());
+		} else {
+			assertEquals(PortLocation.NORTHWEST, p1.getLocation());
+			assertEquals(PortLocation.SOUTHEAST, p2.getLocation());
+		}
 	}
 
 	@Test

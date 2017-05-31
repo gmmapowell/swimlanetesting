@@ -15,18 +15,18 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
-public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
+public class UtilityBar extends BaseViewTest {
 	
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel(10, 0, Status.OK);
-		assertControls(shell, "hexagons.acceptance.1");
+		assertControls(shell, "hexagons.utility");
 	}
 	
 	@Test
-	public void testTheAcceptanceRowLooksRightWhenNoTestsHaveRun() throws Exception {
+	public void testTheUtilityBarLooksRightWhenNoTestsHaveRun() throws Exception {
 		specifyModel(10, 0, Status.OK);
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		Canvas acceptance = waitForControl(shell, "hexagons.utility");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -37,9 +37,9 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 	}
 
 	@Test
-	public void testTheAcceptanceRowLooksRightWhenFiveTestsHaveRunSuccessfully() throws Exception {
+	public void testTheUtilityBarLooksRightWhenFiveTestsHaveRunSuccessfully() throws Exception {
 		specifyModel(10, 5, Status.OK);
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		Canvas acceptance = waitForControl(shell, "hexagons.utility");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -52,9 +52,9 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 	}
 
 	@Test
-	public void testTheAcceptanceRowLooksRightWhenFiveTestsHaveRunWithFailures() throws Exception {
+	public void testTheUtilityBarLooksRightWhenFiveTestsHaveRunWithFailures() throws Exception {
 		specifyModel(10, 5, Status.FAILURES);
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		Canvas acceptance = waitForControl(shell, "hexagons.utility");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -70,22 +70,20 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 
 	protected HexagonDataModel defineModel(int total, int complete, Status status) {
 		HexagonDataModel testModel = context.mock(HexagonDataModel.class);
-		ArrayList<BarData> accList = new ArrayList<BarData>();
-		BarData a = context.mock(BarData.class);
-		accList.add(a);
+		BarData uteBar = context.mock(BarData.class);
 		context.checking(new Expectations() {{
-			allowing(testModel).getHexCount(); will(returnValue(1));
+			allowing(testModel).getHexCount(); will(returnValue(0));
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
-			allowing(testModel).getAcceptanceTests(); will(returnValue(accList));
+			allowing(testModel).getAcceptanceTests(); will(returnValue(new ArrayList<>()));
 			allowing(testModel).getHexagons(); will(returnValue(new ArrayList<HexData>()));
-			allowing(testModel).getUtilityBar(); will(returnValue(null));
-			allowing(a).getId(); will(returnValue("acceptance.1"));
-			allowing(a).getTotal(); will(returnValue(total));
-			allowing(a).getComplete(); will(returnValue(complete));
-			allowing(a).getStatus(); will(returnValue(status));
-			allowing(a).getMarks(); will(returnValue(new int[] { 1 }));
+			allowing(testModel).getUtilityBar(); will(returnValue(uteBar));
+			allowing(uteBar).getId(); will(returnValue("utility"));
+			allowing(uteBar).getTotal(); will(returnValue(total));
+			allowing(uteBar).getComplete(); will(returnValue(complete));
+			allowing(uteBar).getStatus(); will(returnValue(status));
+			allowing(uteBar).getMarks(); will(returnValue(new int[] { 1 }));
 			
-			oneOf(md).addBarListener(with(a), with(aNonNull(BarDataListener.class)));
+			oneOf(md).addBarListener(with(uteBar), with(aNonNull(BarDataListener.class)));
 		}});
 		return testModel;
 	}
