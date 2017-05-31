@@ -8,6 +8,7 @@ import org.jmock.Expectations;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
@@ -120,6 +121,11 @@ public class PartialAcceptanceBars extends BaseViewTest {
 			allowing(d).getComplete(); will(returnValue(11));
 			allowing(d).getStatus(); will(returnValue(Status.OK));
 			allowing(d).getMarks(); will(returnValue(new int[] { 0, 1, 1}));
+
+			oneOf(md).addBarListener(with(a), with(aNonNull(BarDataListener.class)));
+			oneOf(md).addBarListener(with(b), with(aNonNull(BarDataListener.class)));
+			oneOf(md).addBarListener(with(c), with(aNonNull(BarDataListener.class)));
+			oneOf(md).addBarListener(with(d), with(aNonNull(BarDataListener.class)));
 		}});
 		return testModel;
 	}

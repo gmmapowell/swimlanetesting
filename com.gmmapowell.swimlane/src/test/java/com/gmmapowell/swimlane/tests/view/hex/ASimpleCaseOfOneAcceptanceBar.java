@@ -8,6 +8,7 @@ import org.jmock.Expectations;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
@@ -82,6 +83,8 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 			allowing(a).getComplete(); will(returnValue(complete));
 			allowing(a).getStatus(); will(returnValue(status));
 			allowing(a).getMarks(); will(returnValue(new int[] { 1 }));
+			
+			oneOf(md).addBarListener(with(a), with(aNonNull(BarDataListener.class)));
 		}});
 		return testModel;
 	}

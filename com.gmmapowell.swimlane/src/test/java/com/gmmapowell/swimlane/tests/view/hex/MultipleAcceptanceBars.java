@@ -6,6 +6,7 @@ import org.jmock.Expectations;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
@@ -51,6 +52,11 @@ public class MultipleAcceptanceBars extends BaseViewTest {
 			allowing(c).getComplete(); will(returnValue(11));
 			allowing(c).getStatus(); will(returnValue(Status.NONE));
 			allowing(c).getMarks(); will(returnValue(new int[] { 1 }));
+
+
+			oneOf(md).addBarListener(with(a), with(aNonNull(BarDataListener.class)));
+			oneOf(md).addBarListener(with(b), with(aNonNull(BarDataListener.class)));
+			oneOf(md).addBarListener(with(c), with(aNonNull(BarDataListener.class)));
 		}});
 		return testModel;
 	}

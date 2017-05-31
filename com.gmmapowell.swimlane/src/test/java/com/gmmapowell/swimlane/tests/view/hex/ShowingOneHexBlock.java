@@ -10,10 +10,11 @@ import org.jmock.States;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
@@ -78,7 +79,7 @@ public class ShowingOneHexBlock extends BaseViewTest {
 		specifyModel(10, 0, Status.NONE);
 		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
 		mode.become("plus5");
-		md.barChanged(bd);
+		fmd.real().barChanged(bd);
 		displayHelper.flushPendingEvents();
 		checkSizeColors(hexagon, 276, 238, new ImageChecker() {
 			@Override
@@ -118,6 +119,7 @@ public class ShowingOneHexBlock extends BaseViewTest {
 			allowing(bd).getStatus(); will(returnValue(status)); when(mode.is("initial"));
 			allowing(bd).getStatus(); will(returnValue(Status.OK)); when(mode.is("plus5"));
 			allowing(bd).getMarks(); will(returnValue(new int[] { 1 }));
+			oneOf(md).addBarListener(with(bd), with(aNonNull(BarDataListener.class)));
 		}});
 		return testModel;
 	}

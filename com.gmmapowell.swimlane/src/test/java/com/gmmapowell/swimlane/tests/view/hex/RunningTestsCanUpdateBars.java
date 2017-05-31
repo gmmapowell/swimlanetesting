@@ -9,6 +9,7 @@ import org.jmock.States;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
@@ -39,7 +40,7 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 			}
 		});
 		progress.become("halfway");
-		md.barChanged(a);
+		fmd.barChanged(a);
 		displayHelper.flushPendingEvents();
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
@@ -50,7 +51,7 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 			}
 		});
 		progress.become("complete");
-		md.barChanged(a);
+		fmd.barChanged(a);
 		displayHelper.flushPendingEvents();
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
@@ -65,8 +66,12 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 	protected HexagonDataModel modelWith(String s, BarData... bars) {
 		HexagonDataModel testModel = context.mock(HexagonDataModel.class, s);
 		ArrayList<BarData> accList = new ArrayList<BarData>();
-		for (BarData b : bars)
+		for (BarData b : bars) {
 			accList.add(b);
+			context.checking(new Expectations() {{
+				oneOf(md).addBarListener(with(b), with(aNonNull(BarDataListener.class)));
+			}});
+		}
 		context.checking(new Expectations() {{
 			allowing(testModel).getHexCount(); will(returnValue(1));
 			allowing(testModel).getBuildTime(); will(returnValue(exactDate(2017, 04, 20, 04, 20, 00, 420)));
@@ -82,6 +87,7 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 			allowing(a).getId(); will(returnValue("acceptance.11"));
 			allowing(a).getTotal(); will(returnValue(10));
 			allowing(a).getMarks(); will(returnValue(new int[] { 1 }));
+			exactly(2).of(md).barChanged(a);
 		}});
 		return a;
 	}

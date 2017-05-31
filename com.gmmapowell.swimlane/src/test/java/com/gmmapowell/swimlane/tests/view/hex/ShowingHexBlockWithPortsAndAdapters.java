@@ -11,6 +11,7 @@ import org.jmock.Expectations;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
@@ -130,6 +131,10 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 			allowing(a2).getMarks(); will(returnValue(new int[] { 1 }));
 			allowing(pd).getLocation(); will(returnValue(PortLocation.NORTHWEST));
 			allowing(pd).getAdapters(); will(returnValue(adapterList));
+
+			oneOf(md).addBarListener(with(bd), with(aNonNull(BarDataListener.class)));
+			oneOf(md).addBarListener(with(a1), with(aNonNull(BarDataListener.class)));
+			oneOf(md).addBarListener(with(a2), with(aNonNull(BarDataListener.class)));
 		}});
 		return testModel;
 	}

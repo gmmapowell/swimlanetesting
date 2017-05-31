@@ -6,6 +6,7 @@ import org.jmock.Expectations;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
@@ -52,6 +53,8 @@ public class DiscoveringNewAcceptanceBars extends BaseViewTest {
 			allowing(a).getComplete(); will(returnValue(3));
 			allowing(a).getStatus(); will(returnValue(Status.OK));
 			allowing(a).getMarks(); will(returnValue(new int[] { 1 }));
+
+			oneOf(md).addBarListener(with(a), with(aNonNull(BarDataListener.class)));
 		}});
 		return a;
 	}
@@ -64,6 +67,8 @@ public class DiscoveringNewAcceptanceBars extends BaseViewTest {
 			allowing(b).getComplete(); will(returnValue(4));
 			allowing(b).getStatus(); will(returnValue(Status.FAILURES));
 			allowing(b).getMarks(); will(returnValue(new int[] { 1 }));
+			
+			oneOf(md).addBarListener(with(b), with(aNonNull(BarDataListener.class)));
 		}});
 		return b;
 	}
