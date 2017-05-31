@@ -38,7 +38,7 @@ public class HexView implements HexagonModelListener {
 		for (BarData accModel : model.getAcceptanceTests()) {
 			String accId = "hexagons." + accModel.getId();
 			if (findBar(view, accId) == null)
-				createBar(model, accModel, accId);
+				createBar(model, accModel, "accbar", accId);
 		}
 		int hexn = 1;
 		for (HexData hexModel : model.getHexagons()) {
@@ -53,12 +53,12 @@ public class HexView implements HexagonModelListener {
 		if (bd != null) {
 			String id = "hexagons." + bd.getId();
 			if (findBar(view, id) == null)
-				createBar(model, bd, id);
+				createBar(model, bd, "utebar", id);
 		}
 	}
 
-	protected BarControl createBar(HexagonDataModel model, BarData accModel, String accId) {
-		BarControl bc = new BarControl(dispatcher, view, accModel, "accbar", accId);
+	protected BarControl createBar(HexagonDataModel model, BarData accModel, String barType, String accId) {
+		BarControl bc = new BarControl(dispatcher, view, accModel, barType, accId);
 
 		// By default, the bar will have been added at "the end".  If that is the wrong place, we need to consider moving it up
 		// In particular, it should go before any keys that are "acceptance.N" where N is less than our N,

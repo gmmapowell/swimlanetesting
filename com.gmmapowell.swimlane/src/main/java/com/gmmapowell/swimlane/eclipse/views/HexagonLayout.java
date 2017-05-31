@@ -27,6 +27,8 @@ public class HexagonLayout extends Layout {
         	if (type.equals("accbar")) {
         		ymax -= 10; // allow 10px for the bar, even though it only shows 6, allowing 2 for margin on both sides
         		hexAt += 10;
+        	} else if (type.equals("utebar")) {
+           		ymax -= 10; // allow 10px for the bar, but make it underneath the hexagons
         	} else if (type.equals("hexbg")) {
         		nhexes++;
         	}
@@ -87,6 +89,8 @@ public class HexagonLayout extends Layout {
         		int x2 = x1 + pl.x(a/2);
         		Rectangle r = new Rectangle(Math.min(x1, x2), y1, Math.abs(x1-x2), 6);
         		c.setBounds(r);
+        	} else if (type.equals("utebar")) {
+        		c.setBounds(0, hexAt+ymax+2, xmax, 6);
         	} else
         		System.out.println("Don't lay out " + type);
         }
