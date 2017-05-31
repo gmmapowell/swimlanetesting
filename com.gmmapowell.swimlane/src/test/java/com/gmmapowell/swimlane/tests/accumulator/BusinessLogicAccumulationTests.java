@@ -60,10 +60,7 @@ public class BusinessLogicAccumulationTests {
 	public void testWeCannotAssociateTestsWithTheDefaultHexagonAndAlsoHaveASecondHexagon() {
 		acc.acceptance(grp, accCase, Arrays.asList(hexClass1, hexClass2));
 		acc.logic(grp, testCase1, null);
-//		acc.logic(grp, testCase2, hexClass1);
-//		acc.logic(grp, testCase3, hexClass2);
 		acc.analysisComplete();
-		System.out.println(hdm.getErrors());
 		assertEquals(1, hdm.getErrors().size());
 		assertTrue(hdm.getErrors().contains("cannot use @BusinessLogic with default hexagon in java.lang.String since there are multiple hexagons"));
 		assertEquals(2, hdm.getHexCount());

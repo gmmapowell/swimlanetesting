@@ -41,7 +41,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		assertEquals(1, bars.size());
 		BarData bar = bars.get(0);
 		BarDataListener bl = context.mock(BarDataListener.class);
-		md.addBarListener(bl);
+		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			oneOf(bl).barChanged(bar);
 		}});
@@ -60,7 +60,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		BarData bar = bars.get(0);
 		TestInfo test = context.mock(TestInfo.class);
 		BarDataListener bl = context.mock(BarDataListener.class);
-		md.addBarListener(bl);
+		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
 			exactly(2).of(bl).barChanged(bar);
@@ -81,7 +81,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		BarData bar = bars.get(0);
 		TestInfo test = context.mock(TestInfo.class);
 		BarDataListener bl = context.mock(BarDataListener.class);
-		md.addBarListener(bl);
+		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
 			exactly(2).of(bl).barChanged(bar);
@@ -106,7 +106,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		assertNotNull(bar);
 		TestInfo test = context.mock(TestInfo.class);
 		BarDataListener bl = context.mock(BarDataListener.class);
-		md.addBarListener(bl);
+		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(Integer.class.getName()));
 			oneOf(bl).barChanged(bar);
@@ -127,7 +127,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		assertNotNull(bar);
 		TestInfo test = context.mock(TestInfo.class);
 		BarDataListener bl = context.mock(BarDataListener.class);
-		md.addBarListener(bl);
+		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
 			exactly(2).of(bl).barChanged(bar);
@@ -155,7 +155,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		assertEquals(String.class.getName(), bar.classesUnderTest().get(0));
 		TestInfo test = context.mock(TestInfo.class);
 		BarDataListener bl = context.mock(BarDataListener.class);
-		md.addBarListener(bl);
+		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
 			exactly(2).of(bl).barChanged(bar);
@@ -176,7 +176,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		assertEquals(1, hexes.size());
 		BarData bar = hexes.get(0).getBar();
 		BarDataListener bl = context.mock(BarDataListener.class);
-		md.addBarListener(bl);
+		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			oneOf(bl).barChanged(bar);
 		}});
@@ -194,7 +194,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		assertEquals(0, hexes.size());
 		BarData bar = hdm.getUtilityBar();
 		BarDataListener bl = context.mock(BarDataListener.class);
-		md.addBarListener(bl);
+		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			oneOf(bl).barChanged(bar);
 		}});
@@ -212,7 +212,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		assertEquals(1, hexes.size());
 		BarData bar = hexes.get(0).getPorts().get(0).getAdapters().get(0);
 		BarDataListener bl = context.mock(BarDataListener.class);
-		md.addBarListener(bl);
+		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			oneOf(bl).barChanged(bar);
 		}});

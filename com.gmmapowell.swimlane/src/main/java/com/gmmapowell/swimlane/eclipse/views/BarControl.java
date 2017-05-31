@@ -20,7 +20,7 @@ public class BarControl implements BarDataListener {
 		canvas.setData("org.eclipse.swtbot.widget.key", barId);
 		canvas.addPaintListener(new BarPaintListener(canvas, bar));
 		if (dispatcher != null)
-			dispatcher.addBarListener(this);
+			dispatcher.addBarListener(bar, this);
 	}
 
 	public Canvas getCanvas() {

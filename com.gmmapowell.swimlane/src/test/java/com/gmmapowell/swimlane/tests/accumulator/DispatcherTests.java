@@ -16,10 +16,26 @@ public class DispatcherTests extends TestBase {
 		BarDataListener lsnr = context.mock(BarDataListener.class);
 		BarData bar = context.mock(BarData.class);
 		context.checking(new Expectations() {{
+			allowing(bar).getId(); will(returnValue("bar"));
 			oneOf(lsnr).barChanged(bar);
 		}});
-		md.addBarListener(lsnr);
+		md.addBarListener(bar, lsnr);
 		md.barChanged(bar);
+	}
+
+	@Test
+	public void testThatTheDispatcherCanDistinguishWhichBarsToSendToWhichListeners() {
+		BarDataListener lsnr = context.mock(BarDataListener.class);
+		BarData bar1 = context.mock(BarData.class, "bar1");
+		BarData bar2 = context.mock(BarData.class, "bar2");
+		context.checking(new Expectations() {{
+			allowing(bar1).getId(); will(returnValue("bar1"));
+			allowing(bar2).getId(); will(returnValue("bar2"));
+			oneOf(lsnr).barChanged(bar1);
+		}});
+		md.addBarListener(bar1, lsnr);
+		md.barChanged(bar1);
+		md.barChanged(bar2);
 	}
 
 }
