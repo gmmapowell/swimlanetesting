@@ -48,7 +48,7 @@ public abstract class BarInfo implements BarData {
 
 	@Override
 	public int[] getMarks() {
-		return new int[1];
+		return new int[] { 1 };
 	}
 
 	public void merge(BarInfo a) {

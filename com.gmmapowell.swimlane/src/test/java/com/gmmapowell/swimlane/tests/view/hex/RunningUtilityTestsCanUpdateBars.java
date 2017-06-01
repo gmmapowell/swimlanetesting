@@ -54,7 +54,6 @@ public class RunningUtilityTestsCanUpdateBars extends BaseViewTest {
 		Canvas ute = waitForControl(shell, "hexagons.utility");
 		assertEquals(0, ute.getBounds().x);
 		assertEquals(282, ute.getBounds().y);
-		Thread.sleep(2500);
 		checkSizeColors(ute, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {

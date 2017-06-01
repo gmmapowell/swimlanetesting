@@ -55,13 +55,15 @@ public final class BarPaintListener implements PaintListener {
 				if (barx > from) {
 					Color barColor = canvas.getDisplay().getSystemColor(getColor(stat));
 					gc.setBackground(barColor);
-					gc.fillRectangle(from, 0, Math.min(barx-from, to-from), size.y);
+					int cw = Math.min(barx-from, to-from);
+					gc.fillRectangle(from, 0, cw, size.y);
 				}
 				if (barx < to) {
 					int left = Math.max(barx, from);
 					Color grey = canvas.getDisplay().getSystemColor(SWT.COLOR_GRAY);
 					gc.setBackground(grey);
-					gc.fillRectangle(left, 0, Math.min(markedx-left, to-from), size.y);
+					int gw = Math.min(markedx-left, to-from);
+					gc.fillRectangle(left, 0, gw, size.y);
 				}
 			} else {
 				barx += segwidth;
