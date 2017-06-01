@@ -24,11 +24,18 @@ public class ErrorView {
 		table.setHeaderVisible(true);
 		
 		TableColumn tc = new TableColumn(table, SWT.NULL);
-		tc.setText("Hello");
+		tc.setText("Sev");
 		
-		TableItem ti = new TableItem(table, SWT.NULL);
-		ti.setText("Yo!");
-		ti.setText(0, "There");
+		TableColumn tc2 = new TableColumn(table, SWT.NULL);
+		tc2.setText("Message");
+		
+//		TableItem ti = new TableItem(table, SWT.NULL);
+//		ti.setText(0, "There");
+//		ti.setText(1, "Message");
+
+		table.getColumn(0).pack();
+		table.getColumn(1).pack();
+		view.layout();
 	}
 
 	public Control getTop() {
