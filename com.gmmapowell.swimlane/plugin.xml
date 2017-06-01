@@ -67,7 +67,7 @@
 		<command
    			id="com.gmmapowell.swimlane.eclipse.commands.ShowHexes"
    			name="Show Hexes"
-   			defaultHandler="com.gmmapowell.swimlane.eclipse.actions.ShowHexesAction"
+   			defaultHandler="com.gmmapowell.swimlane.eclipse.handlers.ShowHexesHandler"
 		>
 		   	<commandParameter
 		   		id="org.eclipse.ui.commands.radioStateParameter"
@@ -93,7 +93,7 @@
 		<command
    			id="com.gmmapowell.swimlane.eclipse.commands.ShowErrors"
    			name="Show Errors"
-   			defaultHandler="com.gmmapowell.swimlane.eclipse.actions.ShowErrorsAction"
+   			defaultHandler="com.gmmapowell.swimlane.eclipse.handlers.ShowErrorsHandler"
 		>
 			<commandParameter
    				id="com.gmmapowell.swimlane.eclipse.actions.parameter2"
@@ -119,7 +119,7 @@
 		<command
    			id="com.gmmapowell.swimlane.eclipse.commands.RunAll"
    			name="Run All"
-   			defaultHandler="com.gmmapowell.swimlane.eclipse.actions.RunAllTestsAction"
+   			defaultHandler="com.gmmapowell.swimlane.eclipse.handlers.RunAllTestsHandler"
 		>
 	   </command>
    </extension>

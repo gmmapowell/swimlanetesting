@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.eclipse.actions;
+package com.gmmapowell.swimlane.eclipse.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -9,7 +9,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
 
-public class RunAllTestsAction extends AbstractHandler {
+public class RunAllTestsHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IWorkbenchPart me = HandlerUtil.getActivePart(event);

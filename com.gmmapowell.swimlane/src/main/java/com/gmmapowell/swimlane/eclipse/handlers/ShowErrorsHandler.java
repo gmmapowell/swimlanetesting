@@ -1,14 +1,15 @@
-package com.gmmapowell.swimlane.eclipse.actions;
+package com.gmmapowell.swimlane.eclipse.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
-public class ShowHexesAction extends AbstractHandler {
+public class ShowErrorsHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		System.out.println("Show hexes " + event);
+		System.out.println("Show errors");
 		return true;
 	}
+
 }

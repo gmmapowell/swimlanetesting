@@ -8,7 +8,7 @@ import java.util.List;
 import org.jmock.Expectations;
 import org.junit.Test;
 
-import com.gmmapowell.swimlane.eclipse.actions.RunAllTestsAction;
+import com.gmmapowell.swimlane.eclipse.handlers.RunAllTestsHandler;
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
