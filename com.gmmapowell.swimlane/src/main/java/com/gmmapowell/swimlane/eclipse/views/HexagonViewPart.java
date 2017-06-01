@@ -15,6 +15,7 @@ import org.eclipse.ui.part.ViewPart;
 import com.gmmapowell.swimlane.eclipse.RealEclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.SingleStore;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.project.BuildListener;
@@ -31,7 +32,7 @@ import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
  * From this, it builds a "dynamic" view of the tests, i.e. quantity, names and (current) results
  * These are then put together with the static view to build and color the bars within the various portions of the static layout
  */
-public class HexagonViewPart extends ViewPart {
+public class HexagonViewPart extends ViewPart implements SingleStore {
 	public static final String ID = "com.gmmapowell.swimlane.views.HexagonView";
 
 	private BuildListener bl;
@@ -66,11 +67,13 @@ public class HexagonViewPart extends ViewPart {
 		}
 	}
 
+	@Override
 	public void showErrorPane() {
 		stack.topControl = errorView.getTop();
 		stackUI.layout();
 	}
 
+	@Override
 	public void showHexPane() {
 		stack.topControl = hexView.getTop();
 		stackUI.layout();
@@ -84,22 +87,27 @@ public class HexagonViewPart extends ViewPart {
 	public void setFocus() {
 	}
 
+	@Override
 	public TestRunner getTestRunner() {
 		return tr;
 	}
 
+	@Override
 	public ModelDispatcher getDispatcher() {
 		return dispatcher;
 	}
 
+	@Override
 	public Accumulator getAccumulator() {
 		return hexView.getAccumulator();
 	}
 
-	public static HexagonViewPart get(ExecutionEvent event) {
+	public static SingleStore get(ExecutionEvent event) {
 		IWorkbenchPart me = HandlerUtil.getActivePart(event);
 		if (me == null)
 			return null;
-		return me.getAdapter(HexagonViewPart.class);
+		if (!(me instanceof SingleStore))
+			return null;
+		return (SingleStore) me;
 	}
 }
