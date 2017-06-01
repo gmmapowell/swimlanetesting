@@ -12,12 +12,20 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 
 public final class BarPaintListener implements PaintListener {
-	private final BarData barModel;
+	private BarData barModel;
 	private final Canvas canvas;
 
-	public BarPaintListener(Canvas canvas, BarData accModel) {
+	public BarPaintListener(Canvas canvas, BarData bar) {
 		this.canvas = canvas;
-		this.barModel = accModel;
+		this.barModel = bar;
+	}
+	
+	public BarData updateBar(BarData upd) {
+		if (this.barModel == upd)
+			return null;
+		BarData tmp = this.barModel;
+		this.barModel = upd;
+		return tmp;
 	}
 
 	@Override

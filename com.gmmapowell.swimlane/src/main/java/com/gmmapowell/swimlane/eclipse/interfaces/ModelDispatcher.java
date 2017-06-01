@@ -4,6 +4,7 @@ public interface ModelDispatcher {
 
 	void addHexagonModelListener(HexagonModelListener lsnr);
 	void addBarListener(BarData bar, BarDataListener lsnr);
+	void removeBarListener(BarData bar, BarDataListener lsnr);
 	void addAccumulator(AccumulatorListener lsnr);
 
 	void setModel(Object model);

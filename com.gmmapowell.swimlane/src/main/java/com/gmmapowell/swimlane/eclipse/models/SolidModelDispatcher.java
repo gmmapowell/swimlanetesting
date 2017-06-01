@@ -36,6 +36,15 @@ public class SolidModelDispatcher implements ModelDispatcher {
 	}
 
 	@Override
+	public void removeBarListener(BarData bar, BarDataListener lsnr) {
+		if (bar == null)
+			return;
+		String id = bar.getId();
+		if (barLsnrs.containsKey(id))
+			barLsnrs.get(id).remove(lsnr);
+	}
+
+	@Override
 	public void addAccumulator(AccumulatorListener lsnr) {
 		accLsnrs.add(lsnr);
 	}

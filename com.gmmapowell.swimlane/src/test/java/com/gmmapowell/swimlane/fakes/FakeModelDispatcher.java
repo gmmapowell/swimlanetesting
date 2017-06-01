@@ -32,6 +32,12 @@ public class FakeModelDispatcher implements ModelDispatcher {
 	}
 
 	@Override
+	public void removeBarListener(BarData bar, BarDataListener lsnr) {
+		mock.removeBarListener(bar, lsnr);
+		smd.removeBarListener(bar, lsnr);
+	}
+
+	@Override
 	public void addAccumulator(AccumulatorListener lsnr) {
 		smd.addAccumulator(lsnr);
 	}

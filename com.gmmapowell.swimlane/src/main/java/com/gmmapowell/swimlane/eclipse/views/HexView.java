@@ -52,8 +52,11 @@ public class HexView implements HexagonModelListener {
 		BarData bd = model.getUtilityBar();
 		if (bd != null) {
 			String id = "hexagons." + bd.getId();
-			if (findBar(view, id) == null)
-				createBar(model, bd, "utebar", id);
+			BarControl bc = findBar(view, id);
+			if (bc == null)
+				bc = createBar(model, bd, "utebar", id);
+			else
+				bc.barChanged(bd);
 		}
 	}
 
