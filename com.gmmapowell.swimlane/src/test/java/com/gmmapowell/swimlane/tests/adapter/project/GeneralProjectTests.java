@@ -19,10 +19,10 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.gmmapowell.swimlane.eclipse.RealEclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.ProjectSimplifier;
 import com.gmmapowell.swimlane.eclipse.project.ProjectHelper;
-import com.gmmapowell.swimlane.eclipse.views.RealEclipseAbstractor;
 
 public class GeneralProjectTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();

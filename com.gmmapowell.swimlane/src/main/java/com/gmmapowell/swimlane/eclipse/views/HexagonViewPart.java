@@ -2,18 +2,16 @@ package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
+import com.gmmapowell.swimlane.eclipse.RealEclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.project.BuildListener;
-import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
 
 /* We are really looking at a pipeline here.
  * This view part "listens" to post build events and then uses that to collect a (static) description of all the system's tests,
@@ -28,7 +26,6 @@ import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
  */
 public class HexagonViewPart extends ViewPart {
 	public static final String ID = "com.gmmapowell.swimlane.views.HexagonView";
-	public static final String RunAllID = "com.gmmapowell.swimlane.actions.RunAllTests";
 
 	private BuildListener bl;
 	private ModelDispatcher lsnrs;
@@ -40,7 +37,6 @@ public class HexagonViewPart extends ViewPart {
 		lsnrs = new SolidModelDispatcher();
 		new InfoBar(parent, lsnrs);
 		new HexView(parent, lsnrs);
-		configureToolbar(new RemoteJUnitTestRunner(eclipse), getViewSite().getActionBars().getToolBarManager(), lsnrs);
 		try {
 			bl = new BuildListener(lsnrs, eclipse);
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
@@ -49,12 +45,6 @@ public class HexagonViewPart extends ViewPart {
 			// TODO: how do we tell?
 			bl = null;
 		}
-	}
-
-	public void configureToolbar(TestRunner tr, IToolBarManager toolBar, ModelDispatcher lsnrs) {
-		RunAllTestsAction rata = new RunAllTestsAction(tr, lsnrs);
-		lsnrs.addAccumulator(rata);
-		toolBar.add(rata);
 	}
 
 	public void dispose() {

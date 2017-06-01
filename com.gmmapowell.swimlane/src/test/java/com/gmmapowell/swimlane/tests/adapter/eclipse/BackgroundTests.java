@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.IJobFunction;
 import org.junit.Test;
 
-import com.gmmapowell.swimlane.eclipse.views.RealEclipseAbstractor;
+import com.gmmapowell.swimlane.eclipse.RealEclipseAbstractor;
 
 public class BackgroundTests {
 

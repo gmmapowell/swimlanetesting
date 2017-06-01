@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-
-   <extension
+	<extension
          point="org.eclipse.ui.views">
       <category
             name="Swimlane Testing"
@@ -15,6 +14,113 @@
             class="com.gmmapowell.swimlane.eclipse.views.HexagonViewPart"
             id="com.gmmapowell.swimlane.views.HexagonView">
       </view>
-   </extension>
+	</extension>
+   
+	<extension
+		point="org.eclipse.ui.menus">
+		<menuContribution
+	    	locationURI="toolbar:com.gmmapowell.swimlane.views.HexagonView">
+		    <command
+				id="com.gmmapowell.swimlane.eclipse.toolbar.ShowHexesButton"
+		        commandId="com.gmmapowell.swimlane.eclipse.commands.ShowHexes"
+				style="radio"
+				tooltip="Show Hex Diagram"
+			>
+			</command>
+		</menuContribution>
+	</extension>
+   
+	<extension
+    	point="org.eclipse.ui.menus">
+		<menuContribution
+    		locationURI="toolbar:com.gmmapowell.swimlane.views.HexagonView">
+	    	<command
+	        	id="com.gmmapowell.swimlane.eclipse.toolbar.ShowErrorsButton"
+	        	commandId="com.gmmapowell.swimlane.eclipse.commands.ShowErrors"
+				style="radio"
+				tooltip="Show Errors Pane"
+			>
+			</command>
+		</menuContribution>
+	</extension>
+   
+	<extension
+    	point="org.eclipse.ui.menus">
+		<menuContribution
+    		locationURI="toolbar:com.gmmapowell.swimlane.views.HexagonView">
+	    	<command
+	            commandId="com.gmmapowell.swimlane.eclipse.commands.RunAll"
+	            id="com.gmmapowell.swimlane.eclipse.toolbar.RunAllButton"
+	            style="push"
+	            tooltip="Run All Tests"
+            >
+			</command>
+		</menuContribution>
+	</extension>
+   
+	<extension
+         point="org.eclipse.ui.commands">
+		<category
+			name="Swimlane Testing"
+            id="com.gmmapowell.swimlane">
+		</category>
+		<command
+   			id="com.gmmapowell.swimlane.eclipse.commands.ShowHexes"
+   			name="Show Hexes"
+   			defaultHandler="com.gmmapowell.swimlane.eclipse.actions.ShowHexesAction"
+		>
+		   	<commandParameter
+		   		id="org.eclipse.ui.commands.radioStateParameter"
+		   		name="Hex"
+		   		optional="false">
+		   	</commandParameter>
+		   	<state
+		   		id="com.gmmapowell.swimlane.eclipse.actions.whichTab">
+		   		<class
+		   		class="org.eclipse.ui.handlers.RadioState">
+		   			<parameter name="default" value="Hex" />
+		   		</class>
+		   	</state>
+	   </command>
+	</extension>
 
+	<extension
+         point="org.eclipse.ui.commands">
+		<category
+            name="Swimlane Testing"
+            id="com.gmmapowell.swimlane">
+		</category>
+		<command
+   			id="com.gmmapowell.swimlane.eclipse.commands.ShowErrors"
+   			name="Show Errors"
+   			defaultHandler="com.gmmapowell.swimlane.eclipse.actions.ShowErrorsAction"
+		>
+			<commandParameter
+   				id="com.gmmapowell.swimlane.eclipse.actions.parameter2"
+   				name="Select Errors Tab"
+		   		optional="false">
+   			</commandParameter>
+			<state
+	   			id="com.gmmapowell.swimlane.eclipse.actions.whichTab">
+		   		<class
+	   				class="org.eclipse.ui.handlers.RadioState">
+		   			<parameter name="default" value="Hex" />
+				</class>
+			</state>
+	   </command>
+	</extension>
+
+	<extension
+         point="org.eclipse.ui.commands">
+		<category
+            name="Swimlane Testing"
+            id="com.gmmapowell.swimlane">
+		</category>
+		<command
+   			id="com.gmmapowell.swimlane.eclipse.commands.RunAll"
+   			name="Run All"
+   			defaultHandler="com.gmmapowell.swimlane.eclipse.actions.RunAllTestsAction"
+		>
+	   </command>
+   </extension>
 </plugin>
