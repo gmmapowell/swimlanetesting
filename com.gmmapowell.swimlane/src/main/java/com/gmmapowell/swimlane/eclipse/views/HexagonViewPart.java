@@ -9,9 +9,12 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
 import com.gmmapowell.swimlane.eclipse.RealEclipseAbstractor;
+import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.project.BuildListener;
+import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
 
 /* We are really looking at a pipeline here.
  * This view part "listens" to post build events and then uses that to collect a (static) description of all the system's tests,
@@ -28,17 +31,20 @@ public class HexagonViewPart extends ViewPart {
 	public static final String ID = "com.gmmapowell.swimlane.views.HexagonView";
 
 	private BuildListener bl;
-	private ModelDispatcher lsnrs;
+	private ModelDispatcher dispatcher;
+	private RemoteJUnitTestRunner tr;
+	private HexView hexView;
 
 	public void createPartControl(Composite parent) {
 		RealEclipseAbstractor eclipse = new RealEclipseAbstractor();
 		parent.setLayout(new GridLayout(1, false));
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		lsnrs = new SolidModelDispatcher();
-		new InfoBar(parent, lsnrs);
-		new HexView(parent, lsnrs);
+		dispatcher = new SolidModelDispatcher();
+		tr = new RemoteJUnitTestRunner(eclipse);
+		new InfoBar(parent, dispatcher);
+		hexView = new HexView(parent, dispatcher);
 		try {
-			bl = new BuildListener(lsnrs, eclipse);
+			bl = new BuildListener(dispatcher, eclipse);
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
 		} catch (IllegalStateException ex) {
 			// Unit tests will find the workspace closed, so cannot do this; this is OK in that case
@@ -53,5 +59,17 @@ public class HexagonViewPart extends ViewPart {
 	}
 	
 	public void setFocus() {
+	}
+
+	public TestRunner getTestRunner() {
+		return tr;
+	}
+
+	public ModelDispatcher getDispatcher() {
+		return dispatcher;
+	}
+
+	public Accumulator getAccumulator() {
+		return hexView.getAccumulator();
 	}
 }

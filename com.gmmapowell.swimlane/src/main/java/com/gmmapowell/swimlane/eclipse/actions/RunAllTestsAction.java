@@ -3,38 +3,24 @@ package com.gmmapowell.swimlane.eclipse.actions;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.handlers.HandlerUtil;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
-import com.gmmapowell.swimlane.eclipse.interfaces.AccumulatorListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
+import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
 
-public class RunAllTestsAction extends AbstractHandler implements AccumulatorListener {
-//	private final TestRunner tr;
-//	private final ModelDispatcher dispatcher;
-//	private Accumulator model;
-
-	public RunAllTestsAction() {
-	}
-	
-//	public RunAllTestsAction(TestRunner tr, ModelDispatcher dispatcher) {
-//		this.tr = tr;
-//		this.dispatcher = dispatcher;
-//		setEnabled(false);
-//	}
-//
-//	public void run() {
-//		tr.runAll(dispatcher, model);
-//	}
-
-	@Override
-	public void setModel(Accumulator model) {
-//		this.model = model;
-		setEnabled(model != null);
-	}
-
+public class RunAllTestsAction extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		System.out.println("Run All Tests");
-		// TODO Auto-generated method stub
+		IWorkbenchPart me = HandlerUtil.getActivePart(event);
+		if (me == null)
+			return null;
+		HexagonViewPart hv = me.getAdapter(HexagonViewPart.class);
+		if (hv == null)
+			return null;
+		System.out.println("hexview = " + hv);
+		TestRunner tr = hv.getTestRunner();
+		tr.runAll(hv.getDispatcher(), hv.getAccumulator());
 		return null;
 	}
 }

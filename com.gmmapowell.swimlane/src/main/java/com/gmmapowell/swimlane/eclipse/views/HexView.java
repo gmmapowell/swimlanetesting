@@ -5,15 +5,19 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.AccumulatorListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 
-public class HexView implements HexagonModelListener {
+public class HexView implements HexagonModelListener, AccumulatorListener {
 	private final Composite view;
 	private final ModelDispatcher dispatcher;
+	private HexagonDataModel model;
+	private Accumulator accumulator;
 
 	public HexView(Composite parent, ModelDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
@@ -21,9 +25,15 @@ public class HexView implements HexagonModelListener {
 		view.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		dispatcher.addHexagonModelListener(this);
+		dispatcher.addAccumulator(this);
 	}
 
+	public HexagonDataModel getModel() {
+		return model;
+	}
+	
 	public void setModel(HexagonDataModel model) {
+		this.model = model;
 		view.getDisplay().syncExec(new Runnable() {
 			@Override
 			public void run() {
@@ -128,5 +138,15 @@ public class HexView implements HexagonModelListener {
 		}
 		view.layout();
 		return hex;
+	}
+	
+	@Override
+	public void setModel(Accumulator model) {
+		accumulator = model;
+		
+	}
+
+	public Accumulator getAccumulator() {
+		return accumulator;
 	}
 }
