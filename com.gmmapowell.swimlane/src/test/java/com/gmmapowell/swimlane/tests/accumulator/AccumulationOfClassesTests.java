@@ -21,14 +21,14 @@ public class AccumulationOfClassesTests extends TestBase {
 
 	@Test
 	public void ifWeDontPutAnythingInWeGetNothingOut() {
-		List<TestGroup> groups = acc.getAllTestClasses();
+		List<TestGroup> groups = acc.getAllTestGroups();
 		assertTrue(groups.isEmpty());
 	}
 
 	@Test
 	public void ifWePutOneAcceptanceClassInWeGetItOut() {
 		acc.acceptance(grp, Integer.class, Arrays.asList());
-		List<TestGroup> groups = acc.getAllTestClasses();
+		List<TestGroup> groups = acc.getAllTestGroups();
 		assertEquals(1, groups.size());
 		assertEquals(1, groups.get(0).getClasses().length);
 		assertEquals("java.lang.Integer", groups.get(0).getClasses()[0]);

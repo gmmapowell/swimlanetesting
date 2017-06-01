@@ -76,7 +76,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	}
 	
 	@Override
-	public List<TestGroup> getAllTestClasses() {
+	public List<TestGroup> getAllTestGroups() {
 		return allTestClasses;
 	}
 

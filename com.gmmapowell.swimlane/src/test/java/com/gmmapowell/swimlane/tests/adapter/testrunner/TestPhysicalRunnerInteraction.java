@@ -25,7 +25,7 @@ public class TestPhysicalRunnerInteraction extends TestBase {
 			exactly(2).of(sink).testSuccess(with(any(TestInfo.class)));
 			oneOf(sink).testRuntime(with(any(Integer.class)));
 		}});
-		runner.runClass(sink, cp, "com.gmmapowell.swimlane.sample.TestPasses");
+		runner.runClass(null, sink, cp, "com.gmmapowell.swimlane.sample.TestPasses");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -40,7 +40,7 @@ public class TestPhysicalRunnerInteraction extends TestBase {
 			exactly(2).of(sink).testFailure(with(any(TestInfo.class)));
 			oneOf(sink).testRuntime(with(any(Integer.class)));
 		}});
-		runner.runClass(sink, cp, "com.gmmapowell.swimlane.sample.TestPasses", "com.gmmapowell.swimlane.sample.TestFails");
+		runner.runClass(null, sink, cp, "com.gmmapowell.swimlane.sample.TestPasses", "com.gmmapowell.swimlane.sample.TestFails");
 	}
 
 }

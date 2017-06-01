@@ -3,7 +3,6 @@ package com.gmmapowell.swimlane.tests.adapter.testrunner;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -35,10 +34,7 @@ public class TestRunnerTests extends TestBase {
 		tcs.add(tg);
 		tg.addTest("com.foo");
 		context.checking(new Expectations() {{
-			oneOf(hex).getAllTestClasses(); will(returnValue(tcs));
-			oneOf(tr).runClass(hex, tg.getClassPath(), "com.foo");
-			oneOf(md).setModel(hex);
-			oneOf(hex).testsCompleted(with(any(Date.class)));
+			oneOf(tr).runAll(md, hex);
 		}});
 		action.run();
 	}

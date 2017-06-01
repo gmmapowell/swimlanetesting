@@ -16,5 +16,5 @@ public interface Accumulator {
 	void utility(TestGroup grp, Class<?> testCase1);
 	void error(String msg);
 	void analysisComplete();
-	List<TestGroup> getAllTestClasses();
+	List<TestGroup> getAllTestGroups();
 }
