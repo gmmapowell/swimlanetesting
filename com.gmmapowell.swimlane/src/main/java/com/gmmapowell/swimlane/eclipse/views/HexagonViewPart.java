@@ -1,5 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
+import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.SWT;
@@ -7,6 +8,8 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.part.ViewPart;
 
 import com.gmmapowell.swimlane.eclipse.RealEclipseAbstractor;
@@ -34,8 +37,10 @@ public class HexagonViewPart extends ViewPart {
 	private BuildListener bl;
 	private ModelDispatcher dispatcher;
 	private RemoteJUnitTestRunner tr;
+	private Composite stackUI;
 	private StackLayout stack;
 	private HexView hexView;
+	private ErrorView errorView;
 
 	public void createPartControl(Composite parent) {
 		RealEclipseAbstractor eclipse = new RealEclipseAbstractor();
@@ -44,11 +49,12 @@ public class HexagonViewPart extends ViewPart {
 		dispatcher = new SolidModelDispatcher();
 		tr = new RemoteJUnitTestRunner(eclipse);
 		new InfoBar(parent, dispatcher);
-		Composite stackUI = new Composite(parent, SWT.NONE);
+		stackUI = new Composite(parent, SWT.NONE);
 		stackUI.setLayoutData(new GridData(GridData.FILL_BOTH));
 		stack = new StackLayout();
 		stackUI.setLayout(stack);
 		hexView = new HexView(stackUI, dispatcher);
+		errorView = new ErrorView(stackUI);
 		stack.topControl = hexView.getTop();
 		try {
 			bl = new BuildListener(dispatcher, eclipse);
@@ -58,6 +64,16 @@ public class HexagonViewPart extends ViewPart {
 			// TODO: how do we tell?
 			bl = null;
 		}
+	}
+
+	public void showErrorPane() {
+		stack.topControl = errorView.getTop();
+		stackUI.layout();
+	}
+
+	public void showHexPane() {
+		stack.topControl = hexView.getTop();
+		stackUI.layout();
 	}
 
 	public void dispose() {
@@ -78,5 +94,12 @@ public class HexagonViewPart extends ViewPart {
 
 	public Accumulator getAccumulator() {
 		return hexView.getAccumulator();
+	}
+
+	public static HexagonViewPart get(ExecutionEvent event) {
+		IWorkbenchPart me = HandlerUtil.getActivePart(event);
+		if (me == null)
+			return null;
+		return me.getAdapter(HexagonViewPart.class);
 	}
 }

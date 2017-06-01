@@ -1,7 +1,6 @@
 package com.gmmapowell.swimlane.owntests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -15,6 +14,7 @@ import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCanvas;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -106,6 +106,14 @@ public class SwtBotTestCase {
 		assertTrue(acc123.isVisible());
 		Point ws = ext.getSize(acc123.widget);
 		ext.assertColor(acc123, SWT.COLOR_GREEN, ws.x/2, ws.y/2);
+	}
+	
+	@Test
+	public void step20_switchToTheErrorsTab() {
+		SWTBotToolbarButton showErrors = bot.toolbarRadioButtonWithTooltip("Show Errors Pane");
+		showErrors.click();
+		SWTBotTable t = bot.tableWithId("hexagons.errors");
+		assertTrue(t.isVisible());
 	}
 	
 	@AfterClass
