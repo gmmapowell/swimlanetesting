@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.eclipse.views;
+package com.gmmapowell.swimlane.eclipse;
 
 import java.io.File;
 import java.io.IOException;
