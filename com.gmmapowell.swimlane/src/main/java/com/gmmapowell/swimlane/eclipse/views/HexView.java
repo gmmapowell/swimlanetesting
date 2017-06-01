@@ -28,6 +28,10 @@ public class HexView implements HexagonModelListener, AccumulatorListener {
 		dispatcher.addAccumulator(this);
 	}
 
+	public Control getTop() {
+		return view;
+	}
+
 	public HexagonDataModel getModel() {
 		return model;
 	}

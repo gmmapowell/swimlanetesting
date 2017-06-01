@@ -3,6 +3,7 @@ package com.gmmapowell.swimlane.eclipse.views;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -33,6 +34,7 @@ public class HexagonViewPart extends ViewPart {
 	private BuildListener bl;
 	private ModelDispatcher dispatcher;
 	private RemoteJUnitTestRunner tr;
+	private StackLayout stack;
 	private HexView hexView;
 
 	public void createPartControl(Composite parent) {
@@ -42,7 +44,12 @@ public class HexagonViewPart extends ViewPart {
 		dispatcher = new SolidModelDispatcher();
 		tr = new RemoteJUnitTestRunner(eclipse);
 		new InfoBar(parent, dispatcher);
-		hexView = new HexView(parent, dispatcher);
+		Composite stackUI = new Composite(parent, SWT.NONE);
+		stackUI.setLayoutData(new GridData(GridData.FILL_BOTH));
+		stack = new StackLayout();
+		stackUI.setLayout(stack);
+		hexView = new HexView(stackUI, dispatcher);
+		stack.topControl = hexView.getTop();
 		try {
 			bl = new BuildListener(dispatcher, eclipse);
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
