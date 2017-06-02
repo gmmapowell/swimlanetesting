@@ -23,7 +23,7 @@ public abstract class BaseViewTest extends TestBase {
 		shell.setLayout(new GridLayout(1, false));
 		md = context.mock(ModelDispatcher.class);
 		fmd = new FakeModelDispatcher(md);
-		hv = new ErrorView(shell);
+		hv = new ErrorView(shell, fmd);
 		shell.setSize(600, 300);
 		shell.open();
 		displayHelper.flushPendingEvents();

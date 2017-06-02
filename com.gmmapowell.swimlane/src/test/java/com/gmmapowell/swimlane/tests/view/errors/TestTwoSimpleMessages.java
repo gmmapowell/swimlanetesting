@@ -2,6 +2,7 @@ package com.gmmapowell.swimlane.tests.view.errors;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.swt.widgets.Table;
@@ -10,22 +11,13 @@ import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 
-public class MinimalErrorsTest extends BaseViewTest {
+public class TestTwoSimpleMessages extends BaseViewTest {
 
 	@Test
-	public void testThatAllTheControlsArePresent() throws InterruptedException {
-		specifyModel();
-		assertControls(shell, "hexagons.errors");
-	}
-
-	@Test
-	public void testThatTheErrorsPaneIsATableWithTwoColumns() throws InterruptedException {
+	public void testThatTheErrorsPaneIsATableWithTwoRows() throws InterruptedException {
 		specifyModel();
 		Table table = waitForControl(shell, "hexagons.errors");
-		assertEquals(2, table.getColumnCount());
-		assertEquals("Sev", table.getColumn(0).getText());
-		assertEquals("Message", table.getColumn(1).getText());
-		assertEquals(0, table.getItemCount());
+		assertEquals(2, table.getItemCount());
 	}
 
 	protected void specifyModel() throws InterruptedException {
@@ -34,8 +26,11 @@ public class MinimalErrorsTest extends BaseViewTest {
 
 	protected HexagonDataModel defineModel() {
 		HexagonDataModel testModel = context.mock(HexagonDataModel.class);
+		Set<String> errors = new TreeSet<String>();
+		errors.add("hello");
+		errors.add("goodbye");
 		context.checking(new Expectations() {{
-			allowing(testModel).getErrors(); will(returnValue(new TreeSet<String>()));
+			allowing(testModel).getErrors(); will(returnValue(errors));
 		}});
 		return testModel;
 	}
