@@ -62,6 +62,13 @@ public class TestErrorDisplayCase {
 	public void step02_switchToTheErrorsTab() {
 		SWTBotToolbarButton showErrors = bot.toolbarRadioButtonWithTooltip("Show Errors Pane");
 		showErrors.click();
+		bot.getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				assertTrue(showErrors.widget.getSelection());
+				
+			}
+		});
 		SWTBotTable t = bot.tableWithId("hexagons.errors");
 		assertTrue(t.isVisible());
 		assertEquals(2, t.columnCount());
@@ -122,6 +129,20 @@ public class TestErrorDisplayCase {
 				System.out.println(t.cell(i, 1));
 		}
 		assertTrue("did not find no annotations message", found);
+	}
+	
+	@Test
+	public void step10_checkWeStillHaveFourAfterAnotherBuild() {
+		startBuildAt = new Date();
+		ext.projectMenu().menu("Build All").click();
+		SWTBotLabel lastBuild = bot.labelWithId("hexagons.lastBuild");
+		assertNotNull(lastBuild);
+		bot.waitUntil(ext.labelAfterDate(lastBuild, startBuildAt));
+
+		SWTBotTable t = bot.tableWithId("hexagons.errors");
+		assertTrue(t.isVisible());
+		assertEquals(2, t.columnCount());
+		assertEquals(4, t.rowCount());
 	}
 	
 	@AfterClass
