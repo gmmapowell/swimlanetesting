@@ -114,8 +114,30 @@ public class TestThreeHexagonsHappyCase {
 	public void step20_switchToTheErrorsTab() {
 		SWTBotToolbarButton showErrors = bot.toolbarRadioButtonWithTooltip("Show Errors Pane");
 		showErrors.click();
+		bot.getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				assertTrue(showErrors.widget.getSelection());
+				
+			}
+		});
 		SWTBotTable t = bot.tableWithId("hexagons.errors");
 		assertTrue(t.isVisible());
+	}
+	
+	@Test
+	public void step21_andSwitchBack() {
+		SWTBotToolbarButton showHexes = bot.toolbarRadioButtonWithTooltip("Show Hex Diagram");
+		showHexes.click();
+		bot.getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				assertTrue(showHexes.widget.getSelection());
+				
+			}
+		});
+		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
+		assertTrue(acc123.isVisible());
 	}
 	
 	@AfterClass
