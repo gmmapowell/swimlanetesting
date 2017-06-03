@@ -161,7 +161,7 @@ public class TotalOrder {
 					cnt = mc;
 					best = r.getKey();
 				} else if (mc == cnt) {
-					errors.add("There is a cycle between " + best + " and " + r.getKey());
+					errors.add("there is a cycle between " + best + " and " + r.getKey());
 				}
 			}
 			if (cnt == -1)

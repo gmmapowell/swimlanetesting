@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
@@ -42,7 +43,8 @@ public class TestThreeHexagonsHappyCase {
 		ext = new ExtendedBot(bot);
 		ext.closeWelcomeView();
 		ext.turnOffAutoBuild();
-		ext.importSampleProject();
+		String cwd = System.getProperty("user.dir");
+		ext.importSampleProject(new File(new File(cwd).getParentFile(), "sample-proj"));
 		try { Thread.sleep(1000); } catch (InterruptedException ex) { }
 		ext.showView("Swimlane Testing", "Hexagons");
 		hexView = bot.viewByTitle("Hexagons");

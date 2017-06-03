@@ -135,14 +135,13 @@ public class ExtendedBot {
 			welcome.close();
 	}
 
-	public void importSampleProject() {
+	public void importSampleProject(File project) {
 		as.activate();
 		bot.menu("File").menu("Import...").click();
 		System.out.println("Active = " + bot.activeShell());
 		bot.tree().expandNode("General").getNode("Existing Projects into Workspace").click();
 		bot.button("Next >").click();
-		String cwd = System.getProperty("user.dir");
-		String projdir = new File(new File(cwd).getParentFile(), "sample-proj").getPath();
+		String projdir = project.getPath();
 		System.out.println(projdir);
 //		dumpActiveShell();
 		bot.comboBox().setText(projdir);
