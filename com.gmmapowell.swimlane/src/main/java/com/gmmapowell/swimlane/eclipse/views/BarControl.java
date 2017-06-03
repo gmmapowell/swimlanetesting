@@ -70,6 +70,8 @@ public class BarControl implements BarDataListener {
 		switch (type) {
 		case "accbar":
 			return "Acceptance";
+		case "utebar":
+			return "Utilities";
 		default:
 			return type;
 		}

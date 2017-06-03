@@ -1,5 +1,7 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -19,15 +21,15 @@ public class UtilityBar extends BaseViewTest {
 	
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
-		specifyModel(10, 0, Status.OK);
+		specifyModel(10, 0, 0, Status.OK);
 		assertControls(shell, "hexagons.utility");
 	}
 	
 	@Test
 	public void testTheUtilityBarLooksRightWhenNoTestsHaveRun() throws Exception {
-		specifyModel(10, 0, Status.OK);
-		Canvas acceptance = waitForControl(shell, "hexagons.utility");
-		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
+		specifyModel(10, 0, 0, Status.OK);
+		Canvas ute = waitForControl(shell, "hexagons.utility");
+		checkSizeColors(ute, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
 				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 5, 3);
@@ -35,12 +37,19 @@ public class UtilityBar extends BaseViewTest {
 			}
 		});
 	}
+	
+	@Test
+	public void testTheTooltipWhenNoTestsHaveRun() throws Exception {
+		specifyModel(10, 0, 0, Status.OK);
+		Canvas ute = waitForControl(shell, "hexagons.utility");
+		assertEquals("Utilities - 1 group; 0 passed", ute.getToolTipText());
+	}
 
 	@Test
 	public void testTheUtilityBarLooksRightWhenFiveTestsHaveRunSuccessfully() throws Exception {
-		specifyModel(10, 5, Status.OK);
-		Canvas acceptance = waitForControl(shell, "hexagons.utility");
-		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
+		specifyModel(10, 5, 0, Status.OK);
+		Canvas ute = waitForControl(shell, "hexagons.utility");
+		checkSizeColors(ute, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
 				proxy.assertColorOfPixel(SWT.COLOR_GREEN, 5, 3);
@@ -53,9 +62,9 @@ public class UtilityBar extends BaseViewTest {
 
 	@Test
 	public void testTheUtilityBarLooksRightWhenFiveTestsHaveRunWithFailures() throws Exception {
-		specifyModel(10, 5, Status.FAILURES);
-		Canvas acceptance = waitForControl(shell, "hexagons.utility");
-		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
+		specifyModel(10, 5, 1, Status.FAILURES);
+		Canvas ute = waitForControl(shell, "hexagons.utility");
+		checkSizeColors(ute, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
 				proxy.assertColorOfPixel(SWT.COLOR_RED, 290, 3);
@@ -64,11 +73,18 @@ public class UtilityBar extends BaseViewTest {
 		});
 	}
 
-	protected void specifyModel(int total, int complete, Status status) throws InterruptedException {
-		pushModel(defineModel(total, complete, status));
+	@Test
+	public void testTheTooltipWhenThereAreSomeFailures() throws Exception {
+		specifyModel(10, 5, 2, Status.OK);
+		Canvas ute = waitForControl(shell, "hexagons.utility");
+		assertEquals("Utilities - 1 group; 3 passed, 2 failures", ute.getToolTipText());
 	}
 
-	protected HexagonDataModel defineModel(int total, int complete, Status status) {
+	protected void specifyModel(int total, int complete, int failures, Status status) throws InterruptedException {
+		pushModel(defineModel(total, complete, failures, status));
+	}
+
+	protected HexagonDataModel defineModel(int total, int complete, int failures, Status status) {
 		HexagonDataModel testModel = context.mock(HexagonDataModel.class);
 		BarData uteBar = context.mock(BarData.class);
 		context.checking(new Expectations() {{
@@ -80,8 +96,8 @@ public class UtilityBar extends BaseViewTest {
 			allowing(uteBar).getId(); will(returnValue("utility"));
 			allowing(uteBar).getTotal(); will(returnValue(total));
 			allowing(uteBar).getComplete(); will(returnValue(complete));
-			allowing(uteBar).getPassed(); will(returnValue(complete));
-			allowing(uteBar).getFailures(); will(returnValue(0));
+			allowing(uteBar).getPassed(); will(returnValue(complete - failures));
+			allowing(uteBar).getFailures(); will(returnValue(failures));
 			allowing(uteBar).getStatus(); will(returnValue(status));
 			allowing(uteBar).getMarks(); will(returnValue(new int[] { 1 }));
 			
