@@ -29,7 +29,7 @@ import org.junit.runners.MethodSorters;
  */
 @RunWith(SWTBotJunit4ClassRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class SwtBotTestCase {
+public class TestThreeHexagonsHappyCase {
 	private static SWTWorkbenchBot bot;
 	private static ExtendedBot ext;
 	private static SWTBotView hexView;
