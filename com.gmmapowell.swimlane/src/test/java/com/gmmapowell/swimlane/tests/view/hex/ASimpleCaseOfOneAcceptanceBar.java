@@ -21,13 +21,13 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 	
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
-		specifyModel(10, 0, Status.OK);
+		specifyModel(10, 0, 0, Status.OK);
 		assertControls(shell, "hexagons.acceptance.1");
 	}
 	
 	@Test
 	public void testTheAcceptanceRowLooksRightWhenNoTestsHaveRun() throws Exception {
-		specifyModel(10, 0, Status.OK);
+		specifyModel(10, 0, 0, Status.OK);
 		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
@@ -40,14 +40,14 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 
 	@Test
 	public void testTheTooltipWhenNoTestsHaveRun() throws Exception {
-		specifyModel(10, 0, Status.OK);
+		specifyModel(10, 0, 0, Status.OK);
 		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
 		assertEquals("Acceptance - 1 group; 0 passed", acceptance.getToolTipText());
 	}
 
 	@Test
 	public void testTheAcceptanceRowLooksRightWhenFiveTestsHaveRunSuccessfully() throws Exception {
-		specifyModel(10, 5, Status.OK);
+		specifyModel(10, 5, 0, Status.OK);
 		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
@@ -62,14 +62,14 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 
 	@Test
 	public void testTheTooltipWhenFiveTestsHaveRunSuccessfully() throws Exception {
-		specifyModel(10, 5, Status.OK);
+		specifyModel(10, 5, 0, Status.OK);
 		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
 		assertEquals("Acceptance - 1 group; 5 passed", acceptance.getToolTipText());
 	}
 
 	@Test
 	public void testTheAcceptanceRowLooksRightWhenFiveTestsHaveRunWithFailures() throws Exception {
-		specifyModel(10, 5, Status.FAILURES);
+		specifyModel(10, 5, 2, Status.FAILURES);
 		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
@@ -80,11 +80,25 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 		});
 	}
 
-	protected void specifyModel(int total, int complete, Status status) throws InterruptedException {
-		pushModel(defineModel(total, complete, status));
+	@Test
+	public void testTheTooltipWhenFiveTestsHaveRunWithOneFailureSingular() throws Exception {
+		specifyModel(10, 5, 1, Status.FAILURES);
+		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		assertEquals("Acceptance - 1 group; 4 passed, 1 failure", acceptance.getToolTipText());
 	}
 
-	protected HexagonDataModel defineModel(int total, int complete, Status status) {
+	@Test
+	public void testTheTooltipWhenFiveTestsHaveRunWithSomeFailures() throws Exception {
+		specifyModel(10, 5, 2, Status.FAILURES);
+		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		assertEquals("Acceptance - 1 group; 3 passed, 2 failures", acceptance.getToolTipText());
+	}
+
+	protected void specifyModel(int total, int complete, int failures, Status status) throws InterruptedException {
+		pushModel(defineModel(total, complete, failures, status));
+	}
+
+	protected HexagonDataModel defineModel(int total, int complete, int failures, Status status) {
 		HexagonDataModel testModel = context.mock(HexagonDataModel.class);
 		ArrayList<BarData> accList = new ArrayList<BarData>();
 		BarData a = context.mock(BarData.class);
@@ -98,6 +112,8 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 			allowing(a).getId(); will(returnValue("acceptance.1"));
 			allowing(a).getTotal(); will(returnValue(total));
 			allowing(a).getComplete(); will(returnValue(complete));
+			allowing(a).getPassed(); will(returnValue(complete-failures));
+			allowing(a).getFailures(); will(returnValue(failures));
 			allowing(a).getStatus(); will(returnValue(status));
 			allowing(a).getMarks(); will(returnValue(new int[] { 1 }));
 			

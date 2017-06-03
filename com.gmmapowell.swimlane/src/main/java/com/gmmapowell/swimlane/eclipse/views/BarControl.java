@@ -46,7 +46,19 @@ public class BarControl implements BarDataListener {
 				boolean vis = bar != null && bar.getTotal() > 0;
 				canvas.setVisible(vis);
 				if (vis) {
-					canvas.setToolTipText(typeName() + " - 1 group; " + bar.getComplete() + " passed");
+					StringBuilder sb = new StringBuilder(typeName());
+					sb.append(" - 1 group; ");
+					sb.append(bar.getPassed());
+					sb.append(" passed");
+					int failed = bar.getFailures();
+					if (failed > 0) {
+						sb.append(", ");
+						sb.append(failed);
+						sb.append(" failure");
+						if (failed != 1)
+							sb.append("s");
+					}
+					canvas.setToolTipText(sb.toString());
 				}
 				canvas.redraw();
 			}

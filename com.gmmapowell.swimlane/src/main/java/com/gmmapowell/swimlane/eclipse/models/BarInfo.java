@@ -91,6 +91,22 @@ public abstract class BarInfo implements BarData {
 	}
 
 	@Override
+	public int getPassed() {
+		int ret = 0;
+		for (Entry<String, Tracking> q : testClasses.entrySet())
+			ret += q.getValue().passed;
+		return ret;
+	}
+
+	@Override
+	public int getFailures() {
+		int ret = 0;
+		for (Entry<String, Tracking> q : testClasses.entrySet())
+			ret += q.getValue().failed;
+		return ret;
+	}
+
+	@Override
 	public Status getStatus() {
 		return stat ;
 	}

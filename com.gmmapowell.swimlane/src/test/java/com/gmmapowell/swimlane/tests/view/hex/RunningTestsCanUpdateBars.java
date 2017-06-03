@@ -88,6 +88,8 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 			allowing(a).getId(); will(returnValue("acceptance.11"));
 			allowing(a).getTotal(); will(returnValue(10));
 			allowing(a).getMarks(); will(returnValue(new int[] { 1 }));
+			allowing(a).getPassed(); will(returnValue(3));
+			allowing(a).getFailures(); will(returnValue(0));
 			exactly(2).of(md).barChanged(a);
 		}});
 		return a;

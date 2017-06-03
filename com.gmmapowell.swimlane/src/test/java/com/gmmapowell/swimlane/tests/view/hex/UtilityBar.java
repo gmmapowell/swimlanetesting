@@ -80,6 +80,8 @@ public class UtilityBar extends BaseViewTest {
 			allowing(uteBar).getId(); will(returnValue("utility"));
 			allowing(uteBar).getTotal(); will(returnValue(total));
 			allowing(uteBar).getComplete(); will(returnValue(complete));
+			allowing(uteBar).getPassed(); will(returnValue(complete));
+			allowing(uteBar).getFailures(); will(returnValue(0));
 			allowing(uteBar).getStatus(); will(returnValue(status));
 			allowing(uteBar).getMarks(); will(returnValue(new int[] { 1 }));
 			

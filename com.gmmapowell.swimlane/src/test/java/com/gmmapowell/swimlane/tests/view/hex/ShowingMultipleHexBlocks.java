@@ -105,6 +105,8 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 				allowing(bars.get(0)).getId(); will(returnValue("bar1"));
 				allowing(bars.get(0)).getTotal(); will(returnValue(total));
 				allowing(bars.get(0)).getComplete(); will(returnValue(complete));
+				allowing(bars.get(0)).getPassed(); will(returnValue(complete));
+				allowing(bars.get(0)).getFailures(); will(returnValue(0));
 				allowing(bars.get(0)).getStatus(); will(returnValue(status));
 				allowing(bars.get(0)).getMarks(); will(returnValue(new int[] { 1 }));
 				oneOf(md).addBarListener(with(bars.get(0)), with(aNonNull(BarDataListener.class)));
@@ -115,7 +117,9 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 				allowing(hexagons.get(1)).getPorts(); will(returnValue(new ArrayList<PortData>()));
 				allowing(bars.get(1)).getId(); will(returnValue("bar2"));
 				allowing(bars.get(1)).getTotal(); will(returnValue(total));
+				allowing(bars.get(1)).getPassed(); will(returnValue(complete));
 				allowing(bars.get(1)).getComplete(); will(returnValue(complete));
+				allowing(bars.get(1)).getFailures(); will(returnValue(0));
 				allowing(bars.get(1)).getStatus(); will(returnValue(status));
 				allowing(bars.get(1)).getMarks(); will(returnValue(new int[] { 1 }));
 				oneOf(md).addBarListener(with(bars.get(1)), with(aNonNull(BarDataListener.class)));
@@ -126,7 +130,9 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 				allowing(hexagons.get(2)).getPorts(); will(returnValue(new ArrayList<PortData>()));
 				allowing(bars.get(2)).getId(); will(returnValue("bar3"));
 				allowing(bars.get(2)).getTotal(); will(returnValue(total));
+				allowing(bars.get(2)).getPassed(); will(returnValue(complete));
 				allowing(bars.get(2)).getComplete(); will(returnValue(complete));
+				allowing(bars.get(2)).getFailures(); will(returnValue(0));
 				allowing(bars.get(2)).getStatus(); will(returnValue(status));
 				allowing(bars.get(2)).getMarks(); will(returnValue(new int[] { 1 }));
 				oneOf(md).addBarListener(with(bars.get(2)), with(aNonNull(BarDataListener.class)));

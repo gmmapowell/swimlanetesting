@@ -82,6 +82,8 @@ public class RunningUtilityTestsCanUpdateBars extends BaseViewTest {
 			allowing(a).getId(); will(returnValue("utility"));
 			allowing(a).getTotal(); will(returnValue(0));
 			allowing(a).getComplete(); will(returnValue(0));
+			allowing(a).getPassed(); will(returnValue(0));
+			allowing(a).getFailures(); will(returnValue(0));
 			allowing(a).getStatus(); will(returnValue(Status.OK));
 			allowing(a).getMarks(); will(returnValue(new int[] { 1 }));
 			oneOf(md).addBarListener(with(a), with(aNonNull(BarDataListener.class)));
@@ -95,6 +97,8 @@ public class RunningUtilityTestsCanUpdateBars extends BaseViewTest {
 			allowing(a).getId(); will(returnValue("utility"));
 			allowing(a).getTotal(); will(returnValue(10));
 			allowing(a).getComplete(); will(returnValue(5));
+			allowing(a).getPassed(); will(returnValue(5));
+			allowing(a).getFailures(); will(returnValue(0));
 			allowing(a).getStatus(); will(returnValue(Status.OK));
 			allowing(a).getMarks(); will(returnValue(new int[] { 1 }));
 			oneOf(md).addBarListener(with(a), with(aNonNull(BarDataListener.class)));

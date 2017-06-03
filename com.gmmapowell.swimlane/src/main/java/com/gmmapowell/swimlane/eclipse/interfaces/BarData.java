@@ -8,6 +8,8 @@ public interface BarData {
 	String getId();
 	Status getStatus();
 	int getComplete();
+	int getPassed();
+	int getFailures();
 	int getTotal();
 	int[] getMarks();
 	List<String> classesUnderTest();

@@ -117,6 +117,8 @@ public class ShowingOneHexBlock extends BaseViewTest {
 			allowing(bd).getTotal(); will(returnValue(total));
 			allowing(bd).getComplete(); will(returnValue(complete)); when(mode.is("initial"));
 			allowing(bd).getComplete(); will(returnValue(complete+5)); when(mode.is("plus5"));
+			allowing(bd).getPassed(); will(returnValue(0));
+			allowing(bd).getFailures(); will(returnValue(0));
 			allowing(bd).getStatus(); will(returnValue(status)); when(mode.is("initial"));
 			allowing(bd).getStatus(); will(returnValue(Status.OK)); when(mode.is("plus5"));
 			allowing(bd).getMarks(); will(returnValue(new int[] { 1 }));

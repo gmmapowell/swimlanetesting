@@ -135,16 +135,22 @@ public class LayoutTests extends BaseViewTest {
 			allowing(a).getId(); will(returnValue("acceptance.11"));
 			allowing(a).getTotal(); will(returnValue(10));
 			allowing(a).getComplete(); will(returnValue(3));
+			allowing(a).getPassed(); will(returnValue(3));
+			allowing(a).getFailures(); will(returnValue(0));
 			allowing(a).getStatus(); will(returnValue(Status.OK));
 			allowing(a).getMarks(); will(returnValue(new int[] { 1, 1 }));
 			allowing(b).getId(); will(returnValue("acceptance.10"));
 			allowing(b).getTotal(); will(returnValue(6));
 			allowing(b).getComplete(); will(returnValue(4));
+			allowing(b).getPassed(); will(returnValue(4));
+			allowing(b).getFailures(); will(returnValue(0));
 			allowing(b).getStatus(); will(returnValue(Status.FAILURES));
 			allowing(b).getMarks(); will(returnValue(new int[] { 1, 0 }));
 			allowing(c).getId(); will(returnValue("acceptance.01"));
 			allowing(c).getTotal(); will(returnValue(12));
 			allowing(c).getComplete(); will(returnValue(11));
+			allowing(c).getPassed(); will(returnValue(11));
+			allowing(c).getFailures(); will(returnValue(0));
 			allowing(c).getStatus(); will(returnValue(Status.NONE));
 			allowing(c).getMarks(); will(returnValue(new int[] { 0, 1 }));
 
@@ -157,6 +163,8 @@ public class LayoutTests extends BaseViewTest {
 				allowing(bi).getId(); will(returnValue("bar" + i));
 				allowing(bi).getTotal(); will(returnValue(12));
 				allowing(bi).getComplete(); will(returnValue(4*i));
+				allowing(bi).getPassed(); will(returnValue(4*i));
+				allowing(bi).getFailures(); will(returnValue(0));
 				allowing(bi).getStatus(); will(returnValue(Status.OK));
 				allowing(bi).getMarks(); will(returnValue(new int[] { 1 }));
 				
@@ -165,6 +173,8 @@ public class LayoutTests extends BaseViewTest {
 			allowing(uteBar).getId(); will(returnValue("utility"));
 			allowing(uteBar).getTotal(); will(returnValue(10));
 			allowing(uteBar).getComplete(); will(returnValue(5));
+			allowing(uteBar).getPassed(); will(returnValue(5));
+			allowing(uteBar).getFailures(); will(returnValue(0));
 			allowing(uteBar).getStatus(); will(returnValue(Status.OK));
 			allowing(uteBar).getMarks(); will(returnValue(new int[] { 1 }));
 
