@@ -12,11 +12,13 @@ import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 // with the graphical display of painting them
 public class BarControl implements BarDataListener {
 	private final ModelDispatcher dispatcher;
+	private final String type;
 	private final Canvas canvas;
 	private final BarPaintListener bpl;
 
 	public BarControl(ModelDispatcher dispatcher, Composite view, BarData bar, String type, String barId) {
 		this.dispatcher = dispatcher;
+		this.type = type;
 		canvas = new Canvas(view, SWT.NONE);
 		canvas.setData("com.gmmapowell.swimlane.type", type);
 		canvas.setData("com.gmmapowell.swimlane.bar", this);
@@ -24,6 +26,7 @@ public class BarControl implements BarDataListener {
 		bpl = new BarPaintListener(canvas, bar);
 		canvas.addPaintListener(bpl);
 		dispatcher.addBarListener(bar, this);
+		barChanged(bar);
 	}
 
 	public Canvas getCanvas() {
@@ -40,9 +43,23 @@ public class BarControl implements BarDataListener {
 		canvas.getDisplay().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				canvas.setVisible(bar != null && bar.getTotal() > 0);
+				boolean vis = bar != null && bar.getTotal() > 0;
+				canvas.setVisible(vis);
+				if (vis) {
+					canvas.setToolTipText(typeName() + " - 1 group; " + bar.getComplete() + " passed");
+				}
 				canvas.redraw();
 			}
+
 		});
+	}
+
+	private String typeName() {
+		switch (type) {
+		case "accbar":
+			return "Acceptance";
+		default:
+			return type;
+		}
 	}
 }

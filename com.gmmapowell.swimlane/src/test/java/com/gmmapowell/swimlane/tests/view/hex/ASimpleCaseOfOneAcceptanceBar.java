@@ -1,5 +1,7 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -37,6 +39,13 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 	}
 
 	@Test
+	public void testTheTooltipWhenNoTestsHaveRun() throws Exception {
+		specifyModel(10, 0, Status.OK);
+		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		assertEquals("Acceptance - 1 group; 0 passed", acceptance.getToolTipText());
+	}
+
+	@Test
 	public void testTheAcceptanceRowLooksRightWhenFiveTestsHaveRunSuccessfully() throws Exception {
 		specifyModel(10, 5, Status.OK);
 		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
@@ -49,6 +58,13 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseViewTest {
 				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 500, 3);
 			}
 		});
+	}
+
+	@Test
+	public void testTheTooltipWhenFiveTestsHaveRunSuccessfully() throws Exception {
+		specifyModel(10, 5, Status.OK);
+		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		assertEquals("Acceptance - 1 group; 5 passed", acceptance.getToolTipText());
 	}
 
 	@Test
