@@ -140,6 +140,12 @@ public class TestThreeHexagonsHappyCase {
 		assertTrue(acc123.isVisible());
 	}
 	
+	@Test
+	public void step30_checkToolTipOnAcc123() {
+		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
+		assertEquals("Acceptance - 3 groups; 7 passed", acc123.getToolTipText());
+	}
+	
 	@AfterClass
 	public static void tearDown() throws Exception {
 	}
