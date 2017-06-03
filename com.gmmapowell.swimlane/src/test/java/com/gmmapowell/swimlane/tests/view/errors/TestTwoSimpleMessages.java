@@ -20,6 +20,15 @@ public class TestTwoSimpleMessages extends BaseViewTest {
 		assertEquals(2, table.getItemCount());
 	}
 
+	@Test
+	public void testThatSendingTheModelTwiceDoesNotDuplicateRows() throws InterruptedException {
+		HexagonDataModel m = defineModel();
+		pushModel(m);
+		pushModel(m);
+		Table table = waitForControl(shell, "hexagons.errors");
+		assertEquals(2, table.getItemCount());
+	}
+
 	protected void specifyModel() throws InterruptedException {
 		pushModel(defineModel());
 	}

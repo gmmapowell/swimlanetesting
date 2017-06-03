@@ -65,8 +65,8 @@ public class AcceptanceAccumulationTests extends TestBase {
 		assertEquals(2, hdm.getHexCount());
 		assertEquals(2, hdm.getErrors().size());
 		Object[] errs = hdm.getErrors().toArray();
-		assertEquals("There is a cycle between java.lang.Integer and java.lang.String", errs[0]);
-		assertEquals("There is no ordering between java.lang.Integer and java.lang.String", errs[1]);
+		assertEquals("there is a cycle between java.lang.Integer and java.lang.String", errs[0]);
+		assertEquals("there is no ordering between java.lang.Integer and java.lang.String", errs[1]);
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
 		assertEquals(2, acceptanceTests.size());
 		assertEquals("acceptance.10", acceptanceTests.get(0).getId());
@@ -84,8 +84,8 @@ public class AcceptanceAccumulationTests extends TestBase {
 		assertEquals(2, hdm.getHexCount());
 		assertEquals(2, hdm.getErrors().size());
 		Object[] errs = hdm.getErrors().toArray();
-		assertEquals("Ordering between java.lang.Integer and java.lang.String is inconsistent", errs[0]);
-		assertEquals("There is a cycle between java.lang.Integer and java.lang.String", errs[1]);
+		assertEquals("ordering between java.lang.Integer and java.lang.String is inconsistent", errs[0]);
+		assertEquals("there is a cycle between java.lang.Integer and java.lang.String", errs[1]);
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
 		assertEquals(1, acceptanceTests.size());
 		assertEquals("acceptance.11", acceptanceTests.get(0).getId());
@@ -118,8 +118,8 @@ public class AcceptanceAccumulationTests extends TestBase {
 		assertEquals(3, hdm.getHexCount());
 		assertEquals(2, hdm.getErrors().size());
 		Object[] errs = hdm.getErrors().toArray();
-		assertEquals("There is a cycle between java.lang.Integer and java.lang.String", errs[0]);
-		assertEquals("There is no ordering between java.lang.Integer and java.lang.String", errs[1]);
+		assertEquals("there is a cycle between java.lang.Integer and java.lang.String", errs[0]);
+		assertEquals("there is no ordering between java.lang.Integer and java.lang.String", errs[1]);
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
 		assertEquals(2, acceptanceTests.size());
 		assertEquals("acceptance.110", acceptanceTests.get(0).getId());
@@ -135,9 +135,9 @@ public class AcceptanceAccumulationTests extends TestBase {
 		assertEquals(3, hdm.getHexCount());
 		assertEquals(3, hdm.getErrors().size());
 		Object[] errs = hdm.getErrors().toArray();
-		assertEquals("There is a cycle between java.lang.Double and java.lang.Integer", errs[0]);
-		assertEquals("There is a cycle between java.lang.Double and java.lang.String", errs[1]);
-		assertEquals("There is a cycle between java.lang.Integer and java.lang.String", errs[2]);
+		assertEquals("there is a cycle between java.lang.Double and java.lang.Integer", errs[0]);
+		assertEquals("there is a cycle between java.lang.Double and java.lang.String", errs[1]);
+		assertEquals("there is a cycle between java.lang.Integer and java.lang.String", errs[2]);
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
 		assertEquals(3, acceptanceTests.size());
 		assertEquals("acceptance.110", acceptanceTests.get(0).getId());
@@ -187,8 +187,8 @@ public class AcceptanceAccumulationTests extends TestBase {
 		assertEquals(3, hdm.getHexCount());
 		assertEquals(2, hdm.getErrors().size());
 		Object[] errs = hdm.getErrors().toArray();
-		assertEquals("Ordering between java.lang.Double and java.lang.Integer is inconsistent", errs[0]);
-		assertEquals("There is a cycle between java.lang.Double and java.lang.Integer", errs[1]);
+		assertEquals("ordering between java.lang.Double and java.lang.Integer is inconsistent", errs[0]);
+		assertEquals("there is a cycle between java.lang.Double and java.lang.Integer", errs[1]);
 		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
 		assertEquals(2, acceptanceTests.size());
 		assertEquals("acceptance.111", acceptanceTests.get(0).getId());

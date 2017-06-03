@@ -47,7 +47,7 @@ public class ErrorView implements HexagonModelListener {
 	public void setModel(HexagonDataModel model) {
 		view.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				table.clearAll();
+				table.removeAll();
 				for (String s : model.getErrors()) {
 					TableItem ti = new TableItem(table, SWT.NULL);
 //			ti.setText(0, "There");

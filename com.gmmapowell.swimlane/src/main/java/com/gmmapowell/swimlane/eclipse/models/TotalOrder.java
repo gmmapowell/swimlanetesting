@@ -136,9 +136,9 @@ public class TotalOrder {
 							ordering.get(ck).put(rk, outcome.invert());
 							nchanged++;
 						} else
-							none.add("There is no ordering between " + first + " and " + second);
+							none.add("there is no ordering between " + first + " and " + second);
 					} else if (c.getValue() == Order.INCONSISTENT) {
-						ret.add("Ordering between " + first + " and " + second + " is inconsistent");
+						ret.add("ordering between " + first + " and " + second + " is inconsistent");
 					}
 				}
 			}
