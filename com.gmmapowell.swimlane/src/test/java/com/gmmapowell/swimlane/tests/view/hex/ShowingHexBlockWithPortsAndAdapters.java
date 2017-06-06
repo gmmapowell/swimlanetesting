@@ -55,6 +55,13 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 	}
 
 	@Test
+	public void testTooltipForPort() throws Exception {
+		specifyModel();
+		Canvas port = waitForControl(shell, "hexagons.hex.1.port.nw");
+		assertEquals("PortClass", port.getToolTipText());
+	}
+
+	@Test
 	public void testWeCanFindTheTopAdapter() throws Exception {
 		specifyModel();
 		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.1");
@@ -139,6 +146,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 			allowing(a2).getFailures(); will(returnValue(0));
 			allowing(a2).getStatus(); will(returnValue(Status.FAILURES));
 			allowing(a2).getMarks(); will(returnValue(new int[] { 1 }));
+			allowing(pd).getName(); will(returnValue("org.sample.PortClass"));
 			allowing(pd).getLocation(); will(returnValue(PortLocation.NORTHWEST));
 			allowing(pd).getAdapters(); will(returnValue(adapterList));
 

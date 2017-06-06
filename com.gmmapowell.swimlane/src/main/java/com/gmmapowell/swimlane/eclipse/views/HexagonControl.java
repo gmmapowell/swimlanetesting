@@ -26,7 +26,7 @@ public class HexagonControl {
 		this.bar = new BarControl(dispatcher, view, bar, "businessbar", hexId+".bar");
 		for (PortData p : ports) {
 			// should we keep track of these somehow?
-			this.ports.add(new PortControl(view, hexId+".port."+p.getLocation().toString(), hex, p.getLocation()));
+			this.ports.add(new PortControl(view, hexId+".port."+p.getLocation().toString(), hex, p));
 			int j=1;
 			int total = p.getAdapters().size();
 			for (BarData ad : p.getAdapters()) {

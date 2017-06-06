@@ -6,15 +6,16 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 
 public class PortPaintListener implements PaintListener {
 	private final Canvas canvas;
 	private final PortLocation loc;
 
-	public PortPaintListener(Canvas canvas, PortLocation loc) {
+	public PortPaintListener(Canvas canvas, PortData p) {
 		this.canvas = canvas;
-		this.loc = loc;
+		this.loc = p.getLocation();
 	}
 
 	@Override
