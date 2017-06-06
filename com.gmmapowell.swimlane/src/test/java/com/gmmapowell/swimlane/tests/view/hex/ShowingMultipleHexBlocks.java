@@ -1,5 +1,7 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -72,6 +74,20 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 	}
 
 	@Test
+	public void testATooltipWhenNoTestsHaveRun() throws Exception {
+		specifyModel(2, 10, 0, Status.NONE);
+		Canvas ute = waitForControl(shell, "hexagons.hex.1.bar");
+		assertEquals("Left - 1 group; 0 passed", ute.getToolTipText());
+	}
+
+	@Test
+	public void testMiddleTooltipWhenSomeTestsHaveRun() throws Exception {
+		specifyModel(2, 10, 4, Status.OK);
+		Canvas ute = waitForControl(shell, "hexagons.hex.2.bar");
+		assertEquals("Middle - 1 group; 4 passed", ute.getToolTipText());
+	}
+
+	@Test
 	public void testAllTheControlsWeWantAreThereForThreeHexagons() throws Exception {
 		specifyModel(3, 10, 0, Status.NONE);
 		assertControls(shell, "hexagons.hex.1.bg", "hexagons.hex.1.bar", "hexagons.hex.2.bg", "hexagons.hex.2.bar", "hexagons.hex.3.bg", "hexagons.hex.3.bar");
@@ -103,6 +119,7 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 				allowing(hexagons.get(0)).getBar(); will(returnValue(bars.get(0)));
 				allowing(hexagons.get(0)).getPorts(); will(returnValue(new ArrayList<PortData>()));
 				allowing(bars.get(0)).getId(); will(returnValue("bar1"));
+				allowing(bars.get(0)).getName(); will(returnValue("org.sample.Left"));
 				allowing(bars.get(0)).getTotal(); will(returnValue(total));
 				allowing(bars.get(0)).getComplete(); will(returnValue(complete));
 				allowing(bars.get(0)).getPassed(); will(returnValue(complete));
@@ -116,6 +133,7 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 				allowing(hexagons.get(1)).getBar(); will(returnValue(bars.get(1)));
 				allowing(hexagons.get(1)).getPorts(); will(returnValue(new ArrayList<PortData>()));
 				allowing(bars.get(1)).getId(); will(returnValue("bar2"));
+				allowing(bars.get(1)).getName(); will(returnValue("org.sample.Middle"));
 				allowing(bars.get(1)).getTotal(); will(returnValue(total));
 				allowing(bars.get(1)).getPassed(); will(returnValue(complete));
 				allowing(bars.get(1)).getComplete(); will(returnValue(complete));
@@ -129,6 +147,7 @@ public class ShowingMultipleHexBlocks extends BaseViewTest {
 				allowing(hexagons.get(2)).getBar(); will(returnValue(bars.get(2)));
 				allowing(hexagons.get(2)).getPorts(); will(returnValue(new ArrayList<PortData>()));
 				allowing(bars.get(2)).getId(); will(returnValue("bar3"));
+				allowing(bars.get(2)).getName(); will(returnValue("org.sample.Hex1"));
 				allowing(bars.get(2)).getTotal(); will(returnValue(total));
 				allowing(bars.get(2)).getPassed(); will(returnValue(complete));
 				allowing(bars.get(2)).getComplete(); will(returnValue(complete));

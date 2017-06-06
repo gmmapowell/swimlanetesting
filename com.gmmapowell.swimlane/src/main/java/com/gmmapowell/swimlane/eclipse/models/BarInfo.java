@@ -38,6 +38,10 @@ public abstract class BarInfo implements BarData {
 		return id;
 	}
 	
+	public String getName() {
+		throw new RuntimeException("not implemented");
+	}
+	
 	public void addCase(Class<?> tc) {
 		testClasses.put(tc.getName(), new Tracking());
 	}
@@ -108,6 +112,6 @@ public abstract class BarInfo implements BarData {
 
 	@Override
 	public Status getStatus() {
-		return stat ;
+		return stat;
 	}
 }

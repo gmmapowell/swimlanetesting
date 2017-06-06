@@ -93,4 +93,11 @@ public final class BarPaintListener implements PaintListener {
 		}
 		throw new RuntimeException("Cannot handle status " + status);
 	}
+
+	public String getBarName() {
+		if (barModel == null)
+			return null;
+		else
+			return barModel.getName();
+	}
 }

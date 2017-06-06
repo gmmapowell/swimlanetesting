@@ -116,6 +116,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 			allowing(hd).getBar(); will(returnValue(bd));
 			allowing(hd).getPorts(); will(returnValue(portList));
 			allowing(bd).getId(); will(returnValue("bar1"));
+			allowing(bd).getName(); will(returnValue("org.sample.Hex1"));
 			allowing(bd).getTotal(); will(returnValue(10));
 			allowing(bd).getComplete(); will(returnValue(0));
 			allowing(bd).getPassed(); will(returnValue(0));
@@ -123,6 +124,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 			allowing(bd).getStatus(); will(returnValue(Status.NONE));
 			allowing(bd).getMarks(); will(returnValue(new int[] { 1 }));
 			allowing(a1).getId(); will(returnValue("a1"));
+			allowing(a1).getName(); will(returnValue("org.sample.Hex1"));
 			allowing(a1).getTotal(); will(returnValue(20));
 			allowing(a1).getComplete(); will(returnValue(5));
 			allowing(a1).getPassed(); will(returnValue(5));
@@ -130,6 +132,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 			allowing(a1).getStatus(); will(returnValue(Status.OK));
 			allowing(a1).getMarks(); will(returnValue(new int[] { 1 }));
 			allowing(a2).getId(); will(returnValue("a2"));
+			allowing(a2).getName(); will(returnValue("org.sample.Hex1"));
 			allowing(a2).getTotal(); will(returnValue(5));
 			allowing(a2).getComplete(); will(returnValue(4));
 			allowing(a2).getPassed(); will(returnValue(4));

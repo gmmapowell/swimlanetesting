@@ -46,8 +46,13 @@ public class BarControl implements BarDataListener {
 				boolean vis = bar != null && bar.getTotal() > 0;
 				canvas.setVisible(vis);
 				if (vis) {
-					StringBuilder sb = new StringBuilder(typeName());
-					sb.append(" - 1 group; ");
+					String tn = typeName();
+					StringBuilder sb = new StringBuilder();
+					if (tn != null) {
+						sb.append(tn);
+						sb.append(" - ");
+					}
+					sb.append("1 group; ");
 					sb.append(bar.getPassed());
 					sb.append(" passed");
 					int failed = bar.getFailures();
@@ -72,6 +77,12 @@ public class BarControl implements BarDataListener {
 			return "Acceptance";
 		case "utebar":
 			return "Utilities";
+		case "businessbar": {
+			String bn = bpl.getBarName();
+			if (bn == null)
+				return null;
+			return bn.substring(bn.lastIndexOf('.')+1);
+		}
 		default:
 			return type;
 		}

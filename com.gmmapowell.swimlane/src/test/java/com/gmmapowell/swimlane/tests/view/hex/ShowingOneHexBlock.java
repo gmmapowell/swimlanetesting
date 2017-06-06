@@ -1,5 +1,7 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
@@ -75,6 +77,13 @@ public class ShowingOneHexBlock extends BaseViewTest {
 	}
 
 	@Test
+	public void testTheTooltipWhenNoTestsHaveRun() throws Exception {
+		specifyModel(10, 0, Status.NONE);
+		Canvas ute = waitForControl(shell, "hexagons.hex.1.bar");
+		assertEquals("1 group; 0 passed", ute.getToolTipText());
+	}
+
+	@Test
 	public void testTheHexagonsBarChangesColorAfterUpdate() throws Exception {
 		specifyModel(10, 0, Status.NONE);
 		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
@@ -115,6 +124,7 @@ public class ShowingOneHexBlock extends BaseViewTest {
 			allowing(hd).getPorts(); will(returnValue(new ArrayList<PortData>()));
 			allowing(bd).getId(); will(returnValue("bar"));
 			allowing(bd).getTotal(); will(returnValue(total));
+			allowing(bd).getName(); will(returnValue(null));
 			allowing(bd).getComplete(); will(returnValue(complete)); when(mode.is("initial"));
 			allowing(bd).getComplete(); will(returnValue(complete+5)); when(mode.is("plus5"));
 			allowing(bd).getPassed(); will(returnValue(0));
