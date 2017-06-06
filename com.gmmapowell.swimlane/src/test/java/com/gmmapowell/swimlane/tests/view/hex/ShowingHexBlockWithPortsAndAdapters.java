@@ -79,6 +79,13 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 	}
 
 	@Test
+	public void testTooltipForTopAdapter() throws Exception {
+		specifyModel();
+		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.1");
+		assertEquals("TopAdapter - 1 group; 5 passed", adapter.getToolTipText());
+	}
+
+	@Test
 	public void testWeCanFindTheBottomAdapter() throws Exception {
 		specifyModel();
 		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.2");
@@ -92,6 +99,13 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 				proxy.assertColorOfPixel(SWT.COLOR_GRAY, 30, 3); // right
 			}
 		});
+	}
+
+	@Test
+	public void testTooltipForBottomAdapter() throws Exception {
+		specifyModel();
+		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.2");
+		assertEquals("BottomAdapter - 1 group; 4 passed", adapter.getToolTipText());
 	}
 
 	protected void specifyModel() throws InterruptedException {
@@ -131,7 +145,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 			allowing(bd).getStatus(); will(returnValue(Status.NONE));
 			allowing(bd).getMarks(); will(returnValue(new int[] { 1 }));
 			allowing(a1).getId(); will(returnValue("a1"));
-			allowing(a1).getName(); will(returnValue("org.sample.Hex1"));
+			allowing(a1).getName(); will(returnValue("org.sample.TopAdapter"));
 			allowing(a1).getTotal(); will(returnValue(20));
 			allowing(a1).getComplete(); will(returnValue(5));
 			allowing(a1).getPassed(); will(returnValue(5));
@@ -139,7 +153,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
 			allowing(a1).getStatus(); will(returnValue(Status.OK));
 			allowing(a1).getMarks(); will(returnValue(new int[] { 1 }));
 			allowing(a2).getId(); will(returnValue("a2"));
-			allowing(a2).getName(); will(returnValue("org.sample.Hex1"));
+			allowing(a2).getName(); will(returnValue("org.foo.BottomAdapter"));
 			allowing(a2).getTotal(); will(returnValue(5));
 			allowing(a2).getComplete(); will(returnValue(4));
 			allowing(a2).getPassed(); will(returnValue(4));

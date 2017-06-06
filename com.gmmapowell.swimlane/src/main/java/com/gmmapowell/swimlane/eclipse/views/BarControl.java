@@ -77,7 +77,9 @@ public class BarControl implements BarDataListener {
 			return "Acceptance";
 		case "utebar":
 			return "Utilities";
-		case "businessbar": {
+		case "businessbar":
+		case "adapterbar":
+		{
 			String bn = bpl.getBarName();
 			if (bn == null)
 				return null;
