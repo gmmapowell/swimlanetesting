@@ -111,7 +111,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		BarInfo bar;
 		if (hex == null) {
 			if (defaultLogic == null)
-				defaultLogic = new LogicInfo("-default-");
+				defaultLogic = new LogicInfo(null, "-default-");
 			bar = defaultLogic;
 		} else {
 			HexInfo hi = inithex(hex);
@@ -152,7 +152,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	@Override
 	public void utility(TestGroup grp, Class<?> tc) {
 		if (uteBar == null)
-			uteBar = new LogicInfo("utility");
+			uteBar = new LogicInfo(null, "utility");
 		barsFor.put(tc.getName(), uteBar);
 		collectCase(uteBar, grp, tc);
 	}

@@ -81,6 +81,13 @@ public class BusinessLogicAccumulationTests {
 	}
 
 	@Test
+	public void testTheBarHasTheRightName() {
+		acc.logic(grp, testCase1, hexClass1);
+		acc.analysisComplete();
+		assertEquals(hexClass1.getName(), hdm.getHexagons().get(0).getBar().getName());
+	}
+
+	@Test
 	public void testThatOneTestMakesOneEntryInTheBar() {
 		acc.logic(grp, testCase1, hexClass1);
 		acc.analysisComplete();

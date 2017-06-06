@@ -193,6 +193,13 @@ public class AdapterAccumulationTests {
 	}
 
 	@Test
+	public void testTheAdapterBarHasTheRightName() {
+		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
+		acc.analysisComplete();
+		assertEquals(adapterClass1.getName(), hdm.getHexagons().get(0).getPorts().get(0).getAdapters().get(0).getName());
+	}
+
+	@Test
 	public void testWeGroupMultipleTestsIntoASingleBarForTheSameAdapter() {
 		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
 		acc.adapter(grp, testCase2, hexClass1, portClass1, adapterClass1);

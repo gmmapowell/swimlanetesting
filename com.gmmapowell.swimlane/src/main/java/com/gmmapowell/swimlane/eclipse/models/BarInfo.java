@@ -38,9 +38,7 @@ public abstract class BarInfo implements BarData {
 		return id;
 	}
 	
-	public String getName() {
-		throw new RuntimeException("not implemented");
-	}
+	public abstract String getName();
 	
 	public void addCase(Class<?> tc) {
 		testClasses.put(tc.getName(), new Tracking());

@@ -43,7 +43,7 @@ public class HexInfo implements HexData {
 
 	public BarInfo ensureBar() {
 		if (bar == null)
-			bar = new LogicInfo(id +".logic");
+			bar = new LogicInfo(id, id +".logic");
 		return bar;
 	}
 

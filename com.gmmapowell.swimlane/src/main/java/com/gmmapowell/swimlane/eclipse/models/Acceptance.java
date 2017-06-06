@@ -10,6 +10,11 @@ public class Acceptance extends BarInfo {
 		this.hexs = hexs;
 	}
 
+	@Override
+	public String getName() {
+		throw new RuntimeException("acceptance bars do not have names");
+	}
+
 	public void setMarks(List<String> order) {
 		StringBuilder sb = new StringBuilder("acceptance.");
 		marks = new int[order.size()];
