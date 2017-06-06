@@ -11,7 +11,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 
-public class MultipleAcceptanceBars extends BaseViewTest {
+public class MultipleAcceptanceBars extends BaseHexViewTest {
 	
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {

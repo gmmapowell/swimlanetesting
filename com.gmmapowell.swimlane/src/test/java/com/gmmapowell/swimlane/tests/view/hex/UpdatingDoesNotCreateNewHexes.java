@@ -13,7 +13,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 
-public class UpdatingDoesNotCreateNewHexes extends BaseViewTest {
+public class UpdatingDoesNotCreateNewHexes extends BaseHexViewTest {
 	States mode = context.states("mode").startsAs("initial");
 	private BarData bd;
 	

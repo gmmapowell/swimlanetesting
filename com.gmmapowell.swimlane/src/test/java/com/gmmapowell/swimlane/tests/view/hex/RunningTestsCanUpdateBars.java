@@ -16,7 +16,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
-public class RunningTestsCanUpdateBars extends BaseViewTest {
+public class RunningTestsCanUpdateBars extends BaseHexViewTest {
 	
 	@Test
 	public void testTheBarCanBeRedrawnProgressivelyMoreGreen() throws Exception {

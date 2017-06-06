@@ -20,7 +20,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
-public class ShowingHexBlockWithPortsAndAdapters extends BaseViewTest {
+public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
 	private BarData bd;
 	
 	@Test

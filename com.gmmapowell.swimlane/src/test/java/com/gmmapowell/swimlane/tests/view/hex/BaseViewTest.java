@@ -17,7 +17,6 @@ import org.junit.Before;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
-import com.gmmapowell.swimlane.eclipse.views.HexView;
 import com.gmmapowell.swimlane.fakes.FakeModelDispatcher;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
@@ -25,22 +24,28 @@ import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public abstract class BaseViewTest extends TestBase {
 	public Shell shell;
-	public HexView hv;
 	protected ModelDispatcher md;
 	protected FakeModelDispatcher fmd;
 
 	@Before
 	public void setup() throws Exception {
+		create();
+		complete();
+	}
+
+	protected void create() {
 		shell = displayHelper.createShell();
 		shell.setLayout(new GridLayout(1, false));
 		md = context.mock(ModelDispatcher.class);
 		fmd = new FakeModelDispatcher(md);
-		hv = new HexView(shell, fmd);
+	}
+
+	protected void complete() {
 		shell.setSize(600, 300);
 		shell.open();
 		displayHelper.flushPendingEvents();
 	}
-
+	
 	@After
 	public void tearDown() throws Exception {
 //		Thread.sleep(3000);
@@ -49,10 +54,14 @@ public abstract class BaseViewTest extends TestBase {
 
 	protected HexagonDataModel pushModel(HexagonDataModel testModel) {
 		fmd.setModel(testModel);
+		updateShell();
+		return testModel;
+	}
+
+	protected void updateShell() {
 		shell.redraw();
 		shell.update();
 		displayHelper.flushPendingEvents();
-		return testModel;
 	}
 
 	protected void checkSizeColors(Canvas canvas, int x, int y, ImageChecker checker) {

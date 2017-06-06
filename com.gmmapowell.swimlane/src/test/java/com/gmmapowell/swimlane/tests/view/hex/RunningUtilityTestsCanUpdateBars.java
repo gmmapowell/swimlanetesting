@@ -17,7 +17,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
-public class RunningUtilityTestsCanUpdateBars extends BaseViewTest {
+public class RunningUtilityTestsCanUpdateBars extends BaseHexViewTest {
 	
 	@Test
 	public void testWeCanGoFromNoBarToABar() throws Exception {

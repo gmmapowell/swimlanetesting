@@ -20,7 +20,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
-public class ShowingOneHexBlock extends BaseViewTest {
+public class ShowingOneHexBlock extends BaseHexViewTest {
 	States mode = context.states("mode").startsAs("initial");
 	private BarData bd;
 	

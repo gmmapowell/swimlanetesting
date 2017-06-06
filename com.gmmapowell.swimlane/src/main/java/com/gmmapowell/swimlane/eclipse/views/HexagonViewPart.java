@@ -79,6 +79,11 @@ public class HexagonViewPart extends ViewPart implements SingleStore {
 		stackUI.layout();
 	}
 
+	@Override
+	public void showTestResults(String id) {
+		throw new RuntimeException("not implemented");
+	}
+
 	public void dispose() {
 		if (bl != null)
 			ResourcesPlugin.getWorkspace().removeResourceChangeListener(bl);

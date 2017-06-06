@@ -9,5 +9,6 @@ public interface ModelDispatcher {
 
 	void setModel(Object model);
 	void barChanged(BarData bar);
+	void barClicked(String barId);
 
 }

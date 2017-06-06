@@ -15,7 +15,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 
-public class LayoutTests extends BaseViewTest {
+public class LayoutTests extends BaseHexViewTest {
 
 	@Test
 	public void testThatAllTheControlsArePresent() throws InterruptedException {

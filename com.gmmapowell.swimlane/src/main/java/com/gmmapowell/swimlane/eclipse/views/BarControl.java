@@ -1,6 +1,8 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
@@ -23,6 +25,12 @@ public class BarControl implements BarDataListener {
 		canvas.setData("com.gmmapowell.swimlane.type", type);
 		canvas.setData("com.gmmapowell.swimlane.bar", this);
 		canvas.setData("org.eclipse.swtbot.widget.key", barId);
+		canvas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				dispatcher.barClicked(barId);
+			}
+		});
 		bpl = new BarPaintListener(canvas, bar);
 		canvas.addPaintListener(bpl);
 		dispatcher.addBarListener(bar, this);

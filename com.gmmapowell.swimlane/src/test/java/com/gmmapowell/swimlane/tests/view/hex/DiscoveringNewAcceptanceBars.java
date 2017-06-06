@@ -11,7 +11,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 
-public class DiscoveringNewAcceptanceBars extends BaseViewTest {
+public class DiscoveringNewAcceptanceBars extends BaseHexViewTest {
 	
 	@Test
 	public void testWeCanAddASecond_Later_Bar() throws Exception {

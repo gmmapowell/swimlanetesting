@@ -53,4 +53,9 @@ public class FakeModelDispatcher implements ModelDispatcher {
 		smd.barChanged(bar);
 	}
 
+	@Override
+	public void barClicked(String barId) {
+		mock.barClicked(barId);
+	}
+
 }

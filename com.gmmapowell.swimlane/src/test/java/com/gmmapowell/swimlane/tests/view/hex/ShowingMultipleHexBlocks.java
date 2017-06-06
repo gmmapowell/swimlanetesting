@@ -19,7 +19,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
-public class ShowingMultipleHexBlocks extends BaseViewTest {
+public class ShowingMultipleHexBlocks extends BaseHexViewTest {
 	
 	@Test
 	public void testAllTheControlsWeWantAreThereForTwoHexagons() throws Exception {

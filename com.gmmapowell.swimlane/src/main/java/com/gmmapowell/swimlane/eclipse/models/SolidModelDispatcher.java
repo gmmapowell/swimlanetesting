@@ -71,4 +71,9 @@ public class SolidModelDispatcher implements ModelDispatcher {
 			for (BarDataListener l : lsnrs)
 				l.barChanged(bar);
 	}
+
+	@Override
+	public void barClicked(String barId) {
+		throw new RuntimeException("Not implemented");
+	}
 }

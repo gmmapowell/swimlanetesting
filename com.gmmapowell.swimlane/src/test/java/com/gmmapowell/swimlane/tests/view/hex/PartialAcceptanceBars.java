@@ -15,7 +15,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 
-public class PartialAcceptanceBars extends BaseViewTest {
+public class PartialAcceptanceBars extends BaseHexViewTest {
 	
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
