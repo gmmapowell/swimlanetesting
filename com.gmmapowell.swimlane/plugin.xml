@@ -31,6 +31,20 @@
 	</extension>
    
 	<extension
+		point="org.eclipse.ui.menus">
+		<menuContribution
+	    	locationURI="toolbar:com.gmmapowell.swimlane.views.HexagonView">
+		    <command
+				id="com.gmmapowell.swimlane.eclipse.toolbar.TestResults"
+		        commandId="com.gmmapowell.swimlane.eclipse.commands.TestResults"
+				style="radio"
+				tooltip="Test Results"
+			>
+			</command>
+		</menuContribution>
+	</extension>
+   
+	<extension
     	point="org.eclipse.ui.menus">
 		<menuContribution
     		locationURI="toolbar:com.gmmapowell.swimlane.views.HexagonView">
@@ -72,6 +86,32 @@
 		   	<commandParameter
 		   		id="org.eclipse.ui.commands.radioStateParameter"
 		   		name="Hex"
+		   		optional="false">
+		   	</commandParameter>
+		   	<state
+		   		id="com.gmmapowell.swimlane.eclipse.actions.whichTab">
+		   		<class
+		   		class="org.eclipse.ui.handlers.RadioState">
+		   			<parameter name="default" value="Hex" />
+		   		</class>
+		   	</state>
+	   </command>
+	</extension>
+
+	<extension
+         point="org.eclipse.ui.commands">
+		<category
+			name="Swimlane Testing"
+            id="com.gmmapowell.swimlane">
+		</category>
+		<command
+   			id="com.gmmapowell.swimlane.eclipse.commands.TestResults"
+   			name="Test Results"
+   			defaultHandler="com.gmmapowell.swimlane.eclipse.handlers.TestResultsHandler"
+		>
+		   	<commandParameter
+		   		id="org.eclipse.ui.commands.radioStateParameter"
+		   		name="Tests"
 		   		optional="false">
 		   	</commandParameter>
 		   	<state

@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.owntests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -149,6 +150,21 @@ public class TestThreeHexagonsHappyCase {
 	public void step30_checkToolTipOnAcc123() {
 		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
 		assertEquals("Acceptance - 1 group; 2 passed", acc123.getToolTipText());
+	}
+	
+	@Test
+	public void step31_clickAcc123ToMoveToTestResults() {
+		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
+		acc123.click();
+		bot.getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				SWTBotToolbarButton showHexes = bot.toolbarRadioButtonWithTooltip("Show Hex Diagram");
+				assertFalse("hexes button should be deactivated", showHexes.widget.getSelection());
+				SWTBotToolbarButton showTests = bot.toolbarRadioButtonWithTooltip("Test Results");
+				assertTrue("results button should be activated", showTests.widget.getSelection());
+			}
+		});
 	}
 	
 	@AfterClass
