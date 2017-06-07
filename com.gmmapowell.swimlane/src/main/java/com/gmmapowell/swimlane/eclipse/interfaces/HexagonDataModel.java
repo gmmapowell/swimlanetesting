@@ -13,4 +13,5 @@ public interface HexagonDataModel {
 	public Set<String> getErrors();
 	public List<HexData> getHexagons();
 	public BarData getUtilityBar();
+	public Set<TestResultGroup> getTestResultsFor(String resultsFor);
 }

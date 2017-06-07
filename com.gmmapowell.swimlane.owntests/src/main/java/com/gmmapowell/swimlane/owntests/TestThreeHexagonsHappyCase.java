@@ -191,6 +191,12 @@ public class TestThreeHexagonsHappyCase {
 		assertTrue(cases.isVisible());
 	}
 	
+	@Test
+	public void step32_assertThatTheTreeHasTheResultsWeWouldExpect() {
+		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		assertEquals(9, cases.rowCount());
+	}
+	
 	@AfterClass
 	public static void tearDown() throws Exception {
 	}

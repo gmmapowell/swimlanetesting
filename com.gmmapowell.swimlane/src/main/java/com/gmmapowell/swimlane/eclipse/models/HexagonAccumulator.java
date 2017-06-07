@@ -19,6 +19,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
 
@@ -359,9 +360,15 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		// We currently don't have a mechanism to display this, so there is no point capturing or processing it
 	}
 
-	/* These errors are for individual test failures */
+	/* This is called when the test mechanism fails */
 	@Override
 	public void testError(String msg) {
-		// We currently don't have a mechanism to display this, so there is no point capturing or processing it
+		error(msg);
+	}
+
+	@Override
+	public Set<TestResultGroup> getTestResultsFor(String resultsFor) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

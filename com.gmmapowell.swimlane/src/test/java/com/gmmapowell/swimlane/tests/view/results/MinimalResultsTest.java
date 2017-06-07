@@ -32,7 +32,7 @@ public class MinimalResultsTest extends BaseViewTest {
 	protected HexagonDataModel defineModel() {
 		HexagonDataModel testModel = context.mock(HexagonDataModel.class);
 		context.checking(new Expectations() {{
-			allowing(testModel).getErrors(); will(returnValue(new TreeSet<String>()));
+			allowing(testModel).getTestResultsFor(null); will(returnValue(new TreeSet<String>()));
 		}});
 		return testModel;
 	}

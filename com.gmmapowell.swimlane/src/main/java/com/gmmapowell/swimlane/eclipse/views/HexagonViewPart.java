@@ -57,7 +57,7 @@ public class HexagonViewPart extends ViewPart implements SingleStore {
 		stackUI.setLayout(stack);
 		hexView = new HexView(stackUI, dispatcher);
 		errorView = new ErrorView(stackUI, dispatcher);
-		testResults = new TestResultsView(stackUI);
+		testResults = new TestResultsView(stackUI, dispatcher);
 		stack.topControl = hexView.getTop();
 		try {
 			bl = new BuildListener(dispatcher, eclipse);
