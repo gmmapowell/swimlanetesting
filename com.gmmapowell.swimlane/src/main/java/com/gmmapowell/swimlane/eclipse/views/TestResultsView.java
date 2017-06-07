@@ -29,8 +29,7 @@ public class TestResultsView {
 	}
 
 	public Control getTop() {
-		// TODO Auto-generated method stub
-		return null;
+		return view;
 	}
 
 }
