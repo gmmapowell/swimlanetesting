@@ -15,15 +15,18 @@ import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.SingleStore;
 
 public class SolidModelDispatcher implements ModelDispatcher {
 	private final EclipseAbstractor eclipse;
+	private final SingleStore store;
 	private final List<HexagonModelListener> modelLsnrs = new ArrayList<>();
 	private final Map<String, Set<BarDataListener>> barLsnrs = new HashMap<>();
 	private final List<AccumulatorListener> accLsnrs = new ArrayList<>();
 	
-	public SolidModelDispatcher(EclipseAbstractor eclipse) {
+	public SolidModelDispatcher(EclipseAbstractor eclipse, SingleStore store) {
 		this.eclipse = eclipse;
+		this.store = store;
 	}
 
 	@Override
@@ -81,5 +84,6 @@ public class SolidModelDispatcher implements ModelDispatcher {
 	@Override
 	public void barClicked(String barId) {
 		eclipse.switchRadio("com.gmmapowell.swimlane.eclipse.toolbar.TestResults", "com.gmmapowell.swimlane.eclipse.commands.TestResults", "Tests");
+		store.showTestResults(barId);
 	}
 }

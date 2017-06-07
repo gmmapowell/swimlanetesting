@@ -13,7 +13,7 @@ import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public class DispatcherTests extends TestBase {
-	SolidModelDispatcher md = new SolidModelDispatcher(null);
+	SolidModelDispatcher md = new SolidModelDispatcher(null, null);
 	
 	@Test
 	public void testThatTheDispatcherNotifiesAccumulatorListenersWhenTheModelChanges() throws Exception {

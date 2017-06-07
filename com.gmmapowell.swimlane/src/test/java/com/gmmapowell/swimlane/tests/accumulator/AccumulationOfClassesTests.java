@@ -15,7 +15,7 @@ import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public class AccumulationOfClassesTests extends TestBase {
-	ModelDispatcher md = new SolidModelDispatcher(null);
+	ModelDispatcher md = new SolidModelDispatcher(null, null);
 	Accumulator acc = new HexagonAccumulator(md);
 	TestGroup grp = new TestGroup(null);
 

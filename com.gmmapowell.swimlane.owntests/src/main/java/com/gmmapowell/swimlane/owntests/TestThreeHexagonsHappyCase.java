@@ -1,7 +1,6 @@
 package com.gmmapowell.swimlane.owntests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -19,6 +18,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotCanvas;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -187,6 +187,8 @@ public class TestThreeHexagonsHappyCase {
 			fail("Should not have found hexagons.acceptance.111");
 		} catch (WidgetNotFoundException ex) {
 		}
+		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		assertTrue(cases.isVisible());
 	}
 	
 	@AfterClass

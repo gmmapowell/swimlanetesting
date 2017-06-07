@@ -13,7 +13,7 @@ import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 
 public class UtilityAccumulationTests {
-	ModelDispatcher md = new SolidModelDispatcher(null);
+	ModelDispatcher md = new SolidModelDispatcher(null, null);
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestGroup grp = new TestGroup(null);

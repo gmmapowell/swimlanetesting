@@ -42,12 +42,13 @@ public class HexagonViewPart extends ViewPart implements SingleStore {
 	private StackLayout stack;
 	private HexView hexView;
 	private ErrorView errorView;
+	private TestResultsView testResults;
 
 	public void createPartControl(Composite parent) {
 		RealEclipseAbstractor eclipse = new RealEclipseAbstractor();
 		parent.setLayout(new GridLayout(1, false));
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		dispatcher = new SolidModelDispatcher(eclipse);
+		dispatcher = new SolidModelDispatcher(eclipse, this);
 		tr = new RemoteJUnitTestRunner(eclipse);
 		new InfoBar(parent, dispatcher);
 		stackUI = new Composite(parent, SWT.NONE);
@@ -56,6 +57,7 @@ public class HexagonViewPart extends ViewPart implements SingleStore {
 		stackUI.setLayout(stack);
 		hexView = new HexView(stackUI, dispatcher);
 		errorView = new ErrorView(stackUI, dispatcher);
+		testResults = new TestResultsView();
 		stack.topControl = hexView.getTop();
 		try {
 			bl = new BuildListener(dispatcher, eclipse);
@@ -81,8 +83,9 @@ public class HexagonViewPart extends ViewPart implements SingleStore {
 
 	@Override
 	public void showTestResults(String id) {
-		System.out.println("Showing " + id);
-//		throw new RuntimeException("not implemented");
+		testResults.resultsFor(id);
+		stack.topControl = testResults.getTop();
+		stackUI.layout();
 	}
 
 	public void dispose() {
