@@ -28,8 +28,10 @@ public class TestResultsView implements HexagonModelListener {
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		tree = new Tree(view, SWT.BORDER);
 		tree.setData("org.eclipse.swtbot.widget.key", "hexagons.casesTree");
+		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		table = new Table(view, SWT.BORDER);
 		table.setData("org.eclipse.swtbot.widget.key", "hexagons.failure");
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
 		dispatcher.addHexagonModelListener(this);
 	}
