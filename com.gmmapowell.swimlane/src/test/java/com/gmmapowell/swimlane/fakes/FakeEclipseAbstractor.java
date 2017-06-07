@@ -37,4 +37,9 @@ public class FakeEclipseAbstractor implements EclipseAbstractor {
 		job.run(null);
 	}
 
+	@Override
+	public void switchRadio(String toolId, String cmdId, String value) {
+		throw new RuntimeException("Not implemented");
+	}
+
 }

@@ -88,12 +88,8 @@
 		   		name="Hex"
 		   		optional="false">
 		   	</commandParameter>
-		   	<state
-		   		id="com.gmmapowell.swimlane.eclipse.actions.whichTab">
-		   		<class
-		   		class="org.eclipse.ui.handlers.RadioState">
-		   			<parameter name="default" value="Hex" />
-		   		</class>
+		   	<state class="org.eclipse.ui.handlers.RadioState:Hex"
+		   		id="org.eclipse.ui.commands.radioState">
 		   	</state>
 	   </command>
 	</extension>
@@ -114,12 +110,8 @@
 		   		name="Tests"
 		   		optional="false">
 		   	</commandParameter>
-		   	<state
-		   		id="com.gmmapowell.swimlane.eclipse.actions.whichTab">
-		   		<class
-		   		class="org.eclipse.ui.handlers.RadioState">
-		   			<parameter name="default" value="Hex" />
-		   		</class>
+		   	<state class="org.eclipse.ui.handlers.RadioState:Hex"
+		   		id="org.eclipse.ui.commands.radioState">
 		   	</state>
 	   </command>
 	</extension>
@@ -136,16 +128,12 @@
    			defaultHandler="com.gmmapowell.swimlane.eclipse.handlers.ShowErrorsHandler"
 		>
 			<commandParameter
-   				id="com.gmmapowell.swimlane.eclipse.actions.parameter2"
-   				name="Select Errors Tab"
+   				id="org.eclipse.ui.commands.radioStateParameter"
+   				name="Errors"
 		   		optional="false">
    			</commandParameter>
-			<state
-	   			id="com.gmmapowell.swimlane.eclipse.actions.whichTab">
-		   		<class
-	   				class="org.eclipse.ui.handlers.RadioState">
-		   			<parameter name="default" value="Hex" />
-				</class>
+			<state class="org.eclipse.ui.handlers.RadioState:Hex"
+	   			id="org.eclipse.ui.commands.radioState">
 			</state>
 	   </command>
 	</extension>

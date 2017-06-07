@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.commands.Command;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
@@ -19,9 +21,18 @@ import org.eclipse.core.runtime.jobs.IJobFunction;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jface.action.ContributionItem;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.commands.ICommandService;
+import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.handlers.RadioState;
 import org.osgi.framework.Bundle;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
+import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
 
 public class RealEclipseAbstractor implements EclipseAbstractor {
 
@@ -76,4 +87,32 @@ public class RealEclipseAbstractor implements EclipseAbstractor {
 		job.setUser(true);
 		job.schedule();
 	}
+
+	@Override
+	public void switchRadio(String toolId, String cmdId, String value) {
+		try {
+			IWorkbench wb = PlatformUI.getWorkbench();
+			IWorkbenchWindow iww = wb.getActiveWorkbenchWindow();
+			HexagonViewPart hvp = (HexagonViewPart) iww.getActivePage().findView(HexagonViewPart.ID);
+			IToolBarManager tbm = hvp.getViewSite().getActionBars().getToolBarManager();
+			ContributionItem tr = (ContributionItem)tbm.find("com.gmmapowell.swimlane.eclipse.toolbar.TestResults");
+			tr.update();
+//			WorkbenchWindow ww = (WorkbenchWindow) iww;
+			
+			ICommandService commandService = (ICommandService) iww.getService(
+							ICommandService.class);
+			Command command = commandService
+					.getCommand("com.gmmapowell.swimlane.eclipse.commands.TestResults");
+//			ExecutionEvent ev = new ExecutionEvent(command, new HashMap<>(), null, null);
+//			command.getHandler().execute(ev);
+			System.out.println(command.getState(RadioState.STATE_ID).getValue());
+			HandlerUtil.updateRadioState(command, "Tests");
+			System.out.println(command.getState(RadioState.STATE_ID).getValue());
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 }

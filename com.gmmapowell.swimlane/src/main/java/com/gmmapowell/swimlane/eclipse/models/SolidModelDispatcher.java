@@ -11,15 +11,21 @@ import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.AccumulatorListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 
 public class SolidModelDispatcher implements ModelDispatcher {
-	private List<HexagonModelListener> modelLsnrs = new ArrayList<>();
-	private Map<String, Set<BarDataListener>> barLsnrs = new HashMap<>();
-	private List<AccumulatorListener> accLsnrs = new ArrayList<>();
+	private final EclipseAbstractor eclipse;
+	private final List<HexagonModelListener> modelLsnrs = new ArrayList<>();
+	private final Map<String, Set<BarDataListener>> barLsnrs = new HashMap<>();
+	private final List<AccumulatorListener> accLsnrs = new ArrayList<>();
 	
+	public SolidModelDispatcher(EclipseAbstractor eclipse) {
+		this.eclipse = eclipse;
+	}
+
 	@Override
 	public void addHexagonModelListener(HexagonModelListener lsnr) {
 		modelLsnrs.add(lsnr);
@@ -74,6 +80,6 @@ public class SolidModelDispatcher implements ModelDispatcher {
 
 	@Override
 	public void barClicked(String barId) {
-		throw new RuntimeException("Not implemented");
+		eclipse.switchRadio("com.gmmapowell.swimlane.eclipse.toolbar.TestResults", "com.gmmapowell.swimlane.eclipse.commands.TestResults", "Tests");
 	}
 }

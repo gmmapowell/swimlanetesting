@@ -19,4 +19,6 @@ public interface EclipseAbstractor {
 	List<File> getJunitRunnerClasspathEntries();
 
 	void backgroundWithProgress(IJobFunction job);
+
+	void switchRadio(String toolId, String cmdId, String value);
 }

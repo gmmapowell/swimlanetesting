@@ -19,7 +19,7 @@ import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
  * here we assert that the two are coupled correctly internally.
  */
 public class GeneralAccumulationTests {
-	ModelDispatcher md = new SolidModelDispatcher();
+	ModelDispatcher md = new SolidModelDispatcher(null);
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	

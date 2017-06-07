@@ -27,7 +27,7 @@ import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public class UpdatingRealTimeTestResultInfo extends TestBase {
-	SolidModelDispatcher md = new SolidModelDispatcher();
+	SolidModelDispatcher md = new SolidModelDispatcher(null);
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestResultReporter trr = (TestResultReporter) acc;

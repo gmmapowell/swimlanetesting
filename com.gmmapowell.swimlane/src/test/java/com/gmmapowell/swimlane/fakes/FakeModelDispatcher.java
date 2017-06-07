@@ -13,7 +13,7 @@ public class FakeModelDispatcher implements ModelDispatcher {
 
 	public FakeModelDispatcher(ModelDispatcher mock) {
 		this.mock = mock;
-		smd = new SolidModelDispatcher();
+		smd = new SolidModelDispatcher(null);
 	}
 	
 	public ModelDispatcher real() {

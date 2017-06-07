@@ -7,9 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.Date;
 
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
@@ -30,8 +28,6 @@ import org.junit.runners.MethodSorters;
 public class TestErrorDisplayCase {
 	private static SWTWorkbenchBot bot;
 	private static ExtendedBot ext;
-	private static SWTBotView hexView;
-	private static Point viewSize;
 	private static Date startBuildAt;
 
 	@BeforeClass
@@ -44,9 +40,6 @@ public class TestErrorDisplayCase {
 		ext.importSampleProject(new File(new File(cwd).getParentFile(), "error-sample-proj"));
 		try { Thread.sleep(1000); } catch (InterruptedException ex) { }
 		ext.showView("Swimlane Testing", "Hexagons");
-		hexView = bot.viewByTitle("Hexagons");
-		viewSize = ext.getSize(hexView.getWidget());
-		System.out.println("hex view is size " + viewSize);
 		startBuildAt = new Date();
 		ext.projectMenu().menu("Build All").click();
 	}

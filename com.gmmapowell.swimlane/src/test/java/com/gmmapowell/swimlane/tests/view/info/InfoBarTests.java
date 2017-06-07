@@ -28,7 +28,7 @@ public class InfoBarTests extends TestBase {
 	public void setup() throws Exception {
 		shell = displayHelper.createShell();
 		shell.setLayout(new GridLayout(1, false));
-		md = new SolidModelDispatcher();
+		md = new SolidModelDispatcher(null);
 		bar = new InfoBar(shell, md);
 		shell.setSize(600, 300);
 		shell.open();

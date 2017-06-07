@@ -23,7 +23,7 @@ import com.gmmapowell.swimlane.tests.swtutil.TestBase;
  * here we assert that the two are coupled correctly internally.
  */
 public class AcceptanceAccumulationTests extends TestBase {
-	ModelDispatcher md = new SolidModelDispatcher();
+	ModelDispatcher md = new SolidModelDispatcher(null);
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestGroup grp = new TestGroup(null);

@@ -17,7 +17,7 @@ import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 
 public class BusinessLogicAccumulationTests {
-	ModelDispatcher md = new SolidModelDispatcher();
+	ModelDispatcher md = new SolidModelDispatcher(null);
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestGroup grp = new TestGroup(null);
