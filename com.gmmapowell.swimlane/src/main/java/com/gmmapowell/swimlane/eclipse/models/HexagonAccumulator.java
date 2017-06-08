@@ -368,7 +368,8 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public Set<TestResultGroup> getTestResultsFor(String resultsFor) {
-		// TODO Auto-generated method stub
-		return null;
+		Set<TestResultGroup> ret = new TreeSet<>();
+		ret.add(new AccumulatedTestResultGroup());
+		return ret;
 	}
 }
