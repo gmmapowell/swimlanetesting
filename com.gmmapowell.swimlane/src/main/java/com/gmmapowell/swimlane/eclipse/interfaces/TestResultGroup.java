@@ -1,5 +1,8 @@
 package com.gmmapowell.swimlane.eclipse.interfaces;
 
-public interface TestResultGroup extends Comparable<TestResultGroup> {
+import java.util.Set;
 
+public interface TestResultGroup extends Comparable<TestResultGroup> {
+	String name();
+	Set<TestResultClass> testClasses();
 }

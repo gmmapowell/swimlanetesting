@@ -14,7 +14,9 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestResultClass;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestResultTest;
 
 public class TestResultsView implements HexagonModelListener {
 	private final Composite view;
@@ -52,9 +54,20 @@ public class TestResultsView implements HexagonModelListener {
 				table.removeAll();
 				Set<TestResultGroup> groups = model.getTestResultsFor(resultsFor);
 				for (TestResultGroup grp : groups) {
-					System.out.println("have a group");
-					TreeItem item = new TreeItem(tree, SWT.NONE);
-					item.setText("hello");
+					TreeItem gi = new TreeItem(tree, SWT.NONE);
+					gi.setText(grp.name());
+					for (TestResultClass clz : grp.testClasses()) {
+						TreeItem ci = new TreeItem(gi, SWT.NONE);
+						ci.setText(clz.name());
+						for (TestResultTest test : clz.tests()) {
+							TreeItem ti = new TreeItem(ci, SWT.NONE);
+							ti.setText(test.name());
+						}
+					}
+//					TreeItem foo = new TreeItem(gi, SWT.NONE);
+//					foo.setText("There");
+//					TreeItem bar = new TreeItem(foo, SWT.NONE);
+//					bar.setText("Bar");
 				}
 			}
 		});

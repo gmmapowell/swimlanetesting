@@ -5,20 +5,53 @@ import static org.junit.Assert.assertEquals;
 import java.util.TreeSet;
 
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.jmock.Expectations;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestResultClass;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestResultTest;
 
 public class TestASimpleCase extends BaseViewTest {
 
 	@Test
-	public void testThatTheTreeIsATree() throws InterruptedException {
+	public void testThatTheTreeHasOneProject() throws Exception {
 		trv.resultsFor("bar.fred");
 		specifyModel();
 		Tree tree = waitForControl(shell, "hexagons.casesTree");
-		assertEquals(3, tree.getItemCount());
+		assertEquals(1, tree.getItemCount());
+		TreeItem ti = tree.getItem(0);
+		assertEquals("Project1", ti.getText());
+	}
+
+	@Test
+	public void testThatTheProjectHasOneTestClass() throws Exception {
+		trv.resultsFor("bar.fred");
+		specifyModel();
+		Tree tree = waitForControl(shell, "hexagons.casesTree");
+		TreeItem ti = tree.getItem(0);
+		ti.setExpanded(true);
+		assertEquals(1, ti.getItemCount());
+		TreeItem ci = ti.getItem(0);
+		assertEquals("SomeTests", ci.getText());
+	}
+
+	@Test
+	public void testThatTheTestClassContainsATest() throws Exception {
+		trv.resultsFor("bar.fred");
+		specifyModel();
+		Tree tree = waitForControl(shell, "hexagons.casesTree");
+		TreeItem ti = tree.getItem(0);
+		ti.setExpanded(true);
+		TreeItem ci = ti.getItem(0);
+		ci.setExpanded(true);
+		TreeItem i = ci.getItem(0);
+		assertEquals(1, ci.getItemCount());
+		i.setExpanded(true);
+		assertEquals("testSomething", i.getText());
+		assertEquals(0, i.getItemCount());
 	}
 
 	protected void specifyModel() throws InterruptedException {
@@ -28,20 +61,26 @@ public class TestASimpleCase extends BaseViewTest {
 	protected HexagonDataModel defineModel() {
 		HexagonDataModel testModel = context.mock(HexagonDataModel.class);
 		TreeSet<TestResultGroup> groups = new TreeSet<>();
+		TreeSet<TestResultClass> classes = new TreeSet<>();
+		TreeSet<TestResultTest> tests = new TreeSet<>();
 		TestResultGroup g1 = context.mock(TestResultGroup.class, "g1");
-		TestResultGroup g2 = context.mock(TestResultGroup.class, "g2");
-		TestResultGroup g3 = context.mock(TestResultGroup.class, "g3");
+		TestResultClass c1 = context.mock(TestResultClass.class, "c1");
+		TestResultTest t1 = context.mock(TestResultTest.class, "t1");
 		context.checking(new Expectations() {{
 			allowing(g1).compareTo(g1); will(returnValue(0));
-			allowing(g2).compareTo(g1); will(returnValue(1));
-			allowing(g3).compareTo(g1); will(returnValue(1));
-			allowing(g3).compareTo(g2); will(returnValue(1));
+			allowing(c1).compareTo(c1); will(returnValue(0));
+			allowing(t1).compareTo(t1); will(returnValue(0));
 		}});
 		groups.add(g1);
-		groups.add(g2);
-		groups.add(g3);
+		classes.add(c1);
+		tests.add(t1);
 		context.checking(new Expectations() {{
 			allowing(testModel).getTestResultsFor("bar.fred"); will(returnValue(groups));
+			allowing(g1).name(); will(returnValue("Project1"));
+			allowing(g1).testClasses(); will(returnValue(classes));
+			allowing(c1).name(); will(returnValue("SomeTests"));
+			allowing(c1).tests(); will(returnValue(tests));
+			allowing(t1).name(); will(returnValue("testSomething"));
 		}});
 		return testModel;
 	}
