@@ -23,7 +23,7 @@ public class AnalyzerTests {
 	private HexagonTestAnalyzer analyzer;
 	private Accumulator accumulator;
 	private URLClassLoader cl;
-	private TestGroup grp = new TestGroup(null);
+	private TestGroup grp = new TestGroup("Project", null);
 	private Class<?> hex1, hex2;
 	private Class<?> adapter1, port1;
 

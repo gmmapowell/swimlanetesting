@@ -8,7 +8,7 @@ public class TestGroup {
 	private final List<File> cp;
 	private final List<String> tcs = new ArrayList<>();
 
-	public TestGroup(List<File> cp) {
+	public TestGroup(String name, List<File> cp) {
 		this.cp = cp;
 	}
 

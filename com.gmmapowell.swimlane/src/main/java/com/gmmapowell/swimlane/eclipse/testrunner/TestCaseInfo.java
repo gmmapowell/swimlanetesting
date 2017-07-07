@@ -26,6 +26,20 @@ public class TestCaseInfo implements TestInfo {
 	}
 
 	@Override
+	public int compareTo(TestInfo o) {
+		int ret = classUnderTest.compareTo(o.classUnderTest());
+		if (ret != 0)
+			return ret;
+		ret = testname.compareTo(o.testName());
+		return ret;
+	}
+
+	@Override
+	public String groupName() {
+		throw new RuntimeException("GroupName");
+	}
+
+	@Override
 	public String classUnderTest() {
 		return classUnderTest;
 	}

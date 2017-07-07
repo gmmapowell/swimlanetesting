@@ -39,7 +39,7 @@ public class BuildListener implements IResourceChangeListener {
 					ProjectHelper ph = new ProjectHelper(eclipse, jp);
 					List<File> cp = ph.retrieveClasspath();
 					URLClassLoader cl = new URLClassLoader(ph.urlsFrom(cp));
-					ProjectScanner scanner = new ProjectScanner(ph, new HexagonTestAnalyzer(new TestGroup(cp), cl, acc));
+					ProjectScanner scanner = new ProjectScanner(ph, new HexagonTestAnalyzer(new TestGroup(p.getName(), cp), cl, acc));
 					scanner.scan(jp);
 				} catch (JavaModelException e) {
 					// TODO: we should capture "problems" with the view

@@ -20,7 +20,7 @@ public class BusinessLogicAccumulationTests {
 	ModelDispatcher md = new SolidModelDispatcher(null, null);
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
-	TestGroup grp = new TestGroup(null);
+	TestGroup grp = new TestGroup("Project", null);
 	Class<?> testCase1 = String.class;
 	Class<?> testCase2 = Character.class;
 	Class<?> testCase3 = Double.class;

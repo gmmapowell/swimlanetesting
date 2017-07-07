@@ -1,5 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.interfaces;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -13,5 +14,5 @@ public interface HexagonDataModel {
 	public Set<String> getErrors();
 	public List<HexData> getHexagons();
 	public BarData getUtilityBar();
-	public Set<TestResultGroup> getTestResultsFor(String resultsFor);
+	public Collection<TestResultGroup> getTestResultsFor(String resultsFor);
 }

@@ -31,7 +31,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestResultReporter trr = (TestResultReporter) acc;
-	TestGroup grp = new TestGroup(null);
+	TestGroup grp = new TestGroup("Project", null);
 
 	@Test
 	public void whenTheTreeArrivesWeAreNotifiedOfTheNumberOfTests() {
@@ -63,6 +63,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
+			allowing(test).groupName(); will(returnValue("Project"));
 			exactly(2).of(bl).barChanged(bar);
 		}});
 		issueTree();
@@ -109,6 +110,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(Integer.class.getName()));
+			allowing(test).groupName(); will(returnValue("Project"));
 			oneOf(bl).barChanged(bar);
 		}});
 		trr.testSuccess(test);
@@ -130,6 +132,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
+			allowing(test).groupName(); will(returnValue("Project"));
 			exactly(2).of(bl).barChanged(bar);
 		}});
 		issueTree();

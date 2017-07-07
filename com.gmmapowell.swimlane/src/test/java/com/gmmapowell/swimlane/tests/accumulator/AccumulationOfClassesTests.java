@@ -17,7 +17,7 @@ import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 public class AccumulationOfClassesTests extends TestBase {
 	ModelDispatcher md = new SolidModelDispatcher(null, null);
 	Accumulator acc = new HexagonAccumulator(md);
-	TestGroup grp = new TestGroup(null);
+	TestGroup grp = new TestGroup("Project", null);
 
 	@Test
 	public void ifWeDontPutAnythingInWeGetNothingOut() {

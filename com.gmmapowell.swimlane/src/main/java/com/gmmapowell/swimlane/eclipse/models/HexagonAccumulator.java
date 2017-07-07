@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,6 +42,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	private Map<Class<?>, Class<?>> adapterPort = new HashMap<>();
 	private Map<Class<?>, String> portHex = new HashMap<>();
 	private Map<Class<?>, Adapter> adapters = new HashMap<>();
+	private final Map<String, Map<String, TestResultGroup>> resultGroups = new TreeMap<>();
 	private LogicInfo defaultLogic;
 	
 	public HexagonAccumulator(ModelDispatcher dispatcher) {
@@ -104,6 +106,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			ca = new Acceptance(names);
 			compileAcceptances.put(an, ca);
 		}
+		barsFor.put(tc.getName(), ca);
 		collectCase(ca, grp, tc);
 	}
 
@@ -339,6 +342,14 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			error("the class " + forClz + " was run but did not have a bar defined for it");
 			return;
 		}
+		if (!resultGroups.containsKey(bar.getId())) {
+			resultGroups.put(bar.getId(), new HashMap<>());
+		}
+		Map<String, TestResultGroup> rgs = resultGroups.get(bar.getId());
+		if (!rgs.containsKey(test.groupName())) {
+			rgs.put(new AccumulatedTestResultGroup(test.groupName()).name(), new AccumulatedTestResultGroup(test.groupName()));
+		}
+		rgs.get(test.groupName()).add(test);
 		((BarInfo)bar).passed(forClz);
 		dispatcher.barChanged(bar);
 	}
@@ -367,9 +378,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	}
 
 	@Override
-	public Set<TestResultGroup> getTestResultsFor(String resultsFor) {
-		Set<TestResultGroup> ret = new TreeSet<>();
-		ret.add(new AccumulatedTestResultGroup());
-		return ret;
+	public Collection<TestResultGroup> getTestResultsFor(String barId) {
+		return resultGroups.get(barId).values();
 	}
 }

@@ -26,7 +26,7 @@ public class AcceptanceAccumulationTests extends TestBase {
 	ModelDispatcher md = new SolidModelDispatcher(null, null);
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
-	TestGroup grp = new TestGroup(null);
+	TestGroup grp = new TestGroup("Project", null);
 	
 	@Test
 	public void testNoTestsMeansNoHexes() {

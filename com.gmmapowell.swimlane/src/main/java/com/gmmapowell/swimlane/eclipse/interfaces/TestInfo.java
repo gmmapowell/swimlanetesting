@@ -2,7 +2,7 @@ package com.gmmapowell.swimlane.eclipse.interfaces;
 
 import java.util.List;
 
-public interface TestInfo {
+public interface TestInfo extends Comparable<TestInfo> {
 	public enum Type {
 		META,
 		SUITE,
@@ -12,6 +12,7 @@ public interface TestInfo {
 			return this == TEST;
 		}
 	}
+	String groupName();
 	String classUnderTest();
 	String testName();
 	Type type();

@@ -10,9 +10,9 @@ import org.jmock.Expectations;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultClass;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestResultTest;
 
 public class TestASimpleCase extends BaseViewTest {
 
@@ -62,10 +62,10 @@ public class TestASimpleCase extends BaseViewTest {
 		HexagonDataModel testModel = context.mock(HexagonDataModel.class);
 		TreeSet<TestResultGroup> groups = new TreeSet<>();
 		TreeSet<TestResultClass> classes = new TreeSet<>();
-		TreeSet<TestResultTest> tests = new TreeSet<>();
+		TreeSet<TestInfo> tests = new TreeSet<>();
 		TestResultGroup g1 = context.mock(TestResultGroup.class, "g1");
 		TestResultClass c1 = context.mock(TestResultClass.class, "c1");
-		TestResultTest t1 = context.mock(TestResultTest.class, "t1");
+		TestInfo t1 = context.mock(TestInfo.class, "t1");
 		context.checking(new Expectations() {{
 			allowing(g1).compareTo(g1); will(returnValue(0));
 			allowing(c1).compareTo(c1); will(returnValue(0));
@@ -78,9 +78,9 @@ public class TestASimpleCase extends BaseViewTest {
 			allowing(testModel).getTestResultsFor("bar.fred"); will(returnValue(groups));
 			allowing(g1).name(); will(returnValue("Project1"));
 			allowing(g1).testClasses(); will(returnValue(classes));
-			allowing(c1).name(); will(returnValue("SomeTests"));
+			allowing(c1).className(); will(returnValue("SomeTests"));
 			allowing(c1).tests(); will(returnValue(tests));
-			allowing(t1).name(); will(returnValue("testSomething"));
+			allowing(t1).testName(); will(returnValue("testSomething"));
 		}});
 		return testModel;
 	}

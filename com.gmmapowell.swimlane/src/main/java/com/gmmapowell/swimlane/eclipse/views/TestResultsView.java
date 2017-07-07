@@ -1,7 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
-import java.util.Set;
-
+import java.util.Collection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -14,9 +13,9 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultClass;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestResultTest;
 
 public class TestResultsView implements HexagonModelListener {
 	private final Composite view;
@@ -52,16 +51,16 @@ public class TestResultsView implements HexagonModelListener {
 			public void run() {
 				tree.removeAll();
 				table.removeAll();
-				Set<TestResultGroup> groups = model.getTestResultsFor(resultsFor);
+				Collection<TestResultGroup> groups = model.getTestResultsFor(resultsFor);
 				for (TestResultGroup grp : groups) {
 					TreeItem gi = new TreeItem(tree, SWT.NONE);
 					gi.setText(grp.name());
 					for (TestResultClass clz : grp.testClasses()) {
 						TreeItem ci = new TreeItem(gi, SWT.NONE);
-						ci.setText(clz.name());
-						for (TestResultTest test : clz.tests()) {
+						ci.setText(clz.className());
+						for (TestInfo test : clz.tests()) {
 							TreeItem ti = new TreeItem(ci, SWT.NONE);
-							ti.setText(test.name());
+							ti.setText(test.testName());
 						}
 					}
 //					TreeItem foo = new TreeItem(gi, SWT.NONE);

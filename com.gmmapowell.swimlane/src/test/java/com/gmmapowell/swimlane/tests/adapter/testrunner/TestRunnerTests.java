@@ -37,7 +37,7 @@ public class TestRunnerTests extends TestBase {
 		RunAllTestsHandler action = new RunAllTestsHandler();
 		HexAcc hex = context.mock(HexAcc.class);
 		List<TestGroup> tcs = new ArrayList<>();
-		TestGroup tg = new TestGroup(Arrays.asList(new File("a"), new File("b"), new File("c")));
+		TestGroup tg = new TestGroup("Project", Arrays.asList(new File("a"), new File("b"), new File("c")));
 		tcs.add(tg);
 		tg.addTest("com.foo");
 		IEvaluationContext applicationContext = context.mock(IEvaluationContext.class);
