@@ -72,10 +72,6 @@ public class TestResultsView implements HexagonModelListener {
 							ti.setText(test.testName());
 						}
 					}
-//					TreeItem foo = new TreeItem(gi, SWT.NONE);
-//					foo.setText("There");
-//					TreeItem bar = new TreeItem(foo, SWT.NONE);
-//					bar.setText("Bar");
 				}
 			}
 		});

@@ -13,7 +13,7 @@ import com.gmmapowell.swimlane.sample.code.Hexagon3;
 public class AcceptanceTestWithThreeHexagons {
 
 	@Test
-	public void test() throws InterruptedException {
+	public void testMultiplicationWorks() throws InterruptedException {
 		Thread.sleep(1000);
 		assertEquals(42, 6*7);
 	}

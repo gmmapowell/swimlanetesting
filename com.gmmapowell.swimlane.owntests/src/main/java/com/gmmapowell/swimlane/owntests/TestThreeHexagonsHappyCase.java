@@ -226,6 +226,34 @@ public class TestThreeHexagonsHappyCase {
 		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
 		SWTBotTreeItem[] rows = cases.getAllItems();
 		rows[0].click();
+		SWTBotTreeItem[] items = rows[0].getItems();
+		assertEquals(2, items.length);
+		assertEquals("com.gmmapowell.swimlane.sample.tests.AcceptanceTest", items[0].getText());
+	}
+	
+	@Test
+	public void step34_clickToOpenTheFirstTestClass() {
+		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		SWTBotTreeItem[] rows = cases.getAllItems();
+		SWTBotTreeItem[] items = rows[0].getItems();
+		items[0].click();
+		SWTBotTreeItem[] tests = items[0].getItems();
+		assertEquals(1, tests.length);
+		assertEquals("testNothing", tests[0].getText());
+	}
+	
+	@Test
+	public void step35_andSwitchBackToHexMode() {
+		SWTBotToolbarButton showHexes = bot.toolbarRadioButtonWithTooltip("Show Hex Diagram");
+		showHexes.click();
+		bot.getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				assertTrue(showHexes.widget.getSelection());
+			}
+		});
+		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
+		assertTrue(acc123.isVisible());
 	}
 	
 	@AfterClass
