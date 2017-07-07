@@ -14,6 +14,7 @@ import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCanvas;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
@@ -95,7 +96,12 @@ public class TestThreeHexagonsHappyCase {
 	// add some to some hexes and not to others ...
 	@Test(expected=WidgetNotFoundException.class)
 	public void step03b_testTheHexagonBarIsInvisibleWithNoBusinessLogic() {
-		bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.bar");
+		bot.performWithTimeout(new VoidResult() {
+			@Override
+			public void run() {
+				bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.bar");
+			}
+		}, 1000);
 	}
 	
 	// TODO: when we have "auto-run" unit tests in the sample project we should be able to check that they DID run as part of the post-build
@@ -130,11 +136,16 @@ public class TestThreeHexagonsHappyCase {
 		});
 		SWTBotTable t = bot.tableWithId("hexagons.errors");
 		assertTrue(t.isVisible());
-		try {
-			bot.canvasWithId("hexagons.acceptance.111");
-			fail("Should not have found hexagons.acceptance.111");
-		} catch (WidgetNotFoundException ex) {
-		}
+		bot.performWithTimeout(new VoidResult() {
+			@Override
+			public void run() {
+				try {
+					bot.canvasWithId("hexagons.acceptance.111");
+					fail("Should not have found hexagons.acceptance.111");
+				} catch (WidgetNotFoundException ex) {
+				}
+			}
+		}, 1000);
 	}
 	
 	@Test
@@ -149,11 +160,16 @@ public class TestThreeHexagonsHappyCase {
 		});
 		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
 		assertTrue(acc123.isVisible());
-		try {
-			bot.tableWithId("hexagons.errors");
-			fail("Should not have found hexagons.errors");
-		} catch (WidgetNotFoundException ex) {
-		}
+		bot.performWithTimeout(new VoidResult() {
+			@Override
+			public void run() {
+				try {
+					bot.tableWithId("hexagons.errors");
+					fail("Should not have found hexagons.errors");
+				} catch (WidgetNotFoundException ex) {
+				}
+			}
+		}, 1000);
 	}
 	
 	@Test
@@ -178,18 +194,23 @@ public class TestThreeHexagonsHappyCase {
 //				assertTrue("results button should be activated", showTests.widget.getSelection());
 			}
 		});
-		try {
-			bot.tableWithId("hexagons.errors");
-			fail("Should not have found hexagons.errors");
-		} catch (WidgetNotFoundException ex) {
-		}
-		try {
-			bot.canvasWithId("hexagons.acceptance.111");
-			fail("Should not have found hexagons.acceptance.111");
-		} catch (WidgetNotFoundException ex) {
-		}
 		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
 		assertTrue(cases.isVisible());
+		bot.performWithTimeout(new VoidResult() {
+			@Override
+			public void run() {
+				try {
+					bot.tableWithId("hexagons.errors");
+					fail("Should not have found hexagons.errors");
+				} catch (WidgetNotFoundException ex) {
+				}
+				try {
+					bot.canvasWithId("hexagons.acceptance.111");
+					fail("Should not have found hexagons.acceptance.111");
+				} catch (WidgetNotFoundException ex) {
+				}
+			}
+		}, 1000);
 	}
 	
 	@Test
@@ -198,6 +219,13 @@ public class TestThreeHexagonsHappyCase {
 		assertEquals(1, cases.rowCount());
 		SWTBotTreeItem[] rows = cases.getAllItems();
 		assertEquals("sample-proj", rows[0].getText());
+	}
+	
+	@Test
+	public void step33_clickToOpenTheProjectNode() {
+		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		SWTBotTreeItem[] rows = cases.getAllItems();
+		rows[0].click();
 	}
 	
 	@AfterClass
