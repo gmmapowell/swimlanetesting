@@ -7,9 +7,15 @@ import java.util.List;
 public class TestGroup {
 	private final List<File> cp;
 	private final List<String> tcs = new ArrayList<>();
+	private final String name;
 
 	public TestGroup(String name, List<File> cp) {
+		this.name = name;
 		this.cp = cp;
+	}
+
+	public String groupName() {
+		return name;
 	}
 
 	public String getClassPath() {

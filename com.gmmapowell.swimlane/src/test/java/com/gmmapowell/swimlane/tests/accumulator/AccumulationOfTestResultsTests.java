@@ -59,6 +59,15 @@ public class AccumulationOfTestResultsTests extends TestBase {
 	}
 	
 	@Test
+	public void testThatABarThatHasNotRunAnyTestsYetGetsAnEmptyCollection() {
+		trr.testSuccess(test1);
+		assertEquals(0, hdm.getErrors().size());
+		Collection<TestResultGroup> acc = hdm.getTestResultsFor("acceptance.1");
+		assertNotNull(acc);
+		assertEquals(0, acc.size());
+	}
+
+	@Test
 	public void testWeCanRecoverATestGroupGivenTheBarId() {
 		trr.testSuccess(test1);
 		assertEquals(0, hdm.getErrors().size());

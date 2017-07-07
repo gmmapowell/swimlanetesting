@@ -226,21 +226,21 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 	}
 
 	protected void issueTree() {
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "Project", "", "Top"));
 		{
-			TestCaseInfo t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, String.class.getName(), "test1");
+			TestCaseInfo t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", String.class.getName(), "test1");
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		{
-			TestCaseInfo t2 = new TestCaseInfo(TestCaseInfo.Type.TEST, String.class.getName(), "test2");
+			TestCaseInfo t2 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", String.class.getName(), "test2");
 			top.add(new SimpleTree<TestInfo>(t2));
 		}
 		{
-			TestCaseInfo t3 = new TestCaseInfo(TestCaseInfo.Type.TEST, String.class.getName(), "test3");
+			TestCaseInfo t3 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", String.class.getName(), "test3");
 			top.add(new SimpleTree<TestInfo>(t3));
 		}
 		{
-			TestCaseInfo t4 = new TestCaseInfo(TestCaseInfo.Type.TEST, String.class.getName(), "test4");
+			TestCaseInfo t4 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", String.class.getName(), "test4");
 			top.add(new SimpleTree<TestInfo>(t4));
 		}
 		trr.tree(top);

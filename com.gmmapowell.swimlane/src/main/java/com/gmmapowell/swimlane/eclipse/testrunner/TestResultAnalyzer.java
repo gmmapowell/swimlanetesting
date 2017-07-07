@@ -31,8 +31,10 @@ public class TestResultAnalyzer {
 	private final Map<Integer, TestCaseInfo> tests = new HashMap<Integer, TestCaseInfo>();
 	private List<String> capture = null;
 	private TestCaseInfo cfail = null;
+	private final String group;
 
-	public TestResultAnalyzer(IProgressMonitor monitor, TestResultReporter sink) {
+	public TestResultAnalyzer(IProgressMonitor monitor, TestResultReporter sink, String group) {
+		this.group = group;
 		this.monitor = SubMonitor.convert(monitor);
 		this.sink = sink;
 	}
@@ -58,7 +60,7 @@ public class TestResultAnalyzer {
 			}
 			int ntests = Integer.parseInt(codes[0]);
 			monitor.setWorkRemaining(ntests);
-			pending.add(new PendingNode(ntests, new SimpleTree<TestInfo>(new TestCaseInfo(Type.META, "", "Top"))));
+			pending.add(new PendingNode(ntests, new SimpleTree<TestInfo>(new TestCaseInfo(Type.META, group, "", "Top"))));
 		} else if (s.startsWith("%TSTTREE")) {
 			if (pending.isEmpty())
 				throw new RuntimeException("The orchard dried up - more tests than expected");
@@ -66,7 +68,7 @@ public class TestResultAnalyzer {
 			String[] parts = s.split(",");
 			int tc = Integer.parseInt(parts[0]);
 			boolean isSuite = "true".equals(parts[2]);
-			TestCaseInfo tci = new TestCaseInfo(isSuite?Type.SUITE:Type.TEST, extractClassName(parts[1]), extractTestName(parts[1]));
+			TestCaseInfo tci = new TestCaseInfo(isSuite?Type.SUITE:Type.TEST, group, extractClassName(parts[1]), extractTestName(parts[1]));
 			tests.put(tc, tci);
 			Tree<TestInfo> node = new SimpleTree<TestInfo>(tci);
 			pending.get(pending.size()-1).node.add(node);

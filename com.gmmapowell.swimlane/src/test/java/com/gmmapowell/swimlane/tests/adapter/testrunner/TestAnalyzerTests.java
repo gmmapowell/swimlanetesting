@@ -26,7 +26,7 @@ public class TestAnalyzerTests extends TestBase {
 			allowing(monitor);
 			oneOf(trr).testError("Cannot handle protocol v3");
 		}});
-		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr, "Project");
 		tra.push("%TESTC  2 v3");
 	}
 
@@ -34,10 +34,10 @@ public class TestAnalyzerTests extends TestBase {
 	public void testSimpleSuccessIsReported() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "Project", "", "Top"));
 		TestCaseInfo t1;
 		{
-			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestPasses", "test1");
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", "com.gmmapowell.swimlane.sample.TestPasses", "test1");
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		context.checking(new Expectations() {{
@@ -46,7 +46,7 @@ public class TestAnalyzerTests extends TestBase {
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 			oneOf(trr).testSuccess(with(TestInfoMatcher.of(t1)));
 		}});
-		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr, "Project");
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,test1(com.gmmapowell.swimlane.sample.TestPasses),false,1");
 		tra.push("%TESTS  1,test1(com.gmmapowell.swimlane.sample.TestPasses)");
@@ -57,10 +57,10 @@ public class TestAnalyzerTests extends TestBase {
 	public void testSimpleFailureIsReported() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "Project", "", "Top"));
 		TestCaseInfo t1;
 		{
-			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestFails", "fail1");
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", "com.gmmapowell.swimlane.sample.TestFails", "fail1");
 			t1.failed();
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
@@ -70,7 +70,7 @@ public class TestAnalyzerTests extends TestBase {
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 			oneOf(trr).testFailure(with(TestInfoMatcher.of(t1)));
 		}});
-		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr, "Project");
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,fail1(com.gmmapowell.swimlane.sample.TestFails),false,1");
 		tra.push("%TESTS  1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
@@ -82,10 +82,10 @@ public class TestAnalyzerTests extends TestBase {
 	public void testAnErrorCaseIsReportedCorrectly() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "Project", "", "Top"));
 		TestCaseInfo t1;
 		{
-			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestError", "err1");
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", "com.gmmapowell.swimlane.sample.TestError", "err1");
 			t1.failed();
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
@@ -95,7 +95,7 @@ public class TestAnalyzerTests extends TestBase {
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 			oneOf(trr).testFailure(with(TestInfoMatcher.of(t1)));
 		}});
-		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr, "Project");
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,err1(com.gmmapowell.swimlane.sample.TestError),false,1");
 		tra.push("%TESTS  1,err1(com.gmmapowell.swimlane.sample.TestError)");
@@ -107,10 +107,10 @@ public class TestAnalyzerTests extends TestBase {
 	public void testWeCaptureTheStackTrace() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "Project", "", "Top"));
 		TestCaseInfo t1;
 		{
-			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestFails", "fail1");
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", "com.gmmapowell.swimlane.sample.TestFails", "fail1");
 			t1.failed();
 			t1.stack(Arrays.asList("java.lang.Exception: ", "  frame 1", "  frame 2"));
 			top.add(new SimpleTree<TestInfo>(t1));
@@ -121,7 +121,7 @@ public class TestAnalyzerTests extends TestBase {
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 			oneOf(trr).testFailure(with(TestInfoMatcher.of(t1)));
 		}});
-		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr, "Project");
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,fail1(com.gmmapowell.swimlane.sample.TestFails),false,1");
 		tra.push("%TESTS  1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
@@ -139,10 +139,10 @@ public class TestAnalyzerTests extends TestBase {
 	public void testWeCaptureExpectedActualText() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "Project", "", "Top"));
 		TestCaseInfo t1;
 		{
-			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestFails", "fail1");
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", "com.gmmapowell.swimlane.sample.TestFails", "fail1");
 			t1.failed();
 			t1.expectedValue("hello");
 			t1.actualValue("goodbye");
@@ -154,7 +154,7 @@ public class TestAnalyzerTests extends TestBase {
 			oneOf(trr).tree(with(TreeMatcher.of(top)));
 			oneOf(trr).testFailure(with(TestInfoMatcher.of(t1)));
 		}});
-		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr, "Project");
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,fail1(com.gmmapowell.swimlane.sample.TestFails),false,1");
 		tra.push("%TESTS  1,fail1(com.gmmapowell.swimlane.sample.TestFails)");
@@ -173,10 +173,10 @@ public class TestAnalyzerTests extends TestBase {
 	public void testWeReportTheRuntime() {
 		TestResultReporter trr = context.mock(TestResultReporter.class);
 		IProgressMonitor monitor = context.mock(IProgressMonitor.class);
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "Project", "", "Top"));
 		TestCaseInfo t1;
 		{
-			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "com.gmmapowell.swimlane.sample.TestSuccess", "test1");
+			t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", "com.gmmapowell.swimlane.sample.TestSuccess", "test1");
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		context.checking(new Expectations() {{
@@ -186,7 +186,7 @@ public class TestAnalyzerTests extends TestBase {
 			oneOf(trr).testSuccess(with(TestInfoMatcher.of(t1)));
 			oneOf(trr).testRuntime(420);
 		}});
-		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr);
+		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, trr, "Project");
 		tra.push("%TESTC  1 v2");
 		tra.push("%TSTTREE1,test1(com.gmmapowell.swimlane.sample.TestSuccess),false,1");
 		tra.push("%TESTS  1,test1(com.gmmapowell.swimlane.sample.TestSuccess)");

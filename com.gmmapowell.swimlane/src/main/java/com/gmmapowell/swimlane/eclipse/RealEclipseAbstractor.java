@@ -28,7 +28,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.commands.ICommandService;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.handlers.RadioState;
 import org.osgi.framework.Bundle;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
@@ -105,9 +104,9 @@ public class RealEclipseAbstractor implements EclipseAbstractor {
 					.getCommand("com.gmmapowell.swimlane.eclipse.commands.TestResults");
 //			ExecutionEvent ev = new ExecutionEvent(command, new HashMap<>(), null, null);
 //			command.getHandler().execute(ev);
-			System.out.println(command.getState(RadioState.STATE_ID).getValue());
+//			System.out.println(command.getState(RadioState.STATE_ID).getValue());
 			HandlerUtil.updateRadioState(command, "Tests");
-			System.out.println(command.getState(RadioState.STATE_ID).getValue());
+//			System.out.println(command.getState(RadioState.STATE_ID).getValue());
 		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

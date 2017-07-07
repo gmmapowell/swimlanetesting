@@ -379,6 +379,11 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	@Override
 	public Collection<TestResultGroup> getTestResultsFor(String barId) {
-		return resultGroups.get(barId).values();
+		if (barId == null)
+			throw new RuntimeException("BarId cannot be null");
+		Map<String, TestResultGroup> ret = resultGroups.get(barId);
+		if (ret == null)
+			return new HashSet<>();
+		return ret.values();
 	}
 }

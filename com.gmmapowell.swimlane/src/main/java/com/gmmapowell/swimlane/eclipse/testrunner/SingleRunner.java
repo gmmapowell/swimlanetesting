@@ -15,13 +15,13 @@ public class SingleRunner {
 	private final List<String> cmdarray = new ArrayList<String>();
 	private TestResultAnalyzer analyzer;
 
-	public SingleRunner(IProgressMonitor monitor, TestResultReporter sink, String classpath, String[] classesUnderTest) throws IOException {
+	public SingleRunner(IProgressMonitor monitor, TestResultReporter sink, String group, String classpath, String[] classesUnderTest) throws IOException {
 		File file = File.createTempFile("textests", "txt");
 		PrintWriter pw = new PrintWriter(file);
 		for (String s : classesUnderTest)
 			pw.println(s);
 		pw.close();
-		analyzer = new TestResultAnalyzer(monitor, sink);
+		analyzer = new TestResultAnalyzer(monitor, sink, group);
 		cmdarray.add("java");
 		cmdarray.add("-XstartOnFirstThread"); // only for Cocoa SWT, but does it really hurt?
 		cmdarray.add("-classpath");

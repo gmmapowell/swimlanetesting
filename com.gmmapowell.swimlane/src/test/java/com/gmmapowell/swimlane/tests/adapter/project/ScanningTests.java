@@ -58,6 +58,7 @@ public class ScanningTests {
 		context.checking(new Expectations() {{
 			allowing(eclipse).getAllProjects(); will(returnValue(Arrays.asList(ip)));
 			allowing(eclipse).javaProject(ip); will(returnValue(ijp));
+			allowing(ip).getName();
 			allowing(ijp).getProject(); will(returnValue(ip));
 			allowing(rce).getEntryKind(); will(returnValue(IClasspathEntry.CPE_SOURCE));
 			allowing(ijp).getResolvedClasspath(true); will(returnValue(new IClasspathEntry[] { rce }));

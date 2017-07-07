@@ -33,7 +33,7 @@ public class RemoteJUnitTestRunner implements TestRunner {
 			public IStatus run(IProgressMonitor monitor) {
 				IStatus ret = Status.OK_STATUS;
 				for (TestGroup g : model.getAllTestGroups()) {
-					ret = runClass(monitor, (TestResultReporter) model, g.getClassPath(), g.getClasses());
+					ret = runClass(monitor, (TestResultReporter) model, g.groupName(), g.getClassPath(), g.getClasses());
 					if (!ret.isOK())
 						break;
 				}
@@ -45,11 +45,11 @@ public class RemoteJUnitTestRunner implements TestRunner {
 		});
 	}
 
-	public IStatus runClass(IProgressMonitor monitor, TestResultReporter sink, String classpath, String... classesUnderTest) {
-		System.out.println(new Date() + " Running tests " + Arrays.asList(classesUnderTest) + " in classpath " + classpath);
+	public IStatus runClass(IProgressMonitor monitor, TestResultReporter sink, String group, String classpath, String... classesUnderTest) {
+		System.out.println(new Date() + " Group " + group + " is running tests " + Arrays.asList(classesUnderTest) + " in classpath " + classpath);
 		SingleRunner runner = null;
 		try {
-			runner = new SingleRunner(monitor, sink, classpath, classesUnderTest);
+			runner = new SingleRunner(monitor, sink, group, classpath, classesUnderTest);
 			runner.exec();
 			return Status.OK_STATUS;
 		} catch (Exception ex) {

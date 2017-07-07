@@ -17,6 +17,13 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 public class TestASimpleCase extends BaseViewTest {
 
 	@Test
+	public void testThatTheViewCanCopeWithNoChosenResultsBar() throws Exception {
+		specifyModel();
+		Tree tree = waitForControl(shell, "hexagons.casesTree");
+		assertEquals(0, tree.getItemCount());
+	}
+
+	@Test
 	public void testThatTheTreeHasOneProject() throws Exception {
 		trv.resultsFor("bar.fred");
 		specifyModel();

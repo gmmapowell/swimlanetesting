@@ -6,6 +6,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 
 public class TestCaseInfo implements TestInfo {
 	private final Type type;
+	private final String grpName;
 	private final String classUnderTest;
 	private final String testname;
 	private boolean isFailed;
@@ -14,8 +15,9 @@ public class TestCaseInfo implements TestInfo {
 	private String expected;
 	private String actual;
 
-	public TestCaseInfo(Type type, String classUnderTest, String testName) {
+	public TestCaseInfo(Type type, String grpName, String classUnderTest, String testName) {
 		this.type = type;
+		this.grpName = grpName;
 		this.classUnderTest = classUnderTest;
 		this.testname = testName;
 	}
@@ -36,7 +38,7 @@ public class TestCaseInfo implements TestInfo {
 
 	@Override
 	public String groupName() {
-		throw new RuntimeException("GroupName");
+		return grpName;
 	}
 
 	@Override
