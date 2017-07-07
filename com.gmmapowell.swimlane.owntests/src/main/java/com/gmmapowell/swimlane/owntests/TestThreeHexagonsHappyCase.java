@@ -19,6 +19,7 @@ import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotToolbarButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -192,9 +193,11 @@ public class TestThreeHexagonsHappyCase {
 	}
 	
 	@Test
-	public void step32_assertThatTheTreeHasTheResultsWeWouldExpect() {
+	public void step32_assertThatTheTreeContainsTheSampleProjectAsTheTopNode() {
 		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
-		assertEquals(9, cases.rowCount());
+		assertEquals(1, cases.rowCount());
+		SWTBotTreeItem[] rows = cases.getAllItems();
+		assertEquals("sample-proj", rows[0].getText());
 	}
 	
 	@AfterClass

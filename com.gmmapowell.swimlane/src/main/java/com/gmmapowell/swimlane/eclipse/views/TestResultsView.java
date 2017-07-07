@@ -22,6 +22,7 @@ public class TestResultsView implements HexagonModelListener {
 	private final Tree tree;
 	private final Table table;
 	private String resultsFor;
+	private HexagonDataModel model;
 
 	public TestResultsView(Composite parent, ModelDispatcher dispatcher) {
 		view = new Composite(parent, SWT.NONE);
@@ -39,6 +40,7 @@ public class TestResultsView implements HexagonModelListener {
 
 	public void resultsFor(String id) {
 		this.resultsFor = id;
+		updateDisplay();
 	}
 
 	public Control getTop() {
@@ -47,6 +49,11 @@ public class TestResultsView implements HexagonModelListener {
 
 	@Override
 	public void setModel(HexagonDataModel model) {
+		this.model = model;
+		updateDisplay();
+	}
+
+	protected void updateDisplay() {
 		view.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				tree.removeAll();
