@@ -62,6 +62,7 @@ public class TestResultAnalyzer {
 			monitor.setWorkRemaining(ntests);
 			pending.add(new PendingNode(ntests, new SimpleTree<TestInfo>(new TestCaseInfo(Type.META, group, "", "Top"))));
 		} else if (s.startsWith("%TSTTREE")) {
+			System.out.println("tra - " + s);
 			if (pending.isEmpty())
 				throw new RuntimeException("The orchard dried up - more tests than expected");
 			s = s.substring(8);

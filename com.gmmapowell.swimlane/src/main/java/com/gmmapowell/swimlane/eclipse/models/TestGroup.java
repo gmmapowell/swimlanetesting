@@ -1,12 +1,13 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class TestGroup {
 	private final List<File> cp;
-	private final List<String> tcs = new ArrayList<>();
+	private final Set<String> tcs = new TreeSet<>();
 	private final String name;
 
 	public TestGroup(String name, List<File> cp) {

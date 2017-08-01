@@ -255,9 +255,32 @@ public class TestThreeHexagonsHappyCase {
 		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
 		assertTrue(acc123.isVisible());
 	}
+
+	@Test
+	public void step40_testAdapterHasAFailure() {
+		SWTBotCanvas adapter = bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.adapter.nw.1");
+		assertEquals("Hex1Port1Adapter1 - 1 group; 0 passed, 1 failure", adapter.getToolTipText());
+	}
+
+	@Test
+	public void step41_clickToMoveToAdapter() {
+		SWTBotCanvas adapter = bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.adapter.nw.1");
+		adapter.click();
+		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		assertTrue(cases.isVisible());
+	}
+
+	@Test
+	public void step42_assertThatTheTreeContainsTheSampleProjectAsTheTopNode() {
+		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		assertEquals(1, cases.rowCount());
+		SWTBotTreeItem[] rows = cases.getAllItems();
+		assertEquals("sample-proj", rows[0].getText());
+	}
 	
 	@AfterClass
 	public static void tearDown() throws Exception {
+		Thread.sleep(1200);
 	}
 
 }

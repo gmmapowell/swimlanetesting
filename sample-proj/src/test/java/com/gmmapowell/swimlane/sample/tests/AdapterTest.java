@@ -15,7 +15,7 @@ public class AdapterTest {
 
 	@Test
 	public void test() {
-		assertTrue(true);
+		assertTrue(false);
 	}
 
 }
