@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.owntests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -99,7 +100,8 @@ public class TestThreeHexagonsHappyCase {
 		bot.performWithTimeout(new VoidResult() {
 			@Override
 			public void run() {
-				bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.bar");
+				SWTBotCanvas hexbar = bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.bar");
+				assertFalse(hexbar.isVisible());
 			}
 		}, 1000);
 	}

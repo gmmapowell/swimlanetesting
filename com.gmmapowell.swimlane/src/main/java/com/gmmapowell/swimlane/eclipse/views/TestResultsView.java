@@ -58,8 +58,10 @@ public class TestResultsView implements HexagonModelListener {
 			public void run() {
 				tree.removeAll();
 				table.removeAll();
-				if (resultsFor == null)
+				if (resultsFor == null) {
+					System.out.println("resultsFor not set; displaying nothing");
 					return;
+				}
 				Collection<TestResultGroup> groups = model.getTestResultsFor(resultsFor);
 				for (TestResultGroup grp : groups) {
 					TreeItem gi = new TreeItem(tree, SWT.NONE);

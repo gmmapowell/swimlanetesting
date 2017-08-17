@@ -52,7 +52,8 @@ public class HexagonControl {
 		return ports;
 	}
 
-	public void setBarVisibility(boolean b) {
-		bar.getCanvas().setVisible(b);
+	public void barChanged(BarData hcb) {
+		bar.getCanvas().setVisible(hcb != null && hcb.getTotal() > 0);
+		bar.barChanged(hcb);
 	}
 }

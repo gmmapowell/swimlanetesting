@@ -29,7 +29,11 @@ public class BuildListener implements IResourceChangeListener {
 	}
 	
 	@Override
-	public void resourceChanged(IResourceChangeEvent event) {
+	public void resourceChanged(IResourceChangeEvent ignored) {
+		gatherModel();
+	}
+
+	public void gatherModel() {
 		Accumulator acc = new HexagonAccumulator(lsnrs);
 		List<IProject> projects = eclipse.getAllProjects();
 		for (IProject p : projects) {

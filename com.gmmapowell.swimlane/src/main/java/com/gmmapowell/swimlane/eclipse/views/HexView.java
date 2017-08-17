@@ -24,6 +24,8 @@ public class HexView implements HexagonModelListener, AccumulatorListener {
 		view = new Composite(parent, SWT.NONE);
 		view.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		HexagonLayout layout = new HexagonLayout();
+		view.setLayout(layout);
 		dispatcher.addHexagonModelListener(this);
 		dispatcher.addAccumulator(this);
 	}
@@ -38,40 +40,41 @@ public class HexView implements HexagonModelListener, AccumulatorListener {
 	
 	public void setModel(HexagonDataModel model) {
 		this.model = model;
-		view.getDisplay().syncExec(new Runnable() {
-			@Override
-			public void run() {
-				update(model);
-			}
-		});
+		update(model);
 	}
 
 	private void update(HexagonDataModel model) {
-		HexagonLayout layout = new HexagonLayout();
-		view.setLayout(layout);
-		for (BarData accModel : model.getAcceptanceTests()) {
-			String accId = "hexagons." + accModel.getId();
-			if (findBar(view, accId) == null)
-				createBar(model, accModel, "accbar", accId);
-		}
-		int hexn = 1;
-		for (HexData hexModel : model.getHexagons()) {
-			String hexId = "hexagons." + hexModel.getId();
-			HexagonControl hc = findHexagon(view, hexId + ".bg");
-			if (hc == null)
-				hc = createHexagon(hexModel, hexn, hexId);
-			hc.setBarVisibility(hexModel.getBar() != null && hexModel.getBar().getTotal() > 0);
-			hexn++;
-		}
-		BarData bd = model.getUtilityBar();
-		if (bd != null) {
-			String id = "hexagons." + bd.getId();
-			BarControl bc = findBar(view, id);
-			if (bc == null)
-				bc = createBar(model, bd, "utebar", id);
-			else
-				bc.barChanged(bd);
-		}
+		view.getDisplay().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				for (BarData accModel : model.getAcceptanceTests()) {
+					String accId = "hexagons." + accModel.getId();
+					BarControl bc = findBar(view, accId);
+					if (bc == null)
+						createBar(model, accModel, "accbar", accId);
+					else
+						bc.barChanged(accModel);
+				}
+				int hexn = 1;
+				for (HexData hexModel : model.getHexagons()) {
+					String hexId = "hexagons." + hexModel.getId();
+					HexagonControl hc = findHexagon(view, hexId + ".bg");
+					if (hc == null)
+						hc = createHexagon(hexModel, hexn, hexId);
+					hc.barChanged(hexModel.getBar());
+					hexn++;
+				}
+				BarData bd = model.getUtilityBar();
+				if (bd != null) {
+					String id = "hexagons." + bd.getId();
+					BarControl bc = findBar(view, id);
+					if (bc == null)
+						bc = createBar(model, bd, "utebar", id);
+					else
+						bc.barChanged(bd);
+				}
+			}
+		});
 	}
 
 	protected BarControl createBar(HexagonDataModel model, BarData accModel, String barType, String accId) {

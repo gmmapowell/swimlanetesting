@@ -27,6 +27,10 @@ public class RemoteJUnitTestRunner implements TestRunner {
 
 	@Override
 	public void runAll(ModelDispatcher dispatcher, Accumulator model) {
+		if (model == null) {
+			System.out.println("Cannot run tests without a model");
+			return;
+		}
 		eclipse.backgroundWithProgress(new IJobFunction() {
 			
 			@Override

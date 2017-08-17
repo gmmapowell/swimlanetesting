@@ -342,14 +342,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			error("the class " + forClz + " was run but did not have a bar defined for it");
 			return;
 		}
-		if (!resultGroups.containsKey(bar.getId())) {
-			resultGroups.put(bar.getId(), new HashMap<>());
-		}
-		Map<String, TestResultGroup> rgs = resultGroups.get(bar.getId());
-		if (!rgs.containsKey(test.groupName())) {
-			rgs.put(new AccumulatedTestResultGroup(test.groupName()).name(), new AccumulatedTestResultGroup(test.groupName()));
-		}
-		rgs.get(test.groupName()).add(test);
+		addResultGroupToBar(bar, test);
 		((BarInfo)bar).passed(forClz);
 		dispatcher.barChanged(bar);
 	}
@@ -362,8 +355,20 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			error("the class " + forClz + " was run but did not have a bar defined for it");
 			return;
 		}
+		addResultGroupToBar(bar, test);
 		((BarInfo)bar).failed(forClz);
 		dispatcher.barChanged(bar);
+	}
+
+	private void addResultGroupToBar(BarData bar, TestInfo test) {
+		if (!resultGroups.containsKey(bar.getId())) {
+			resultGroups.put(bar.getId(), new HashMap<>());
+		}
+		Map<String, TestResultGroup> rgs = resultGroups.get(bar.getId());
+		if (!rgs.containsKey(test.groupName())) {
+			rgs.put(new AccumulatedTestResultGroup(test.groupName()).name(), new AccumulatedTestResultGroup(test.groupName()));
+		}
+		rgs.get(test.groupName()).add(test);
 	}
 
 	@Override

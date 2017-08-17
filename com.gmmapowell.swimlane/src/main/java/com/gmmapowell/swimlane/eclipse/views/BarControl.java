@@ -45,8 +45,8 @@ public class BarControl implements BarDataListener {
 	public void barChanged(BarData bar) {
 		BarData old;
 		if ((old = bpl.updateBar(bar)) != null) {
-			dispatcher.addBarListener(bar, this);
 			dispatcher.removeBarListener(old, this);
+			dispatcher.addBarListener(bar, this);
 		}
 		canvas.getDisplay().asyncExec(new Runnable() {
 			@Override
@@ -71,7 +71,8 @@ public class BarControl implements BarDataListener {
 						if (failed != 1)
 							sb.append("s");
 					}
-					canvas.setToolTipText(sb.toString());
+					String tooltip = sb.toString();
+					canvas.setToolTipText(tooltip);
 				}
 				canvas.redraw();
 			}

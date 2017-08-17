@@ -29,10 +29,9 @@ import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
 import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
-import org.eclipse.swtbot.swt.finder.utils.SWTBotPreferences;
+import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.waits.ICondition;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotCanvas;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotCheckBox;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotLabel;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
@@ -72,6 +71,12 @@ public class ExtendedBot {
 
 	public void turnOffAutoBuild() {
 		as.activate();
+		SWTBotMenu menu = projectMenu();
+		SWTBotMenu autoBuild = menu.menu("Build Automatically");
+		if (autoBuild.isChecked())
+			autoBuild.click();
+		
+		/*
 		openPreferencesWindow();
 		bot.tree().expandNode("General").select("Workspace");
 		SWTBotCheckBox buildAuto = bot.checkBox("Build automatically");
@@ -89,6 +94,7 @@ public class ExtendedBot {
 			ex.printStackTrace();
 			bot.button("OK").click();
 		}
+		*/
 	}
 
 	public ICondition labelAfterDate(SWTBotLabel field, Date wantAfter) {
@@ -178,23 +184,22 @@ public class ExtendedBot {
 		} else {
 			t.getTreeItem(path[0]).click();
 		}
-		long q = SWTBotPreferences.TIMEOUT;
-		SWTBotPreferences.TIMEOUT = 200;
-		try {
-			for (int i=0;i<10;i++) {
-				try {
-					bot.button("OK").click();
-					return;
-				} catch (TimeoutException | WidgetNotFoundException ex) { System.out.println("No OK button"); }
-				try {
-					bot.button("Open").click();
-					return;
-				} catch (TimeoutException | WidgetNotFoundException ex) { System.out.println("No Open button"); }
+		bot.performWithTimeout(new VoidResult() {
+			@Override
+			public void run() {
+				for (int i=0;i<10;i++) {
+					try {
+						bot.button("Open").click();
+						return;
+					} catch (TimeoutException | WidgetNotFoundException ex) { System.out.println("No Open button"); }
+					try {
+						bot.button("OK").click();
+						return;
+					} catch (TimeoutException | WidgetNotFoundException ex) { System.out.println("No OK button"); }
+				}
+				throw new RuntimeException("Could not find OK or Open button");
 			}
-			throw new RuntimeException("Could not find OK or Open button");
-		} finally {
-			SWTBotPreferences.TIMEOUT = q;
-		}
+		}, 200);
 	}
 
 	public void dumpActiveShell() {

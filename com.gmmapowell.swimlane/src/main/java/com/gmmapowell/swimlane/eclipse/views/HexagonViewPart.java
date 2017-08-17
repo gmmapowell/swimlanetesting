@@ -63,6 +63,7 @@ public class HexagonViewPart extends ViewPart implements SingleStore {
 		try {
 			bl = new BuildListener(dispatcher, eclipse);
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
+			bl.gatherModel();
 		} catch (IllegalStateException ex) {
 			// Unit tests will find the workspace closed, so cannot do this; this is OK in that case
 			// TODO: how do we tell?
@@ -84,9 +85,12 @@ public class HexagonViewPart extends ViewPart implements SingleStore {
 
 	@Override
 	public void showTestResults(String id) {
-		testResults.resultsFor(id);
 		stack.topControl = testResults.getTop();
 		stackUI.layout();
+		if (id != null) // only update the current test results flag if something valid
+			testResults.resultsFor(id);
+		else
+			testResults.updateDisplay();
 	}
 
 	public void dispose() {
