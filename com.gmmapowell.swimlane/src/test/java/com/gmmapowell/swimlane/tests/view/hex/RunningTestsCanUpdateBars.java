@@ -6,6 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
 import org.jmock.Expectations;
 import org.jmock.States;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
@@ -19,6 +20,7 @@ import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 public class RunningTestsCanUpdateBars extends BaseHexViewTest {
 	
 	@Test
+	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheBarCanBeRedrawnProgressivelyMoreGreen() throws Exception {
 		States progress = context.states("progress");
 		progress.become("initial");

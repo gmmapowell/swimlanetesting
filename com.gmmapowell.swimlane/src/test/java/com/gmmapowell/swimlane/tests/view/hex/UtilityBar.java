@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
 import org.jmock.Expectations;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
@@ -26,6 +27,7 @@ public class UtilityBar extends BaseHexViewTest {
 	}
 	
 	@Test
+	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheUtilityBarLooksRightWhenNoTestsHaveRun() throws Exception {
 		specifyModel(10, 0, 0, Status.OK);
 		Canvas ute = waitForControl(shell, "hexagons.utility");
@@ -46,6 +48,7 @@ public class UtilityBar extends BaseHexViewTest {
 	}
 
 	@Test
+	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheUtilityBarLooksRightWhenFiveTestsHaveRunSuccessfully() throws Exception {
 		specifyModel(10, 5, 0, Status.OK);
 		Canvas ute = waitForControl(shell, "hexagons.utility");
@@ -61,6 +64,7 @@ public class UtilityBar extends BaseHexViewTest {
 	}
 
 	@Test
+	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheUtilityBarLooksRightWhenFiveTestsHaveRunWithFailures() throws Exception {
 		specifyModel(10, 5, 1, Status.FAILURES);
 		Canvas ute = waitForControl(shell, "hexagons.utility");

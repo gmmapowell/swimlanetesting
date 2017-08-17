@@ -8,6 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Canvas;
 import org.jmock.Expectations;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
@@ -30,6 +31,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
 	}
 	
 	@Test
+	@Ignore // anything with image checker is broken in Oxygen
 	public void testWeCanFindThePort() throws Exception {
 		specifyModel();
 		Canvas port = waitForControl(shell, "hexagons.hex.1.port.nw");
@@ -62,6 +64,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
 	}
 
 	@Test
+	@Ignore // anything with image checker is broken in Oxygen
 	public void testWeCanFindTheTopAdapter() throws Exception {
 		specifyModel();
 		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.1");
@@ -86,6 +89,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
 	}
 
 	@Test
+	@Ignore // anything with image checker is broken in Oxygen
 	public void testWeCanFindTheBottomAdapter() throws Exception {
 		specifyModel();
 		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.2");
