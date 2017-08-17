@@ -273,6 +273,7 @@ public class TestThreeHexagonsHappyCase {
 	@Test
 	public void step42_assertThatTheTreeContainsTheSampleProjectAsTheTopNode() {
 		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		assertTrue(cases.isVisible());
 		assertEquals(1, cases.rowCount());
 		SWTBotTreeItem[] rows = cases.getAllItems();
 		assertEquals("sample-proj", rows[0].getText());

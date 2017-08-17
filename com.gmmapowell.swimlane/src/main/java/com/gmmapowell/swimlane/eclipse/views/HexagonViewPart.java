@@ -45,6 +45,7 @@ public class HexagonViewPart extends ViewPart implements SingleStore {
 	private TestResultsView testResults;
 
 	public void createPartControl(Composite parent) {
+		System.out.println("In create part control");
 		RealEclipseAbstractor eclipse = new RealEclipseAbstractor();
 		parent.setLayout(new GridLayout(1, false));
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
