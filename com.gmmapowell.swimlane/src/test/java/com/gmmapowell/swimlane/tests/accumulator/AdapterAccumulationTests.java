@@ -54,7 +54,14 @@ public class AdapterAccumulationTests {
 	}
 	
 	@Test
-	public void testThatIfWeAccumulateOneAdapterTestTheModelMustHaveTheHexagonForIt() {
+	public void nothingHappensUntilWeCallComplete() {
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
+	}
+
+	@Test
+	public void ifWeAccumulateOneAdapterTestTheModelMustHaveTheHexagonForIt() {
 		context.checking(new Expectations() {{
 			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
 			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1)));
@@ -66,10 +73,10 @@ public class AdapterAccumulationTests {
 	}
 
 	@Test
-	public void testThatWeCanSupportDefaultHexagonsWithAnAdapterTest() {
+	public void weCanSupportDefaultHexagonsWithAnAdapterTest() {
 		context.checking(new Expectations() {{
 			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
-			oneOf(layout).addHexagonPort(with(0), with(aNonNull(PortInfo.class)));
+			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1)));
 		}});
 		acc.startAnalysis(bcd);
 		acc.clean(grp);
@@ -78,10 +85,10 @@ public class AdapterAccumulationTests {
 	}
 
 	@Test
-	public void testWeCanAccumulateAnAdapterTestWithoutSpecifyingHexagonOrPortAsLongAsWeAlreadyKnowThePortForTheAdapter() {
+	public void weCanAccumulateAnAdapterTestWithoutSpecifyingHexagonOrPortAsLongAsWeAlreadyKnowThePortForTheAdapter() {
 		context.checking(new Expectations() {{
 			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
-			oneOf(layout).addHexagonPort(with(0), with(aNonNull(PortInfo.class)));
+			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1)));
 		}});
 		acc.startAnalysis(bcd);
 		acc.clean(grp);
@@ -91,7 +98,7 @@ public class AdapterAccumulationTests {
 	}
 
 	@Test
-	public void testItIsAnErrorToNeverLinkAnAdapterToAPort() {
+	public void itIsAnErrorToNeverLinkAnAdapterToAPort() {
 		context.checking(new Expectations() {{
 			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
 			oneOf(errors).error("did not bind adapter " + adapterClass1.getName() + " to a port");
@@ -103,12 +110,12 @@ public class AdapterAccumulationTests {
 	}
 
 	@Test
-	public void testThatItIsAnErrorToHaveMultipleHexagonsAndADefault() {
+	public void itIsAnErrorToHaveMultipleHexagonsAndADefault() {
 		context.checking(new Expectations() {{
 			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
 			oneOf(layout).addHexagon(with(1), with(aNonNull(HexInfo.class)));
-			oneOf(layout).addHexagonPort(with(0), with(aNonNull(PortInfo.class)));
-			oneOf(layout).addHexagonPort(with(1), with(aNonNull(PortInfo.class)));
+			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1)));
+			oneOf(layout).addHexagonPort(with(1), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass2)));
 			oneOf(errors).error("port " + portClass3.getName() + " was not bound to a hexagon");
 		}});
 		acc.startAnalysis(bcd);
@@ -119,29 +126,32 @@ public class AdapterAccumulationTests {
 		acc.analysisComplete(bcd);
 	}
 
-	/*
 	@Test
-	public void testWeCanAccumulateTwoAdapterTestsForTheSameAdapter() {
-		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
-		acc.adapter(grp, testCase2, hexClass1, portClass1, adapterClass1);
-		acc.analysisComplete();
-		HexData hd = hdm.getHexagons().get(0);
-		assertEquals(1, hd.getPorts().size());
-		PortData pd = hd.getPorts().get(0);
-		assertEquals(Long.class.getName(), pd.getName());
+	public void weCanAccumulateTwoAdapterTestsForTheSameAdapter() {
+		context.checking(new Expectations() {{
+			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
+			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1)));
+		}});
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
+		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
+		acc.analysisComplete(bcd);
 	}
 	
 	@Test
-	public void testWeCanSpecifyTheAdapterPortLocation() {
-		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
-		acc.portLocation(adapterClass1, PortLocation.SOUTHEAST);
-		acc.analysisComplete();
-		HexData hd = hdm.getHexagons().get(0);
-		assertEquals(1, hd.getPorts().size());
-		PortData pd = hd.getPorts().get(0);
-		assertEquals(PortLocation.SOUTHEAST, pd.getLocation());
+	public void weCanSpecifyTheAdapterPortLocation() {
+		context.checking(new Expectations() {{
+			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
+			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.SOUTHEAST, portClass1)));
+		}});
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1));
+		acc.analysisComplete(bcd);
 	}
 
+	/*
 	@Test
 	public void testWeCannotSpecifyConflictingPortHexLocations() {
 		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);

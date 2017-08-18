@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRole;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
+import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator.HexLoc;
 import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 
 public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator, DataCentral, TestResultReporter {
@@ -126,26 +128,68 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	}
 
 	private void fleshOutPorts() {
+		// for each hex, create a map of available locations so that we can assign the defaults later
+		Map<String, List<PortLocation>> available = new HashMap<>();
+		for (String hex : hexOrdering)
+			available.put(hex, new ArrayList<>(Arrays.asList(PortLocation.values())));
+
+		// first gather info on all the hexes' port locations
+		Map<HexLoc, Set<String>> locations = new HashMap<>();
 		for (AllConstraints ac : constraints.values()) {
 			for (Entry<String, PortConstraints> e : ac.ports.entrySet()) {
 				PortConstraints c = e.getValue();
-				if (c.hexes.isEmpty() && hexes.size() > 1) {
+				String hex = c.getHexName();
+				if (hex == null) {
 					error("port " + e.getKey() + " was not bound to a hexagon");
 					continue;
 				}
-				int pos;
-				HexInfo hi;
-				if (!c.hexes.isEmpty()) {
-					String hex = c.hexes.iterator().next();
-					pos = getHexPos(hex);
-					hi = hexes.get(hex);
-				} else {
-					pos = 0;
-					hi = hexes.get("");
+				PortLocation loc = c.getLocation();
+				if (loc != null) {
+					HexLoc hl = new HexLoc(hex, loc);
+					if (!locations.containsKey(hl)) {
+						locations.put(hl, new TreeSet<>());
+						available.get(hex).remove(loc);
+					}
+					locations.get(hl).add(e.getKey());
 				}
+			}
+		}
+		
+		// Now invert that to get a map of ports to locations, noting any clashes
+		Map<String, HexLoc> portsAreAt = new HashMap<>();
+		for (Entry<HexLoc, Set<String>> e : locations.entrySet()) {
+			if (e.getValue().size() > 1)
+				error("multiple things somewhere"); // work through this with tests
+			String first = e.getValue().iterator().next();
+			if (portsAreAt.containsKey(first))
+				error("that's two places that both want " + first); // work through this with tests
+			else
+				portsAreAt.put(first, e.getKey());
+		}
+		
+		// Now build the actual ports, inasmuch as they don't already exist
+		for (AllConstraints ac : constraints.values()) {
+			for (Entry<String, PortConstraints> e : ac.ports.entrySet()) {
+				HexLoc hl = portsAreAt.get(e.getKey());
+				PortConstraints c = e.getValue();
+				String hn;
+				if (hl == null) {
+					hn = c.getHexName();
+					if (hn == null)
+						continue;
+					List<PortLocation> options = available.get(hn);
+					if (options.isEmpty()) {
+						error("no free locations to put port " + e.getKey() + " on hex " + hn);
+						continue;
+					}
+					hl = new HexLoc(hn, options.remove(0));
+				} else
+					hn = hl.hex;
+				int pos = getHexPos(hn);
+				HexInfo hi = hexes.get(hn);
 				PortData pi = hi.getPort(e.getKey());
 				if (pi == null) {
-					pi = new PortInfo(e.getKey(), PortLocation.NORTHWEST);
+					pi = new PortInfo(e.getKey(), hl.loc);
 					hi.addPort(pi);
 					if (layout != null)
 						layout.addHexagonPort(pos, pi);
@@ -609,12 +653,28 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	}
 
 	public class PortConstraints {
-		public Set<String> hexes = new TreeSet<>();
+		public Set<String> chexes = new TreeSet<>();
 		public Set<PortLocation> locations = new TreeSet<>();
 
 		public void addHex(String hex) {
 			if (hex != null)
-				hexes.add(hex);
+				chexes.add(hex);
+		}
+
+		public PortLocation getLocation() {
+			if (locations.isEmpty())
+				return null;
+			return locations.iterator().next();
+		}
+
+		public String getHexName() {
+			if (chexes.isEmpty() && hexes.size() > 1)
+				return null; // can't be done
+			if (!chexes.isEmpty()) {
+				return chexes.iterator().next();
+			} else {
+				return "";
+			}
 		}
 
 		public void addLocation(PortLocation location) {
@@ -622,5 +682,23 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 				locations.add(location);
 		}
 
+	}
+
+	public class HexLoc {
+		private final String hex;
+		private final PortLocation loc;
+
+		public HexLoc(String hex, PortLocation loc) {
+			this.hex = hex;
+			this.loc = loc;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof HexLoc))
+				return false;
+			HexLoc other = (HexLoc) obj;
+			return this.hex.equals(other.hex) && this.loc.equals(other.loc);
+		}
 	}
 }
