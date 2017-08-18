@@ -12,7 +12,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TestResultReader implements Runnable {
+public class TestResultReader extends Thread implements Runnable {
 	private final TestResultAnalyzer analyzer;
 	private boolean done;
 	private AtomicInteger port = null;

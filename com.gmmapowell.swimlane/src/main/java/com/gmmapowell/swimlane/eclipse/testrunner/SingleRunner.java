@@ -13,16 +13,20 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
 
 public class SingleRunner {
-	private final List<String> cmdarray = new ArrayList<String>();
-	private TestResultAnalyzer analyzer;
+	public SingleRunner() throws IOException {
+	}
+	
+	public static void exec(IProgressMonitor monitor, TestResultReporter sink, GroupOfTests group, String classpath, String... classesUnderTest) throws Exception {
 
-	public SingleRunner(IProgressMonitor monitor, TestResultReporter sink, GroupOfTests group, String classpath, String[] classesUnderTest) throws IOException {
 		File file = File.createTempFile("textests", "txt");
 		PrintWriter pw = new PrintWriter(file);
 		for (String s : classesUnderTest)
 			pw.println(s);
 		pw.close();
-		analyzer = new TestResultAnalyzer(monitor, sink, group);
+
+		TestResultAnalyzer analyzer = new TestResultAnalyzer(monitor, sink, group);
+
+		List<String> cmdarray = new ArrayList<String>();
 		cmdarray.add("java");
 		cmdarray.add("-XstartOnFirstThread"); // only for Cocoa SWT, but does it really hurt?
 		cmdarray.add("-classpath");
@@ -38,13 +42,10 @@ public class SingleRunner {
 		cmdarray.add("-testNameFile");
 		cmdarray.add(file.getPath());
 		cmdarray.add("-port");
-	}
-	
-	public void exec() throws Exception {
+
 		System.out.println(new Date() + " starting to run tests");
 		TestResultReader trr = new TestResultReader(analyzer);
-		Thread thr = new Thread(trr);
-		thr.start();
+		trr.start();
 
 		cmdarray.add(Integer.toString(trr.getPort()));
 		ProcessBuilder builder = new ProcessBuilder(cmdarray);
@@ -53,10 +54,8 @@ public class SingleRunner {
 		proc.waitFor();
 
 		trr.done();
-		thr.interrupt();
-		thr.join();
+		trr.interrupt();
+		trr.join();
 		System.out.println(new Date() + " finished running tests");
 	}
-
-
 }
