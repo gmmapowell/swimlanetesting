@@ -24,7 +24,7 @@ import com.gmmapowell.swimlane.tests.swtutil.TestBase;
  */
 public class AcceptanceAccumulationTests extends TestBase {
 	ModelDispatcher md = new SolidModelDispatcher(null, null);
-	Accumulator acc = new HexagonAccumulator(md);
+	Accumulator acc = new HexagonAccumulator();
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestGroup grp = new TestGroup("Project", null);
 	

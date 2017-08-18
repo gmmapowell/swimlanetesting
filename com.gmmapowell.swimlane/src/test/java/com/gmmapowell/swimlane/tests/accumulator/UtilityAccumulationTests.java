@@ -14,7 +14,7 @@ import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 
 public class UtilityAccumulationTests {
 	ModelDispatcher md = new SolidModelDispatcher(null, null);
-	Accumulator acc = new HexagonAccumulator(md);
+	Accumulator acc = new HexagonAccumulator();
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestGroup grp = new TestGroup("Project", null);
 	Class<?> testCase1 = String.class;

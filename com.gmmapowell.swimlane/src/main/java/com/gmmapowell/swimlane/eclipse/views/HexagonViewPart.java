@@ -55,9 +55,9 @@ public class HexagonViewPart extends ViewPart implements CommandDispatcher {
 		errorView = new ErrorView(stackUI);
 		testResults = new TestResultsView(stackUI);
 		stack.topControl = hexView.getTop();
-		accumulator = new HexagonAccumulator(null);
+		accumulator = new HexagonAccumulator();
 		try {
-			HexagonTestAnalyzer hta = new HexagonTestAnalyzer(accumulator);
+			HexagonTestAnalyzer hta = new HexagonTestAnalyzer(accumulator, accumulator);
 			bl = new BuildListener(eclipse, hta);
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
 			bl.analyzeProjects(eclipse.getAllProjects());
@@ -66,7 +66,7 @@ public class HexagonViewPart extends ViewPart implements CommandDispatcher {
 			bl = null;
 		}
 
-		tr = new RemoteJUnitTestRunner(eclipse);
+		tr = new RemoteJUnitTestRunner(eclipse, accumulator);
 	}
 
 	@Override

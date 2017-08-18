@@ -25,7 +25,7 @@ import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public class AccumulationOfTestResultsTests extends TestBase {
 	ModelDispatcher md = new SolidModelDispatcher(null, null);
-	HexagonAccumulator hex = new HexagonAccumulator(md);
+	HexagonAccumulator hex = new HexagonAccumulator();
 	TestResultReporter trr = hex; 
 	HexagonDataModel hdm = hex; 
 	TestGroup grp = new TestGroup("Project", null);

@@ -1,34 +1,29 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
+import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestRole;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
-import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
-import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
 
-public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestResultReporter, AnalysisAccumulator {
-	private final ModelDispatcher dispatcher;
+public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator, DataCentral, TestResultReporter {
 	private Date buildTime;
 	private Date testsCompleteTime;
 	private final Map<String, Acceptance> compileAcceptances = new TreeMap<String, Acceptance>();
@@ -47,25 +42,51 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	private Map<Class<?>, Adapter> adapters = new HashMap<>();
 	private final Map<String, Map<String, TestResultGroup>> resultGroups = new TreeMap<>();
 	private LogicInfo defaultLogic;
+	private Map<GroupOfTests, Object> groups = new TreeMap<>();
+	private Set<DateListener> buildDateListeners = new HashSet<>();
 	
-	public HexagonAccumulator(ModelDispatcher dispatcher) {
-		this.dispatcher = dispatcher;
+
+	@Override
+	public void startAnalysis(Date startTime) {
+		// TODO Auto-generated method stub
+		
 	}
 
-	public void setBuildTime(Date d) {
-		this.buildTime = d;
+	@Override
+	public void haveTestClass(GroupOfTests grp, String clzName, TestRole role) {
+		// TODO Auto-generated method stub
+		
 	}
-	
+
+	@Override
+	public void analysisComplete(Date completeTime) {
+		this.buildTime = completeTime;
+		for (DateListener l : buildDateListeners)
+			l.dateChanged(completeTime);
+	}
+
+	@Override
+	public void addBuildDateListener(DateListener lsnr) {
+		buildDateListeners.add(lsnr);
+		if (buildTime != null)
+			lsnr.dateChanged(buildTime);
+	}
+
+	/* TDA
 	@Override
 	public Date getBuildTime() {
 		return this.buildTime;
 	}
+	*/
 	
+	/* should probably implement TRR
 	@Override
 	public void testsCompleted(Date d) {
 		this.testsCompleteTime = d;
 	}
+	*/
 
+	/* should not have any getters - we're TDA now
 	@Override
 	public Date getTestCompleteTime() {
 		return testsCompleteTime;
@@ -85,7 +106,9 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	public List<TestGroup> getAllTestGroups() {
 		return allTestClasses;
 	}
-
+	*/
+	
+	/* should probably implement AA
 	@Override
 	public void acceptance(TestGroup grp, Class<?> tc, List<Class<?>> hexes) {
 		if (hexes == null || hexes.isEmpty()) {
@@ -173,7 +196,9 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		}
 		adapterLocations.put(adapter, loc);
 	}
+	*/
 
+	/* Don't know what this is helping, but for now ...
 	private HexInfo inithex(Class<?> hex) {
 		if (hex == null)
 			throw new RuntimeException("Shouldn't do that");
@@ -186,7 +211,9 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		hexesFor.put(name, hi);
 		return hi;
 	}
+	*/
 
+	/* Part of AA ...
 	@Override
 	public void analysisComplete() {
 		if (defaultLogic != null)
@@ -280,7 +307,9 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		grp.addTest(tc.getName());
 		ca.addCase(tc);
 	}
+	*/
 	
+	/* TDA no getters
 	@Override
 	public List<HexData> getHexagons() {
 		return hexagons;
@@ -290,6 +319,7 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 	public BarData getUtilityBar() {
 		return uteBar;
 	}
+	*/
 
 	/* These errors relate to static analysis errors, such as hexagons in the wrong order.
 	 * These methods are here because we override the (mocked) interface Accumulator and its tests demand that errors be reported
@@ -299,11 +329,14 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		errors.add(msg);
 	}
 
+	/* TDA
 	@Override
 	public Set<String> getErrors() {
 		return errors;
 	}
+	*/
 
+	/*
 	private void traverseTree(Map<String, AtomicInteger> classCounts, Tree<TestInfo> tree) {
 		TestInfo ti = tree.me();
 		if (ti.type().isTestCase()) {
@@ -317,33 +350,59 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		for (Tree<TestInfo> c : tree.children())
 			traverseTree(classCounts, c);
 	}
+	*/
 
 	@Override
-	public void testSuccess(TestInfo test) {
-		String forClz = test.classUnderTest();
-		BarData bar = barsFor.get(forClz);
-		if (bar == null) {
-			error("the class " + forClz + " was run but did not have a bar defined for it");
-			return;
-		}
-		addResultGroupToBar(bar, test);
-		((BarInfo)bar).passed(forClz);
-		dispatcher.barChanged(bar);
+	public void testsStarted(GroupOfTests grp, Date currentDate) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void testCount(GroupOfTests grp, int cnt) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void testSuccess(GroupOfTests grp, String testClz, String testFn) {
+//		String forClz = test.classUnderTest();
+//		BarData bar = barsFor.get(forClz);
+//		if (bar == null) {
+//			error("the class " + forClz + " was run but did not have a bar defined for it");
+//			return;
+//		}
+//		addResultGroupToBar(bar, test);
+//		((BarInfo)bar).passed(forClz);
+//		dispatcher.barChanged(bar);
 	}
 
 	@Override
-	public void testFailure(TestInfo test) {
-		String forClz = test.classUnderTest();
-		BarData bar = barsFor.get(forClz);
-		if (bar == null) {
-			error("the class " + forClz + " was run but did not have a bar defined for it");
-			return;
-		}
-		addResultGroupToBar(bar, test);
-		((BarInfo)bar).failed(forClz);
-		dispatcher.barChanged(bar);
+	public void testFailure(GroupOfTests grp, String testClz, String testFn, List<String> stack, List<String> expected, List<String> actual) {
+//		String forClz = test.classUnderTest();
+//		BarData bar = barsFor.get(forClz);
+//		if (bar == null) {
+//			error("the class " + forClz + " was run but did not have a bar defined for it");
+//			return;
+//		}
+//		addResultGroupToBar(bar, test);
+//		((BarInfo)bar).failed(forClz);
+//		dispatcher.barChanged(bar);
 	}
 
+	@Override
+	public void testError(GroupOfTests grp, String testClz, String testFn, List<String> stack) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void testsCompleted(GroupOfTests grp, Date currentDate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* this is presumably a helper for somebody
 	private void addResultGroupToBar(BarData bar, TestInfo test) {
 		if (!resultGroups.containsKey(bar.getId())) {
 			resultGroups.put(bar.getId(), new HashMap<>());
@@ -354,18 +413,9 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		}
 		rgs.get(test.groupName()).add(test);
 	}
+	*/
 
-	@Override
-	public void testRuntime(int ms) {
-		// We currently don't have a mechanism to display this, so there is no point capturing or processing it
-	}
-
-	/* This is called when the test mechanism fails */
-	@Override
-	public void testError(String msg) {
-		error(msg);
-	}
-
+	/* TDA
 	@Override
 	public Collection<TestResultGroup> getTestResultsFor(String barId) {
 		if (barId == null)
@@ -375,9 +425,16 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 			return new HashSet<>();
 		return ret.values();
 	}
+	*/
 
 	// TDA: this should do much more of the work
 	public void runAllTests(TestRunner tr) {
-		tr.runAll(this);
+		tr.runAll(this, this);
+	}
+
+	@Override
+	public void allGroups(GroupHandler hdlr) {
+		for (GroupOfTests g : groups.keySet())
+			hdlr.runGroup(g);
 	}
 }

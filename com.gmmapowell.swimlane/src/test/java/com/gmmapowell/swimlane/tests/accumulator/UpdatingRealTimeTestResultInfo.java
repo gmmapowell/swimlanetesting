@@ -29,7 +29,7 @@ import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public class UpdatingRealTimeTestResultInfo extends TestBase {
 	SolidModelDispatcher md = new SolidModelDispatcher(null, null);
-	Accumulator acc = new HexagonAccumulator(md);
+	Accumulator acc = new HexagonAccumulator();
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestResultReporter trr = (TestResultReporter) acc;
 	GroupOfTests grp = context.mock(GroupOfTests.class);

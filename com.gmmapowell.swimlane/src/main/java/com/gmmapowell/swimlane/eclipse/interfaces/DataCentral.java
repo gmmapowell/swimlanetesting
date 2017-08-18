@@ -8,6 +8,6 @@ public interface DataCentral {
 		public IStatus runGroup(GroupOfTests grp);
 	}
 
+	void addBuildDateListener(DateListener lsnr);
 	void allGroups(GroupHandler hdlr);
-
 }

@@ -1,17 +1,17 @@
 package com.gmmapowell.swimlane.tests.accumulator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import java.util.Date;
 
+import org.jmock.Expectations;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
+import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
-import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 
 /* The purpose of the accumulator is to take input in one form (what we discover)
  * and to build a stable model out of it.
@@ -19,19 +19,28 @@ import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
  * here we assert that the two are coupled correctly internally.
  */
 public class GeneralAccumulationTests {
-	ModelDispatcher md = new SolidModelDispatcher(null, null);
-	Accumulator acc = new HexagonAccumulator(md);
-	HexagonDataModel hdm = (HexagonDataModel)acc;
+	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
+	AnalysisAccumulator acc = new HexagonAccumulator();
+	DataCentral lsnrs = (DataCentral) acc;
+	DateListener lsnr = context.mock(DateListener.class);
 	
 	@Test
-	public void testDateCanBeNull() {
-		assertNull(hdm.getBuildTime());
-	}
-	
-	@Test
-	public void testTheTrivialDateThing() {
+	public void theTrivialDateThing() {
+		lsnrs.addBuildDateListener(lsnr);
 		Date d = new Date();
-		acc.setBuildTime(d);
-		assertEquals(d, hdm.getBuildTime());
+		context.checking(new Expectations() {{
+			oneOf(lsnr).dateChanged(d);
+		}});
+		acc.analysisComplete(d);
+	}
+
+	@Test
+	public void ifTheDateIsAlreadySetWhenWeAddTheListenerWeStillGetTheCallback() {
+		Date d = new Date();
+		acc.analysisComplete(d);
+		context.checking(new Expectations() {{
+			oneOf(lsnr).dateChanged(d);
+		}});
+		lsnrs.addBuildDateListener(lsnr);
 	}
 }

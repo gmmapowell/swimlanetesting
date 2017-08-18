@@ -11,6 +11,7 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
@@ -33,10 +34,11 @@ public class RemoteJUnitTestRunner implements TestRunner {
 	}
 	
 	private TestRunnerRule singleThreadedTestRunner = new TestRunnerRule();
+	private final ErrorAccumulator eh;
 	
-
-	public RemoteJUnitTestRunner(EclipseAbstractor eclipse) {
+	public RemoteJUnitTestRunner(EclipseAbstractor eclipse, ErrorAccumulator eh) {
 		this.eclipse = eclipse;
+		this.eh = eh;
 	}
 
 	@Override
@@ -50,9 +52,7 @@ public class RemoteJUnitTestRunner implements TestRunner {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
 				IStatus ret = Status.OK_STATUS;
-				reporter.testsStarted(eclipse.currentDate());
 				central.allGroups(g -> runGroup(monitor, g));
-				reporter.testsCompleted(eclipse.currentDate());
 				return ret;
 			}
 
@@ -63,7 +63,9 @@ public class RemoteJUnitTestRunner implements TestRunner {
 				System.out.println(new Date() + " Group " + g + " is running tests " + Arrays.asList(classesUnderTest) + " in classpath " + classpath);
 				ret = Status.OK_STATUS;
 				try {
-					SingleRunner.exec(monitor, reporter, g, classpath, classesUnderTest);
+					reporter.testsStarted(g, eclipse.currentDate());
+					SingleRunner.exec(monitor, eh, reporter, g, classpath, classesUnderTest);
+					reporter.testsCompleted(g, eclipse.currentDate());
 				} catch (Exception ex) {
 					ex.printStackTrace(); // how to deal with this?
 					ret = Status.CANCEL_STATUS;
