@@ -1,7 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.testrunner;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,14 +8,12 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
-import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
 
 public class SingleRunner {
-	public SingleRunner() throws IOException {
-	}
-	
-	public static void exec(IProgressMonitor monitor, TestResultReporter sink, GroupOfTests group, String classpath, String... classesUnderTest) throws Exception {
+	public static void exec(IProgressMonitor monitor, ErrorAccumulator eh, TestResultReporter sink, GroupOfTests group, String classpath, String... classesUnderTest) throws Exception {
 
 		File file = File.createTempFile("textests", "txt");
 		PrintWriter pw = new PrintWriter(file);
@@ -24,7 +21,7 @@ public class SingleRunner {
 			pw.println(s);
 		pw.close();
 
-		TestResultAnalyzer analyzer = new TestResultAnalyzer(monitor, sink, group);
+		TestResultAnalyzer analyzer = new TestResultAnalyzer(monitor, eh, sink, group);
 
 		List<String> cmdarray = new ArrayList<String>();
 		cmdarray.add("java");

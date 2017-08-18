@@ -10,9 +10,9 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.ProjectAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.ProjectSimplifier;
-import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
 
 public class ProjectScanner {
 	private final Set<String> scanned = new TreeSet<String>();

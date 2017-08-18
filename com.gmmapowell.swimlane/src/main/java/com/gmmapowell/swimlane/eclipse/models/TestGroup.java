@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
+
 public class TestGroup implements GroupOfTests {
 	private final List<File> cp;
 	private final Set<String> tcs = new TreeSet<>();

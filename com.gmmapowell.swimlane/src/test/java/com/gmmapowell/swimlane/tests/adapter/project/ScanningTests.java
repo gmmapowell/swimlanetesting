@@ -12,9 +12,9 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.ProjectAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.ProjectSimplifier;
-import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.project.ProjectScanner;
 
 public class ScanningTests {

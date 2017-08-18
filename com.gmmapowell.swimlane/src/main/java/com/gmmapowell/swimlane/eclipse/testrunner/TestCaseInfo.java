@@ -2,8 +2,8 @@ package com.gmmapowell.swimlane.eclipse.testrunner;
 
 import java.util.List;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
-import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
 
 public class TestCaseInfo implements TestInfo {
 	private final Type type;

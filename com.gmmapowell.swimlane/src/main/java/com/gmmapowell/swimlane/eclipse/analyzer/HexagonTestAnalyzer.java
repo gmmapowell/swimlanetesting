@@ -6,18 +6,21 @@ import java.net.URLClassLoader;
 import java.util.Date;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.ProjectAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRole;
-import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
 import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 import com.gmmapowell.swimlane.eclipse.roles.UnlabelledTestRole;
 
 public class HexagonTestAnalyzer implements ProjectAnalyzer {
+	private final ErrorAccumulator eh;
 	private final AnalysisAccumulator accumulator;
 
-	public HexagonTestAnalyzer(AnalysisAccumulator accumulator) {
+	public HexagonTestAnalyzer(ErrorAccumulator eh, AnalysisAccumulator accumulator) {
+		this.eh = eh;
 		this.accumulator = accumulator;
 	}
 
@@ -70,12 +73,12 @@ public class HexagonTestAnalyzer implements ProjectAnalyzer {
 						role = new UtilityRole();
 					}
 					if (role != null && finalRole != null) {
-						accumulator.error("cannot have multiple role annotations on " + clzName);
+						eh.error("cannot have multiple role annotations on " + clzName);
 						return;
 					}
 					finalRole = role;
 				} catch (Exception e) {
-					accumulator.error(e.getMessage());
+					eh.error(e.getMessage());
 				}
 			}
 			if (finalRole == null) {
@@ -89,7 +92,7 @@ public class HexagonTestAnalyzer implements ProjectAnalyzer {
 			if (finalRole != null)
 				accumulator.haveTestClass(grp, clzName, finalRole);
 		} catch (ClassNotFoundException e1) {
-			accumulator.error("No such class: " + e1.getMessage());
+			eh.error("No such class: " + e1.getMessage());
 		}
 	}
 

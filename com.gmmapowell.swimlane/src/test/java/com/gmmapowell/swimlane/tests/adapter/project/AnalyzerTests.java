@@ -12,8 +12,8 @@ import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
-import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
 import com.gmmapowell.swimlane.testsupport.matchers.AcceptanceRoleMatcher;
 import com.gmmapowell.swimlane.testsupport.matchers.AdapterRoleMatcher;
 import com.gmmapowell.swimlane.testsupport.matchers.BusinessRoleMatcher;

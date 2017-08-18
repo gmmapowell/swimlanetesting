@@ -2,6 +2,6 @@ package com.gmmapowell.swimlane.eclipse.interfaces;
 
 public interface TestRunner {
 
-	void runAll(Accumulator model);
+	void runAll(DataCentral central, TestResultReporter reporter);
 
 }

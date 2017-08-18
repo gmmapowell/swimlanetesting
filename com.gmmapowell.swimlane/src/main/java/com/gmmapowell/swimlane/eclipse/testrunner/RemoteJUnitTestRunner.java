@@ -9,11 +9,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobFunction;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
-import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 
 // This is a centralized object for running tests and should do so off the main UI thread
 // We only want one set of tests to be running at once, no matter how many have been dispatched
@@ -40,9 +40,9 @@ public class RemoteJUnitTestRunner implements TestRunner {
 	}
 
 	@Override
-	public void runAll(Accumulator model) {
-		if (model == null) {
-			System.out.println("Cannot run tests without a model");
+	public void runAll(DataCentral central, TestResultReporter reporter) {
+		if (reporter == null) {
+			System.out.println("Cannot run tests without a reporter");
 			return;
 		}
 		eclipse.backgroundWithProgressLocked(singleThreadedTestRunner, new IJobFunction() {
@@ -50,21 +50,24 @@ public class RemoteJUnitTestRunner implements TestRunner {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
 				IStatus ret = Status.OK_STATUS;
-				for (TestGroup g : model.getAllTestGroups()) {
-					String classpath = g.getClassPath();
-					String[] classesUnderTest = g.getClasses();
-					System.out.println(new Date() + " Group " + g + " is running tests " + Arrays.asList(classesUnderTest) + " in classpath " + classpath);
-					ret = Status.OK_STATUS;
-					try {
-						SingleRunner.exec(monitor, (TestResultReporter) model, g, classpath, classesUnderTest);
-					} catch (Exception ex) {
-						ex.printStackTrace(); // how to deal with this?
-						ret = Status.CANCEL_STATUS;
-					}
-					if (!ret.isOK())
-						break;
+				reporter.testsStarted(eclipse.currentDate());
+				central.allGroups(g -> runGroup(monitor, g));
+				reporter.testsCompleted(eclipse.currentDate());
+				return ret;
+			}
+
+			private IStatus runGroup(IProgressMonitor monitor, GroupOfTests g) {
+				IStatus ret;
+				String classpath = g.getClassPath();
+				String[] classesUnderTest = g.getClasses();
+				System.out.println(new Date() + " Group " + g + " is running tests " + Arrays.asList(classesUnderTest) + " in classpath " + classpath);
+				ret = Status.OK_STATUS;
+				try {
+					SingleRunner.exec(monitor, reporter, g, classpath, classesUnderTest);
+				} catch (Exception ex) {
+					ex.printStackTrace(); // how to deal with this?
+					ret = Status.CANCEL_STATUS;
 				}
-				model.testsCompleted(new Date());
 				return ret;
 			}
 			
