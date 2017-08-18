@@ -1,6 +1,8 @@
 package com.gmmapowell.swimlane.tests.accumulator;
 
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -28,9 +30,8 @@ public class AdapterAccumulationTests {
 	ErrorMessageListener errors = context.mock(ErrorMessageListener.class);
 	Date bcd = new Date();
 	TestGroup grp = new TestGroup("Project", null);
-	Class<?> testCase1 = String.class;
-	Class<?> testCase2 = Character.class;
 	Class<?> hexClass1 = Integer.class;
+	Class<?> hexClass2 = List.class;
 	Class<?> portClass1 = Long.class;
 	Class<?> portClass2 = Float.class;
 	Class<?> portClass3 = Double.class;
@@ -38,6 +39,7 @@ public class AdapterAccumulationTests {
 	Class<?> portClass5 = Number.class;
 	Class<?> adapterClass1 = Exception.class;
 	Class<?> adapterClass2 = RuntimeException.class;
+	Class<?> adapterClass3 = IOException.class;
 
 	// These tests would be more compelling with a HexInfoMatcher
 	@Before
@@ -91,16 +93,26 @@ public class AdapterAccumulationTests {
 		acc.analysisComplete(bcd);
 	}
 
-	/*
 	@Test
 	public void testThatItIsAnErrorToHaveMultipleHexagonsAndADefault() {
-		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
-		acc.adapter(grp, testCase2, null, portClass2, adapterClass2);
-		acc.analysisComplete();
-		assertEquals(1, hdm.getErrors().size());
-		assertTrue(hdm.getErrors().contains("port " + portClass2.getName() + " was not bound to a hexagon"));
+		context.checking(new Expectations() {{
+			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
+			oneOf(layout).addHexagon(with(1), with(aNonNull(HexInfo.class)));
+			oneOf(errors).error("port " + portClass3.getName() + " was not bound to a hexagon");
+		}});
+		acc.startAnalysis(bcd);
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
+		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass2, portClass2, null, adapterClass2));
+		acc.haveTestClass(grp, "TestCase3", new AdapterRole(null, portClass3, null, adapterClass3));
+		acc.analysisComplete(bcd);
+//		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
+//		acc.adapter(grp, testCase2, null, portClass2, adapterClass2);
+//		acc.analysisComplete();
+//		assertEquals(1, hdm.getErrors().size());
+//		assertTrue(hdm.getErrors().contains());
 	}
 
+	/*
 	@Test
 	public void testThatIfWeAccumulateOneAdapterTestWithAPortTheModelMustHaveThePortForTheHexagon() {
 		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
