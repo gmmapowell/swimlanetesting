@@ -8,12 +8,13 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestRole;
 public class AcceptanceRole implements TestRole {
 	private final List<String> hexes;
 
-	public AcceptanceRole(Class<?>[] hexes) {
+	public AcceptanceRole(Class<?>... hexes) {
 		this.hexes = new ArrayList<>();
 		for (Class<?> c : hexes)
 			this.hexes.add(c.getName());
 	}
 
+	@Override
 	public List<String> getHexes() {
 		return hexes;
 	}

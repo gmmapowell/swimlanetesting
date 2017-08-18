@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -15,6 +16,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorMessageListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
@@ -22,6 +24,9 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRole;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
+import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
+import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator.AdapterContext;
+import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 
 public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator, DataCentral, TestResultReporter {
 	private Date buildTime;
@@ -36,33 +41,62 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	private Map<String, BarData> barsFor = new HashMap<>();
 	private final ArrayList<TestGroup> allTestClasses = new ArrayList<TestGroup>();
 	private LogicInfo uteBar;
-	private Map<Class<?>, PortLocation> adapterLocations = new HashMap<>();
-	private Map<Class<?>, Class<?>> adapterPort = new HashMap<>();
-	private Map<Class<?>, String> portHex = new HashMap<>();
-	private Map<Class<?>, Adapter> adapters = new HashMap<>();
+	private Map<String, AdapterContext> adapters = new HashMap<>();
 	private final Map<String, Map<String, TestResultGroup>> resultGroups = new TreeMap<>();
 	private LogicInfo defaultLogic;
 	private Map<GroupOfTests, Object> groups = new TreeMap<>();
 	private Set<DateListener> buildDateListeners = new HashSet<>();
-	
+	private Set<ErrorMessageListener> errorListeners = new HashSet<>();
+	private ViewLayout layout;
+	private Map<String, HexInfo> hexes = new TreeMap<>();
 
 	@Override
 	public void startAnalysis(Date startTime) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void haveTestClass(GroupOfTests grp, String clzName, TestRole role) {
-		// TODO Auto-generated method stub
-		
+//		List<String> hexes = role.getHexes();
+//		for (String s : hexes) {
+//			if (!this.hexes.containsKey(s)) {
+//				addHex(s);
+//			}
+//		}
+		if (role instanceof AdapterRole)
+			collectAdapterInfo((AdapterRole)role);
+		else
+			error("cannot handle " + role.getClass());
+	}
+
+	private void collectAdapterInfo(AdapterRole role) {
+		String adapter = role.getAdapter();		
+		if (!adapters.containsKey(adapter))
+			adapters.put(adapter, new AdapterContext());
+		AdapterContext cxt = adapters.get(adapter);
+		cxt.addPort(role.getPort());
 	}
 
 	@Override
 	public void analysisComplete(Date completeTime) {
+		// TODO: do acceptance first to hopefully get the order
+		for (Entry<String, AdapterContext> e : adapters.entrySet()) {
+			AdapterContext c = e.getValue();
+			if (!hexes.containsKey(c.hex))
+				addHex(c.hex);
+			if (c.ports.isEmpty())
+				error("did not bind adapter " + e.getKey() + " to a port");
+
+		}
 		this.buildTime = completeTime;
 		for (DateListener l : buildDateListeners)
 			l.dateChanged(completeTime);
+	}
+
+	private void addHex(String s) {
+		HexInfo hi = new HexInfo(null, null);
+		this.hexes.put(s, hi);
+		if (layout != null)
+			layout.addHexagon(0, hi);
 	}
 
 	@Override
@@ -70,6 +104,21 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		buildDateListeners.add(lsnr);
 		if (buildTime != null)
 			lsnr.dateChanged(buildTime);
+	}
+	
+	@Override
+	public void addErrorMessageListener(ErrorMessageListener eml) {
+		eml.clear();
+		errorListeners.add(eml);
+		if (eml != null) {
+			for (String s : errors)
+				eml.error(s);
+		}
+	}
+
+	@Override
+	public void setViewLayout(ViewLayout layout) {
+		this.layout = layout;
 	}
 
 	/* TDA
@@ -327,6 +376,8 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	@Override
 	public void error(String msg) {
 		errors.add(msg);
+		for (ErrorMessageListener eml : errorListeners)
+			eml.error(msg);
 	}
 
 	/* TDA
@@ -436,5 +487,15 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	public void allGroups(GroupHandler hdlr) {
 		for (GroupOfTests g : groups.keySet())
 			hdlr.runGroup(g);
+	}
+
+	public class AdapterContext {
+		public String hex = "";
+		public List<String> ports = new ArrayList<String>();
+
+		public void addPort(String port) {
+			if (port != null)
+				ports.add(port);
+		}
 	}
 }

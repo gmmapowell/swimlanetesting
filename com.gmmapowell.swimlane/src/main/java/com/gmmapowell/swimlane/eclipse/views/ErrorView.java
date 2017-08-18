@@ -9,10 +9,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorMessageListener;
 
-public class ErrorView implements HexagonModelListener {
+public class ErrorView implements ErrorMessageListener {
 	private final Composite view;
 	private final Table table;
 
@@ -40,16 +39,23 @@ public class ErrorView implements HexagonModelListener {
 		return view;
 	}
 
+	
 	@Override
-	public void setModel(HexagonDataModel model) {
+	public void clear(/* TODO: this should be more selective, i.e. project/testgroup level */) {
 		view.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				table.removeAll();
-				for (String s : model.getErrors()) {
-					TableItem ti = new TableItem(table, SWT.NULL);
+			}
+		});
+	}
+
+	@Override
+	public void error(String message) {
+		view.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				TableItem ti = new TableItem(table, SWT.NULL);
 //			ti.setText(0, "There");
-					ti.setText(1, s);
-				}
+				ti.setText(1, message);
 			}
 		});
 	}
