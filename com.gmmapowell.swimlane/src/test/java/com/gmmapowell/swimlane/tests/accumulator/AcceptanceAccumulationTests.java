@@ -144,9 +144,9 @@ public class AcceptanceAccumulationTests extends TestBase {
 		assertEquals("acceptance.101", acceptanceTests.get(1).getId());
 		assertEquals("acceptance.011", acceptanceTests.get(2).getId());
 		assertEquals(3, grp.getClasses().length);
-		assertEquals(String.class.getName(), grp.getClasses()[0]);
+		assertEquals(Float.class.getName(), grp.getClasses()[0]);
 		assertEquals(Long.class.getName(), grp.getClasses()[1]);
-		assertEquals(Float.class.getName(), grp.getClasses()[2]);
+		assertEquals(String.class.getName(), grp.getClasses()[2]);
 	}
 
 	@Test

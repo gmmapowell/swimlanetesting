@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 
+@Deprecated
 public interface Accumulator {
 	void setBuildTime(Date date);
 	void testsCompleted(Date date);

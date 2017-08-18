@@ -14,7 +14,7 @@ public class BackgroundTests {
 	@Test
 	public void test() {
 		RealEclipseAbstractor eclipse = new RealEclipseAbstractor();
-		eclipse.backgroundWithProgress(new IJobFunction() {
+		eclipse.backgroundWithProgressLocked(null, new IJobFunction() {
 			@Override
 			public IStatus run(IProgressMonitor ipm) {
 				SubMonitor monitor = SubMonitor.convert(ipm);

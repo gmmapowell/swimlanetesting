@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.testsupport.matchers.AcceptanceRoleMatcher;
@@ -23,6 +24,7 @@ import com.gmmapowell.swimlane.testsupport.matchers.UtilityRoleMatcher;
 public class AnalyzerTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	private HexagonTestAnalyzer analyzer;
+	private ErrorAccumulator eh = context.mock(ErrorAccumulator.class);
 	private AnalysisAccumulator accumulator;
 	private URLClassLoader cl;
 	private GroupOfTests grp;
@@ -36,7 +38,7 @@ public class AnalyzerTests {
 		File anns = new File("../swimlane-annotations/bin/classes/");
 		File root = new File("../swimlane-annotations/bin/testclasses");
 		cl = new URLClassLoader(new URL[] { root.toURI().toURL(), anns.toURI().toURL() });
-		analyzer = new HexagonTestAnalyzer(accumulator);
+		analyzer = new HexagonTestAnalyzer(eh, accumulator);
 		hex1 = "com.gmmapowell.swimlane.samples.Hexagon1";
 		hex2 = "com.gmmapowell.swimlane.samples.Hexagon2";
 		adapter1 = "com.gmmapowell.swimlane.samples.Hex1Port1Adapter1";
@@ -137,7 +139,7 @@ public class AnalyzerTests {
 	public void testWeAreNotifiedIfTheClassCannotBeFound() throws Exception {
 		String clzName = "unknown";
 		context.checking(new Expectations() {{
-			oneOf(accumulator).error("No such class: unknown");
+			oneOf(eh).error("No such class: unknown");
 		}});
 		analyzer.consider(grp, cl, clzName);
 	}

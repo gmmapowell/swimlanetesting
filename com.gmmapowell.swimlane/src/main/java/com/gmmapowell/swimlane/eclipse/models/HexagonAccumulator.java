@@ -304,25 +304,6 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		return errors;
 	}
 
-	@Override
-	public void tree(Tree<TestInfo> tree) {
-		// It's possible that actually collecting a list of the test names would be more useful
-		Map<String, AtomicInteger> classCounts = new HashMap<>();
-		traverseTree(classCounts, tree);
-		Set<BarData> changed = new HashSet<>();
-		for (Entry<String, AtomicInteger> e : classCounts.entrySet()) {
-			BarData bar = barsFor.get(e.getKey());
-			if (bar == null) {
-				System.out.println("There is no bar for test class " + e.getKey() +"; how did it get run?");
-				continue;
-			}
-			((BarInfo)bar).casesForClass(e.getKey(), e.getValue().get());
-			changed.add(bar);
-		}
-		for (BarData bd : changed)
-			dispatcher.barChanged(bd);
-	}
-
 	private void traverseTree(Map<String, AtomicInteger> classCounts, Tree<TestInfo> tree) {
 		TestInfo ti = tree.me();
 		if (ti.type().isTestCase()) {

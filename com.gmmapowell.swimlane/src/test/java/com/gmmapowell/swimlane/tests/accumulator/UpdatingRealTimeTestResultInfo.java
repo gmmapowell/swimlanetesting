@@ -46,7 +46,6 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		context.checking(new Expectations() {{
 			oneOf(bl).barChanged(bar);
 		}});
-		issueTree();
 		assertEquals(4, bar.getTotal());
 		assertEquals(0, bar.getComplete());
 		assertEquals(Status.OK, bar.getStatus());
@@ -67,7 +66,6 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 			allowing(test).groupName(); will(returnValue(grp));
 			exactly(2).of(bl).barChanged(bar);
 		}});
-		issueTree();
 		trr.testSuccess(test);
 		assertEquals(4, bar.getTotal());
 		assertEquals(1, bar.getComplete());
@@ -88,7 +86,6 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
 			exactly(2).of(bl).barChanged(bar);
 		}});
-		issueTree();
 		trr.testFailure(test);
 		assertEquals(4, bar.getTotal());
 		assertEquals(1, bar.getComplete());
@@ -136,7 +133,6 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 			allowing(test).groupName(); will(returnValue(grp));
 			exactly(2).of(bl).barChanged(bar);
 		}});
-		issueTree();
 		trr.testSuccess(test);
 		assertEquals(1, bar.classesUnderTest().size());
 		assertEquals(4, bar.getTotal());
@@ -164,7 +160,6 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
 			exactly(2).of(bl).barChanged(bar);
 		}});
-		issueTree();
 		trr.testFailure(test);
 		assertEquals(1, bar.classesUnderTest().size());
 		assertEquals(4, bar.getTotal());
@@ -184,7 +179,6 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		context.checking(new Expectations() {{
 			oneOf(bl).barChanged(bar);
 		}});
-		issueTree();
 		assertEquals(4, bar.getTotal());
 		assertEquals(0, bar.getComplete());
 		assertEquals(Status.OK, bar.getStatus());
@@ -202,7 +196,6 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		context.checking(new Expectations() {{
 			oneOf(bl).barChanged(bar);
 		}});
-		issueTree();
 		assertEquals(4, bar.getTotal());
 		assertEquals(0, bar.getComplete());
 		assertEquals(Status.OK, bar.getStatus());
@@ -220,31 +213,9 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		context.checking(new Expectations() {{
 			oneOf(bl).barChanged(bar);
 		}});
-		issueTree();
 		assertEquals(4, bar.getTotal());
 		assertEquals(0, bar.getComplete());
 		assertEquals(Status.OK, bar.getStatus());
-	}
-
-	protected void issueTree() {
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, grp, "", "Top"));
-		{
-			TestCaseInfo t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, grp, String.class.getName(), "test1");
-			top.add(new SimpleTree<TestInfo>(t1));
-		}
-		{
-			TestCaseInfo t2 = new TestCaseInfo(TestCaseInfo.Type.TEST, grp, String.class.getName(), "test2");
-			top.add(new SimpleTree<TestInfo>(t2));
-		}
-		{
-			TestCaseInfo t3 = new TestCaseInfo(TestCaseInfo.Type.TEST, grp, String.class.getName(), "test3");
-			top.add(new SimpleTree<TestInfo>(t3));
-		}
-		{
-			TestCaseInfo t4 = new TestCaseInfo(TestCaseInfo.Type.TEST, grp, String.class.getName(), "test4");
-			top.add(new SimpleTree<TestInfo>(t4));
-		}
-		trr.tree(top);
 	}
 
 	protected BarData findBar(List<BarData> bars, String name) {
