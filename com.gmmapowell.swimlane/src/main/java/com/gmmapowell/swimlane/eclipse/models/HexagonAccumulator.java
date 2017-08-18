@@ -20,6 +20,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorMessageListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
@@ -49,6 +50,7 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	private Set<DateListener> buildDateListeners = new HashSet<>();
 	private Set<ErrorMessageListener> errorListeners = new HashSet<>();
 	private ViewLayout layout;
+	private List<String> hexOrdering = new ArrayList<>();
 	private Map<String, HexInfo> hexes = new TreeMap<>();
 
 	@Override
@@ -61,12 +63,6 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 
 	@Override
 	public void haveTestClass(GroupOfTests grp, String clzName, TestRole role) {
-//		List<String> hexes = role.getHexes();
-//		for (String s : hexes) {
-//			if (!this.hexes.containsKey(s)) {
-//				addHex(s);
-//			}
-//		}
 		if (role instanceof AdapterRole)
 			collectAdapterInfo((AdapterRole)role);
 		else
@@ -125,8 +121,27 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	private void fleshOutPorts() {
 		for (Entry<String, PortContext> e : ports.entrySet()) {
 			PortContext c = e.getValue();
-			if (c.hexes.isEmpty() && hexes.size() > 1)
+			if (c.hexes.isEmpty() && hexes.size() > 1) {
 				error("port " + e.getKey() + " was not bound to a hexagon");
+				continue;
+			}
+			int pos;
+			HexInfo hi;
+			if (!c.hexes.isEmpty()) {
+				String hex = c.hexes.iterator().next();
+				pos = getHexPos(hex);
+				hi = hexes.get(hex);
+			} else {
+				pos = 0;
+				hi = hexes.get("");
+			}
+			PortData pi = hi.getPort(e.getKey());
+			if (pi == null) {
+				pi = new PortInfo(e.getKey(), PortLocation.NORTHWEST);
+				hi.addPort(pi);
+				if (layout != null)
+					layout.addHexagonPort(pos, pi);
+			}
 		}
 	}
 
@@ -161,10 +176,18 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	}
 
 	private void addHex(String s) {
-		HexInfo hi = new HexInfo(null, null);
+		HexInfo hi = new HexInfo();
 		this.hexes.put(s, hi);
+		this.hexOrdering.add(s);
 		if (layout != null)
 			layout.addHexagon(this.hexes.size()-1, hi);
+	}
+
+	private int getHexPos(String hex) {
+		for (int i=0;i<hexOrdering.size();i++)
+			if (hexOrdering.get(i).equals(hex))
+				return i;
+		throw new RuntimeException("did not find " + hex);
 	}
 
 	@Override
