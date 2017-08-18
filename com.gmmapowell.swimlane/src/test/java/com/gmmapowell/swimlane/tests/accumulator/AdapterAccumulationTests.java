@@ -57,9 +57,10 @@ public class AdapterAccumulationTests {
 	public void testThatIfWeAccumulateOneAdapterTestTheModelMustHaveTheHexagonForIt() {
 		context.checking(new Expectations() {{
 			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
-			oneOf(layout).addHexagonPort(with(0), with(aNonNull(PortInfo.class)));
+			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1)));
 		}});
 		acc.startAnalysis(bcd);
+		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
 		acc.analysisComplete(bcd);
 	}
@@ -71,6 +72,7 @@ public class AdapterAccumulationTests {
 			oneOf(layout).addHexagonPort(with(0), with(aNonNull(PortInfo.class)));
 		}});
 		acc.startAnalysis(bcd);
+		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase2", new AdapterRole(null, portClass1, null, adapterClass1));
 		acc.analysisComplete(bcd);
 	}
@@ -82,6 +84,7 @@ public class AdapterAccumulationTests {
 			oneOf(layout).addHexagonPort(with(0), with(aNonNull(PortInfo.class)));
 		}});
 		acc.startAnalysis(bcd);
+		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
 		acc.haveTestClass(grp, "TestCase2", new AdapterRole(null, null, null, adapterClass1));
 		acc.analysisComplete(bcd);
@@ -94,6 +97,7 @@ public class AdapterAccumulationTests {
 			oneOf(errors).error("did not bind adapter " + adapterClass1.getName() + " to a port");
 		}});
 		acc.startAnalysis(bcd);
+		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase2", new AdapterRole(null, null, null, adapterClass1));
 		acc.analysisComplete(bcd);
 	}
@@ -108,6 +112,7 @@ public class AdapterAccumulationTests {
 			oneOf(errors).error("port " + portClass3.getName() + " was not bound to a hexagon");
 		}});
 		acc.startAnalysis(bcd);
+		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
 		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass2, portClass2, null, adapterClass2));
 		acc.haveTestClass(grp, "TestCase3", new AdapterRole(null, portClass3, null, adapterClass3));

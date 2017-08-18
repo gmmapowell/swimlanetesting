@@ -30,6 +30,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 
 public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator, DataCentral, TestResultReporter {
+
 	private Date buildTime;
 	private Date testsCompleteTime;
 	private final Map<String, Acceptance> compileAcceptances = new TreeMap<String, Acceptance>();
@@ -42,8 +43,7 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	private Map<String, BarData> barsFor = new HashMap<>();
 	private final ArrayList<TestGroup> allTestClasses = new ArrayList<TestGroup>();
 	private LogicInfo uteBar;
-	private Map<String, AdapterContext> adapters;
-	private Map<String, PortContext> ports;
+	private Map<GroupOfTests, AllConstraints> constraints = new HashMap<GroupOfTests, AllConstraints>();
 	private final Map<String, Map<String, TestResultGroup>> resultGroups = new TreeMap<>();
 	private LogicInfo defaultLogic;
 	private Map<GroupOfTests, Object> groups = new TreeMap<>();
@@ -55,33 +55,39 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 
 	@Override
 	public void startAnalysis(Date startTime) {
-		if (adapters != null)
-			throw new RuntimeException("I think you are running two analyses at the same time ... don't");
-		adapters = new HashMap<>();
-		ports = new HashMap<>();
+//		if (/* already running an analysis */)
+//			throw new RuntimeException("I think you are running two analyses at the same time ... don't");
+	}
+	
+	@Override
+	public void clean(GroupOfTests grp) {
+		constraints.remove(grp);
 	}
 
 	@Override
 	public void haveTestClass(GroupOfTests grp, String clzName, TestRole role) {
+		if (!constraints.containsKey(grp))
+			constraints.put(grp, new AllConstraints());
+		AllConstraints c = constraints.get(grp);
 		if (role instanceof AdapterRole)
-			collectAdapterInfo((AdapterRole)role);
+			collectAdapterInfo(c, (AdapterRole)role);
 		else
 			error("cannot handle " + role.getClass());
 	}
 
-	private void collectAdapterInfo(AdapterRole role) {
+	private void collectAdapterInfo(AllConstraints c, AdapterRole role) {
 		String adapter = role.getAdapter();		
-		if (!adapters.containsKey(adapter))
-			adapters.put(adapter, new AdapterContext());
-		AdapterContext cxt = adapters.get(adapter);
+		if (!c.adapters.containsKey(adapter))
+			c.adapters.put(adapter, new AdapterConstraints());
+		AdapterConstraints cxt = c.adapters.get(adapter);
 		cxt.addHex(role.getHex());
 		// could add test to adapter (if we passed it in) if that would be interesting
 		String port = role.getPort();
 		if (port != null) {
 			cxt.addPort(port);
-			if (!ports.containsKey(port))
-				ports.put(port, new PortContext());
-			PortContext pc = ports.get(port);
+			if (!c.ports.containsKey(port))
+				c.ports.put(port, new PortConstraints());
+			PortConstraints pc = c.ports.get(port);
 			pc.addHex(role.getHex());
 			pc.addLocation(role.getLocation());
 			// could add adapter to port if that would be interesting
@@ -93,7 +99,6 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		scanForHexes();
 		fleshOutPorts();
 		fleshOutAdapters();
-		cleanupAfterAnalysis();
 		updateBuildDoneTime(completeTime);
 	}
 
@@ -102,12 +107,14 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		boolean needSomething = false;
 		List<String> hexes = new ArrayList<String>();
 		// TODO: do acceptance first to hopefully get the order
-		for (Entry<String, AdapterContext> e : adapters.entrySet()) {
-			AdapterContext c = e.getValue();
-			if (c.hexes.isEmpty())
-				needSomething = true;
-			else
-				hexes.add(c.hexes.iterator().next());
+		for (AllConstraints ac : constraints.values()) {
+			for (Entry<String, AdapterConstraints> e : ac.adapters.entrySet()) {
+				AdapterConstraints c = e.getValue();
+				if (c.hexes.isEmpty())
+					needSomething = true;
+				else
+					hexes.add(c.hexes.iterator().next());
+			}
 		}
 		for (String s : hexes) {
 			if (!this.hexes.containsKey(s)) {
@@ -119,54 +126,53 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	}
 
 	private void fleshOutPorts() {
-		for (Entry<String, PortContext> e : ports.entrySet()) {
-			PortContext c = e.getValue();
-			if (c.hexes.isEmpty() && hexes.size() > 1) {
-				error("port " + e.getKey() + " was not bound to a hexagon");
-				continue;
-			}
-			int pos;
-			HexInfo hi;
-			if (!c.hexes.isEmpty()) {
-				String hex = c.hexes.iterator().next();
-				pos = getHexPos(hex);
-				hi = hexes.get(hex);
-			} else {
-				pos = 0;
-				hi = hexes.get("");
-			}
-			PortData pi = hi.getPort(e.getKey());
-			if (pi == null) {
-				pi = new PortInfo(e.getKey(), PortLocation.NORTHWEST);
-				hi.addPort(pi);
-				if (layout != null)
-					layout.addHexagonPort(pos, pi);
+		for (AllConstraints ac : constraints.values()) {
+			for (Entry<String, PortConstraints> e : ac.ports.entrySet()) {
+				PortConstraints c = e.getValue();
+				if (c.hexes.isEmpty() && hexes.size() > 1) {
+					error("port " + e.getKey() + " was not bound to a hexagon");
+					continue;
+				}
+				int pos;
+				HexInfo hi;
+				if (!c.hexes.isEmpty()) {
+					String hex = c.hexes.iterator().next();
+					pos = getHexPos(hex);
+					hi = hexes.get(hex);
+				} else {
+					pos = 0;
+					hi = hexes.get("");
+				}
+				PortData pi = hi.getPort(e.getKey());
+				if (pi == null) {
+					pi = new PortInfo(e.getKey(), PortLocation.NORTHWEST);
+					hi.addPort(pi);
+					if (layout != null)
+						layout.addHexagonPort(pos, pi);
+				}
 			}
 		}
 	}
 
 	private void fleshOutAdapters() {
-		for (Entry<String, AdapterContext> e : adapters.entrySet()) {
-			AdapterContext c = e.getValue();
-			if (!c.hexes.isEmpty()) {
-				Iterator<String> it = c.hexes.iterator();
-				String hex = it.next();
-				// TODO: I think we should tell somebody this ...
-				if (it.hasNext()) { // multiple hexes
-					StringBuilder sb = new StringBuilder("duh");
-					while (it.hasNext())
-						sb.append(it.next());
-					error(sb.toString());
+		for (AllConstraints ac : constraints.values()) {
+			for (Entry<String, AdapterConstraints> e : ac.adapters.entrySet()) {
+				AdapterConstraints c = e.getValue();
+				if (!c.hexes.isEmpty()) {
+					Iterator<String> it = c.hexes.iterator();
+					String hex = it.next();
+					// TODO: I think we should tell somebody this ...
+					if (it.hasNext()) { // multiple hexes
+						StringBuilder sb = new StringBuilder("duh");
+						while (it.hasNext())
+							sb.append(it.next());
+						error(sb.toString());
+					}
 				}
+				if (c.ports.isEmpty())
+					error("did not bind adapter " + e.getKey() + " to a port");
 			}
-			if (c.ports.isEmpty())
-				error("did not bind adapter " + e.getKey() + " to a port");
 		}
-	}
-
-	private void cleanupAfterAnalysis() {
-		adapters = null;
-		ports = null;
 	}
 
 	private void updateBuildDoneTime(Date completeTime) {
@@ -580,7 +586,14 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 			hdlr.runGroup(g);
 	}
 
-	public class AdapterContext {
+	public class AllConstraints {
+		// adapter class name -> constraints
+		Map<String, AdapterConstraints> adapters = new TreeMap<>();
+		// port class name -> constraints
+		Map<String, PortConstraints> ports = new TreeMap<>();
+	}
+
+	public class AdapterConstraints {
 		public Set<String> hexes = new TreeSet<>();
 		public Set<String> ports = new TreeSet<>();
 
@@ -595,7 +608,7 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		}
 	}
 
-	public class PortContext {
+	public class PortConstraints {
 		public Set<String> hexes = new TreeSet<>();
 		public Set<PortLocation> locations = new TreeSet<>();
 
