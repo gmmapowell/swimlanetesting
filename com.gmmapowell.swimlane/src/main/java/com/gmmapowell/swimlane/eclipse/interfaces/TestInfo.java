@@ -2,6 +2,8 @@ package com.gmmapowell.swimlane.eclipse.interfaces;
 
 import java.util.List;
 
+import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
+
 public interface TestInfo extends Comparable<TestInfo> {
 	public enum Type {
 		META,
@@ -12,7 +14,7 @@ public interface TestInfo extends Comparable<TestInfo> {
 			return this == TEST;
 		}
 	}
-	String groupName();
+	GroupOfTests groupName();
 	String classUnderTest();
 	String testName();
 	Type type();

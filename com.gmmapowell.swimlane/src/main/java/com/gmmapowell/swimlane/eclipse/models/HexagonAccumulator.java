@@ -397,6 +397,6 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 
 	// TDA: this should do much more of the work
 	public void runAllTests(TestRunner tr) {
-		tr.runAll(null, this);
+		tr.runAll(this);
 	}
 }

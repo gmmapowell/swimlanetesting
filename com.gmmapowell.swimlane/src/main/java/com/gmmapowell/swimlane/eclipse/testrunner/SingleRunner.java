@@ -10,12 +10,13 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
+import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
 
 public class SingleRunner {
 	private final List<String> cmdarray = new ArrayList<String>();
 	private TestResultAnalyzer analyzer;
 
-	public SingleRunner(IProgressMonitor monitor, TestResultReporter sink, String group, String classpath, String[] classesUnderTest) throws IOException {
+	public SingleRunner(IProgressMonitor monitor, TestResultReporter sink, GroupOfTests group, String classpath, String[] classesUnderTest) throws IOException {
 		File file = File.createTempFile("textests", "txt");
 		PrintWriter pw = new PrintWriter(file);
 		for (String s : classesUnderTest)
@@ -25,6 +26,7 @@ public class SingleRunner {
 		cmdarray.add("java");
 		cmdarray.add("-XstartOnFirstThread"); // only for Cocoa SWT, but does it really hurt?
 		cmdarray.add("-classpath");
+		System.out.println("classpath = " + classpath);
 		cmdarray.add(classpath);
 		cmdarray.add("org.eclipse.jdt.internal.junit.runner.RemoteTestRunner");
 		cmdarray.add("-version");

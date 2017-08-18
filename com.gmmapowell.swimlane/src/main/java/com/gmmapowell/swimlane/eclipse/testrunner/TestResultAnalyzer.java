@@ -13,6 +13,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo.Type;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
+import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.models.SimpleTree;
 
 public class TestResultAnalyzer {
@@ -31,9 +32,9 @@ public class TestResultAnalyzer {
 	private final Map<Integer, TestCaseInfo> tests = new HashMap<Integer, TestCaseInfo>();
 	private List<String> capture = null;
 	private TestCaseInfo cfail = null;
-	private final String group;
+	private final GroupOfTests group;
 
-	public TestResultAnalyzer(IProgressMonitor monitor, TestResultReporter sink, String group) {
+	public TestResultAnalyzer(IProgressMonitor monitor, TestResultReporter sink, GroupOfTests group) {
 		this.group = group;
 		this.monitor = SubMonitor.convert(monitor);
 		this.sink = sink;

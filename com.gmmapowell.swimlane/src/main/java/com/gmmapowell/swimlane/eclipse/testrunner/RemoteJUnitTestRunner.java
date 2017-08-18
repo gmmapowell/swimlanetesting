@@ -10,9 +10,9 @@ import org.eclipse.core.runtime.jobs.IJobFunction;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
+import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 
 // This is a centralized object for running tests and should do so off the main UI thread
@@ -26,7 +26,7 @@ public class RemoteJUnitTestRunner implements TestRunner {
 	}
 
 	@Override
-	public void runAll(ModelDispatcher dispatcher, Accumulator model) {
+	public void runAll(Accumulator model) {
 		if (model == null) {
 			System.out.println("Cannot run tests without a model");
 			return;
@@ -37,19 +37,18 @@ public class RemoteJUnitTestRunner implements TestRunner {
 			public IStatus run(IProgressMonitor monitor) {
 				IStatus ret = Status.OK_STATUS;
 				for (TestGroup g : model.getAllTestGroups()) {
-					ret = runClass(monitor, (TestResultReporter) model, g.groupName(), g.getClassPath(), g.getClasses());
+					ret = runClass(monitor, (TestResultReporter) model, g, g.getClassPath(), g.getClasses());
 					if (!ret.isOK())
 						break;
 				}
 				model.testsCompleted(new Date());
-				dispatcher.setModel(model);
 				return ret;
 			}
 			
 		});
 	}
 
-	public IStatus runClass(IProgressMonitor monitor, TestResultReporter sink, String group, String classpath, String... classesUnderTest) {
+	public IStatus runClass(IProgressMonitor monitor, TestResultReporter sink, GroupOfTests group, String classpath, String... classesUnderTest) {
 		System.out.println(new Date() + " Group " + group + " is running tests " + Arrays.asList(classesUnderTest) + " in classpath " + classpath);
 		SingleRunner runner = null;
 		try {

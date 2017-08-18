@@ -19,6 +19,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
+import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
 import com.gmmapowell.swimlane.eclipse.models.SimpleTree;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
@@ -31,7 +32,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 	Accumulator acc = new HexagonAccumulator(md);
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestResultReporter trr = (TestResultReporter) acc;
-	TestGroup grp = new TestGroup("Project", null);
+	GroupOfTests grp = context.mock(GroupOfTests.class);
 
 	@Test
 	public void whenTheTreeArrivesWeAreNotifiedOfTheNumberOfTests() {
@@ -63,7 +64,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
-			allowing(test).groupName(); will(returnValue("Project"));
+			allowing(test).groupName(); will(returnValue(grp));
 			exactly(2).of(bl).barChanged(bar);
 		}});
 		issueTree();
@@ -110,7 +111,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(Integer.class.getName()));
-			allowing(test).groupName(); will(returnValue("Project"));
+			allowing(test).groupName(); will(returnValue(grp));
 			oneOf(bl).barChanged(bar);
 		}});
 		trr.testSuccess(test);
@@ -132,7 +133,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		md.addBarListener(bar, bl);
 		context.checking(new Expectations() {{
 			allowing(test).classUnderTest(); will(returnValue(String.class.getName()));
-			allowing(test).groupName(); will(returnValue("Project"));
+			allowing(test).groupName(); will(returnValue(grp));
 			exactly(2).of(bl).barChanged(bar);
 		}});
 		issueTree();
@@ -226,21 +227,21 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 	}
 
 	protected void issueTree() {
-		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, "Project", "", "Top"));
+		Tree<TestInfo> top = new SimpleTree<TestInfo>(new TestCaseInfo(TestCaseInfo.Type.META, grp, "", "Top"));
 		{
-			TestCaseInfo t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", String.class.getName(), "test1");
+			TestCaseInfo t1 = new TestCaseInfo(TestCaseInfo.Type.TEST, grp, String.class.getName(), "test1");
 			top.add(new SimpleTree<TestInfo>(t1));
 		}
 		{
-			TestCaseInfo t2 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", String.class.getName(), "test2");
+			TestCaseInfo t2 = new TestCaseInfo(TestCaseInfo.Type.TEST, grp, String.class.getName(), "test2");
 			top.add(new SimpleTree<TestInfo>(t2));
 		}
 		{
-			TestCaseInfo t3 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", String.class.getName(), "test3");
+			TestCaseInfo t3 = new TestCaseInfo(TestCaseInfo.Type.TEST, grp, String.class.getName(), "test3");
 			top.add(new SimpleTree<TestInfo>(t3));
 		}
 		{
-			TestCaseInfo t4 = new TestCaseInfo(TestCaseInfo.Type.TEST, "Project", String.class.getName(), "test4");
+			TestCaseInfo t4 = new TestCaseInfo(TestCaseInfo.Type.TEST, grp, String.class.getName(), "test4");
 			top.add(new SimpleTree<TestInfo>(t4));
 		}
 		trr.tree(top);
