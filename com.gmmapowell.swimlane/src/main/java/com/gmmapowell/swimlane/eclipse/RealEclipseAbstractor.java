@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.jobs.IJobFunction;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -32,10 +33,10 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.osgi.framework.Bundle;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
+import com.gmmapowell.swimlane.eclipse.interfaces.RunningJob;
 import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
 
 public class RealEclipseAbstractor implements EclipseAbstractor {
-
 	@Override
 	public Date currentDate() {
 		return new Date();
@@ -87,10 +88,12 @@ public class RealEclipseAbstractor implements EclipseAbstractor {
 	}
 
 	@Override
-	public void backgroundWithProgress(IJobFunction jf) {
+	public RunningJob backgroundWithProgressLocked(ISchedulingRule rule, IJobFunction jf) {
 		Job job = Job.create("Running Tests ...", jf);
+		job.setRule(rule);
 		job.setUser(true);
 		job.schedule();
+		return new BackgroundJob(job);
 	}
 
 	@Override

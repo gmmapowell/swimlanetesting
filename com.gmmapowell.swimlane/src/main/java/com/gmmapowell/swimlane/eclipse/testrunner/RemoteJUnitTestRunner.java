@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobFunction;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
@@ -20,6 +21,20 @@ import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 // We thus probably need some sort of coordination signal such as "the backlog is done"
 public class RemoteJUnitTestRunner implements TestRunner {
 	private final EclipseAbstractor eclipse;
+	private class TestRunnerRule implements ISchedulingRule {
+		@Override
+		public boolean contains(ISchedulingRule rule) {
+			return this == rule;
+		}
+
+		@Override
+		public boolean isConflicting(ISchedulingRule rule) {
+			return this == rule;
+		}
+	}
+	
+	private TestRunnerRule singleThreadedTestRunner = new TestRunnerRule();
+	
 
 	public RemoteJUnitTestRunner(EclipseAbstractor eclipse) {
 		this.eclipse = eclipse;
@@ -31,7 +46,7 @@ public class RemoteJUnitTestRunner implements TestRunner {
 			System.out.println("Cannot run tests without a model");
 			return;
 		}
-		eclipse.backgroundWithProgress(new IJobFunction() {
+		eclipse.backgroundWithProgressLocked(singleThreadedTestRunner, new IJobFunction() {
 			
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
