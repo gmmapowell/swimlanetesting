@@ -158,8 +158,23 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		// Now invert that to get a map of ports to locations, noting any clashes
 		Map<String, HexLoc> portsAreAt = new HashMap<>();
 		for (Entry<HexLoc, Set<String>> e : locations.entrySet()) {
-			if (e.getValue().size() > 1)
-				error("multiple things somewhere"); // work through this with tests
+			if (e.getValue().size() > 1) {
+				StringBuilder sb = new StringBuilder("ports");
+				String sep = " ";
+				int sz = e.getValue().size();
+				Iterator<String> it = e.getValue().iterator();
+				for (int i=0;i<sz;i++) {
+					sb.append(sep);
+					sb.append(it.next());
+					if (i == sz-2)
+						sep = " and ";
+					else
+						sep = ", ";
+				}
+				sb.append(" cannot all be in ");
+				sb.append(e.getKey().loc);
+				error(sb.toString());
+			}
 			String first = e.getValue().iterator().next();
 			if (portsAreAt.containsKey(first))
 				error("that's two places that both want " + first); // work through this with tests
@@ -720,6 +735,16 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 				return false;
 			HexLoc other = (HexLoc) obj;
 			return this.hex.equals(other.hex) && this.loc.equals(other.loc);
+		}
+		
+		@Override
+		public int hashCode() {
+			return hex.hashCode() ^ loc.hashCode();
+		}
+		
+		@Override
+		public String toString() {
+			return "HexLoc[" + hex +":"+loc+"]";
 		}
 	}
 }
