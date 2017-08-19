@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.jmock.Expectations;
+import org.jmock.Sequence;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,6 +15,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorMessageListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
+import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 import com.gmmapowell.swimlane.eclipse.models.HexInfo;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
@@ -28,7 +30,7 @@ import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 public class AdapterAccumulationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	AnalysisAccumulator acc = new HexagonAccumulator();
-	ViewLayout layout = context.mock(ViewLayout.class);
+	Solution solution = context.mock(Solution.class);
 	ErrorMessageListener errors = context.mock(ErrorMessageListener.class);
 	Date bcd = new Date();
 	TestGroup grp = new TestGroup("Project", null);
@@ -42,6 +44,10 @@ public class AdapterAccumulationTests {
 	Class<?> adapterClass1 = Exception.class;
 	Class<?> adapterClass2 = RuntimeException.class;
 	Class<?> adapterClass3 = IOException.class;
+	HexInfoMatcher hmd = HexInfoMatcher.called(null);
+	HexInfoMatcher hm1 = HexInfoMatcher.called(hexClass1);
+	HexInfoMatcher hm2 = HexInfoMatcher.called(hexClass2);
+	Sequence seq = context.sequence("solution");
 
 	// These tests would be more compelling with a HexInfoMatcher
 	@Before
@@ -49,7 +55,7 @@ public class AdapterAccumulationTests {
 		context.checking(new Expectations() {{
 			oneOf(errors).clear();
 		}});
-		((DataCentral)acc).setViewLayout(layout);
+		((DataCentral)acc).setSolution(solution);
 		((DataCentral)acc).addErrorMessageListener(errors);
 	}
 	
@@ -63,20 +69,27 @@ public class AdapterAccumulationTests {
 	@Test
 	public void ifWeAccumulateOneAdapterTestTheModelMustHaveTheHexagonForIt() {
 		context.checking(new Expectations() {{
-			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
-			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1)));
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
+			oneOf(solution).port(with(hm1), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1))); inSequence(seq);
+			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
 		}});
 		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
 		acc.analysisComplete(bcd);
 	}
-
 	@Test
 	public void weCanSupportDefaultHexagonsWithAnAdapterTest() {
 		context.checking(new Expectations() {{
-			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
-			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1)));
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hmd)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hmd)); inSequence(seq);
+			oneOf(solution).port(with(hmd), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1))); inSequence(seq);
+			oneOf(solution).portsDone(with(hmd)); inSequence(seq);
 		}});
 		acc.startAnalysis(bcd);
 		acc.clean(grp);
@@ -87,8 +100,12 @@ public class AdapterAccumulationTests {
 	@Test
 	public void weCanAccumulateAnAdapterTestWithoutSpecifyingHexagonOrPortAsLongAsWeAlreadyKnowThePortForTheAdapter() {
 		context.checking(new Expectations() {{
-			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
-			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1)));
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
+			oneOf(solution).port(with(hm1), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1))); inSequence(seq);
+			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
 		}});
 		acc.startAnalysis(bcd);
 		acc.clean(grp);
@@ -100,7 +117,11 @@ public class AdapterAccumulationTests {
 	@Test
 	public void itIsAnErrorToNeverLinkAnAdapterToAPort() {
 		context.checking(new Expectations() {{
-			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hmd)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hmd)); inSequence(seq);
+			oneOf(solution).portsDone(with(hmd)); inSequence(seq);
 			oneOf(errors).error("did not bind adapter " + adapterClass1.getName() + " to a port");
 		}});
 		acc.startAnalysis(bcd);
@@ -112,10 +133,16 @@ public class AdapterAccumulationTests {
 	@Test
 	public void itIsAnErrorToHaveMultipleHexagonsAndADefault() {
 		context.checking(new Expectations() {{
-			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
-			oneOf(layout).addHexagon(with(1), with(aNonNull(HexInfo.class)));
-			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1)));
-			oneOf(layout).addHexagonPort(with(1), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass2)));
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).hex(with(hm2)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
+			oneOf(solution).port(with(hm1), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1))); inSequence(seq);
+			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
+			oneOf(solution).port(with(hm2), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass2))); inSequence(seq);
+			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
 			oneOf(errors).error("port " + portClass3.getName() + " was not bound to a hexagon");
 		}});
 		acc.startAnalysis(bcd);
@@ -129,8 +156,12 @@ public class AdapterAccumulationTests {
 	@Test
 	public void weCanAccumulateTwoAdapterTestsForTheSameAdapter() {
 		context.checking(new Expectations() {{
-			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
-			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1)));
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
+			oneOf(solution).port(with(hm1), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass1))); inSequence(seq);
+			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
 		}});
 		acc.startAnalysis(bcd);
 		acc.clean(grp);
@@ -142,8 +173,12 @@ public class AdapterAccumulationTests {
 	@Test
 	public void weCanSpecifyTheAdapterPortLocation() {
 		context.checking(new Expectations() {{
-			oneOf(layout).addHexagon(with(0), with(aNonNull(HexInfo.class)));
-			oneOf(layout).addHexagonPort(with(0), with(PortInfoMatcher.port(PortLocation.SOUTHEAST, portClass1)));
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
+			oneOf(solution).port(with(hm1), with(PortInfoMatcher.port(PortLocation.SOUTHEAST, portClass1))); inSequence(seq);
+			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
 		}});
 		acc.startAnalysis(bcd);
 		acc.clean(grp);
@@ -151,23 +186,25 @@ public class AdapterAccumulationTests {
 		acc.analysisComplete(bcd);
 	}
 
-	/*
 	@Test
 	public void testWeCannotSpecifyConflictingPortHexLocations() {
-		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
-		acc.portLocation(adapterClass1, PortLocation.SOUTHEAST);
-		acc.adapter(grp, testCase2, hexClass1, portClass1, adapterClass2);
-		acc.portLocation(adapterClass2, PortLocation.SOUTHWEST);
-		acc.analysisComplete();
-		assertEquals(1, hdm.getErrors().size());
-		assertTrue(hdm.getErrors().contains("Cannot specify multiple locations for port " + portClass1.getName()));
-		assertEquals(1, hdm.getHexCount());
-		HexData hd = hdm.getHexagons().get(0);
-		assertEquals(1, hd.getPorts().size());
-		PortData pd = hd.getPorts().get(0);
-		assertTrue(PortLocation.SOUTHEAST.equals(pd.getLocation()) || PortLocation.SOUTHWEST.equals(pd.getLocation()));
+		context.checking(new Expectations() {{
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
+			oneOf(solution).port(with(hm1), with(PortInfoMatcher.port(PortLocation.SOUTHWEST, portClass1))); inSequence(seq);
+			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
+			oneOf(errors).error("port " + portClass1.getName() + " cannot be in sw and se");
+		}});
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1));
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHWEST, adapterClass2));
+		acc.analysisComplete(bcd);
 	}
 
+	/*
 	@Test
 	public void testWeCannotSpecifyConflictingAdapterHexLocations() {
 		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);

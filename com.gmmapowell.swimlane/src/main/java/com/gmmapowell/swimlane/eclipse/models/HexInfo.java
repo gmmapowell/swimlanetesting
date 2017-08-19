@@ -8,9 +8,17 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 
 public class HexInfo implements HexData {
+	private final String name;
 	private final List<PortData> ports = new ArrayList<PortData>();
 	private LogicInfo bar;
 	
+	public HexInfo(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
+	}
 	@Override
 	public BarData getBar() {
 		return bar;

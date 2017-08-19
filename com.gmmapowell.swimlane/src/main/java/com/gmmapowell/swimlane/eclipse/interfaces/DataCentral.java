@@ -9,7 +9,7 @@ public interface DataCentral {
 
 	void addBuildDateListener(DateListener lsnr);
 	void addErrorMessageListener(ErrorMessageListener eml);
-	void setViewLayout(ViewLayout layout);
+	void setSolution(Solution solution);
 
 	void allGroups(GroupHandler hdlr);
 }
