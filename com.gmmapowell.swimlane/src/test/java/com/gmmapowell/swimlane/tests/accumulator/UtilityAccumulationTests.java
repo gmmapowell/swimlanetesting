@@ -1,45 +1,64 @@
 package com.gmmapowell.swimlane.tests.accumulator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import java.util.Date;
+
+import org.jmock.Expectations;
+import org.jmock.Sequence;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.analyzer.UtilityRole;
+import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorMessageListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
-import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 
 public class UtilityAccumulationTests {
-	ModelDispatcher md = new SolidModelDispatcher(null, null);
-	Accumulator acc = new HexagonAccumulator();
-	HexagonDataModel hdm = (HexagonDataModel)acc;
+	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
+	AnalysisAccumulator acc = new HexagonAccumulator();
+	Solution solution = context.mock(Solution.class);
+	ErrorMessageListener errors = context.mock(ErrorMessageListener.class);
+	Date bcd = new Date();
 	TestGroup grp = new TestGroup("Project", null);
-	Class<?> testCase1 = String.class;
-	Class<?> testCase2 = Character.class;
+	Sequence seq = context.sequence("solution");
+
+	@Before
+	public void setup() {
+		context.checking(new Expectations() {{
+			oneOf(errors).clear();
+		}});
+		((DataCentral)acc).setSolution(solution);
+		((DataCentral)acc).addErrorMessageListener(errors);
+	}
 	
 	@Test
-	public void testNoUtilityTestsMeansNoUtilityBar() {
-		acc.analysisComplete();
-		assertNull(hdm.getUtilityBar());
-	}
-
-	@Test
 	public void testThatWeCanStoreAndRecoverATest() {
-		acc.utility(grp, testCase1);
-		acc.analysisComplete();
-		assertNotNull(hdm.getUtilityBar());
-		assertEquals(1, hdm.getUtilityBar().classesUnderTest().size());
+		context.checking(new Expectations() {{
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).needsUtilityBar(); inSequence(seq);
+		}});
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new UtilityRole());
+		acc.analysisComplete(bcd);
 	}
 
 	@Test
 	public void testThatWeCanStoreAndRecoverMultipleTest() {
-		acc.utility(grp, testCase1);
-		acc.utility(grp, testCase2);
-		acc.analysisComplete();
-		assertNotNull(hdm.getUtilityBar());
-		assertEquals(2, hdm.getUtilityBar().classesUnderTest().size());
+		context.checking(new Expectations() {{
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).needsUtilityBar(); inSequence(seq);
+		}});
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new UtilityRole());
+		acc.haveTestClass(grp, "TestCase1", new UtilityRole());
+		acc.analysisComplete(bcd);
 	}
 }

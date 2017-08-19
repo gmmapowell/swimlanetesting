@@ -8,4 +8,6 @@ public interface Solution {
 	void beginPorts(HexData hi);
 	void port(HexData hi, PortData port);
 	void portsDone(HexData hi);
+
+	void needsUtilityBar();
 }

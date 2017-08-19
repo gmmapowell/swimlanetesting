@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.gmmapowell.swimlane.eclipse.analyzer.UtilityRole;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
@@ -54,6 +55,7 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	private Solution solution;
 	private List<String> hexOrdering = new ArrayList<>();
 	private Map<String, HexInfo> hexes = new TreeMap<>();
+	private boolean wantUte;
 
 	@Override
 	public void startAnalysis(Date startTime) {
@@ -75,6 +77,8 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 			collectAcceptanceInfo(c, (AcceptanceRole)role);
 		else if (role instanceof AdapterRole)
 			collectAdapterInfo(c, (AdapterRole)role);
+		else if (role instanceof UtilityRole)
+			collectUtilityInfo(c, (UtilityRole)role);
 		else
 			error("cannot handle " + role.getClass());
 	}
@@ -102,11 +106,18 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		}
 	}
 
+	private void collectUtilityInfo(AllConstraints c, UtilityRole role) {
+		c.hasUtility = true;
+	}
+
 	@Override
 	public void analysisComplete(Date completeTime) {
+		// I think this should probably collect its info in a one-time-use structure
+		// rather than fields ...
 		scanForHexes();
 		fleshOutPorts();
 		fleshOutAdapters();
+		figureUtilityBar();
 		announceResults(completeTime);
 	}
 
@@ -293,6 +304,13 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		}
 	}
 
+	private void figureUtilityBar() {
+		wantUte = false;
+		for (AllConstraints ac : constraints.values()) {
+			wantUte |= ac.hasUtility;
+		}
+	}
+
 	private void announceResults(Date completeTime) {
 		if (solution != null) {
 			solution.beginHexes();
@@ -307,6 +325,9 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 					solution.port(hi, p);
 				solution.portsDone(hi);
 			}
+			
+			if (wantUte)
+				solution.needsUtilityBar();
 		}
 
 		this.buildTime = completeTime;
@@ -724,6 +745,8 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		Map<String, AdapterConstraints> adapters = new TreeMap<>();
 		// port class name -> constraints
 		Map<String, PortConstraints> ports = new TreeMap<>();
+		// does it have any utility tests?
+		public boolean hasUtility;
 	}
 
 	public class AcceptanceConstraints {
