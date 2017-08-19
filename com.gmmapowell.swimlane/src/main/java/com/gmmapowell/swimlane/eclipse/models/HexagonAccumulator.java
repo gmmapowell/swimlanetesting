@@ -37,7 +37,6 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	private Date testsCompleteTime;
 	private final Map<String, Acceptance> compileAcceptances = new TreeMap<String, Acceptance>();
 	private List<BarData> acceptances = new ArrayList<>();
-	private final TotalOrder hexorder = new TotalOrder();
 	private List<String> order;
 	private final Map<String, HexInfo> hexesFor = new HashMap<String, HexInfo>();
 	private final List<HexData> hexagons = new ArrayList<>();
@@ -80,7 +79,9 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	}
 
 	private void collectAcceptanceInfo(AllConstraints c, AcceptanceRole role) {
-		c.acceptances.add(new AcceptanceConstraints(role.getHexes()));
+		if (c.acceptances == null)
+			c.acceptances = new AcceptanceConstraints();
+		c.acceptances.acase(role.getHexes());
 		/*
 		String adapter = role.getAdapter();		
 		if (!c.adapters.containsKey(adapter))
@@ -132,11 +133,48 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		// List because order *is* important
 		boolean needSomething = false;
 		List<String> hexes = new ArrayList<String>();
+		
+		// TODO: I think I'm looping wrongly about this; I think
+		// the bestordering should be called after we've looped over all
+		// the acceptance tests, so:
+		//   loop on constraints, collect bestorder
+		//   figure the best ordering & update hexes
+		//   then loop to do adapters
 		for (AllConstraints ac : constraints.values()) {
-			for (AcceptanceConstraints e : ac.acceptances) {
-				if (e.hexes.isEmpty())
-					needSomething = true;
-			}
+			Set<String> errors = new TreeSet<>();
+			ac.acceptances.hexorder.ensureTotalOrdering(errors);
+			for (String s : errors)
+				error(s);
+			ac.acceptances.hexorder.dump();
+//			if (defaultLogic != null)
+//				this.hexorder.haveDefault();
+//			else if (!adapterPort.isEmpty() && portHex.isEmpty())
+//				this.hexorder.haveDefault();
+//			this.hexorder.ensureTotalOrdering(errors);
+			TreeMap<String, Acceptance> tmp = new TreeMap<String, Acceptance>();
+			List<String> order = ac.acceptances.hexorder.bestOrdering(errors);
+			System.out.println("ordering has " + order + " " + order.size());
+			hexes.addAll(order);
+//			for (Acceptance a : compileAcceptances.values()) {
+//				a.setMarks(order);
+//				// Handle an error case where because of inconsistent hex definitions, we have two
+//				// different acceptance tests that think they represent the same pattern (i.e. we can't distinguish two 1s in the name in different orders)
+//				// Merge these into a single test
+//				Acceptance prev = tmp.get(a.getId());
+//				if (prev != null) {
+//					prev.merge(a);
+//				} else {
+//					// This is the normal non-error case
+//					tmp.put(a.getId(), a);
+//				}
+//			}
+//			// Because we want to sort 111, 110, 101, 100, 011 ... reverse the default sorted list by adding each item on the front
+//			for (Acceptance a : tmp.values()) {
+//				acceptances.add(0, a);
+//				for (String c : a.classesUnderTest())
+//					barsFor.put(c, a);
+//			}
+
 			for (Entry<String, AdapterConstraints> e : ac.adapters.entrySet()) {
 				AdapterConstraints c = e.getValue();
 				if (c.hexes.isEmpty())
@@ -697,7 +735,7 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 
 	public class AllConstraints {
 		// acceptance tests
-		List<AcceptanceConstraints> acceptances = new ArrayList<>();
+		AcceptanceConstraints acceptances = null;
 		// adapter class name -> constraints
 		Map<String, AdapterConstraints> adapters = new TreeMap<>();
 		// port class name -> constraints
@@ -705,10 +743,16 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	}
 
 	public class AcceptanceConstraints {
-		private final List<String> hexes;
+		private final TotalOrder hexorder = new TotalOrder();
 
-		public AcceptanceConstraints(List<String> hexes) {
-			this.hexes = hexes;
+		public AcceptanceConstraints() {
+		}
+
+		public void acase(List<String> hexes) {
+			if (hexes.isEmpty())
+				hexorder.haveDefault();
+			else
+				hexorder.addAll(hexes);
 		}
 
 	}

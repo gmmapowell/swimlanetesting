@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.tests.accumulator;
 
 import java.util.Date;
+import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.Sequence;
@@ -30,7 +31,11 @@ public class AcceptanceAccumulationTests {
 	Sequence seq = context.sequence("solution");
 	TestGroup grp = new TestGroup("Project", null);
 	Date bcd = new Date();
+	Class<?> hexClass1 = Integer.class;
+	Class<?> hexClass2 = List.class;
 	HexInfoMatcher hmd = HexInfoMatcher.called(null);
+	HexInfoMatcher hm1 = HexInfoMatcher.called(hexClass1);
+	HexInfoMatcher hm2 = HexInfoMatcher.called(hexClass2);
 
 	@Before
 	public void setup() {
@@ -67,37 +72,45 @@ public class AcceptanceAccumulationTests {
 		acc.analysisComplete(bcd);
 	}
 	
-	/*
 	@Test
 	public void testOneAcceptanceWithTwoHexesGivesTwoHexesAndNoErrors() {
-		acc.acceptance(grp, String.class, Arrays.asList(Integer.class, String.class));
-		acc.analysisComplete();
-		assertEquals(2, hdm.getHexCount());
-		assertEquals(0, hdm.getErrors().size());
-		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
-		assertEquals(1, acceptanceTests.size());
-		assertEquals("acceptance.11", acceptanceTests.get(0).getId());
+		context.checking(new Expectations() {{
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).hex(with(hm2)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
+			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
+			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
+		}});
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
+		acc.analysisComplete(bcd);
 	}
 	
 	@Test
 	public void testTwoAcceptancesWithTwoHexesGivesTwoHexesButComplainsAboutNoTotalOrdering() {
-		acc.acceptance(grp, Integer.class, Arrays.asList(Integer.class));
-		acc.acceptance(grp, String.class, Arrays.asList(String.class));
-		acc.analysisComplete();
-		assertEquals(2, hdm.getHexCount());
-		assertEquals(2, hdm.getErrors().size());
-		Object[] errs = hdm.getErrors().toArray();
-		assertEquals("there is a cycle between java.lang.Integer and java.lang.String", errs[0]);
-		assertEquals("there is no ordering between java.lang.Integer and java.lang.String", errs[1]);
-		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
-		assertEquals(2, acceptanceTests.size());
-		assertEquals("acceptance.10", acceptanceTests.get(0).getId());
-		assertEquals("acceptance.01", acceptanceTests.get(1).getId());
-		assertEquals(2, grp.getClasses().length);
-		assertEquals(Integer.class.getName(), grp.getClasses()[0]);
-		assertEquals(String.class.getName(), grp.getClasses()[1]);
+		context.checking(new Expectations() {{
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).hex(with(hm2)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
+			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
+			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
+			oneOf(errors).error("ordering between java.lang.Integer and java.util.List is inconsistent");
+		}});
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
+		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass1));
+		acc.analysisComplete(bcd);
 	}
 	
+	/*
 	@Test
 	public void testTwoAcceptancesEachWithTwoHexesInDifferentOrdersGivesTwoHexesButComplainsAboutInconsistentOrdering() {
 		acc.acceptance(grp, String.class, Arrays.asList(Integer.class, String.class));

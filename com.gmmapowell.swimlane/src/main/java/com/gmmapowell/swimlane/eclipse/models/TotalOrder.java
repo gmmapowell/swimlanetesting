@@ -53,17 +53,15 @@ public class TotalOrder {
 		}
 	}
 
-	public void addAll(List<Class<?>> hexes) {
-		List<String> names = new ArrayList<String>();
-		for (Class<?> cls : hexes) {
-			names.add(cls.getName());
-			add(cls.getName());
+	public void addAll(List<String> hexes) {
+		for (String cls : hexes) {
+			add(cls);
 		}
-		for (int i=0;i<names.size();i++) {
-			String ni = names.get(i);
+		for (int i=0;i<hexes.size();i++) {
+			String ni = hexes.get(i);
 			Map<String, Order> ti = ordering.get(ni);
-			for (int j=0;j<names.size();j++) {
-				String nj = names.get(j);
+			for (int j=0;j<hexes.size();j++) {
+				String nj = hexes.get(j);
 				Map<String, Order> tj = ordering.get(nj);
 				Order val = Order.SAME;
 				Order tij = ti.get(nj);
@@ -169,7 +167,7 @@ public class TotalOrder {
 			ret.add(best);
 		}
 		if (ret.isEmpty() && haveDefault)
-			ret.add("-default-");
+			ret.add("");
 		return ret;
 	}
 
