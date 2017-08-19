@@ -6,24 +6,22 @@ import java.util.List;
 import org.jmock.Expectations;
 import org.jmock.Sequence;
 import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.analyzer.BusinessRole;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
-import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
-import com.gmmapowell.swimlane.eclipse.interfaces.ErrorMessageListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
-import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
+import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
 
 public class BusinessLogicAccumulationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
-	AnalysisAccumulator acc = new HexagonAccumulator();
 	Solution solution = context.mock(Solution.class);
-	ErrorMessageListener errors = context.mock(ErrorMessageListener.class);
+	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
+	AnalysisAccumulator acc = new SolutionCreator(errors, solution);
 	Date bcd = new Date();
 	TestGroup grp = new TestGroup("Project", null);
 	Class<?> hexClass1 = Integer.class;
@@ -32,15 +30,6 @@ public class BusinessLogicAccumulationTests {
 	HexInfoMatcher hm1 = HexInfoMatcher.called(hexClass1);
 	HexInfoMatcher hm2 = HexInfoMatcher.called(hexClass2);
 	Sequence seq = context.sequence("solution");
-
-	@Before
-	public void setup() {
-		context.checking(new Expectations() {{
-			oneOf(errors).clear();
-		}});
-		((DataCentral)acc).setSolution(solution);
-		((DataCentral)acc).addErrorMessageListener(errors);
-	}
 
 	@Test
 	public void testThatIfWeAccumulateOneLogicTestTheModelMustHaveTheHexagonForIt() {

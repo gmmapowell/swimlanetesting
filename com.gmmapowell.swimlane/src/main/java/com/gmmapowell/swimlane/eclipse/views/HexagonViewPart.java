@@ -15,7 +15,7 @@ import org.eclipse.ui.part.ViewPart;
 import com.gmmapowell.swimlane.eclipse.RealEclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.CommandDispatcher;
-import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
+import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 import com.gmmapowell.swimlane.eclipse.project.BuildListener;
 import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
 
@@ -40,7 +40,7 @@ public class HexagonViewPart extends ViewPart implements CommandDispatcher {
 	private HexView hexView;
 	private ErrorView errorView;
 	private TestResultsView testResults;
-	private HexagonAccumulator accumulator;
+	private SolutionCreator accumulator;
 
 	public void createPartControl(Composite parent) {
 		RealEclipseAbstractor eclipse = new RealEclipseAbstractor();
@@ -55,7 +55,7 @@ public class HexagonViewPart extends ViewPart implements CommandDispatcher {
 		errorView = new ErrorView(stackUI);
 		testResults = new TestResultsView(stackUI);
 		stack.topControl = hexView.getTop();
-		accumulator = new HexagonAccumulator();
+		accumulator = new SolutionCreator();
 		try {
 			HexagonTestAnalyzer hta = new HexagonTestAnalyzer(accumulator, accumulator);
 			bl = new BuildListener(eclipse, hta);

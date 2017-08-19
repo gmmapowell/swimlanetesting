@@ -8,8 +8,6 @@ public interface DataCentral {
 	}
 
 	void addBuildDateListener(DateListener lsnr);
-	void addErrorMessageListener(ErrorMessageListener eml);
-	void setSolution(Solution solution);
 
 	void allGroups(GroupHandler hdlr);
 }

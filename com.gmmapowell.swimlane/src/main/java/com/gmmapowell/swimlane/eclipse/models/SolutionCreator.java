@@ -20,7 +20,6 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
-import com.gmmapowell.swimlane.eclipse.interfaces.ErrorMessageListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
@@ -33,11 +32,13 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
 import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 
-public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator, DataCentral, TestResultReporter {
+// should only be the AnalysisAccumulator ...
+public class SolutionCreator implements AnalysisAccumulator, DataCentral, TestResultReporter {
+	private final ErrorAccumulator eh;
+	private final Solution solution;
 
 	private Date buildTime;
 	private Date testsCompleteTime;
-	private Set<String> errors = new TreeSet<>();
 
 	private Map<GroupOfTests, AllConstraints> constraints = new HashMap<GroupOfTests, AllConstraints>();
 
@@ -52,12 +53,15 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	private LogicInfo defaultLogic;
 	private Map<GroupOfTests, Object> groups = new TreeMap<>();
 	private Set<DateListener> buildDateListeners = new HashSet<>();
-	private Set<ErrorMessageListener> errorListeners = new HashSet<>();
-	private Solution solution;
 	private List<String> hexOrdering = new ArrayList<>();
 	private Map<String, HexInfo> hexes = new TreeMap<>();
 	private boolean wantUte;
 
+	public SolutionCreator(ErrorAccumulator eh, Solution sol) {
+		this.eh = eh;
+		solution = sol;
+		
+	}
 	@Override
 	public void startAnalysis(Date startTime) {
 //		if (/* already running an analysis */)
@@ -83,7 +87,7 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		else if (role instanceof BusinessRole)
 			collectBusinessLogicInfo(c, clzName, (BusinessRole)role);
 		else
-			error("cannot handle " + role.getClass());
+			eh.error("cannot handle " + role.getClass());
 	}
 
 	private void collectAcceptanceInfo(AllConstraints c, AcceptanceRole role) {
@@ -195,15 +199,15 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		Set<String> errs = new TreeSet<>();
 		hexorder.ensureTotalOrdering(errs);
 		for (String s : errs)
-			error(s);
+			eh.error(s);
 		Set<String> errs2 = new TreeSet<>();
 		List<String> order = hexorder.bestOrdering(errs2);
 		if (errs.isEmpty())
 			for (String s : errs2)
-				error(s);
+				eh.error(s);
 		if (!defaultLogic.isEmpty() && order.size() > 1) {
 			for (String c : defaultLogic)
-				error("cannot use @BusinessLogic with default hexagon in " + c + " since there are multiple hexagons");
+				eh.error("cannot use @BusinessLogic with default hexagon in " + c + " since there are multiple hexagons");
 		}
 		for (String s : order) {
 			addHex(s);
@@ -223,7 +227,7 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 				PortConstraints c = e.getValue();
 				String hex = c.getHexName();
 				if (hex == null) {
-					error("port " + e.getKey() + " was not bound to a hexagon");
+					eh.error("port " + e.getKey() + " was not bound to a hexagon");
 					continue;
 				}
 				PortLocation loc = c.getLocation();
@@ -256,11 +260,11 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 				}
 				sb.append(" cannot all be in ");
 				sb.append(e.getKey().loc);
-				error(sb.toString());
+				eh.error(sb.toString());
 			}
 			String first = e.getValue().iterator().next();
 			if (portsAreAt.containsKey(first))
-				error("that's two places that both want " + first); // work through this with tests
+				eh.error("that's two places that both want " + first); // work through this with tests
 			else
 				portsAreAt.put(first, e.getKey());
 		}
@@ -281,7 +285,7 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 						if (j == sz-2)
 							sb.append(" and");
 					}
-					error(sb.toString());
+					eh.error(sb.toString());
 				}
 				if (hl == null) {
 					hn = c.getHexName();
@@ -289,7 +293,7 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 						continue;
 					List<PortLocation> options = available.get(hn);
 					if (options.isEmpty()) {
-						error("no free locations to put port " + e.getKey() + " on hex " + hn);
+						eh.error("no free locations to put port " + e.getKey() + " on hex " + hn);
 						continue;
 					}
 					hl = new HexLoc(hn, options.remove(0));
@@ -318,11 +322,11 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 						StringBuilder sb = new StringBuilder("duh");
 						while (it.hasNext())
 							sb.append(it.next());
-						error(sb.toString());
+						eh.error(sb.toString());
 					}
 				}
 				if (c.ports.isEmpty())
-					error("did not bind adapter " + e.getKey() + " to a port");
+					eh.error("did not bind adapter " + e.getKey() + " to a port");
 			}
 		}
 	}
@@ -378,21 +382,6 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 			lsnr.dateChanged(buildTime);
 	}
 	
-	@Override
-	public void addErrorMessageListener(ErrorMessageListener eml) {
-		eml.clear();
-		errorListeners.add(eml);
-		if (eml != null) {
-			for (String s : errors)
-				eml.error(s);
-		}
-	}
-
-	@Override
-	public void setSolution(Solution solution) {
-		this.solution = solution;
-	}
-
 	/* TDA
 	@Override
 	public Date getBuildTime() {
@@ -639,23 +628,6 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	@Override
 	public BarData getUtilityBar() {
 		return uteBar;
-	}
-	*/
-
-	/* These errors relate to static analysis errors, such as hexagons in the wrong order.
-	 * These methods are here because we override the (mocked) interface Accumulator and its tests demand that errors be reported
-	 */
-	@Override
-	public void error(String msg) {
-		errors.add(msg);
-		for (ErrorMessageListener eml : errorListeners)
-			eml.error(msg);
-	}
-
-	/* TDA
-	@Override
-	public Set<String> getErrors() {
-		return errors;
 	}
 	*/
 

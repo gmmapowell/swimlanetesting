@@ -8,15 +8,13 @@ import java.util.Set;
 import org.jmock.Expectations;
 import org.jmock.Sequence;
 import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
-import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
-import com.gmmapowell.swimlane.eclipse.interfaces.ErrorMessageListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
-import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
+import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
 
@@ -27,9 +25,9 @@ import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
  */
 public class AcceptanceAccumulationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
-	AnalysisAccumulator acc = new HexagonAccumulator();
 	Solution solution = context.mock(Solution.class);
-	ErrorMessageListener errors = context.mock(ErrorMessageListener.class);
+	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
+	AnalysisAccumulator acc = new SolutionCreator(errors, solution);
 	Sequence seq = context.sequence("solution");
 	TestGroup grp = new TestGroup("Project", null);
 	Date bcd = new Date();
@@ -42,15 +40,6 @@ public class AcceptanceAccumulationTests {
 	HexInfoMatcher hm2 = HexInfoMatcher.called(hexClass2);
 	HexInfoMatcher hm3 = HexInfoMatcher.called(hexClass3);
 	HexInfoMatcher hm4 = HexInfoMatcher.called(hexClass4);
-
-	@Before
-	public void setup() {
-		context.checking(new Expectations() {{
-			oneOf(errors).clear();
-		}});
-		((DataCentral)acc).setSolution(solution);
-		((DataCentral)acc).addErrorMessageListener(errors);
-	}
 	
 	@Test
 	public void testNoTestsMeansNoHexes() {

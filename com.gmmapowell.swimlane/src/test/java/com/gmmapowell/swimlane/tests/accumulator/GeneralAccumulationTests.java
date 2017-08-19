@@ -11,7 +11,7 @@ import org.junit.Test;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
-import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
+import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 
 /* The purpose of the accumulator is to take input in one form (what we discover)
  * and to build a stable model out of it.
@@ -20,7 +20,7 @@ import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
  */
 public class GeneralAccumulationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
-	AnalysisAccumulator acc = new HexagonAccumulator();
+	AnalysisAccumulator acc = new SolutionCreator();
 	DataCentral lsnrs = (DataCentral) acc;
 	DateListener lsnr = context.mock(DateListener.class);
 	

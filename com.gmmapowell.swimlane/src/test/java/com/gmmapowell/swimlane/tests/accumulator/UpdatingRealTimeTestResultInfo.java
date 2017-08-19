@@ -20,7 +20,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
-import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
+import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 import com.gmmapowell.swimlane.eclipse.models.SimpleTree;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
@@ -29,7 +29,7 @@ import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public class UpdatingRealTimeTestResultInfo extends TestBase {
 	SolidModelDispatcher md = new SolidModelDispatcher(null, null);
-	Accumulator acc = new HexagonAccumulator();
+	Accumulator acc = new SolutionCreator();
 	HexagonDataModel hdm = (HexagonDataModel)acc;
 	TestResultReporter trr = (TestResultReporter) acc;
 	GroupOfTests grp = context.mock(GroupOfTests.class);
