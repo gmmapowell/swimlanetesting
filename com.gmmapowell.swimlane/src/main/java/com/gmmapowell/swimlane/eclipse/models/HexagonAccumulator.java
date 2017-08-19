@@ -81,24 +81,6 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 
 	private void collectAcceptanceInfo(AllConstraints c, AcceptanceRole role) {
 		c.acceptances.acase(role.getHexes());
-		/*
-		String adapter = role.getAdapter();		
-		if (!c.adapters.containsKey(adapter))
-			c.adapters.put(adapter, new AdapterConstraints());
-		AdapterConstraints cxt = c.adapters.get(adapter);
-		cxt.addHex(role.getHex());
-		// could add test to adapter (if we passed it in) if that would be interesting
-		String port = role.getPort();
-		if (port != null) {
-			cxt.addPort(port);
-			if (!c.ports.containsKey(port))
-				c.ports.put(port, new PortConstraints());
-			PortConstraints pc = c.ports.get(port);
-			pc.addHex(role.getHex());
-			pc.addLocation(role.getLocation());
-			// could add adapter to port if that would be interesting
-		}
-		*/
 	}
 
 	private void collectAdapterInfo(AllConstraints c, AdapterRole role) {
@@ -141,7 +123,6 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		//   figure the best ordering & update hexes
 		//   then loop to do adapters
 		for (AllConstraints ac : constraints.values()) {
-			Set<String> errors = new TreeSet<>();
 			for (List<String> s : ac.acceptances.allHexes)
 				if (s.isEmpty())
 					hexorder.haveDefault();
@@ -181,12 +162,15 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 					hexorder.add(c.hexes.iterator().next());
 			}
 		}
-		hexorder.ensureTotalOrdering(errors);
-		for (String s : errors)
+		Set<String> errs = new TreeSet<>();
+		hexorder.ensureTotalOrdering(errs);
+		for (String s : errs)
 			error(s);
-		hexorder.dump();
-		List<String> order = hexorder.bestOrdering(errors);
-		System.out.println("ordering has " + order + " " + order.size());
+		Set<String> errs2 = new TreeSet<>();
+		List<String> order = hexorder.bestOrdering(errs2);
+		if (errs.isEmpty())
+			for (String s : errs2)
+				error(s);
 		for (String s : order) {
 			addHex(s);
 		}
