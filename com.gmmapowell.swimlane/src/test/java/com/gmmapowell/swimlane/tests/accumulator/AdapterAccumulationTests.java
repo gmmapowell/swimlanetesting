@@ -140,6 +140,7 @@ public class AdapterAccumulationTests {
 			oneOf(solution).port(with(hm2), with(PortInfoMatcher.port(PortLocation.NORTHWEST, portClass2))); inSequence(seq);
 			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
 			oneOf(errors).error("port " + portClass3.getName() + " was not bound to a hexagon");
+			oneOf(errors).error("there is no ordering between " + hexClass1.getName() + " and " + hexClass2.getName());
 		}});
 		acc.startAnalysis(bcd);
 		acc.clean(grp);

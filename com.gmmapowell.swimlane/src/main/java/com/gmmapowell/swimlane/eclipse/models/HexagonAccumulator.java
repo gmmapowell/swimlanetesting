@@ -35,16 +35,17 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 
 	private Date buildTime;
 	private Date testsCompleteTime;
+	private Set<String> errors = new TreeSet<>();
+
+	private Map<GroupOfTests, AllConstraints> constraints = new HashMap<GroupOfTests, AllConstraints>();
+
 	private final Map<String, Acceptance> compileAcceptances = new TreeMap<String, Acceptance>();
 	private List<BarData> acceptances = new ArrayList<>();
-	private List<String> order;
 	private final Map<String, HexInfo> hexesFor = new HashMap<String, HexInfo>();
 	private final List<HexData> hexagons = new ArrayList<>();
-	private Set<String> errors = new TreeSet<>();
 	private Map<String, BarData> barsFor = new HashMap<>();
 	private final ArrayList<TestGroup> allTestClasses = new ArrayList<TestGroup>();
 	private LogicInfo uteBar;
-	private Map<GroupOfTests, AllConstraints> constraints = new HashMap<GroupOfTests, AllConstraints>();
 	private final Map<String, Map<String, TestResultGroup>> resultGroups = new TreeMap<>();
 	private LogicInfo defaultLogic;
 	private Map<GroupOfTests, Object> groups = new TreeMap<>();
@@ -79,8 +80,6 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	}
 
 	private void collectAcceptanceInfo(AllConstraints c, AcceptanceRole role) {
-		if (c.acceptances == null)
-			c.acceptances = new AcceptanceConstraints();
 		c.acceptances.acase(role.getHexes());
 		/*
 		String adapter = role.getAdapter();		
@@ -131,8 +130,9 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 
 	private void scanForHexes() {
 		// List because order *is* important
-		boolean needSomething = false;
-		List<String> hexes = new ArrayList<String>();
+//		boolean needSomething = false;
+//		List<String> hexes = new ArrayList<String>();
+		TotalOrder hexorder = new TotalOrder();
 		
 		// TODO: I think I'm looping wrongly about this; I think
 		// the bestordering should be called after we've looped over all
@@ -142,19 +142,17 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		//   then loop to do adapters
 		for (AllConstraints ac : constraints.values()) {
 			Set<String> errors = new TreeSet<>();
-			ac.acceptances.hexorder.ensureTotalOrdering(errors);
-			for (String s : errors)
-				error(s);
-			ac.acceptances.hexorder.dump();
+			for (List<String> s : ac.acceptances.allHexes)
+				if (s.isEmpty())
+					hexorder.haveDefault();
+				else
+					hexorder.addAll(s);
 //			if (defaultLogic != null)
 //				this.hexorder.haveDefault();
 //			else if (!adapterPort.isEmpty() && portHex.isEmpty())
 //				this.hexorder.haveDefault();
 //			this.hexorder.ensureTotalOrdering(errors);
-			TreeMap<String, Acceptance> tmp = new TreeMap<String, Acceptance>();
-			List<String> order = ac.acceptances.hexorder.bestOrdering(errors);
-			System.out.println("ordering has " + order + " " + order.size());
-			hexes.addAll(order);
+//			TreeMap<String, Acceptance> tmp = new TreeMap<String, Acceptance>();
 //			for (Acceptance a : compileAcceptances.values()) {
 //				a.setMarks(order);
 //				// Handle an error case where because of inconsistent hex definitions, we have two
@@ -178,18 +176,20 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 			for (Entry<String, AdapterConstraints> e : ac.adapters.entrySet()) {
 				AdapterConstraints c = e.getValue();
 				if (c.hexes.isEmpty())
-					needSomething = true;
+					hexorder.haveDefault();
 				else
-					hexes.add(c.hexes.iterator().next());
+					hexorder.add(c.hexes.iterator().next());
 			}
 		}
-		for (String s : hexes) {
-			if (!this.hexes.containsKey(s)) {
-				addHex(s);
-			}
+		hexorder.ensureTotalOrdering(errors);
+		for (String s : errors)
+			error(s);
+		hexorder.dump();
+		List<String> order = hexorder.bestOrdering(errors);
+		System.out.println("ordering has " + order + " " + order.size());
+		for (String s : order) {
+			addHex(s);
 		}
-		if (this.hexes.isEmpty() && needSomething)
-			addHex("");
 	}
 
 	private void fleshOutPorts() {
@@ -735,7 +735,7 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 
 	public class AllConstraints {
 		// acceptance tests
-		AcceptanceConstraints acceptances = null;
+		AcceptanceConstraints acceptances = new AcceptanceConstraints();
 		// adapter class name -> constraints
 		Map<String, AdapterConstraints> adapters = new TreeMap<>();
 		// port class name -> constraints
@@ -743,16 +743,10 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	}
 
 	public class AcceptanceConstraints {
-		private final TotalOrder hexorder = new TotalOrder();
-
-		public AcceptanceConstraints() {
-		}
+		private final List<List<String>> allHexes = new ArrayList<>();
 
 		public void acase(List<String> hexes) {
-			if (hexes.isEmpty())
-				hexorder.haveDefault();
-			else
-				hexorder.addAll(hexes);
+			allHexes.add(hexes);
 		}
 
 	}
