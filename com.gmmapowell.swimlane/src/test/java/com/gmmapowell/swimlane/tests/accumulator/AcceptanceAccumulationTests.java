@@ -233,36 +233,49 @@ public class AcceptanceAccumulationTests {
 		acc.analysisComplete(bcd);
 	}
 	
-	/*
 	@Test
 	public void testThreeAcceptancesWithATotalOfThreeHexesCanBeConsistentWithOneCoveringAllThree() {
-		acc.acceptance(grp, String.class, Arrays.asList(Double.class, Integer.class, String.class));
-		acc.acceptance(grp, String.class, Arrays.asList(Double.class, Integer.class));
-		acc.acceptance(grp, String.class, Arrays.asList(Integer.class, String.class));
-		acc.analysisComplete();
-		assertEquals(3, hdm.getHexCount());
-		assertEquals(0, hdm.getErrors().size());
-		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
-		assertEquals(3, acceptanceTests.size());
-		assertEquals("acceptance.111", acceptanceTests.get(0).getId());
-		assertEquals("acceptance.110", acceptanceTests.get(1).getId());
-		assertEquals("acceptance.011", acceptanceTests.get(2).getId());
+		context.checking(new Expectations() {{
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).hex(with(hm2)); inSequence(seq);
+			oneOf(solution).hex(with(hm3)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
+			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
+			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
+			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
+		}});
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2, hexClass3));
+		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass1, hexClass2));
+		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3));
+		acc.analysisComplete(bcd);
 	}
 	
 	@Test
 	public void testThreeAcceptancesWithATotalOfThreeHexesCanBeInonsistentWithOneCoveringAllThreeIfInADifferentOrder() {
-		acc.acceptance(grp, String.class, Arrays.asList(Double.class, Integer.class, String.class));
-		acc.acceptance(grp, String.class, Arrays.asList(Integer.class, Double.class));
-		acc.analysisComplete();
-		assertEquals(3, hdm.getHexCount());
-		assertEquals(2, hdm.getErrors().size());
-		Object[] errs = hdm.getErrors().toArray();
-		assertEquals("ordering between java.lang.Double and java.lang.Integer is inconsistent", errs[0]);
-		assertEquals("there is a cycle between java.lang.Double and java.lang.Integer", errs[1]);
-		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
-		assertEquals(2, acceptanceTests.size());
-		assertEquals("acceptance.111", acceptanceTests.get(0).getId());
-		assertEquals("acceptance.110", acceptanceTests.get(1).getId());
+		context.checking(new Expectations() {{
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).hex(with(hm2)); inSequence(seq);
+			oneOf(solution).hex(with(hm3)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
+			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
+			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
+			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
+			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
+			oneOf(errors).error("ordering between java.lang.Integer and java.util.List is inconsistent");
+		}});
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2, hexClass3));
+		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass2, hexClass1));
+		acc.analysisComplete(bcd);
 	}
-	*/
 }
