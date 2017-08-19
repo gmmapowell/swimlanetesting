@@ -28,7 +28,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRole;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
-import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
+import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
 import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 
 public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator, DataCentral, TestResultReporter {
@@ -71,10 +71,34 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		if (!constraints.containsKey(grp))
 			constraints.put(grp, new AllConstraints());
 		AllConstraints c = constraints.get(grp);
-		if (role instanceof AdapterRole)
+		if (role instanceof AcceptanceRole)
+			collectAcceptanceInfo(c, (AcceptanceRole)role);
+		else if (role instanceof AdapterRole)
 			collectAdapterInfo(c, (AdapterRole)role);
 		else
 			error("cannot handle " + role.getClass());
+	}
+
+	private void collectAcceptanceInfo(AllConstraints c, AcceptanceRole role) {
+		c.acceptances.add(new AcceptanceConstraints(role.getHexes()));
+		/*
+		String adapter = role.getAdapter();		
+		if (!c.adapters.containsKey(adapter))
+			c.adapters.put(adapter, new AdapterConstraints());
+		AdapterConstraints cxt = c.adapters.get(adapter);
+		cxt.addHex(role.getHex());
+		// could add test to adapter (if we passed it in) if that would be interesting
+		String port = role.getPort();
+		if (port != null) {
+			cxt.addPort(port);
+			if (!c.ports.containsKey(port))
+				c.ports.put(port, new PortConstraints());
+			PortConstraints pc = c.ports.get(port);
+			pc.addHex(role.getHex());
+			pc.addLocation(role.getLocation());
+			// could add adapter to port if that would be interesting
+		}
+		*/
 	}
 
 	private void collectAdapterInfo(AllConstraints c, AdapterRole role) {
@@ -108,8 +132,11 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		// List because order *is* important
 		boolean needSomething = false;
 		List<String> hexes = new ArrayList<String>();
-		// TODO: do acceptance first to hopefully get the order
 		for (AllConstraints ac : constraints.values()) {
+			for (AcceptanceConstraints e : ac.acceptances) {
+				if (e.hexes.isEmpty())
+					needSomething = true;
+			}
 			for (Entry<String, AdapterConstraints> e : ac.adapters.entrySet()) {
 				AdapterConstraints c = e.getValue();
 				if (c.hexes.isEmpty())
@@ -245,17 +272,19 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	}
 
 	private void announceResults(Date completeTime) {
-		solution.beginHexes();
-		for (String s : hexOrdering)
-			solution.hex(hexes.get(s));
-		solution.hexesDone();
-
-		for (String s : hexOrdering) {
-			HexInfo hi = hexes.get(s);
-			solution.beginPorts(hi);
-			for (PortData p : hi.getPorts())
-				solution.port(hi, p);
-			solution.portsDone(hi);
+		if (solution != null) {
+			solution.beginHexes();
+			for (String s : hexOrdering)
+				solution.hex(hexes.get(s));
+			solution.hexesDone();
+	
+			for (String s : hexOrdering) {
+				HexInfo hi = hexes.get(s);
+				solution.beginPorts(hi);
+				for (PortData p : hi.getPorts())
+					solution.port(hi, p);
+				solution.portsDone(hi);
+			}
 		}
 
 		this.buildTime = completeTime;
@@ -667,10 +696,21 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	}
 
 	public class AllConstraints {
+		// acceptance tests
+		List<AcceptanceConstraints> acceptances = new ArrayList<>();
 		// adapter class name -> constraints
 		Map<String, AdapterConstraints> adapters = new TreeMap<>();
 		// port class name -> constraints
 		Map<String, PortConstraints> ports = new TreeMap<>();
+	}
+
+	public class AcceptanceConstraints {
+		private final List<String> hexes;
+
+		public AcceptanceConstraints(List<String> hexes) {
+			this.hexes = hexes;
+		}
+
 	}
 
 	public class AdapterConstraints {

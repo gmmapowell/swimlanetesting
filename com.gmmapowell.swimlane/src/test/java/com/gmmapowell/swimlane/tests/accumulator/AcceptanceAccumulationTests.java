@@ -1,51 +1,73 @@
 package com.gmmapowell.swimlane.tests.accumulator;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Date;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import org.jmock.Expectations;
+import org.jmock.Sequence;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorMessageListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
-import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
-import com.gmmapowell.swimlane.tests.swtutil.TestBase;
+import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
 
 /* The purpose of the accumulator is to take input in one form (what we discover)
  * and to build a stable model out of it.
  * To decouple these two roles, we have two interfaces: Accumulator for input and HexagonDataModel for output;
  * here we assert that the two are coupled correctly internally.
  */
-public class AcceptanceAccumulationTests extends TestBase {
-	ModelDispatcher md = new SolidModelDispatcher(null, null);
-	Accumulator acc = new HexagonAccumulator();
-	HexagonDataModel hdm = (HexagonDataModel)acc;
+public class AcceptanceAccumulationTests {
+	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
+	AnalysisAccumulator acc = new HexagonAccumulator();
+	Solution solution = context.mock(Solution.class);
+	ErrorMessageListener errors = context.mock(ErrorMessageListener.class);
+	Sequence seq = context.sequence("solution");
 	TestGroup grp = new TestGroup("Project", null);
+	Date bcd = new Date();
+	HexInfoMatcher hmd = HexInfoMatcher.called(null);
+
+	@Before
+	public void setup() {
+		context.checking(new Expectations() {{
+			oneOf(errors).clear();
+		}});
+		((DataCentral)acc).setSolution(solution);
+		((DataCentral)acc).addErrorMessageListener(errors);
+	}
 	
 	@Test
 	public void testNoTestsMeansNoHexes() {
-		assertEquals(0, hdm.getHexCount());
-		assertEquals(0, hdm.getAcceptanceTests().size());
+		context.checking(new Expectations() {{
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+		}});
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.analysisComplete(bcd);
 	}
 	
 	@Test
 	public void testOneUnboundAcceptanceGivesOneHex() {
-		acc.acceptance(grp, String.class, new ArrayList<>());
-		acc.analysisComplete();
-		assertEquals(1, hdm.getHexCount());
-		List<BarData> acceptanceTests = hdm.getAcceptanceTests();
-		assertEquals(1, acceptanceTests.size());
-		assertEquals("acceptance.1", acceptanceTests.get(0).getId());
-		assertEquals(1, grp.getClasses().length);
-		assertEquals(String.class.getName(), grp.getClasses()[0]);
+		context.checking(new Expectations() {{
+			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).hex(with(hmd)); inSequence(seq);
+			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginPorts(with(hmd)); inSequence(seq);
+			oneOf(solution).portsDone(with(hmd)); inSequence(seq);
+		}});
+		acc.startAnalysis(bcd);
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole());
+		acc.analysisComplete(bcd);
 	}
 	
+	/*
 	@Test
 	public void testOneAcceptanceWithTwoHexesGivesTwoHexesAndNoErrors() {
 		acc.acceptance(grp, String.class, Arrays.asList(Integer.class, String.class));
@@ -194,4 +216,5 @@ public class AcceptanceAccumulationTests extends TestBase {
 		assertEquals("acceptance.111", acceptanceTests.get(0).getId());
 		assertEquals("acceptance.110", acceptanceTests.get(1).getId());
 	}
+	*/
 }

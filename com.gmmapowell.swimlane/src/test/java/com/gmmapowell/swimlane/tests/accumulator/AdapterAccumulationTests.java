@@ -46,7 +46,6 @@ public class AdapterAccumulationTests {
 	HexInfoMatcher hm2 = HexInfoMatcher.called(hexClass2);
 	Sequence seq = context.sequence("solution");
 
-	// These tests would be more compelling with a HexInfoMatcher
 	@Before
 	public void setup() {
 		context.checking(new Expectations() {{
