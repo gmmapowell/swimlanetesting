@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.gmmapowell.swimlane.eclipse.analyzer.BusinessRole;
 import com.gmmapowell.swimlane.eclipse.analyzer.UtilityRole;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
@@ -79,12 +80,22 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 			collectAdapterInfo(c, (AdapterRole)role);
 		else if (role instanceof UtilityRole)
 			collectUtilityInfo(c, (UtilityRole)role);
+		else if (role instanceof BusinessRole)
+			collectBusinessLogicInfo(c, clzName, (BusinessRole)role);
 		else
 			error("cannot handle " + role.getClass());
 	}
 
 	private void collectAcceptanceInfo(AllConstraints c, AcceptanceRole role) {
 		c.acceptances.acase(role.getHexes());
+	}
+
+	private void collectBusinessLogicInfo(AllConstraints c, String clzName, BusinessRole role) {
+		String s = role.getHex();
+		if (s == null)
+			c.businessDefault.add(clzName);
+		else
+			c.businessHexes.add(s);
 	}
 
 	private void collectAdapterInfo(AllConstraints c, AdapterRole role) {
@@ -126,6 +137,7 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 //		boolean needSomething = false;
 //		List<String> hexes = new ArrayList<String>();
 		TotalOrder hexorder = new TotalOrder();
+		List<String> defaultLogic = new ArrayList<>();
 		
 		// TODO: I think I'm looping wrongly about this; I think
 		// the bestordering should be called after we've looped over all
@@ -165,6 +177,11 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 //					barsFor.put(c, a);
 //			}
 
+			defaultLogic.addAll(ac.businessDefault);
+			for (String s : ac.businessHexes) {
+				hexorder.add(s); // don't use addAll because that implies ordered
+			}
+
 			for (Entry<String, AdapterConstraints> e : ac.adapters.entrySet()) {
 				AdapterConstraints c = e.getValue();
 				if (c.hexes.isEmpty())
@@ -173,6 +190,8 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 					hexorder.add(c.hexes.iterator().next());
 			}
 		}
+		if (!defaultLogic.isEmpty())
+			hexorder.haveDefault();
 		Set<String> errs = new TreeSet<>();
 		hexorder.ensureTotalOrdering(errs);
 		for (String s : errs)
@@ -182,6 +201,10 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 		if (errs.isEmpty())
 			for (String s : errs2)
 				error(s);
+		if (!defaultLogic.isEmpty() && order.size() > 1) {
+			for (String c : defaultLogic)
+				error("cannot use @BusinessLogic with default hexagon in " + c + " since there are multiple hexagons");
+		}
 		for (String s : order) {
 			addHex(s);
 		}
@@ -741,6 +764,10 @@ public class HexagonAccumulator implements ErrorAccumulator, AnalysisAccumulator
 	public class AllConstraints {
 		// acceptance tests
 		AcceptanceConstraints acceptances = new AcceptanceConstraints();
+		// business logic references hexes ...
+		List<String> businessHexes = new ArrayList<>();
+		// and cases that don't reference a hex
+		List<String> businessDefault = new ArrayList<>();
 		// adapter class name -> constraints
 		Map<String, AdapterConstraints> adapters = new TreeMap<>();
 		// port class name -> constraints
