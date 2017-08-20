@@ -1,7 +1,9 @@
 package com.gmmapowell.swimlane.tests.analysis;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.Sequence;
@@ -26,6 +28,7 @@ public class UtilityAccumulationTests {
 	Date bcd = new Date();
 	TestGroup grp = new TestGroup("Project", null);
 	Sequence seq = context.sequence("solution");
+	List<String> tests = new ArrayList<>();
 
 	@Test
 	public void testThatWeCanStoreAndRecoverATest() {
@@ -35,7 +38,7 @@ public class UtilityAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new UtilityRole());
+		acc.haveTestClass(grp, "TestCase1", new UtilityRole(), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -47,8 +50,8 @@ public class UtilityAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new UtilityRole());
-		acc.haveTestClass(grp, "TestCase1", new UtilityRole());
+		acc.haveTestClass(grp, "TestCase1", new UtilityRole(), tests);
+		acc.haveTestClass(grp, "TestCase1", new UtilityRole(), tests);
 		acc.analysisComplete(bcd);
 	}
 }

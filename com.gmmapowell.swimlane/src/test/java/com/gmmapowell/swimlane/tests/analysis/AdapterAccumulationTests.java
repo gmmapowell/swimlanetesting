@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.tests.analysis;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -46,11 +47,12 @@ public class AdapterAccumulationTests {
 	String hm1 = hexClass1.getName();
 	String hm2 = hexClass2.getName();
 	Sequence seq = context.sequence("solution");
+	List<String> tests = new ArrayList<>();
 
 	@Test
 	public void nothingHappensUntilWeCallComplete() {
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1), tests);
 	}
 
 	@Test
@@ -63,7 +65,7 @@ public class AdapterAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1), tests);
 		acc.analysisComplete(bcd);
 	}
 	@Test
@@ -76,7 +78,7 @@ public class AdapterAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase2", new AdapterRole(null, portClass1, null, adapterClass1));
+		acc.haveTestClass(grp, "TestCase2", new AdapterRole(null, portClass1, null, adapterClass1), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -90,8 +92,8 @@ public class AdapterAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
-		acc.haveTestClass(grp, "TestCase2", new AdapterRole(null, null, null, adapterClass1));
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1), tests);
+		acc.haveTestClass(grp, "TestCase2", new AdapterRole(null, null, null, adapterClass1), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -104,7 +106,7 @@ public class AdapterAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase2", new AdapterRole(null, null, null, adapterClass1));
+		acc.haveTestClass(grp, "TestCase2", new AdapterRole(null, null, null, adapterClass1), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -113,9 +115,9 @@ public class AdapterAccumulationTests {
 		context.checking(new Expectations() {{
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
-			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).port(PortLocation.NORTHWEST, portClass1.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass1.getName()); inSequence(seq);
+			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).port(PortLocation.NORTHWEST, portClass2.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass2.getName()); inSequence(seq);
 			oneOf(errors).error("port " + portClass3.getName() + " was not bound to a hexagon");
@@ -123,9 +125,9 @@ public class AdapterAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
-		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass2, portClass2, null, adapterClass2));
-		acc.haveTestClass(grp, "TestCase3", new AdapterRole(null, portClass3, null, adapterClass3));
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1), tests);
+		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass2, portClass2, null, adapterClass2), tests);
+		acc.haveTestClass(grp, "TestCase3", new AdapterRole(null, portClass3, null, adapterClass3), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -139,8 +141,8 @@ public class AdapterAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
-		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass1, portClass1, null, adapterClass1));
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1), tests);
+		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass1, portClass1, null, adapterClass1), tests);
 		acc.analysisComplete(bcd);
 	}
 	
@@ -154,7 +156,7 @@ public class AdapterAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1));
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -170,8 +172,8 @@ public class AdapterAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1));
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHWEST, adapterClass2));
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1), tests);
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHWEST, adapterClass2), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -218,8 +220,8 @@ public class AdapterAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1));
-		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass1, portClass2, PortLocation.SOUTHEAST, adapterClass2));
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1), tests);
+		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass1, portClass2, PortLocation.SOUTHEAST, adapterClass2), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -235,8 +237,8 @@ public class AdapterAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1));
-		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass1, portClass2, null, adapterClass2));
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1), tests);
+		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass1, portClass2, null, adapterClass2), tests);
 		acc.analysisComplete(bcd);
 	}
 

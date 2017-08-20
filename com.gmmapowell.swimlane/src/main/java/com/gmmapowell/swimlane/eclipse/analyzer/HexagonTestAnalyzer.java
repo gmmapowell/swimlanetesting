@@ -3,7 +3,9 @@ package com.gmmapowell.swimlane.eclipse.analyzer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
@@ -83,16 +85,17 @@ public class HexagonTestAnalyzer implements ProjectAnalyzer {
 					eh.error(e.getMessage());
 				}
 			}
-			if (finalRole == null) {
-				for (Method m : tc.getMethods()) {
-					for (Annotation ts : m.getAnnotations())
-						if (ts.annotationType().getName().equals("org.junit.Test")) {
+			List<String> tests = new ArrayList<>();
+			for (Method m : tc.getMethods()) {
+				for (Annotation ts : m.getAnnotations())
+					if (ts.annotationType().getName().equals("org.junit.Test")) {
+						tests.add(m.getName());
+						if (finalRole == null)
 							finalRole = new UnlabelledTestRole();
-						}
-				}
+					}
 			}
 			if (finalRole != null)
-				accumulator.haveTestClass(grp, clzName, finalRole);
+				accumulator.haveTestClass(grp, clzName, finalRole, tests);
 		} catch (ClassNotFoundException e1) {
 			eh.error("No such class: " + e1.getMessage());
 		}

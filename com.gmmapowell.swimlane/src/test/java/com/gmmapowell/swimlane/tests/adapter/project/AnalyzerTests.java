@@ -3,7 +3,9 @@ package com.gmmapowell.swimlane.tests.adapter.project;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -33,6 +35,7 @@ public class AnalyzerTests {
 	private String hex1, hex2;
 	private String adapter1, port1;
 	private DataCentral hub;
+	List<String> tests = new ArrayList<>();
 
 	@Before
 	public void setup() throws Exception {
@@ -58,7 +61,7 @@ public class AnalyzerTests {
 	public void testWeCanDetectTheAcceptanceAnnotationOnATestClass() throws Exception {
 		String clzName = "com.gmmapowell.swimlane.samples.SampleAcceptance1";
 		context.checking(new Expectations() {{
-			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AcceptanceRoleMatcher.withHexes()));
+			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AcceptanceRoleMatcher.withHexes()), tests);
 		}});
 		analyzer.consider(grp, cl, clzName);
 	}
@@ -67,7 +70,7 @@ public class AnalyzerTests {
 	public void testWeCanDetectTheHexagonsInAnAcceptanceAnnotation() throws Exception {
 		String clzName = "com.gmmapowell.swimlane.samples.SampleAcceptanceWithHexes";
 		context.checking(new Expectations() {{
-			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AcceptanceRoleMatcher.withHexes(hex1, hex2)));
+			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AcceptanceRoleMatcher.withHexes(hex1, hex2)), tests);
 		}});
 		analyzer.consider(grp, cl, clzName);
 	}
@@ -76,7 +79,7 @@ public class AnalyzerTests {
 	public void testWeCanDetectWhenABusinessTestIsIndicated() throws Exception {
 		String clzName = "com.gmmapowell.swimlane.samples.SampleBusiness";
 		context.checking(new Expectations() {{
-			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(BusinessRoleMatcher.logic(null)));
+			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(BusinessRoleMatcher.logic(null)), tests);
 		}});
 		analyzer.consider(grp, cl, clzName);
 	}
@@ -85,7 +88,7 @@ public class AnalyzerTests {
 	public void testWeCanDetectWhenABusinessTestIsIndicatedForASpecificHexagon() throws Exception {
 		String clzName = "com.gmmapowell.swimlane.samples.SampleBusinessWithHex";
 		context.checking(new Expectations() {{
-			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(BusinessRoleMatcher.logic(hex1)));
+			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(BusinessRoleMatcher.logic(hex1)), tests);
 		}});
 		analyzer.consider(grp, cl, clzName);
 	}
@@ -94,7 +97,7 @@ public class AnalyzerTests {
 	public void testWeCanDetectWhenAnAdapterTestIsIndicated() throws Exception {
 		String clzName = "com.gmmapowell.swimlane.samples.SampleAdapter1";
 		context.checking(new Expectations() {{
-			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AdapterRoleMatcher.hex(null).adapter(adapter1)));
+			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AdapterRoleMatcher.hex(null).adapter(adapter1)), tests);
 		}});
 		analyzer.consider(grp, cl, clzName);
 	}
@@ -103,7 +106,7 @@ public class AnalyzerTests {
 	public void testWeCanDetectWhenAnAdapterTestIsIndicatedWithAHexagon() throws Exception {
 		String clzName = "com.gmmapowell.swimlane.samples.SampleAdapter2";
 		context.checking(new Expectations() {{
-			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AdapterRoleMatcher.hex(hex1).adapter(adapter1)));
+			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AdapterRoleMatcher.hex(hex1).adapter(adapter1)), tests);
 		}});
 		analyzer.consider(grp, cl, clzName);
 	}
@@ -112,7 +115,7 @@ public class AnalyzerTests {
 	public void testWeCanDetectWhenAnAdapterTestIsIndicatedWithAPort() throws Exception {
 		String clzName = "com.gmmapowell.swimlane.samples.SampleAdapter3";
 		context.checking(new Expectations() {{
-			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AdapterRoleMatcher.hex(null).adapter(adapter1).port(port1)));
+			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AdapterRoleMatcher.hex(null).adapter(adapter1).port(port1)), tests);
 		}});
 		analyzer.consider(grp, cl, clzName);
 	}
@@ -121,7 +124,7 @@ public class AnalyzerTests {
 	public void testWeCanDetectWhenAnAdapterTestSpecifiesALocationForItsPortRelativeToTheHexagon() throws Exception {
 		String clzName = "com.gmmapowell.swimlane.samples.SampleAdapter4";
 		context.checking(new Expectations() {{
-			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AdapterRoleMatcher.hex(null).adapter(adapter1).location(PortLocation.NORTHWEST)));
+			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(AdapterRoleMatcher.hex(null).adapter(adapter1).location(PortLocation.NORTHWEST)), tests);
 		}});
 		analyzer.consider(grp, cl, clzName);
 	}
@@ -130,7 +133,7 @@ public class AnalyzerTests {
 	public void testWeCanDetectWhenAUtilityTestIsIndicated() throws Exception {
 		String clzName = "com.gmmapowell.swimlane.samples.SampleUtility";
 		context.checking(new Expectations() {{
-			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(UtilityRoleMatcher.matcher()));
+			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(UtilityRoleMatcher.matcher()), tests);
 		}});
 		analyzer.consider(grp, cl, clzName);
 	}
@@ -139,7 +142,7 @@ public class AnalyzerTests {
 	public void testWeCanDetectTestsThatHaventBeenAnnotated() throws Exception {
 		String clzName = "com.gmmapowell.swimlane.samples.UnlabelledTest";
 		context.checking(new Expectations() {{
-			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(UnlabelledRoleMatcher.matcher()));
+			oneOf(accumulator).haveTestClass(with(grp), with(clzName), with(UnlabelledRoleMatcher.matcher()), tests);
 		}});
 		analyzer.consider(grp, cl, clzName);
 	}

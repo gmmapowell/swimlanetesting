@@ -25,7 +25,6 @@ import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 
 // should only be the AnalysisAccumulator ...
 public class SolutionCreator implements AnalysisAccumulator {
-
 	private final ErrorAccumulator eh;
 	private final Solution solution;
 
@@ -39,7 +38,6 @@ public class SolutionCreator implements AnalysisAccumulator {
 		this.eh = eh;
 		solution = sol;
 		this.constraints = constraints;
-		
 	}
 	
 	@Override
@@ -48,7 +46,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 	}
 
 	@Override
-	public void haveTestClass(GroupOfTests grp, String clzName, TestRole role) {
+	public void haveTestClass(GroupOfTests grp, String clzName, TestRole role, List<String> tests) {
 		if (!constraints.containsKey(grp))
 			constraints.put(grp, new AllConstraints());
 		AllConstraints c = constraints.get(grp);
@@ -59,7 +57,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 		else if (role instanceof UtilityRole)
 			collectUtilityInfo(c, (UtilityRole)role);
 		else if (role instanceof BusinessRole)
-			collectBusinessLogicInfo(c, clzName, (BusinessRole)role);
+			collectBusinessLogicInfo(c, (BusinessRole)role, grp, clzName, tests);
 		else
 			eh.error("cannot handle " + role.getClass());
 	}
@@ -68,12 +66,26 @@ public class SolutionCreator implements AnalysisAccumulator {
 		c.acceptances.acase(role.getHexes());
 	}
 
-	private void collectBusinessLogicInfo(AllConstraints c, String clzName, BusinessRole role) {
+	private void collectBusinessLogicInfo(AllConstraints c, BusinessRole role, GroupOfTests grp, String testClass, List<String> tests) {
 		String s = role.getHex();
-		if (s == null)
-			c.businessDefault.add(clzName);
-		else
-			c.businessHexes.add(s);
+		TestCaseTracker tc = new TestCaseTracker(grp, testClass, tests);
+		if (s == null) {
+			c.classesInBusinessDefault.add(testClass);
+			c.defaultTracker.add(tc);
+		} else {
+			HexTracker curr = null;
+			for (HexTracker ht : c.businessHexes) {
+				if (ht.name.equals(s)) {
+					curr = ht;
+					break;
+				}
+			}
+			if (curr == null) {
+				curr = new HexTracker(s);
+				c.businessHexes.add(curr);
+			}
+			curr.add(tc);
+		}
 	}
 
 	private void collectAdapterInfo(AllConstraints c, AdapterRole role) {
@@ -104,6 +116,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 		// I think this should probably collect its info in a one-time-use structure
 		// rather than fields ...
 		scanForHexes();
+		addBusinessLogicTestsToHexes();
 		fleshOutPorts();
 		fleshOutAdapters();
 		figureUtilityBar();
@@ -155,9 +168,9 @@ public class SolutionCreator implements AnalysisAccumulator {
 //					barsFor.put(c, a);
 //			}
 
-			defaultLogic.addAll(ac.businessDefault);
-			for (String s : ac.businessHexes) {
-				hexorder.add(s); // don't use addAll because that implies ordered
+			defaultLogic.addAll(ac.classesInBusinessDefault);
+			for (HexTracker ht : ac.businessHexes) {
+				hexorder.add(ht.name); // don't use addAll because that implies ordered
 			}
 
 			for (Entry<String, AdapterConstraints> e : ac.adapters.entrySet()) {
@@ -186,6 +199,20 @@ public class SolutionCreator implements AnalysisAccumulator {
 		for (String s : order) {
 			addHex(s);
 		}
+	}
+
+	private void addBusinessLogicTestsToHexes() {
+		for (AllConstraints ac : constraints.values()) {
+			for (TestCaseTracker k : ac.defaultTracker.tests) {
+				this.hexes.get(this.hexOrdering.get(0)).tests.add(k);
+			}
+			for (HexTracker ht : ac.businessHexes) {
+				for (TestCaseTracker k : ht.tests) {
+					this.hexes.get(ht.name).tests.add(k);
+				}
+			}
+		}
+		
 	}
 
 	private void fleshOutPorts() {
@@ -318,11 +345,11 @@ public class SolutionCreator implements AnalysisAccumulator {
 	private void announceResults(Date completeTime) {
 		if (solution != null) {
 			solution.beginAnalysis();
-			for (String s : hexOrdering)
-				solution.hex(s);
-	
 			for (String s : hexOrdering) {
+				solution.hex(s);
 				HexTracker hi = hexes.get(s);
+				for (TestCaseTracker tc : hi.tests)
+					solution.testClass(tc.grp, tc.testClass, tc.tests);
 				for (PortTracker p : hi.getPorts()) {
 					solution.port(p.loc, p.name);
 					for (AdapterTracker a : p.adapters) {
@@ -338,19 +365,21 @@ public class SolutionCreator implements AnalysisAccumulator {
 		}
 	}
 
-	private void addHex(String s) {
+	private HexTracker addHex(String s) {
 		HexTracker hi = new HexTracker(s);
 		this.hexes.put(s, hi);
 		this.hexOrdering.add(s);
+		return hi;
 	}
 
 	public class AllConstraints {
 		// acceptance tests
 		AcceptanceConstraints acceptances = new AcceptanceConstraints();
 		// business logic references hexes ...
-		List<String> businessHexes = new ArrayList<>();
+		List<HexTracker> businessHexes = new ArrayList<>();
 		// and cases that don't reference a hex
-		List<String> businessDefault = new ArrayList<>();
+		HexTracker defaultTracker = new HexTracker("");
+		List<String> classesInBusinessDefault = new ArrayList<>();
 		// adapter class name -> constraints
 		Map<String, AdapterConstraints> adapters = new TreeMap<>();
 		// port class name -> constraints
@@ -450,11 +479,16 @@ public class SolutionCreator implements AnalysisAccumulator {
 	public static class HexTracker {
 		private final String name;
 		private final List<PortTracker> ports = new ArrayList<>();
+		private final List<TestCaseTracker> tests = new ArrayList<>();
 		
 		public HexTracker(String name) {
 			this.name = name;
 		}
 		
+		public void add(TestCaseTracker tc) {
+			tests.add(tc);
+		}
+
 		public String getName() {
 			return name;
 		}
@@ -478,6 +512,18 @@ public class SolutionCreator implements AnalysisAccumulator {
 		@Override
 		public String toString() {
 			return "hex[" + name + "]";
+		}
+	}
+
+	public class TestCaseTracker {
+		private final GroupOfTests grp;
+		private final String testClass;
+		private final List<String> tests;
+
+		public TestCaseTracker(GroupOfTests grp, String testClass, List<String> tests) {
+			this.grp = grp;
+			this.testClass = testClass;
+			this.tests = tests;
 		}
 
 	}

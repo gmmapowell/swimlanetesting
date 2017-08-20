@@ -40,4 +40,8 @@ public class TestGroup implements GroupOfTests {
 		tcs.add(clsName);
 	}
 
+	@Override
+	public String toString() {
+		return "Group[" + name + "]";
+	}
 }

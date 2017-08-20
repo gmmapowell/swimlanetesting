@@ -1,5 +1,6 @@
 package com.gmmapowell.swimlane.tests.analysis;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,7 @@ public class BusinessLogicAccumulationTests {
 	String hmd = "";
 	String hm1 = hexClass1.getName();
 	String hm2 = hexClass2.getName();
+	List<String> tests = new ArrayList<>();
 	Sequence seq = context.sequence("solution");
 
 	@Test
@@ -39,10 +41,11 @@ public class BusinessLogicAccumulationTests {
 		context.checking(new Expectations() {{
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new BusinessRole(hexClass1));
+		acc.haveTestClass(grp, "TestCase1", new BusinessRole(hexClass1), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -51,10 +54,11 @@ public class BusinessLogicAccumulationTests {
 		context.checking(new Expectations() {{
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hmd)); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new BusinessRole(null));
+		acc.haveTestClass(grp, "TestCase1", new BusinessRole(null), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -63,11 +67,13 @@ public class BusinessLogicAccumulationTests {
 		context.checking(new Expectations() {{
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new BusinessRole(null));
-		acc.haveTestClass(grp, "TestCase1", new BusinessRole(hexClass1));
+		acc.haveTestClass(grp, "TestCase1", new BusinessRole(null), tests);
+		acc.haveTestClass(grp, "TestCase2", new BusinessRole(hexClass1), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -76,13 +82,15 @@ public class BusinessLogicAccumulationTests {
 		context.checking(new Expectations() {{
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
+//			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(errors).error("cannot use @BusinessLogic with default hexagon in TestCase1 since there are multiple hexagons");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new BusinessRole(null));
-		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass1, hexClass2));
+		acc.haveTestClass(grp, "TestCase1", new BusinessRole(null), tests);
+		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass1, hexClass2), tests);
 		acc.analysisComplete(bcd);
 	}
 

@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.tests.analysis;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,8 @@ public class AcceptanceAccumulationTests {
 	String hm2 = hexClass2.getName();
 	String hm3 = hexClass3.getName();
 	String hm4 = hexClass4.getName();
-	
+	List<String> tests = new ArrayList<>();
+
 	@Test
 	public void testNoTestsMeansNoHexes() {
 		context.checking(new Expectations() {{
@@ -62,7 +64,7 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole());
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(), tests);
 		acc.analysisComplete(bcd);
 	}
 	
@@ -75,7 +77,7 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
 		acc.analysisComplete(bcd);
 	}
 	
@@ -89,8 +91,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1));
-		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2));
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1), tests);
+		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2), tests);
 		acc.analysisComplete(bcd);
 	}
 	
@@ -104,8 +106,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
-		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass1));
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
+		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass1), tests);
 		acc.analysisComplete(bcd);
 	}
 	
@@ -119,8 +121,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
-		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3));
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
+		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -135,8 +137,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
-		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass1, hexClass3));
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
+		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass1, hexClass3), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -153,9 +155,9 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
-		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3));
-		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass3, hexClass1));
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
+		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3), tests);
+		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass3, hexClass1), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -170,9 +172,9 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
-		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3));
-		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass3, hexClass4));
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
+		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3), tests);
+		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass3, hexClass4), tests);
 		acc.analysisComplete(bcd);
 	}
 	
@@ -186,9 +188,9 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2, hexClass3));
-		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass1, hexClass2));
-		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3));
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2, hexClass3), tests);
+		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass1, hexClass2), tests);
+		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3), tests);
 		acc.analysisComplete(bcd);
 	}
 	
@@ -203,8 +205,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2, hexClass3));
-		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass2, hexClass1));
+		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2, hexClass3), tests);
+		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass2, hexClass1), tests);
 		acc.analysisComplete(bcd);
 	}
 }
