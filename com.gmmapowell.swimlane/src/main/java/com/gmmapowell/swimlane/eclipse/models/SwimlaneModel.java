@@ -170,7 +170,8 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	}
 
 	public class SolutionHelper implements Solution {
-
+		int chex = -1;
+		
 		@Override
 		public void beginHexes() {
 			// TODO in update cases, need to start tracking what was already there
@@ -192,20 +193,28 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 
 		@Override
 		public void beginPorts(String hi) {
-			// TODO Auto-generated method stub
-			
+			for (int i=0;i<hexes.size();i++) {
+				if (hexes.get(i).getName().equals(hi)) {
+					chex = i;
+					return;
+				}
+			}
+			throw new RuntimeException("Protocol error");
 		}
 
 		@Override
-		public void port(String hi, PortLocation loc, String port) {
-			// TODO Auto-generated method stub
-			
+		public void port(PortLocation loc, String port) {
+			if (chex == -1)
+				throw new RuntimeException("Protocol error");
+			HexInfo hi = hexes.get(chex);
+			PortInfo pi = new PortInfo(port, loc);
+			hi.addPort(pi);
+			layout.addHexagonPort(chex, loc, pi);
 		}
 
 		@Override
 		public void portsDone(String hi) {
-			// TODO Auto-generated method stub
-			
+			chex = -1;
 		}
 
 		@Override

@@ -10,10 +10,12 @@ import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel.SolutionHelper;
 import com.gmmapowell.swimlane.testsupport.matchers.HexInfoMatcher;
+import com.gmmapowell.swimlane.testsupport.matchers.PortInfoMatcher;
 
 // This just tests everything from a "standing" start ...
 public class SolutionCreationInitialTests {
@@ -68,4 +70,19 @@ public class SolutionCreationInitialTests {
 		helper.hex(Integer.class.getName());
 		helper.hexesDone();
 	}
+
+	@Test
+	public void oneHexOnePortFindsPublishesTheRightInfo() {
+		context.checking(new Expectations() {{
+			oneOf(layout).addHexagon(with(0), with(HexInfoMatcher.called(String.class)));
+			oneOf(layout).addHexagonPort(with(0), with(PortLocation.NORTHWEST), with(PortInfoMatcher.port(String.class)));
+		}});
+		helper.beginHexes();
+		helper.hex(String.class.getName());
+		helper.hexesDone();
+		helper.beginPorts(String.class.getName());
+		helper.port(PortLocation.NORTHWEST, String.class.getName());
+		helper.portsDone(String.class.getName());
+	}
+
 }

@@ -322,7 +322,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 				HexTracker hi = hexes.get(s);
 				solution.beginPorts(s);
 				for (PortTracker p : hi.getPorts())
-					solution.port(s, p.loc, p.name);
+					solution.port(p.loc, p.name);
 				solution.portsDone(s);
 			}
 			

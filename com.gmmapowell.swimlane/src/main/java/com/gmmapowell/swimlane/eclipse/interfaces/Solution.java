@@ -8,7 +8,7 @@ public interface Solution {
 	void hexesDone();
 	
 	void beginPorts(String hi);
-	void port(String hi, PortLocation loc, String port);
+	void port(PortLocation loc, String port);
 	void portsDone(String hi);
 
 	void needsUtilityBar();
