@@ -17,7 +17,6 @@ import com.gmmapowell.swimlane.eclipse.analyzer.UtilityRole;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRole;
@@ -26,13 +25,14 @@ import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 
 // should only be the AnalysisAccumulator ...
 public class SolutionCreator implements AnalysisAccumulator {
+
 	private final ErrorAccumulator eh;
 	private final Solution solution;
 
 	private Map<GroupOfTests, AllConstraints> constraints;
 
 	private List<String> hexOrdering = new ArrayList<>();
-	private Map<String, HexInfo> hexes = new TreeMap<>();
+	private Map<String, HexTracker> hexes = new TreeMap<>();
 	private boolean wantUte;
 
 	public SolutionCreator(ErrorAccumulator eh, Solution sol, Map<GroupOfTests, AllConstraints> constraints) {
@@ -273,10 +273,10 @@ public class SolutionCreator implements AnalysisAccumulator {
 					hl = new HexLoc(hn, options.remove(0));
 				} else
 					hn = hl.hex;
-				HexInfo hi = hexes.get(hn);
-				PortData pi = hi.getPort(e.getKey());
+				HexTracker hi = hexes.get(hn);
+				PortTracker pi = hi.getPort(e.getKey());
 				if (pi == null) {
-					pi = new PortInfo(e.getKey(), hl.loc);
+					pi = new PortTracker(e.getKey(), hl.loc);
 					hi.addPort(pi);
 				}
 			}
@@ -319,10 +319,10 @@ public class SolutionCreator implements AnalysisAccumulator {
 			solution.hexesDone();
 	
 			for (String s : hexOrdering) {
-				HexInfo hi = hexes.get(s);
+				HexTracker hi = hexes.get(s);
 				solution.beginPorts(s);
-				for (PortData p : hi.getPorts())
-					solution.port(s, p.getLocation(), p.getName());
+				for (PortTracker p : hi.getPorts())
+					solution.port(s, p.loc, p.name);
 				solution.portsDone(s);
 			}
 			
@@ -334,7 +334,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 	}
 
 	private void addHex(String s) {
-		HexInfo hi = new HexInfo(s);
+		HexTracker hi = new HexTracker(s);
 		this.hexes.put(s, hi);
 		this.hexOrdering.add(s);
 	}
@@ -434,6 +434,51 @@ public class SolutionCreator implements AnalysisAccumulator {
 		@Override
 		public String toString() {
 			return "HexLoc[" + hex +":"+loc+"]";
+		}
+	}
+
+	public class HexTracker {
+		private final String name;
+		private final List<PortTracker> ports = new ArrayList<>();
+		
+		public HexTracker(String name) {
+			this.name = name;
+		}
+		
+		public String getName() {
+			return name;
+		}
+
+		public List<PortTracker> getPorts() {
+			return ports;
+		}
+
+		public void addPort(PortTracker portInfo) {
+			ports.add(portInfo);
+		}
+
+		protected PortTracker getPort(String port) {
+			for (PortTracker pd : ports) {
+				if (pd.name.equals(port))
+					return pd;
+			}
+			return null;
+		}
+		
+		@Override
+		public String toString() {
+			return "hex[" + name + "]";
+		}
+
+	}
+
+	public class PortTracker {
+		private final String name;
+		private final PortLocation loc;
+
+		public PortTracker(String port, PortLocation location) {
+			this.name = port;
+			this.loc = location;
 		}
 	}
 }
