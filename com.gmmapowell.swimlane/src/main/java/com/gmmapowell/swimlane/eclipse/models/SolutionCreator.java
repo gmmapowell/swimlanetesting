@@ -315,15 +315,15 @@ public class SolutionCreator implements AnalysisAccumulator {
 		if (solution != null) {
 			solution.beginHexes();
 			for (String s : hexOrdering)
-				solution.hex(hexes.get(s));
+				solution.hex(s);
 			solution.hexesDone();
 	
 			for (String s : hexOrdering) {
 				HexInfo hi = hexes.get(s);
-				solution.beginPorts(hi);
+				solution.beginPorts(s);
 				for (PortData p : hi.getPorts())
-					solution.port(hi, p);
-				solution.portsDone(hi);
+					solution.port(s, p.getLocation(), p.getName());
+				solution.portsDone(s);
 			}
 			
 			if (wantUte)

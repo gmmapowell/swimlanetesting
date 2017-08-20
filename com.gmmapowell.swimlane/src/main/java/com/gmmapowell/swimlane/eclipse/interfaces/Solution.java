@@ -4,12 +4,12 @@ import java.util.Date;
 
 public interface Solution {
 	void beginHexes();
-	void hex(HexData hi);
+	void hex(String clzName);
 	void hexesDone();
 	
-	void beginPorts(HexData hi);
-	void port(HexData hi, PortData port);
-	void portsDone(HexData hi);
+	void beginPorts(String hi);
+	void port(String hi, PortLocation loc, String port);
+	void portsDone(String hi);
 
 	void needsUtilityBar();
 	void analysisDone(Date completeTime);

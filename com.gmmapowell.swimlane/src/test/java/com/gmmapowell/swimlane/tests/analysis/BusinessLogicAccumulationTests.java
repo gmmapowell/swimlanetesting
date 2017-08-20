@@ -19,7 +19,6 @@ import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
-import com.gmmapowell.swimlane.testsupport.matchers.HexInfoMatcher;
 
 public class BusinessLogicAccumulationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -30,9 +29,9 @@ public class BusinessLogicAccumulationTests {
 	TestGroup grp = new TestGroup("Project", null);
 	Class<?> hexClass1 = Integer.class;
 	Class<?> hexClass2 = List.class;
-	HexInfoMatcher hmd = HexInfoMatcher.called(null);
-	HexInfoMatcher hm1 = HexInfoMatcher.called(hexClass1);
-	HexInfoMatcher hm2 = HexInfoMatcher.called(hexClass2);
+	String hmd = "";
+	String hm1 = hexClass1.getName();
+	String hm2 = hexClass2.getName();
 	Sequence seq = context.sequence("solution");
 
 	@Test

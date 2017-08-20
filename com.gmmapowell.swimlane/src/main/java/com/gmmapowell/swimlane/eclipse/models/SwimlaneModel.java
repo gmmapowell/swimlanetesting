@@ -15,7 +15,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
@@ -170,43 +170,43 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		@Override
 		public void beginHexes() {
 			// TODO Auto-generated method stub
-
+			
 		}
 
 		@Override
-		public void hex(HexData hi) {
+		public void hex(String clzName) {
 			// TODO Auto-generated method stub
-
+			
 		}
 
 		@Override
 		public void hexesDone() {
 			// TODO Auto-generated method stub
-
+			
 		}
 
 		@Override
-		public void beginPorts(HexData hi) {
+		public void beginPorts(String hi) {
 			// TODO Auto-generated method stub
-
+			
 		}
 
 		@Override
-		public void port(HexData hi, PortData port) {
+		public void port(String hi, PortLocation loc, String port) {
 			// TODO Auto-generated method stub
-
+			
 		}
 
 		@Override
-		public void portsDone(HexData hi) {
+		public void portsDone(String hi) {
 			// TODO Auto-generated method stub
-
+			
 		}
 
 		@Override
 		public void needsUtilityBar() {
 			// TODO Auto-generated method stub
-
+			
 		}
 
 		public void analysisDone(Date completeTime) {

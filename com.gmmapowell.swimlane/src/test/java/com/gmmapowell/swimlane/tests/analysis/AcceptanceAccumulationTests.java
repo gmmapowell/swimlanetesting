@@ -17,10 +17,9 @@ import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
-import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
+import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
-import com.gmmapowell.swimlane.testsupport.matchers.HexInfoMatcher;
 
 /* The purpose of the accumulator is to take input in one form (what we discover)
  * and to build a stable model out of it.
@@ -39,11 +38,11 @@ public class AcceptanceAccumulationTests {
 	Class<?> hexClass2 = List.class;
 	Class<?> hexClass3 = Set.class;
 	Class<?> hexClass4 = Array.class;
-	HexInfoMatcher hmd = HexInfoMatcher.called(null);
-	HexInfoMatcher hm1 = HexInfoMatcher.called(hexClass1);
-	HexInfoMatcher hm2 = HexInfoMatcher.called(hexClass2);
-	HexInfoMatcher hm3 = HexInfoMatcher.called(hexClass3);
-	HexInfoMatcher hm4 = HexInfoMatcher.called(hexClass4);
+	String hmd = "";
+	String hm1 = hexClass1.getName();
+	String hm2 = hexClass2.getName();
+	String hm3 = hexClass3.getName();
+	String hm4 = hexClass4.getName();
 	
 	@Test
 	public void testNoTestsMeansNoHexes() {
