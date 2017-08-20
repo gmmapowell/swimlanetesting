@@ -12,7 +12,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
-import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
+import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 
 /* The purpose of the accumulator is to take input in one form (what we discover)
@@ -24,7 +24,8 @@ public class GeneralAccumulationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	Solution solution = context.mock(Solution.class);
 	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
-	DataCentral acc = new SwimlaneModel(errors);
+	ViewLayout layout = context.mock(ViewLayout.class);
+	DataCentral acc = new SwimlaneModel(errors, layout);
 	DateListener lsnr = context.mock(DateListener.class);
 	
 	@Test
@@ -34,14 +35,14 @@ public class GeneralAccumulationTests {
 		context.checking(new Expectations() {{
 			oneOf(lsnr).dateChanged(d);
 		}});
-		SolutionCreator sc = acc.startAnalysis(d);
+		AnalysisAccumulator sc = acc.startAnalysis(d);
 		sc.analysisComplete(d);
 	}
 
 	@Test
 	public void ifTheDateIsAlreadySetWhenWeAddTheListenerWeStillGetTheCallback() {
 		Date d = new Date();
-		SolutionCreator sc = acc.startAnalysis(d);
+		AnalysisAccumulator sc = acc.startAnalysis(d);
 		sc.analysisComplete(d);
 		context.checking(new Expectations() {{
 			oneOf(lsnr).dateChanged(d);

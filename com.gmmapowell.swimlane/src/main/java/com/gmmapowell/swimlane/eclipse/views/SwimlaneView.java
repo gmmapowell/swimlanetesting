@@ -11,8 +11,9 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 
-public class SwimlaneView implements HexagonModelListener, AccumulatorListener {
+public class SwimlaneView implements HexagonModelListener, AccumulatorListener, ViewLayout {
 	private final Composite view;
 	private HexagonDataModel model;
 	private Accumulator accumulator;

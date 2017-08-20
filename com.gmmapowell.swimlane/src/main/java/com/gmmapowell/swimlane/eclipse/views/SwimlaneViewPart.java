@@ -16,7 +16,6 @@ import com.gmmapowell.swimlane.eclipse.RealEclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.CommandDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.ErrorCollector;
-import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 import com.gmmapowell.swimlane.eclipse.project.BuildListener;
 import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
@@ -58,7 +57,7 @@ public class SwimlaneViewPart extends ViewPart implements CommandDispatcher {
 		testResults = new TestResultsView(stackUI);
 		stack.topControl = hexView.getTop();
 		ErrorCollector errorcoll = new ErrorCollector();
-		centralModel = new SwimlaneModel(errorcoll);
+		centralModel = new SwimlaneModel(errorcoll, hexView);
 		try {
 			HexagonTestAnalyzer hta = new HexagonTestAnalyzer(errorcoll, centralModel);
 			bl = new BuildListener(eclipse, hta);
@@ -69,7 +68,7 @@ public class SwimlaneViewPart extends ViewPart implements CommandDispatcher {
 			bl = null;
 		}
 
-		tr = new RemoteJUnitTestRunner(eclipse, centralModel);
+		tr = new RemoteJUnitTestRunner(eclipse, errorcoll);
 	}
 
 	@Override

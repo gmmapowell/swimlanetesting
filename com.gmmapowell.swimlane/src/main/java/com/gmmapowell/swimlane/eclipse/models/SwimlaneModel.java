@@ -20,10 +20,12 @@ import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
+import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
 
 public class SwimlaneModel implements DataCentral, TestResultReporter {
 	private final ErrorAccumulator eh;
+	private final ViewLayout layout;
 
 	private Date buildTime;
 	private Date testsCompleteTime;
@@ -45,8 +47,10 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	private Set<DateListener> buildDateListeners = new HashSet<>();
 	private Map<String, HexInfo> hexes = new TreeMap<>();
 
-	public SwimlaneModel(ErrorAccumulator eh) {
+
+	public SwimlaneModel(ErrorAccumulator eh, ViewLayout layout) {
 		this.eh = eh;
+		this.layout = layout;
 		
 	}
 	@Override

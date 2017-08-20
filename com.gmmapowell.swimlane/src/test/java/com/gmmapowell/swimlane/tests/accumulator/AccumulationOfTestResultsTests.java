@@ -11,12 +11,14 @@ import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorMessageListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
+import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 
 public class AccumulationOfTestResultsTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	ErrorAccumulator eh = context.mock(ErrorAccumulator.class);
-	TestResultReporter acc = new SwimlaneModel(eh);
+	ViewLayout layout = context.mock(ViewLayout.class);
+	TestResultReporter acc = new SwimlaneModel(eh, layout);
 	Solution solution = context.mock(Solution.class);
 	ErrorMessageListener errors = context.mock(ErrorMessageListener.class);
 
