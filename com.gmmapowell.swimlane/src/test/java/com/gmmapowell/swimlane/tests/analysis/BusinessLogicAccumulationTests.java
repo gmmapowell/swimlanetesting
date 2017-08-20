@@ -37,11 +37,8 @@ public class BusinessLogicAccumulationTests {
 	@Test
 	public void testThatIfWeAccumulateOneLogicTestTheModelMustHaveTheHexagonForIt() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -52,11 +49,8 @@ public class BusinessLogicAccumulationTests {
 	@Test
 	public void testWeCanAssociateTestsWithTheDefaultHexagon() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hmd)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hmd)); inSequence(seq);
-			oneOf(solution).portsDone(with(hmd)); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -67,11 +61,8 @@ public class BusinessLogicAccumulationTests {
 	@Test
 	public void testWeCanAssociateTestsWithTheDefaultHexagonAndNameIt() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -83,14 +74,9 @@ public class BusinessLogicAccumulationTests {
 	@Test
 	public void testWeCannotAssociateTestsWithTheDefaultHexagonAndAlsoHaveASecondHexagon() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
 			oneOf(errors).error("cannot use @BusinessLogic with default hexagon in TestCase1 since there are multiple hexagons");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});

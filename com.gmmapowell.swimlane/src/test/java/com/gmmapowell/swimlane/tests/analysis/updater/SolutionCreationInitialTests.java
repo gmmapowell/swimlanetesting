@@ -45,8 +45,7 @@ public class SolutionCreationInitialTests {
 	public void weCanTriviallyHandleThereBeingNoHexesAtAll() {
 		context.checking(new Expectations() {{
 		}});
-		helper.beginHexes();
-		helper.hexesDone();
+		helper.beginAnalysis();
 	}
 
 	@Test
@@ -54,9 +53,8 @@ public class SolutionCreationInitialTests {
 		context.checking(new Expectations() {{
 			oneOf(layout).addHexagon(with(0), with(HexInfoMatcher.called(String.class)));
 		}});
-		helper.beginHexes();
+		helper.beginAnalysis();
 		helper.hex(String.class.getName());
-		helper.hexesDone();
 	}
 
 	@Test
@@ -65,24 +63,19 @@ public class SolutionCreationInitialTests {
 			oneOf(layout).addHexagon(with(0), with(HexInfoMatcher.called(String.class)));
 			oneOf(layout).addHexagon(with(1), with(HexInfoMatcher.called(Integer.class)));
 		}});
-		helper.beginHexes();
+		helper.beginAnalysis();
 		helper.hex(String.class.getName());
 		helper.hex(Integer.class.getName());
-		helper.hexesDone();
 	}
 
 	@Test
-	public void oneHexOnePortFindsPublishesTheRightInfo() {
+	public void oneHexOnePortPublishesTheRightInfo() {
 		context.checking(new Expectations() {{
 			oneOf(layout).addHexagon(with(0), with(HexInfoMatcher.called(String.class)));
 			oneOf(layout).addHexagonPort(with(0), with(PortLocation.NORTHWEST), with(PortInfoMatcher.port(String.class)));
 		}});
-		helper.beginHexes();
+		helper.beginAnalysis();
 		helper.hex(String.class.getName());
-		helper.hexesDone();
-		helper.beginPorts(String.class.getName());
 		helper.port(PortLocation.NORTHWEST, String.class.getName());
-		helper.portsDone(String.class.getName());
 	}
-
 }

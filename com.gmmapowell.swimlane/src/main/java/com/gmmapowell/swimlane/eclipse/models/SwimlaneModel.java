@@ -173,7 +173,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		int chex = -1;
 		
 		@Override
-		public void beginHexes() {
+		public void beginAnalysis() {
 			// TODO in update cases, need to start tracking what was already there
 			
 		}
@@ -181,25 +181,15 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		@Override
 		public void hex(String clzName) {
 			HexInfo hi = new HexInfo(clzName);
-			layout.addHexagon(SwimlaneModel.this.hexes.size(), hi);
+			chex = SwimlaneModel.this.hexes.size();
+			layout.addHexagon(chex, hi);
 			SwimlaneModel.this.hexes.add(hi);
 		}
 
 		@Override
-		public void hexesDone() {
+		public void testClass(GroupOfTests grp, String clzName, List<String> tests) {
 			// TODO Auto-generated method stub
 			
-		}
-
-		@Override
-		public void beginPorts(String hi) {
-			for (int i=0;i<hexes.size();i++) {
-				if (hexes.get(i).getName().equals(hi)) {
-					chex = i;
-					return;
-				}
-			}
-			throw new RuntimeException("Protocol error");
 		}
 
 		@Override
@@ -213,10 +203,17 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		}
 
 		@Override
-		public void portsDone(String hi) {
-			chex = -1;
+		public void adapterAt(String adapter) {
+			// TODO Auto-generated method stub
+			
 		}
 
+		@Override
+		public void acceptance(String... hexes) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 		@Override
 		public void needsUtilityBar() {
 			// TODO Auto-generated method stub
@@ -227,5 +224,4 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 			SwimlaneModel.this.analysisDone(completeTime);
 		}
 	}
-
 }

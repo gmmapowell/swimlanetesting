@@ -30,8 +30,7 @@ public class UtilityAccumulationTests {
 	@Test
 	public void testThatWeCanStoreAndRecoverATest() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).needsUtilityBar(); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
@@ -43,8 +42,7 @@ public class UtilityAccumulationTests {
 	@Test
 	public void testThatWeCanStoreAndRecoverMultipleTest() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).needsUtilityBar(); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});

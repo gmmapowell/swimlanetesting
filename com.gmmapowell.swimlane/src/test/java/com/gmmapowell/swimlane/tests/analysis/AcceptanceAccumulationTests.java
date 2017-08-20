@@ -47,8 +47,7 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testNoTestsMeansNoHexes() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -58,11 +57,8 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testOneUnboundAcceptanceGivesOneHex() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hmd)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hmd)); inSequence(seq);
-			oneOf(solution).portsDone(with(hmd)); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -73,14 +69,9 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testOneAcceptanceWithTwoHexesGivesTwoHexesAndNoErrors() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -91,14 +82,9 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testTwoAcceptancesWithTwoHexesGivesTwoHexesButComplainsAboutNoTotalOrdering() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
 			oneOf(errors).error("there is no ordering between java.lang.Integer and java.util.List");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
@@ -111,14 +97,9 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testTwoAcceptancesEachWithTwoHexesInDifferentOrdersGivesTwoHexesButComplainsAboutInconsistentOrdering() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
 			oneOf(errors).error("ordering between java.lang.Integer and java.util.List is inconsistent");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
@@ -131,17 +112,10 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testTwoAcceptancesEachWithTwoOverlappingHexesThatMakeATotalOrderingOfThreeHexes() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -153,17 +127,10 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testTwoAcceptancesEachWithTwoOrderedHexesIsNotTotal() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
 			oneOf(errors).error("there is no ordering between java.util.List and java.util.Set");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
@@ -176,17 +143,10 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testThreeAcceptancesEachWithTwoOrderedHexesIsNotConsistent() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
 			oneOf(errors).error("there is a cycle between java.lang.Integer and java.util.Set");
 			oneOf(errors).error("there is a cycle between java.lang.Integer and java.util.List");
 			oneOf(errors).error("there is a cycle between java.util.List and java.util.Set");
@@ -202,20 +162,11 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testThreeAcceptancesEachWithTwoOverlappingHexesThatMakeATotalOrderingAfterTwoPasses() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
 			oneOf(solution).hex(with(hm4)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm4)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm4)); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -228,17 +179,10 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testThreeAcceptancesWithATotalOfThreeHexesCanBeConsistentWithOneCoveringAllThree() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -251,17 +195,10 @@ public class AcceptanceAccumulationTests {
 	@Test
 	public void testThreeAcceptancesWithATotalOfThreeHexesCanBeInonsistentWithOneCoveringAllThreeIfInADifferentOrder() {
 		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
-			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
 			oneOf(errors).error("ordering between java.lang.Integer and java.util.List is inconsistent");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});

@@ -91,7 +91,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 			PortConstraints pc = c.ports.get(port);
 			pc.addHex(role.getHex());
 			pc.addLocation(role.getLocation());
-			// could add adapter to port if that would be interesting
+			pc.adapters.add(adapter);
 		}
 	}
 
@@ -278,6 +278,10 @@ public class SolutionCreator implements AnalysisAccumulator {
 				if (pi == null) {
 					pi = new PortTracker(e.getKey(), hl.loc);
 					hi.addPort(pi);
+					
+					for (String at : c.adapters) {
+						pi.adapters.add(new AdapterTracker(at));
+					}
 				}
 			}
 		}
@@ -313,17 +317,18 @@ public class SolutionCreator implements AnalysisAccumulator {
 
 	private void announceResults(Date completeTime) {
 		if (solution != null) {
-			solution.beginHexes();
+			solution.beginAnalysis();
 			for (String s : hexOrdering)
 				solution.hex(s);
-			solution.hexesDone();
 	
 			for (String s : hexOrdering) {
 				HexTracker hi = hexes.get(s);
-				solution.beginPorts(s);
-				for (PortTracker p : hi.getPorts())
+				for (PortTracker p : hi.getPorts()) {
 					solution.port(p.loc, p.name);
-				solution.portsDone(s);
+					for (AdapterTracker a : p.adapters) {
+						solution.adapterAt(a.name);
+					}
+				}
 			}
 			
 			if (wantUte)
@@ -380,6 +385,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 	public class PortConstraints {
 		public Set<String> chexes = new TreeSet<>();
 		public Set<PortLocation> locations = new TreeSet<>();
+		public Set<String> adapters = new TreeSet<>();
 
 		public void addHex(String hex) {
 			if (hex != null)
@@ -405,6 +411,10 @@ public class SolutionCreator implements AnalysisAccumulator {
 		public void addLocation(PortLocation location) {
 			if (location != null)
 				locations.add(location);
+		}
+		
+		public void addAdapter(String adapterName) {
+			this.adapters.add(adapterName);
 		}
 
 	}
@@ -437,7 +447,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 		}
 	}
 
-	public class HexTracker {
+	public static class HexTracker {
 		private final String name;
 		private final List<PortTracker> ports = new ArrayList<>();
 		
@@ -472,13 +482,23 @@ public class SolutionCreator implements AnalysisAccumulator {
 
 	}
 
-	public class PortTracker {
+	public static class PortTracker {
 		private final String name;
 		private final PortLocation loc;
+		private final List<AdapterTracker> adapters = new ArrayList<>();
 
 		public PortTracker(String port, PortLocation location) {
 			this.name = port;
 			this.loc = location;
 		}
 	}
+
+	public static class AdapterTracker {
+		private String name;
+
+		public AdapterTracker(String at) {
+			this.name = at;
+		}
+	}
+
 }
