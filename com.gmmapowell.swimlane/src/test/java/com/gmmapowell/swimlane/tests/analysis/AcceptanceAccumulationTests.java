@@ -1,7 +1,8 @@
-package com.gmmapowell.swimlane.tests.accumulator;
+package com.gmmapowell.swimlane.tests.analysis;
 
 import java.lang.reflect.Array;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -13,10 +14,13 @@ import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
+import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
+import com.gmmapowell.swimlane.testsupport.matchers.HexInfoMatcher;
 
 /* The purpose of the accumulator is to take input in one form (what we discover)
  * and to build a stable model out of it.
@@ -27,7 +31,7 @@ public class AcceptanceAccumulationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	Solution solution = context.mock(Solution.class);
 	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
-	AnalysisAccumulator acc = new SolutionCreator(errors, solution);
+	AnalysisAccumulator acc = new SolutionCreator(errors, solution, new HashMap<GroupOfTests, AllConstraints>());
 	Sequence seq = context.sequence("solution");
 	TestGroup grp = new TestGroup("Project", null);
 	Date bcd = new Date();
@@ -46,8 +50,8 @@ public class AcceptanceAccumulationTests {
 		context.checking(new Expectations() {{
 			oneOf(solution).beginHexes(); inSequence(seq);
 			oneOf(solution).hexesDone(); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.analysisComplete(bcd);
 	}
@@ -60,8 +64,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).hexesDone(); inSequence(seq);
 			oneOf(solution).beginPorts(with(hmd)); inSequence(seq);
 			oneOf(solution).portsDone(with(hmd)); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole());
 		acc.analysisComplete(bcd);
@@ -78,8 +82,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
 			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
 			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
 		acc.analysisComplete(bcd);
@@ -97,8 +101,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
 			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
 			oneOf(errors).error("there is no ordering between java.lang.Integer and java.util.List");
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1));
 		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2));
@@ -117,8 +121,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
 			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
 			oneOf(errors).error("ordering between java.lang.Integer and java.util.List is inconsistent");
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
 		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass1));
@@ -139,8 +143,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
 			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
 			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
 		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3));
@@ -162,8 +166,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
 			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
 			oneOf(errors).error("there is no ordering between java.util.List and java.util.Set");
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
 		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass1, hexClass3));
@@ -187,8 +191,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(errors).error("there is a cycle between java.lang.Integer and java.util.Set");
 			oneOf(errors).error("there is a cycle between java.lang.Integer and java.util.List");
 			oneOf(errors).error("there is a cycle between java.util.List and java.util.Set");
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
 		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3));
@@ -213,8 +217,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
 			oneOf(solution).beginPorts(with(hm4)); inSequence(seq);
 			oneOf(solution).portsDone(with(hm4)); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2));
 		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass2, hexClass3));
@@ -236,8 +240,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
 			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
 			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2, hexClass3));
 		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass1, hexClass2));
@@ -260,8 +264,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).beginPorts(with(hm3)); inSequence(seq);
 			oneOf(solution).portsDone(with(hm3)); inSequence(seq);
 			oneOf(errors).error("ordering between java.lang.Integer and java.util.List is inconsistent");
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2, hexClass3));
 		acc.haveTestClass(grp, "TestCase3", new AcceptanceRole(hexClass2, hexClass1));

@@ -1,6 +1,7 @@
-package com.gmmapowell.swimlane.tests.accumulator;
+package com.gmmapowell.swimlane.tests.analysis;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.jmock.Expectations;
@@ -12,16 +13,19 @@ import org.junit.Test;
 import com.gmmapowell.swimlane.eclipse.analyzer.BusinessRole;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
+import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
+import com.gmmapowell.swimlane.testsupport.matchers.HexInfoMatcher;
 
 public class BusinessLogicAccumulationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	Solution solution = context.mock(Solution.class);
 	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
-	AnalysisAccumulator acc = new SolutionCreator(errors, solution);
+	AnalysisAccumulator acc = new SolutionCreator(errors, solution, new HashMap<GroupOfTests, AllConstraints>());
 	Date bcd = new Date();
 	TestGroup grp = new TestGroup("Project", null);
 	Class<?> hexClass1 = Integer.class;
@@ -39,8 +43,8 @@ public class BusinessLogicAccumulationTests {
 			oneOf(solution).hexesDone(); inSequence(seq);
 			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
 			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new BusinessRole(hexClass1));
 		acc.analysisComplete(bcd);
@@ -54,8 +58,8 @@ public class BusinessLogicAccumulationTests {
 			oneOf(solution).hexesDone(); inSequence(seq);
 			oneOf(solution).beginPorts(with(hmd)); inSequence(seq);
 			oneOf(solution).portsDone(with(hmd)); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new BusinessRole(null));
 		acc.analysisComplete(bcd);
@@ -69,8 +73,8 @@ public class BusinessLogicAccumulationTests {
 			oneOf(solution).hexesDone(); inSequence(seq);
 			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
 			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new BusinessRole(null));
 		acc.haveTestClass(grp, "TestCase1", new BusinessRole(hexClass1));
@@ -89,8 +93,8 @@ public class BusinessLogicAccumulationTests {
 			oneOf(solution).beginPorts(with(hm2)); inSequence(seq);
 			oneOf(solution).portsDone(with(hm2)); inSequence(seq);
 			oneOf(errors).error("cannot use @BusinessLogic with default hexagon in TestCase1 since there are multiple hexagons");
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new BusinessRole(null));
 		acc.haveTestClass(grp, "TestCase2", new AcceptanceRole(hexClass1, hexClass2));

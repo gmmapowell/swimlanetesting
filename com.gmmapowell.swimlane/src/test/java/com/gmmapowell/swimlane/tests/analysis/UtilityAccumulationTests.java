@@ -1,6 +1,7 @@
-package com.gmmapowell.swimlane.tests.accumulator;
+package com.gmmapowell.swimlane.tests.analysis;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import org.jmock.Expectations;
 import org.jmock.Sequence;
@@ -11,15 +12,17 @@ import org.junit.Test;
 import com.gmmapowell.swimlane.eclipse.analyzer.UtilityRole;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
+import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
 
 public class UtilityAccumulationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	Solution solution = context.mock(Solution.class);
 	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
-	AnalysisAccumulator acc = new SolutionCreator(errors, solution);
+	AnalysisAccumulator acc = new SolutionCreator(errors, solution, new HashMap<GroupOfTests, AllConstraints>());
 	Date bcd = new Date();
 	TestGroup grp = new TestGroup("Project", null);
 	Sequence seq = context.sequence("solution");
@@ -30,8 +33,8 @@ public class UtilityAccumulationTests {
 			oneOf(solution).beginHexes(); inSequence(seq);
 			oneOf(solution).hexesDone(); inSequence(seq);
 			oneOf(solution).needsUtilityBar(); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new UtilityRole());
 		acc.analysisComplete(bcd);
@@ -43,8 +46,8 @@ public class UtilityAccumulationTests {
 			oneOf(solution).beginHexes(); inSequence(seq);
 			oneOf(solution).hexesDone(); inSequence(seq);
 			oneOf(solution).needsUtilityBar(); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
-		acc.startAnalysis(bcd);
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new UtilityRole());
 		acc.haveTestClass(grp, "TestCase1", new UtilityRole());

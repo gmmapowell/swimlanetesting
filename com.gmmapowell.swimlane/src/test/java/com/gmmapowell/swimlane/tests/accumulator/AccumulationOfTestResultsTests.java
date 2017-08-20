@@ -1,36 +1,22 @@
 package com.gmmapowell.swimlane.tests.accumulator;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorMessageListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestResultClass;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
-import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
-import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
-import com.gmmapowell.swimlane.eclipse.models.TestGroup;
-import com.gmmapowell.swimlane.tests.swtutil.TestBase;
+import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 
 public class AccumulationOfTestResultsTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
-	TestResultReporter acc = new SolutionCreator();
+	ErrorAccumulator eh = context.mock(ErrorAccumulator.class);
+	TestResultReporter acc = new SwimlaneModel(eh);
 	Solution solution = context.mock(Solution.class);
 	ErrorMessageListener errors = context.mock(ErrorMessageListener.class);
 
@@ -68,16 +54,19 @@ public class AccumulationOfTestResultsTests {
 //		hex.analysisComplete();
 	}
 
-	/*
 	@Test
 	public void testThatABarThatHasNotRunAnyTestsYetGetsAnEmptyCollection() {
+		fail("revisit all these");
+		/*
 		trr.testSuccess(test1);
 		assertEquals(0, hdm.getErrors().size());
 		Collection<TestResultGroup> acc = hdm.getTestResultsFor("acceptance.1");
 		assertNotNull(acc);
 		assertEquals(0, acc.size());
+		*/
 	}
 
+	/*
 	@Test
 	public void testWeCanRecoverATestGroupGivenTheBarId() {
 		trr.testSuccess(test1);

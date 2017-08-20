@@ -1,5 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.interfaces;
 
+import java.util.Date;
+
 public interface Solution {
 	void beginHexes();
 	void hex(HexData hi);
@@ -10,4 +12,5 @@ public interface Solution {
 	void portsDone(HexData hi);
 
 	void needsUtilityBar();
+	void analysisDone(Date completeTime);
 }
