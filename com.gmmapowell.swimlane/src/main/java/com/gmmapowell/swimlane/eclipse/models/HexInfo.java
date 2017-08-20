@@ -3,6 +3,7 @@ package com.gmmapowell.swimlane.eclipse.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 
@@ -34,6 +35,12 @@ public class HexInfo implements HexData {
 		return null;
 	}
 	
+	@Override
+	public void addBusinessLogicListener(BarDataListener lsnr) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	@Override
 	public String toString() {
 		return "hex[" + name + "]";

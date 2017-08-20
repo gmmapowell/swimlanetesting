@@ -2,29 +2,46 @@ package com.gmmapowell.swimlane.tests.accumulator;
 
 import static org.junit.Assert.fail;
 
+import java.util.Date;
+
+import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
+import com.gmmapowell.swimlane.eclipse.analyzer.BusinessRole;
+import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
+import com.gmmapowell.swimlane.testsupport.CaptureLayout;
+import com.gmmapowell.swimlane.testsupport.matchers.TestInfoMatcher;
 
 public class UpdatingRealTimeTestResultInfo {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
-	DateListener lsnr = context.mock(DateListener.class);
-	ViewLayout layout = context.mock(ViewLayout.class);
+	CaptureLayout layout = new CaptureLayout(context);
 	SwimlaneModel acc = new SwimlaneModel(errors, layout);
 	TestResultReporter trr = (TestResultReporter) acc;
 	GroupOfTests grp = context.mock(GroupOfTests.class);
 
 	@Test
-	public void whenTheTreeArrivesWeAreNotifiedOfTheNumberOfTests() {
-		fail("not yet refactored");
+	public void weCanRegisterForUpdatesAboutBusinessLogicTestsInAHex() {
+		AnalysisAccumulator analyzer = acc.startAnalysis(new Date());
+		analyzer.haveTestClass(grp, "TestClass1", new BusinessRole(String.class));
+		analyzer.analysisComplete(new Date());
+		BarDataListener lsnr = layout.hexes.get(0);
+		context.checking(new Expectations() {{
+			oneOf(lsnr).clearGroup(grp);
+			oneOf(lsnr).testCompleted(with(grp), with(TestInfoMatcher.success(grp, "TestClass1", "case1")));
+		}});
+		acc.testCount(grp, 1);
+		acc.testSuccess(grp, "TestClass1", "case1");
+		acc.testsCompleted(grp, new Date());
 		/*
 		acc.acceptance(grp, String.class, new ArrayList<>());
 		acc.analysisComplete();

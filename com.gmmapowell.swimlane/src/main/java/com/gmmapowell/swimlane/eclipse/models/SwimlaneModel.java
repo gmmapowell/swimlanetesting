@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
+import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
@@ -55,7 +56,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		
 	}
 	@Override
-	public SolutionCreator startAnalysis(Date startTime) {
+	public AnalysisAccumulator startAnalysis(Date startTime) {
 		if (currentSolution != null)
 			throw new RuntimeException("I think you are running two analyses at the same time ... don't");
 		return new SolutionCreator(eh, new SolutionHelper(), constraints);
