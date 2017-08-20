@@ -3,6 +3,7 @@ package com.gmmapowell.swimlane.tests.adapter.project;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Date;
 
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -12,6 +13,7 @@ import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
@@ -30,19 +32,26 @@ public class AnalyzerTests {
 	private GroupOfTests grp;
 	private String hex1, hex2;
 	private String adapter1, port1;
+	private DataCentral hub;
 
 	@Before
 	public void setup() throws Exception {
 		grp = context.mock(GroupOfTests.class);
+		hub = context.mock(DataCentral.class);
 		accumulator = context.mock(AnalysisAccumulator.class);
+		Date bcd = new Date();
+		context.checking(new Expectations() {{
+			oneOf(hub).startAnalysis(bcd); will(returnValue(accumulator));
+		}});
 		File anns = new File("../swimlane-annotations/bin/classes/");
 		File root = new File("../swimlane-annotations/bin/testclasses");
 		cl = new URLClassLoader(new URL[] { root.toURI().toURL(), anns.toURI().toURL() });
-		analyzer = new HexagonTestAnalyzer(eh, accumulator);
+		analyzer = new HexagonTestAnalyzer(eh, hub);
 		hex1 = "com.gmmapowell.swimlane.samples.Hexagon1";
 		hex2 = "com.gmmapowell.swimlane.samples.Hexagon2";
 		adapter1 = "com.gmmapowell.swimlane.samples.Hex1Port1Adapter1";
 		port1 = "com.gmmapowell.swimlane.samples.Hex1Port1";
+		analyzer.startAnalysis(bcd);
 	}
 
 	@Test

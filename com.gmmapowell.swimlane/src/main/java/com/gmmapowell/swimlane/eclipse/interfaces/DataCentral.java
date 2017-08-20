@@ -4,8 +4,6 @@ import java.util.Date;
 
 import org.eclipse.core.runtime.IStatus;
 
-import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
-
 // TODO: I'm not really happy with this name ...
 public interface DataCentral {
 	public interface GroupHandler {
@@ -16,5 +14,5 @@ public interface DataCentral {
 
 	void allGroups(GroupHandler hdlr);
 
-	SolutionCreator startAnalysis(Date startTime);
+	AnalysisAccumulator startAnalysis(Date startTime);
 }

@@ -6,6 +6,7 @@ import java.net.URLClassLoader;
 import java.util.Date;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
@@ -17,16 +18,17 @@ import com.gmmapowell.swimlane.eclipse.roles.UnlabelledTestRole;
 
 public class HexagonTestAnalyzer implements ProjectAnalyzer {
 	private final ErrorAccumulator eh;
-	private final AnalysisAccumulator accumulator;
+	private final DataCentral hub;
+	private AnalysisAccumulator accumulator;
 
-	public HexagonTestAnalyzer(ErrorAccumulator eh, AnalysisAccumulator accumulator) {
+	public HexagonTestAnalyzer(ErrorAccumulator eh, DataCentral hub) {
 		this.eh = eh;
-		this.accumulator = accumulator;
+		this.hub = hub;
 	}
 
 	@Override
 	public void startAnalysis(Date startTime) {
-		accumulator.startAnalysis(startTime);
+		accumulator = hub.startAnalysis(startTime);
 	}
 	
 	@Override
@@ -100,7 +102,4 @@ public class HexagonTestAnalyzer implements ProjectAnalyzer {
 	public void analysisComplete(Date completeTime) {
 		accumulator.analysisComplete(completeTime);
 	}
-	
-	
-
 }

@@ -15,7 +15,9 @@ import org.eclipse.ui.part.ViewPart;
 import com.gmmapowell.swimlane.eclipse.RealEclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
 import com.gmmapowell.swimlane.eclipse.interfaces.CommandDispatcher;
+import com.gmmapowell.swimlane.eclipse.models.ErrorCollector;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
+import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 import com.gmmapowell.swimlane.eclipse.project.BuildListener;
 import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
 
@@ -40,7 +42,7 @@ public class HexagonViewPart extends ViewPart implements CommandDispatcher {
 	private HexView hexView;
 	private ErrorView errorView;
 	private TestResultsView testResults;
-	private SolutionCreator accumulator;
+	private SwimlaneModel centralModel;
 
 	public void createPartControl(Composite parent) {
 		RealEclipseAbstractor eclipse = new RealEclipseAbstractor();
@@ -55,9 +57,10 @@ public class HexagonViewPart extends ViewPart implements CommandDispatcher {
 		errorView = new ErrorView(stackUI);
 		testResults = new TestResultsView(stackUI);
 		stack.topControl = hexView.getTop();
-		accumulator = new SolutionCreator();
+		ErrorCollector errorcoll = new ErrorCollector();
+		centralModel = new SwimlaneModel(errorcoll);
 		try {
-			HexagonTestAnalyzer hta = new HexagonTestAnalyzer(accumulator, accumulator);
+			HexagonTestAnalyzer hta = new HexagonTestAnalyzer(errorcoll, centralModel);
 			bl = new BuildListener(eclipse, hta);
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
 			bl.analyzeProjects(eclipse.getAllProjects());
@@ -66,7 +69,7 @@ public class HexagonViewPart extends ViewPart implements CommandDispatcher {
 			bl = null;
 		}
 
-		tr = new RemoteJUnitTestRunner(eclipse, accumulator);
+		tr = new RemoteJUnitTestRunner(eclipse, centralModel);
 	}
 
 	@Override
@@ -104,7 +107,7 @@ public class HexagonViewPart extends ViewPart implements CommandDispatcher {
 	
 	@Override
 	public void runAllTests() {
-		accumulator.runAllTests(tr);
+		centralModel.runAllTests(tr);
 	}
 
 	public static CommandDispatcher get(ExecutionEvent event) {
