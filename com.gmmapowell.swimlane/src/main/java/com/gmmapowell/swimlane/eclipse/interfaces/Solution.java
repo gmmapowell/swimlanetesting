@@ -16,7 +16,7 @@ public interface Solution {
 
 	void port(PortLocation loc, String port);
 	// for each port
-	void adapterAt(String adapter);
+	void adapter(String adapter);
 
 	void acceptance(String... hexes);
 	void needsUtilityBar();

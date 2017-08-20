@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
@@ -171,6 +172,8 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 
 	public class SolutionHelper implements Solution {
 		int chex = -1;
+		PortLocation cloc;
+		int apos = 0;
 		
 		@Override
 		public void beginAnalysis() {
@@ -200,12 +203,16 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 			PortInfo pi = new PortInfo(port, loc);
 			hi.addPort(pi);
 			layout.addHexagonPort(chex, loc, pi);
+			cloc = loc;
 		}
 
 		@Override
-		public void adapterAt(String adapter) {
-			// TODO Auto-generated method stub
+		public void adapter(String name) {
+			if (chex == -1 || cloc == null)
+				throw new RuntimeException("Protocol error");
 			
+			AdapterInfo adapter = new AdapterInfo(name);
+			layout.addAdapter(chex, cloc, apos++, adapter);
 		}
 
 		@Override

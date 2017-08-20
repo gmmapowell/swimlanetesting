@@ -326,7 +326,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 				for (PortTracker p : hi.getPorts()) {
 					solution.port(p.loc, p.name);
 					for (AdapterTracker a : p.adapters) {
-						solution.adapterAt(a.name);
+						solution.adapter(a.name);
 					}
 				}
 			}
