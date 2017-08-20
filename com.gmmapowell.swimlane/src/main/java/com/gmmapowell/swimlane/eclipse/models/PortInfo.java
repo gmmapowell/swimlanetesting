@@ -17,7 +17,6 @@ public class PortInfo implements PortData {
 		return portClass;
 	}
 
-	@Override
 	public PortLocation getLocation() {
 		return loc;
 	}

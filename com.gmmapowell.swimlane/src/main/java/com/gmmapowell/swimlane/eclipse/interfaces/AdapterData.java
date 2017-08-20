@@ -1,9 +1,9 @@
 package com.gmmapowell.swimlane.eclipse.interfaces;
 
-public interface PortData {
+public interface AdapterData {
 	String getName();
-//	PortLocation getLocation();
+//	int getLocation();
 	
-	// addAdapterListener()
+	// addTestListener()
 	// addDisposeListener()
 }

@@ -18,7 +18,6 @@ public class HexInfo implements HexData {
 		return name;
 	}
 
-	@Override
 	public List<PortData> getPorts() {
 		return ports;
 	}

@@ -26,6 +26,7 @@ import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
 public class SwimlaneModel implements DataCentral, TestResultReporter {
 	private final ErrorAccumulator eh;
 	private final ViewLayout layout;
+	private final List<HexInfo> hexes = new ArrayList<>();
 
 	private Date buildTime;
 	private Date testsCompleteTime;
@@ -45,7 +46,6 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	private LogicInfo defaultLogic;
 	private Map<GroupOfTests, Object> groups = new TreeMap<>();
 	private Set<DateListener> buildDateListeners = new HashSet<>();
-	private Map<String, HexInfo> hexes = new TreeMap<>();
 
 
 	public SwimlaneModel(ErrorAccumulator eh, ViewLayout layout) {
@@ -173,14 +173,15 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 
 		@Override
 		public void beginHexes() {
-			// TODO Auto-generated method stub
+			// TODO in update cases, need to start tracking what was already there
 			
 		}
 
 		@Override
 		public void hex(String clzName) {
-			// TODO Auto-generated method stub
-			
+			HexInfo hi = new HexInfo(clzName);
+			layout.addHexagon(SwimlaneModel.this.hexes.size(), hi);
+			SwimlaneModel.this.hexes.add(hi);
 		}
 
 		@Override
