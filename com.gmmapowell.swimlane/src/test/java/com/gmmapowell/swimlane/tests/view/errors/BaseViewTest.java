@@ -8,14 +8,12 @@ import org.junit.Before;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.views.ErrorView;
-import com.gmmapowell.swimlane.fakes.FakeModelDispatcher;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public abstract class BaseViewTest extends TestBase {
 	public Shell shell;
 	public ErrorView hv;
 	protected ModelDispatcher md;
-	protected FakeModelDispatcher fmd;
 
 	@Before
 	public void setup() throws Exception {

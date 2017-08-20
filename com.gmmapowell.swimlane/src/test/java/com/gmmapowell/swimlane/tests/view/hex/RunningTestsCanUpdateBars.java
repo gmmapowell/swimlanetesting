@@ -42,7 +42,7 @@ public class RunningTestsCanUpdateBars extends BaseHexViewTest {
 			}
 		});
 		progress.become("halfway");
-		fmd.barChanged(a);
+//		fmd.barChanged(a);
 		displayHelper.flushPendingEvents();
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
@@ -53,7 +53,7 @@ public class RunningTestsCanUpdateBars extends BaseHexViewTest {
 			}
 		});
 		progress.become("complete");
-		fmd.barChanged(a);
+//		fmd.barChanged(a);
 		displayHelper.flushPendingEvents();
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override

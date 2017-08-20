@@ -91,7 +91,7 @@ public class ShowingOneHexBlock extends BaseHexViewTest {
 		specifyModel(10, 0, Status.NONE);
 		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
 		mode.become("plus5");
-		fmd.real().barChanged(bd);
+//		fmd.real().barChanged(bd);
 		displayHelper.flushPendingEvents();
 		checkSizeColors(hexagon, 276, 238, new ImageChecker() {
 			@Override

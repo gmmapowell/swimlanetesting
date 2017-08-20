@@ -1,41 +1,31 @@
 package com.gmmapowell.swimlane.tests.accumulator;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.jmock.Expectations;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Rule;
 import org.junit.Test;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
-import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
-import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
-import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
-import com.gmmapowell.swimlane.eclipse.models.SimpleTree;
-import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
-import com.gmmapowell.swimlane.eclipse.models.TestGroup;
-import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
-import com.gmmapowell.swimlane.tests.swtutil.TestBase;
+import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
+import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 
-public class UpdatingRealTimeTestResultInfo extends TestBase {
-	SolidModelDispatcher md = new SolidModelDispatcher(null, null);
-	Accumulator acc = new SolutionCreator();
-	HexagonDataModel hdm = (HexagonDataModel)acc;
+public class UpdatingRealTimeTestResultInfo {
+	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
+	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
+	DateListener lsnr = context.mock(DateListener.class);
+	ViewLayout layout = context.mock(ViewLayout.class);
+	SwimlaneModel acc = new SwimlaneModel(errors, layout);
 	TestResultReporter trr = (TestResultReporter) acc;
 	GroupOfTests grp = context.mock(GroupOfTests.class);
 
 	@Test
 	public void whenTheTreeArrivesWeAreNotifiedOfTheNumberOfTests() {
+		fail("not yet refactored");
+		/*
 		acc.acceptance(grp, String.class, new ArrayList<>());
 		acc.analysisComplete();
 		List<BarData> bars = hdm.getAcceptanceTests();
@@ -49,8 +39,9 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		assertEquals(4, bar.getTotal());
 		assertEquals(0, bar.getComplete());
 		assertEquals(Status.OK, bar.getStatus());
+		*/
 	}
-
+/*
 	@Test
 	public void reportingTestSuccessFiresBarDataListener() {
 		acc.acceptance(grp, String.class, new ArrayList<>());
@@ -226,7 +217,7 @@ public class UpdatingRealTimeTestResultInfo extends TestBase {
 		}
 		return bar;
 	}
-
+*/
 	// also need to test for tree() calls
 	// and what if there is no bar
 }

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+@Deprecated
 public interface HexagonDataModel {
 	enum Status { NONE, OK, FAILURES, SKIPPED }; 
 	public Date getBuildTime();

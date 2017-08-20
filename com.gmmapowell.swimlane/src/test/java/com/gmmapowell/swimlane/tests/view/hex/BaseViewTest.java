@@ -17,7 +17,6 @@ import org.junit.Before;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
-import com.gmmapowell.swimlane.fakes.FakeModelDispatcher;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
@@ -25,7 +24,6 @@ import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 public abstract class BaseViewTest extends TestBase {
 	public Shell shell;
 	protected ModelDispatcher md;
-	protected FakeModelDispatcher fmd;
 
 	@Before
 	public void setup() throws Exception {
@@ -37,7 +35,6 @@ public abstract class BaseViewTest extends TestBase {
 		shell = displayHelper.createShell();
 		shell.setLayout(new GridLayout(1, false));
 		md = context.mock(ModelDispatcher.class);
-		fmd = new FakeModelDispatcher(md);
 	}
 
 	protected void complete() {
@@ -53,7 +50,6 @@ public abstract class BaseViewTest extends TestBase {
 	}
 
 	protected HexagonDataModel pushModel(HexagonDataModel testModel) {
-		fmd.setModel(testModel);
 		updateShell();
 		return testModel;
 	}
