@@ -34,7 +34,7 @@ import org.osgi.framework.Bundle;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.RunningJob;
-import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
+import com.gmmapowell.swimlane.eclipse.views.SwimlaneViewPart;
 
 public class RealEclipseAbstractor implements EclipseAbstractor {
 	@Override
@@ -101,7 +101,7 @@ public class RealEclipseAbstractor implements EclipseAbstractor {
 		try {
 			IWorkbench wb = PlatformUI.getWorkbench();
 			IWorkbenchWindow iww = wb.getActiveWorkbenchWindow();
-			HexagonViewPart hvp = (HexagonViewPart) iww.getActivePage().findView(HexagonViewPart.ID);
+			SwimlaneViewPart hvp = (SwimlaneViewPart) iww.getActivePage().findView(SwimlaneViewPart.ID);
 			IToolBarManager tbm = hvp.getViewSite().getActionBars().getToolBarManager();
 			ContributionItem tr = (ContributionItem)tbm.find("com.gmmapowell.swimlane.eclipse.toolbar.TestResults");
 			tr.update();

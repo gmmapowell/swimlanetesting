@@ -32,14 +32,14 @@ import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
  * From this, it builds a "dynamic" view of the tests, i.e. quantity, names and (current) results
  * These are then put together with the static view to build and color the bars within the various portions of the static layout
  */
-public class HexagonViewPart extends ViewPart implements CommandDispatcher {
+public class SwimlaneViewPart extends ViewPart implements CommandDispatcher {
 	public static final String ID = "com.gmmapowell.swimlane.views.HexagonView";
 
 	private BuildListener bl;
 	private RemoteJUnitTestRunner tr;
 	private Composite stackUI;
 	private StackLayout stack;
-	private HexView hexView;
+	private SwimlaneView hexView;
 	private ErrorView errorView;
 	private TestResultsView testResults;
 	private SwimlaneModel centralModel;
@@ -53,7 +53,7 @@ public class HexagonViewPart extends ViewPart implements CommandDispatcher {
 		stackUI.setLayoutData(new GridData(GridData.FILL_BOTH));
 		stack = new StackLayout();
 		stackUI.setLayout(stack);
-		hexView = new HexView(stackUI);
+		hexView = new SwimlaneView(stackUI);
 		errorView = new ErrorView(stackUI);
 		testResults = new TestResultsView(stackUI);
 		stack.topControl = hexView.getTop();

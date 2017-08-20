@@ -5,13 +5,13 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.CommandDispatcher;
-import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
+import com.gmmapowell.swimlane.eclipse.views.SwimlaneViewPart;
 
-public class ShowHexesHandler extends AbstractHandler {
+public class ShowSwimlaneHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		CommandDispatcher hv = HexagonViewPart.get(event);
+		CommandDispatcher hv = SwimlaneViewPart.get(event);
 		if (hv == null)
 			return null;
 		hv.showHexPane();

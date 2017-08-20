@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Layout;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 
-public class HexagonLayout extends Layout {
+public class SwimlaneLayout extends Layout {
 
 	@Override
 	protected Point computeSize(Composite composite, int wHint, int hHint, boolean flushCache) {

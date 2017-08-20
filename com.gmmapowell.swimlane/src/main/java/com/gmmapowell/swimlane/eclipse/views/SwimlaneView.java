@@ -12,16 +12,16 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 
-public class HexView implements HexagonModelListener, AccumulatorListener {
+public class SwimlaneView implements HexagonModelListener, AccumulatorListener {
 	private final Composite view;
 	private HexagonDataModel model;
 	private Accumulator accumulator;
 
-	public HexView(Composite parent) {
+	public SwimlaneView(Composite parent) {
 		view = new Composite(parent, SWT.NONE);
 		view.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		HexagonLayout layout = new HexagonLayout();
+		SwimlaneLayout layout = new SwimlaneLayout();
 		view.setLayout(layout);
 	}
 

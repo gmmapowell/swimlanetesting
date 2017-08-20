@@ -8,23 +8,23 @@
             id="com.gmmapowell.swimlane">
       </category>
       <view
-            name="Hexagons"
+            name="Swimlane"
             icon="icons/sample.gif"
             category="com.gmmapowell.swimlane"
-            class="com.gmmapowell.swimlane.eclipse.views.HexagonViewPart"
-            id="com.gmmapowell.swimlane.views.HexagonView">
+            class="com.gmmapowell.swimlane.eclipse.views.SwimlaneViewPart"
+            id="com.gmmapowell.swimlane.views.SwimlaneView">
       </view>
 	</extension>
    
 	<extension
 		point="org.eclipse.ui.menus">
 		<menuContribution
-	    	locationURI="toolbar:com.gmmapowell.swimlane.views.HexagonView">
+	    	locationURI="toolbar:com.gmmapowell.swimlane.views.SwimlaneView">
 		    <command
-				id="com.gmmapowell.swimlane.eclipse.toolbar.ShowHexesButton"
-		        commandId="com.gmmapowell.swimlane.eclipse.commands.ShowHexes"
+				id="com.gmmapowell.swimlane.eclipse.toolbar.ShowSwimlaneButton"
+		        commandId="com.gmmapowell.swimlane.eclipse.commands.ShowSwimlane"
 				style="radio"
-				tooltip="Show Hex Diagram"
+				tooltip="Show Swimlane Diagram"
 			>
 			</command>
 		</menuContribution>
@@ -33,7 +33,7 @@
 	<extension
 		point="org.eclipse.ui.menus">
 		<menuContribution
-	    	locationURI="toolbar:com.gmmapowell.swimlane.views.HexagonView">
+	    	locationURI="toolbar:com.gmmapowell.swimlane.views.SwimlaneView">
 		    <command
 				id="com.gmmapowell.swimlane.eclipse.toolbar.TestResults"
 		        commandId="com.gmmapowell.swimlane.eclipse.commands.TestResults"
@@ -47,7 +47,7 @@
 	<extension
     	point="org.eclipse.ui.menus">
 		<menuContribution
-    		locationURI="toolbar:com.gmmapowell.swimlane.views.HexagonView">
+    		locationURI="toolbar:com.gmmapowell.swimlane.views.SwimlaneView">
 	    	<command
 	        	id="com.gmmapowell.swimlane.eclipse.toolbar.ShowErrorsButton"
 	        	commandId="com.gmmapowell.swimlane.eclipse.commands.ShowErrors"
@@ -61,7 +61,7 @@
 	<extension
     	point="org.eclipse.ui.menus">
 		<menuContribution
-    		locationURI="toolbar:com.gmmapowell.swimlane.views.HexagonView">
+    		locationURI="toolbar:com.gmmapowell.swimlane.views.SwimlaneView">
 	    	<command
 	            commandId="com.gmmapowell.swimlane.eclipse.commands.RunAll"
 	            id="com.gmmapowell.swimlane.eclipse.toolbar.RunAllButton"
@@ -79,16 +79,16 @@
             id="com.gmmapowell.swimlane">
 		</category>
 		<command
-   			id="com.gmmapowell.swimlane.eclipse.commands.ShowHexes"
-   			name="Show Hexes"
-   			defaultHandler="com.gmmapowell.swimlane.eclipse.handlers.ShowHexesHandler"
+   			id="com.gmmapowell.swimlane.eclipse.commands.ShowSwimlane"
+   			name="Show Swimlanes"
+   			defaultHandler="com.gmmapowell.swimlane.eclipse.handlers.ShowSwimlaneHandler"
 		>
 		   	<commandParameter
 		   		id="org.eclipse.ui.commands.radioStateParameter"
-		   		name="Hex"
+		   		name="Swimlane"
 		   		optional="false">
 		   	</commandParameter>
-		   	<state class="org.eclipse.ui.handlers.RadioState:Hex"
+		   	<state class="org.eclipse.ui.handlers.RadioState:Swimlane"
 		   		id="org.eclipse.ui.commands.radioState">
 		   	</state>
 	   </command>
@@ -110,7 +110,7 @@
 		   		name="Tests"
 		   		optional="false">
 		   	</commandParameter>
-		   	<state class="org.eclipse.ui.handlers.RadioState:Hex"
+		   	<state class="org.eclipse.ui.handlers.RadioState:Swimlane"
 		   		id="org.eclipse.ui.commands.radioState">
 		   	</state>
 	   </command>
@@ -132,7 +132,7 @@
    				name="Errors"
 		   		optional="false">
    			</commandParameter>
-			<state class="org.eclipse.ui.handlers.RadioState:Hex"
+			<state class="org.eclipse.ui.handlers.RadioState:Swimlane"
 	   			id="org.eclipse.ui.commands.radioState">
 			</state>
 	   </command>
