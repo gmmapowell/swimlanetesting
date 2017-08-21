@@ -12,10 +12,8 @@ import org.eclipse.core.runtime.SubMonitor;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo.Type;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
-import com.gmmapowell.swimlane.eclipse.models.SimpleTree;
 
 public class TestResultAnalyzer {
 	class PendingNode {

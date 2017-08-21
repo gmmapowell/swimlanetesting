@@ -2,6 +2,8 @@ package com.gmmapowell.swimlane.testsupport;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.jmock.integration.junit4.JUnitRuleMockery;
 
@@ -19,6 +21,7 @@ public class CaptureLayout implements ViewLayout {
 	public final List<BarDataListener> hexes = new ArrayList<>();
 	public final List<BarDataListener> acceptance = new ArrayList<>();
 	public BarDataListener utility;
+	public final Map<String, BarDataListener> adapters = new TreeMap<>();
 	
 	public CaptureLayout(JUnitRuleMockery context) {
 		this.context = context;
@@ -50,8 +53,9 @@ public class CaptureLayout implements ViewLayout {
 
 	@Override
 	public void addAdapter(int hex, PortLocation ploc, int aloc, AdapterData adapter) {
-		// TODO Auto-generated method stub
-		
+		BarDataListener lsnr = context.mock(BarDataListener.class, "adapter_" + adapter.getName());
+		adapter.addTestListener(lsnr);
+		adapters.put(adapter.getName(), lsnr);
 	}
 
 

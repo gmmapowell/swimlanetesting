@@ -18,6 +18,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
+import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 import com.gmmapowell.swimlane.testsupport.CaptureLayout;
 import com.gmmapowell.swimlane.testsupport.matchers.TestInfoMatcher;
 
@@ -98,6 +99,21 @@ public class UpdatingRealTimeTestResultInfo {
 		}});
 		acc.testCount(grp, 1);
 		acc.testSuccess(grp, "Acc", "case1");
+		acc.testsCompleted(grp, new Date());
+	}
+
+	@Test
+	public void weCanRegisterForUpdatesAboutAdapterTests() {
+		AnalysisAccumulator analyzer = acc.startAnalysis(new Date());
+		analyzer.haveTestClass(grp, "Test1", new AdapterRole(String.class, Double.class, null, Integer.class), tests);
+		analyzer.analysisComplete(new Date());
+		BarDataListener lsnr1 = capture.adapters.get(Integer.class.getName());
+		context.checking(new Expectations() {{
+			oneOf(lsnr1).clearGroup(grp);
+			oneOf(lsnr1).testCompleted(with(TestInfoMatcher.success(grp, "Test1", "case1")));
+		}});
+		acc.testCount(grp, 1);
+		acc.testSuccess(grp, "Test1", "case1");
 		acc.testsCompleted(grp, new Date());
 	}
 

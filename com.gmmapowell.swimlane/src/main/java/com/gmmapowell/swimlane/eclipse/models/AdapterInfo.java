@@ -1,8 +1,9 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 
-public class AdapterInfo implements AdapterData {
+public class AdapterInfo extends BarInfo implements AdapterData {
 	private final String name;
 
 	public AdapterInfo(String name) {
@@ -12,6 +13,11 @@ public class AdapterInfo implements AdapterData {
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public void addTestListener(BarDataListener lsnr) {
+		lsnrs.add(lsnr);
 	}
 
 	@Override

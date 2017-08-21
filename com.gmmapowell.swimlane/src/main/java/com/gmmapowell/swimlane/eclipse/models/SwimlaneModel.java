@@ -225,6 +225,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 			
 			AdapterInfo adapter = new AdapterInfo(name);
 			layout.addAdapter(chex, cloc, apos++, adapter);
+			currentBar = adapter;
 		}
 
 		@Override
