@@ -16,9 +16,10 @@ public class LayoutTests extends BaseHexViewTest {
 			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
 		}});
 		swimlane.addHexagon(0, h1);
+//		showFor(5000);
 		assertControlsInOrder(shell, "swimlane.hexbg.0", "swimlane.bar.business.0");
-		checkLocationSizeColors("swimlane.hexbg.0", 0, 0, 590, 290, proxy -> { });
-		checkLocationSizeColors("swimlane.bar.business.0", 118, 142, 354, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.hexbg.0", 157, 26, 276, 238, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.0", 213, 142, 165, 6, proxy -> { });
 	}
 
 	@Test
@@ -31,12 +32,12 @@ public class LayoutTests extends BaseHexViewTest {
 		}});
 		swimlane.addHexagon(0, h1);
 		swimlane.addHexagon(1, h2);
-		assertControlsInOrder(shell, "swimlane.hexbg.0", "swimlane.bar.business.0", "swimlane.hexbg.1", "swimlane.bar.business.1");
-		checkLocationSizeColors("swimlane.hexbg.0", 0, 0, 295, 290, proxy -> { });
-		checkLocationSizeColors("swimlane.bar.business.0", 59, 142, 177, 6, proxy -> { });
-		checkLocationSizeColors("swimlane.hexbg.1", 295, 0, 295, 290, proxy -> { });
-		checkLocationSizeColors("swimlane.bar.business.1", 354, 142, 177, 6, proxy -> { });
 //		showFor(5000);
+		assertControlsInOrder(shell, "swimlane.hexbg.0", "swimlane.bar.business.0", "swimlane.hexbg.1", "swimlane.bar.business.1");
+		checkLocationSizeColors("swimlane.hexbg.0", 29, 43, 236, 204, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.0", 77, 142, 141, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.hexbg.1", 324, 43, 236, 204, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.1", 372, 142, 141, 6, proxy -> { });
 	}
 
 	/*

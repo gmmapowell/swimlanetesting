@@ -47,13 +47,16 @@ public class SwimlaneLayout extends Layout {
 		int ymax = composite.getSize().y;
 		if (!constraints.bgs.isEmpty()) {
 			int x = 0;
-			int width = xmax/constraints.bgs.size();
+			int nhexes = constraints.bgs.size();
 			for (HexagonBackground bg : constraints.bgs) {
-				int xpos = xmax*x/constraints.bgs.size();
-				bg.layout(xpos, 0, width, ymax);
+				int a = figureA(xmax/nhexes, ymax);
+        			int midx = xmax*(2*x+1)/nhexes/2;
+            		int h = (int)(a*Math.sqrt(3));
+    				int width = 4*a;
+				bg.layout(midx-2*a, /*hexAt+*/ymax/2-h, width, 2*h);
 				SwimlaneLayoutData bar = constraints.businessBars.get(bg);
 				if (bar != null)
-					bar.layout(xpos+width/5, ymax/2-3, width*3/5, 6);
+					bar.layout(midx-width*3/10, ymax/2-3, width*3/5, 6);
 				x++;
 			}
 		}
