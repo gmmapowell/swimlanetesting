@@ -56,12 +56,12 @@ public abstract class BaseViewTest extends TestBase {
 		displayHelper.flushPendingEvents();
 	}
 
-	protected void checkSizeColors(String objName, int x, int y, ImageChecker checker) {
+	protected void checkLocationSizeColors(String objName, int x, int y, int width, int height, ImageChecker checker) {
 		List<String> names = new ArrayList<String>();
 		for (Control ch : ((Composite)shell.getChildren()[0]).getChildren()) {
 			String cn = (String) ch.getData("org.eclipse.swtbot.widget.key");
 			if (objName.equals(cn)) {
-				checkSizeColors((Canvas)ch, x, y, checker);
+				checkSizeColors((Canvas)ch, x, y, width, height, checker);
 				return;
 			}
 			names.add(cn);
@@ -69,12 +69,20 @@ public abstract class BaseViewTest extends TestBase {
 		throw new RuntimeException(objName + " was not a valid child: " + names);
 	}
 	
-	protected void checkSizeColors(Canvas canvas, int x, int y, ImageChecker checker) {
-		Point pt = canvas.getSize();
-		assertEquals(x, pt.x);
-		assertEquals(y, pt.y);
+	protected void checkSizeColors(Canvas canvas, int x, int y, int width, int height, ImageChecker checker) {
+		{
+			Point pt = canvas.getLocation();
+			assertEquals(x, pt.x);
+			assertEquals(y, pt.y);
+		}
+		Image image;
+		{
+			Point pt = canvas.getSize();
+			assertEquals(width, pt.x);
+			assertEquals(height, pt.y);
+			image = new Image(canvas.getDisplay(), pt.x, pt.y);
+		}
 		GC gc = new GC(canvas);
-		Image image = new Image(canvas.getDisplay(), pt.x, pt.y);
 		PaletteData palette = image.getImageData().palette;
 		for (int i=0;i<5;i++) {
 			try {

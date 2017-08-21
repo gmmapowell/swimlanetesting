@@ -14,7 +14,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 
 // An object that combines the business logic of being aware of the idea of tests
 // with the graphical display of painting them
-public class BarControl implements BarDataListener, SwimlaneLayoutData {
+public class BarControl implements BarDataListener {
 //	private final String type;
 	private final Canvas canvas;
 //	private final BarPaintListener bpl;
@@ -40,12 +40,6 @@ public class BarControl implements BarDataListener, SwimlaneLayoutData {
 
 	public Canvas getCanvas() {
 		return canvas;
-	}
-
-	@Override
-	public void constrain(SwimlaneLayoutConstraints constraints) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

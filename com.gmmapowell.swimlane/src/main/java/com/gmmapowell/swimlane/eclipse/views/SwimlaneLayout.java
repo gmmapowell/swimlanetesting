@@ -49,7 +49,12 @@ public class SwimlaneLayout extends Layout {
 			int x = 0;
 			int width = xmax/constraints.bgs.size();
 			for (HexagonBackground bg : constraints.bgs) {
-				bg.layout(xmax*x/constraints.bgs.size(), 0, width, ymax);
+				int xpos = xmax*x/constraints.bgs.size();
+				bg.layout(xpos, 0, width, ymax);
+				SwimlaneLayoutData bar = constraints.businessBars.get(bg);
+				if (bar != null)
+					bar.layout(xpos+width/5, ymax/2-3, width*3/5, 6);
+				x++;
 			}
 		}
 		/*

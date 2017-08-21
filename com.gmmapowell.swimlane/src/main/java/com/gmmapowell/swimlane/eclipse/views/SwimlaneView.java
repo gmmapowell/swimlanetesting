@@ -35,6 +35,7 @@ public class SwimlaneView implements ViewLayout {
 	public void addHexagon(int pos, HexData hi) {
 		HexagonBackground hc = factory.hexagon(view, pos);
 		BarControl bc = factory.bar(view, "business." + pos);
+		bc.getCanvas().setLayoutData(new BusinessBarLayout(hc, bc.getCanvas()));
 		hi.addBusinessLogicListener(bc);
 		view.layout();
 	}
