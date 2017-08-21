@@ -38,7 +38,7 @@ import org.junit.runners.MethodSorters;
 public class TestThreeHexagonsHappyCase {
 	private static SWTWorkbenchBot bot;
 	private static ExtendedBot ext;
-	private static SWTBotView hexView;
+	private static SWTBotView swimlaneView;
 	private static Point viewSize;
 	private static Date startBuildAt;
 
@@ -51,16 +51,16 @@ public class TestThreeHexagonsHappyCase {
 		String cwd = System.getProperty("user.dir");
 		ext.importSampleProject(new File(new File(cwd).getParentFile(), "sample-proj"));
 		try { Thread.sleep(1000); } catch (InterruptedException ex) { }
-		ext.showView("Swimlane Testing", "Hexagons");
-		hexView = bot.viewByTitle("Hexagons");
-		viewSize = ext.getSize(hexView.getWidget());
+		ext.showView("Swimlane Testing", "Swimlane");
+		swimlaneView = bot.viewByTitle("Swimlane");
+		viewSize = ext.getSize(swimlaneView.getWidget());
 		startBuildAt = new Date();
 		ext.projectMenu().menu("Build All").click();
 	}
 
 	@Test
 	public void step01_testThatABuildOccurredRecently() {
-		SWTBotLabel lastBuild = bot.labelWithId("hexagons.lastBuild");
+		SWTBotLabel lastBuild = bot.labelWithId("swimlane.lastBuild");
 		assertNotNull(lastBuild);
 		bot.waitUntil(ext.labelAfterDate(lastBuild, startBuildAt));
 	}
@@ -72,7 +72,7 @@ public class TestThreeHexagonsHappyCase {
 	public void step02_testThatItFoundTheAcceptanceBar() throws Exception {
 		System.out.println(new Date() + "Waiting for canvas");
 		try {
-			SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
+			SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
 			assertTrue(acc123.isVisible());
 			Point ws = ext.getSize(acc123.widget);
 			ext.assertPct(ws.x, viewSize.x, 95, 100);
@@ -86,7 +86,7 @@ public class TestThreeHexagonsHappyCase {
 	
 	@Test
 	public void step03a_testThatItFoundOneOfTheHexagons() {
-		SWTBotCanvas hex1 = bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.bg");
+		SWTBotCanvas hex1 = bot.canvasWithId("swimlane.com.gmmapowell.swimlane.sample.code.Hexagon1.bg");
 		assertTrue(hex1.isVisible());
 		Point ws = ext.getSize(hex1.widget);
 		ext.assertPct(ws.x, viewSize.x, 18, 22);
@@ -100,7 +100,7 @@ public class TestThreeHexagonsHappyCase {
 		bot.performWithTimeout(new VoidResult() {
 			@Override
 			public void run() {
-				SWTBotCanvas hexbar = bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.bar");
+				SWTBotCanvas hexbar = bot.canvasWithId("swimlane.com.gmmapowell.swimlane.sample.code.Hexagon1.bar");
 				assertFalse(hexbar.isVisible());
 			}
 		}, 1000);
@@ -113,13 +113,13 @@ public class TestThreeHexagonsHappyCase {
 		Date runTestsAt = new Date();
 		SWTBotToolbarButton runTests = bot.toolbarButtonWithTooltip("Run All Tests");
 		runTests.click();
-		SWTBotLabel testsComplete = bot.labelWithId("hexagons.testsComplete");
+		SWTBotLabel testsComplete = bot.labelWithId("swimlane.testsComplete");
 		bot.waitUntil(ext.labelAfterDate(testsComplete, runTestsAt));
 	}
 	
 	@Test
 	public void step11_testThatTheAcceptanceBarIsNowGreen() {
-		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
+		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
 		assertTrue(acc123.isVisible());
 		Point ws = ext.getSize(acc123.widget);
 		ext.assertColor(acc123, SWT.COLOR_GREEN, ws.x/2, ws.y/2);
@@ -136,13 +136,13 @@ public class TestThreeHexagonsHappyCase {
 				
 			}
 		});
-		SWTBotTable t = bot.tableWithId("hexagons.errors");
+		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		assertTrue(t.isVisible());
 		bot.performWithTimeout(new VoidResult() {
 			@Override
 			public void run() {
 				try {
-					bot.canvasWithId("hexagons.acceptance.111");
+					bot.canvasWithId("swimlane.acceptance.111");
 					fail("Should not have found hexagons.acceptance.111");
 				} catch (WidgetNotFoundException ex) {
 				}
@@ -160,13 +160,13 @@ public class TestThreeHexagonsHappyCase {
 				assertTrue(showHexes.widget.getSelection());
 			}
 		});
-		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
+		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
 		assertTrue(acc123.isVisible());
 		bot.performWithTimeout(new VoidResult() {
 			@Override
 			public void run() {
 				try {
-					bot.tableWithId("hexagons.errors");
+					bot.tableWithId("swimlane.errors");
 					fail("Should not have found hexagons.errors");
 				} catch (WidgetNotFoundException ex) {
 				}
@@ -176,13 +176,13 @@ public class TestThreeHexagonsHappyCase {
 	
 	@Test
 	public void step30_checkToolTipOnAcc123() {
-		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
+		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
 		assertEquals("Acceptance - 1 group; 2 passed", acc123.getToolTipText());
 	}
 	
 	@Test
 	public void step31_clickAcc123ToMoveToTestResults() {
-		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
+		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
 		acc123.click();
 		bot.getDisplay().syncExec(new Runnable() {
 			@Override
@@ -196,18 +196,18 @@ public class TestThreeHexagonsHappyCase {
 //				assertTrue("results button should be activated", showTests.widget.getSelection());
 			}
 		});
-		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		SWTBotTree cases = bot.treeWithId("swimlane.casesTree");
 		assertTrue(cases.isVisible());
 		bot.performWithTimeout(new VoidResult() {
 			@Override
 			public void run() {
 				try {
-					bot.tableWithId("hexagons.errors");
+					bot.tableWithId("swimlane.errors");
 					fail("Should not have found hexagons.errors");
 				} catch (WidgetNotFoundException ex) {
 				}
 				try {
-					bot.canvasWithId("hexagons.acceptance.111");
+					bot.canvasWithId("swimlane.acceptance.111");
 					fail("Should not have found hexagons.acceptance.111");
 				} catch (WidgetNotFoundException ex) {
 				}
@@ -217,7 +217,7 @@ public class TestThreeHexagonsHappyCase {
 	
 	@Test
 	public void step32_assertThatTheTreeContainsTheSampleProjectAsTheTopNode() {
-		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		SWTBotTree cases = bot.treeWithId("swimlane.casesTree");
 		assertEquals(1, cases.rowCount());
 		SWTBotTreeItem[] rows = cases.getAllItems();
 		assertEquals("sample-proj", rows[0].getText());
@@ -225,7 +225,7 @@ public class TestThreeHexagonsHappyCase {
 	
 	@Test
 	public void step33_clickToOpenTheProjectNode() {
-		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		SWTBotTree cases = bot.treeWithId("swimlane.casesTree");
 		SWTBotTreeItem[] rows = cases.getAllItems();
 		rows[0].click();
 		SWTBotTreeItem[] items = rows[0].getItems();
@@ -235,7 +235,7 @@ public class TestThreeHexagonsHappyCase {
 	
 	@Test
 	public void step34_clickToOpenTheFirstTestClass() {
-		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		SWTBotTree cases = bot.treeWithId("swimlane.casesTree");
 		SWTBotTreeItem[] rows = cases.getAllItems();
 		SWTBotTreeItem[] items = rows[0].getItems();
 		items[0].click();
@@ -254,27 +254,27 @@ public class TestThreeHexagonsHappyCase {
 				assertTrue(showHexes.widget.getSelection());
 			}
 		});
-		SWTBotCanvas acc123 = bot.canvasWithId("hexagons.acceptance.111");
+		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
 		assertTrue(acc123.isVisible());
 	}
 
 	@Test
 	public void step40_testAdapterHasAFailure() {
-		SWTBotCanvas adapter = bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.adapter.nw.1");
+		SWTBotCanvas adapter = bot.canvasWithId("swimlane.com.gmmapowell.swimlane.sample.code.Hexagon1.adapter.nw.1");
 		assertEquals("Hex1Port1Adapter1 - 1 group; 0 passed, 1 failure", adapter.getToolTipText());
 	}
 
 	@Test
 	public void step41_clickToMoveToAdapter() {
-		SWTBotCanvas adapter = bot.canvasWithId("hexagons.com.gmmapowell.swimlane.sample.code.Hexagon1.adapter.nw.1");
+		SWTBotCanvas adapter = bot.canvasWithId("swimlane.com.gmmapowell.swimlane.sample.code.Hexagon1.adapter.nw.1");
 		adapter.click();
-		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		SWTBotTree cases = bot.treeWithId("swimlane.casesTree");
 		assertTrue(cases.isVisible());
 	}
 
 	@Test
 	public void step42_assertThatTheTreeContainsTheSampleProjectAsTheTopNode() {
-		SWTBotTree cases = bot.treeWithId("hexagons.casesTree");
+		SWTBotTree cases = bot.treeWithId("swimlane.casesTree");
 		assertTrue(cases.isVisible());
 		assertEquals(1, cases.rowCount());
 		SWTBotTreeItem[] rows = cases.getAllItems();

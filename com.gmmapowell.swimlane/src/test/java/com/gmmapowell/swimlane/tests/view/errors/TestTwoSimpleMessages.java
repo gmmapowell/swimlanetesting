@@ -5,7 +5,7 @@ public class TestTwoSimpleMessages extends BaseViewTest {
 	@Test
 	public void testThatTheErrorsPaneIsATableWithTwoRows() throws InterruptedException {
 		specifyModel();
-		Table table = waitForControl(shell, "hexagons.errors");
+		Table table = waitForControl(shell, "swimlane.errors");
 		assertEquals(2, table.getItemCount());
 	}
 
@@ -14,7 +14,7 @@ public class TestTwoSimpleMessages extends BaseViewTest {
 		HexagonDataModel m = defineModel();
 		pushModel();
 		pushModel();
-		Table table = waitForControl(shell, "hexagons.errors");
+		Table table = waitForControl(shell, "swimlane.errors");
 		assertEquals(2, table.getItemCount());
 	}
 

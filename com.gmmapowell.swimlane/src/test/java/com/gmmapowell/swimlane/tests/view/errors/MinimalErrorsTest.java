@@ -5,13 +5,13 @@ public class MinimalErrorsTest extends BaseViewTest {
 	@Test
 	public void testThatAllTheControlsArePresent() throws InterruptedException {
 		specifyModel();
-		assertControls(shell, "hexagons.errors");
+		assertControls(shell, "swimlane.errors");
 	}
 
 	@Test
 	public void testThatTheErrorsPaneIsATableWithTwoColumns() throws InterruptedException {
 		specifyModel();
-		Table table = waitForControl(shell, "hexagons.errors");
+		Table table = waitForControl(shell, "swimlane.errors");
 		assertEquals(2, table.getColumnCount());
 		assertEquals("Sev", table.getColumn(0).getText());
 		assertEquals("Message", table.getColumn(1).getText());

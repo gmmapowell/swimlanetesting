@@ -67,7 +67,7 @@ public class SwimlaneView implements ViewLayout {
 //			@Override
 //			public void run() {
 //				for (BarData accModel : model.getAcceptanceTests()) {
-//					String accId = "hexagons." + accModel.getId();
+//					String accId = "swimlane." + accModel.getId();
 //					BarControl bc = findBar(view, accId);
 //					if (bc == null)
 //						createBar(model, accModel, "accbar", accId);
@@ -76,7 +76,7 @@ public class SwimlaneView implements ViewLayout {
 //				}
 //				int hexn = 1;
 //				for (HexData hexModel : model.getHexagons()) {
-//					String hexId = "hexagons." + hexModel.getId();
+//					String hexId = "swimlane." + hexModel.getId();
 //					HexagonControl hc = findHexagon(view, hexId + ".bg");
 //					if (hc == null)
 //						hc = createHexagon(hexModel, hexn, hexId);
@@ -85,7 +85,7 @@ public class SwimlaneView implements ViewLayout {
 //				}
 //				BarData bd = model.getUtilityBar();
 //				if (bd != null) {
-//					String id = "hexagons." + bd.getId();
+//					String id = "swimlane." + bd.getId();
 //					BarControl bc = findBar(view, id);
 //					if (bc == null)
 //						bc = createBar(model, bd, "utebar", id);
@@ -111,7 +111,7 @@ public class SwimlaneView implements ViewLayout {
 //			if (type != null && type.equals("hexbg")) { // move it before a bg
 //				bc.getCanvas().moveAbove(c);
 //				break;
-//			} else if (okey != null && okey.startsWith("hexagons.acceptance.") && okey.compareTo(accId) < 0) {
+//			} else if (okey != null && okey.startsWith("swimlane.acceptance.") && okey.compareTo(accId) < 0) {
 //				bc.getCanvas().moveAbove(c);
 //				break;
 //			}

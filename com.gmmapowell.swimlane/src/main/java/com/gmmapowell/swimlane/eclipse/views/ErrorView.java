@@ -21,7 +21,7 @@ public class ErrorView implements ErrorMessageListener {
 		view.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		table = new Table(view, SWT.BORDER);
-		table.setData("org.eclipse.swtbot.widget.key", "hexagons.errors");
+		table.setData("org.eclipse.swtbot.widget.key", "swimlane.errors");
 		table.setLayoutData(new GridData(GridData.FILL_BOTH));
 		table.setHeaderVisible(true);
 		

@@ -6,18 +6,18 @@ public class DiscoveringNewAcceptanceBars extends BaseHexViewTest {
 	public void testWeCanAddASecond_Later_Bar() throws Exception {
 		BarData a = a();
 		pushModel(modelWith("initial", a));
-		assertControlsInOrder(shell, "hexagons.acceptance.11");
+		assertControlsInOrder(shell, "swimlane.acceptance.11");
 		pushModel(modelWith("update", a,b()));
-		assertControlsInOrder(shell, "hexagons.acceptance.11", "hexagons.acceptance.10");
+		assertControlsInOrder(shell, "swimlane.acceptance.11", "swimlane.acceptance.10");
 	}
 	
 	@Test
 	public void testIfWeAddTheLaterBarFirstTheEarlierBarMovesUp() throws Exception {
 		BarData b = b();
 		pushModel(modelWith("initial", b));
-		assertControlsInOrder(shell, "hexagons.acceptance.10");
+		assertControlsInOrder(shell, "swimlane.acceptance.10");
 		pushModel(modelWith("update", b,a()));
-		assertControlsInOrder(shell, "hexagons.acceptance.11", "hexagons.acceptance.10");
+		assertControlsInOrder(shell, "swimlane.acceptance.11", "swimlane.acceptance.10");
 	}
 	
 	protected HexagonDataModel modelWith(String s, BarData... bars) {

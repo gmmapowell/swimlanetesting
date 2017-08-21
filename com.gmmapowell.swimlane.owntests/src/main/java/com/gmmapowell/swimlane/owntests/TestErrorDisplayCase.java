@@ -39,14 +39,14 @@ public class TestErrorDisplayCase {
 		String cwd = System.getProperty("user.dir");
 		ext.importSampleProject(new File(new File(cwd).getParentFile(), "error-sample-proj"));
 		try { Thread.sleep(1000); } catch (InterruptedException ex) { }
-		ext.showView("Swimlane Testing", "Hexagons");
+		ext.showView("Swimlane Testing", "Swimlane");
 		startBuildAt = new Date();
 		ext.projectMenu().menu("Build All").click();
 	}
 
 	@Test
 	public void step01_testThatABuildOccurredRecently() {
-		SWTBotLabel lastBuild = bot.labelWithId("hexagons.lastBuild");
+		SWTBotLabel lastBuild = bot.labelWithId("swimlane.lastBuild");
 		assertNotNull(lastBuild);
 		bot.waitUntil(ext.labelAfterDate(lastBuild, startBuildAt));
 	}
@@ -62,7 +62,7 @@ public class TestErrorDisplayCase {
 				
 			}
 		});
-		SWTBotTable t = bot.tableWithId("hexagons.errors");
+		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		assertTrue(t.isVisible());
 		assertEquals(2, t.columnCount());
 		assertEquals(4, t.rowCount());
@@ -70,7 +70,7 @@ public class TestErrorDisplayCase {
 	
 	@Test
 	public void step02a_checkForCycleMessage() {
-		SWTBotTable t = bot.tableWithId("hexagons.errors");
+		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		boolean found = false;
 		for (int i=0;i<t.rowCount();i++) {
 			if (t.cell(i, 1).equals("there is a cycle between com.gmmapowell.swimlane.sample.code.Hexagon2 and com.gmmapowell.swimlane.sample.code.Hexagon3")) {
@@ -84,7 +84,7 @@ public class TestErrorDisplayCase {
 	
 	@Test
 	public void step02b_checkForLocationProblemMessage() {
-		SWTBotTable t = bot.tableWithId("hexagons.errors");
+		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		boolean found = false;
 		for (int i=0;i<t.rowCount();i++) {
 			if (t.cell(i, 1).equals("cannot assign locations nw and se to adapter com.gmmapowell.swimlane.sample.code.Hex1Port1Adapter1")) {
@@ -98,7 +98,7 @@ public class TestErrorDisplayCase {
 	
 	@Test
 	public void step02c_checkForAdapterPortError() {
-		SWTBotTable t = bot.tableWithId("hexagons.errors");
+		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		boolean found = false;
 		for (int i=0;i<t.rowCount();i++) {
 			if (t.cell(i, 1).equals("cannot bind adapter com.gmmapowell.swimlane.sample.code.Hex1Port1Adapter1 to both com.gmmapowell.swimlane.sample.code.Hex2Port1 and com.gmmapowell.swimlane.sample.code.Hex1Port1")) {
@@ -112,7 +112,7 @@ public class TestErrorDisplayCase {
 	
 	@Test
 	public void step02d_checkForNoAnnotationsError() {
-		SWTBotTable t = bot.tableWithId("hexagons.errors");
+		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		boolean found = false;
 		for (int i=0;i<t.rowCount();i++) {
 			if (t.cell(i, 1).equals("com.gmmapowell.swimlane.sample.tests.UtilityTest has @Test annotations but no swimlane annotations")) {
@@ -128,11 +128,11 @@ public class TestErrorDisplayCase {
 	public void step10_checkWeStillHaveFourAfterAnotherBuild() {
 		startBuildAt = new Date();
 		ext.projectMenu().menu("Build All").click();
-		SWTBotLabel lastBuild = bot.labelWithId("hexagons.lastBuild");
+		SWTBotLabel lastBuild = bot.labelWithId("swimlane.lastBuild");
 		assertNotNull(lastBuild);
 		bot.waitUntil(ext.labelAfterDate(lastBuild, startBuildAt));
 
-		SWTBotTable t = bot.tableWithId("hexagons.errors");
+		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		assertTrue(t.isVisible());
 		assertEquals(2, t.columnCount());
 		assertEquals(4, t.rowCount());

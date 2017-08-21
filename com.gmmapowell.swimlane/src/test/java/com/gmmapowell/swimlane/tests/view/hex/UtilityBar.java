@@ -5,14 +5,14 @@ public class UtilityBar extends BaseHexViewTest {
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel(10, 0, 0, Status.OK);
-		assertControls(shell, "hexagons.utility");
+		assertControls(shell, "swimlane.utility");
 	}
 	
 	@Test
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheUtilityBarLooksRightWhenNoTestsHaveRun() throws Exception {
 		specifyModel(10, 0, 0, Status.OK);
-		Canvas ute = waitForControl(shell, "hexagons.utility");
+		Canvas ute = waitForControl(shell, "swimlane.utility");
 		checkSizeColors(ute, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -25,7 +25,7 @@ public class UtilityBar extends BaseHexViewTest {
 	@Test
 	public void testTheTooltipWhenNoTestsHaveRun() throws Exception {
 		specifyModel(10, 0, 0, Status.OK);
-		Canvas ute = waitForControl(shell, "hexagons.utility");
+		Canvas ute = waitForControl(shell, "swimlane.utility");
 		assertEquals("Utilities - 1 group; 0 passed", ute.getToolTipText());
 	}
 
@@ -33,7 +33,7 @@ public class UtilityBar extends BaseHexViewTest {
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheUtilityBarLooksRightWhenFiveTestsHaveRunSuccessfully() throws Exception {
 		specifyModel(10, 5, 0, Status.OK);
-		Canvas ute = waitForControl(shell, "hexagons.utility");
+		Canvas ute = waitForControl(shell, "swimlane.utility");
 		checkSizeColors(ute, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -49,7 +49,7 @@ public class UtilityBar extends BaseHexViewTest {
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheUtilityBarLooksRightWhenFiveTestsHaveRunWithFailures() throws Exception {
 		specifyModel(10, 5, 1, Status.FAILURES);
-		Canvas ute = waitForControl(shell, "hexagons.utility");
+		Canvas ute = waitForControl(shell, "swimlane.utility");
 		checkSizeColors(ute, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -62,7 +62,7 @@ public class UtilityBar extends BaseHexViewTest {
 	@Test
 	public void testTheTooltipWhenThereAreSomeFailures() throws Exception {
 		specifyModel(10, 5, 2, Status.OK);
-		Canvas ute = waitForControl(shell, "hexagons.utility");
+		Canvas ute = waitForControl(shell, "swimlane.utility");
 		assertEquals("Utilities - 1 group; 3 passed, 2 failures", ute.getToolTipText());
 	}
 

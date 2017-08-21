@@ -28,7 +28,7 @@ public class BarControl implements BarDataListener {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				// TODO: fix this
-//				dispatcher.barClicked(barId.substring("hexagons.".length()));
+//				dispatcher.barClicked(barId.substring("swimlane.".length()));
 			}
 		});
 		bpl = new BarPaintListener(canvas, bar);

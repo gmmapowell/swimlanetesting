@@ -6,13 +6,13 @@ public class LayoutTests extends BaseHexViewTest {
 	@Test
 	public void testThatAllTheControlsArePresent() throws InterruptedException {
 		specifyModel();
-		assertControls(shell, "hexagons.acceptance.11", "hexagons.acceptance.10", "hexagons.acceptance.01", "hexagons.hex.0.bg", "hexagons.hex.0.bar", "hexagons.hex.1.bg", "hexagons.hex.1.bar", "hexagons.utility");
+		assertControls(shell, "swimlane.acceptance.11", "swimlane.acceptance.10", "swimlane.acceptance.01", "swimlane.hex.0.bg", "swimlane.hex.0.bar", "swimlane.hex.1.bg", "swimlane.hex.1.bar", "swimlane.utility");
 	}
 
 	@Test
 	public void testThatAcc1AppearsInAboutTheRightPlace() throws InterruptedException {
 		specifyModel();
-		Canvas acc1 = waitForControl(shell, "hexagons.acceptance.11");
+		Canvas acc1 = waitForControl(shell, "swimlane.acceptance.11");
 		assertEquals(0, acc1.getBounds().x);
 		assertEquals(2, acc1.getBounds().y);
 		assertEquals(590, acc1.getBounds().width);
@@ -22,7 +22,7 @@ public class LayoutTests extends BaseHexViewTest {
 	@Test
 	public void testThatAcc2AppearsInAboutTheRightPlace() throws InterruptedException {
 		specifyModel();
-		Canvas acc2 = waitForControl(shell, "hexagons.acceptance.10");
+		Canvas acc2 = waitForControl(shell, "swimlane.acceptance.10");
 		assertEquals(0, acc2.getBounds().x);
 		assertEquals(12, acc2.getBounds().y);
 		assertEquals(590, acc2.getBounds().width);
@@ -32,7 +32,7 @@ public class LayoutTests extends BaseHexViewTest {
 	@Test
 	public void testThatAcc3AppearsInAboutTheRightPlace() throws InterruptedException {
 		specifyModel();
-		Canvas acc2 = waitForControl(shell, "hexagons.acceptance.01");
+		Canvas acc2 = waitForControl(shell, "swimlane.acceptance.01");
 		assertEquals(0, acc2.getBounds().x);
 		assertEquals(22, acc2.getBounds().y);
 		assertEquals(590, acc2.getBounds().width);
@@ -42,7 +42,7 @@ public class LayoutTests extends BaseHexViewTest {
 	@Test
 	public void testThatHex1AppearsInAboutTheRightPlace() throws InterruptedException {
 		specifyModel();
-		Canvas hex1 = waitForControl(shell, "hexagons.hex.0.bg");
+		Canvas hex1 = waitForControl(shell, "swimlane.hex.0.bg");
 		assertEquals(29, hex1.getBounds().x);
 		assertEquals(53, hex1.getBounds().y);
 		assertEquals(236, hex1.getBounds().width);
@@ -52,7 +52,7 @@ public class LayoutTests extends BaseHexViewTest {
 	@Test
 	public void testThatHex1BarAppearsInAboutTheRightPlace() throws InterruptedException {
 		specifyModel();
-		Canvas hex1 = waitForControl(shell, "hexagons.hex.0.bar");
+		Canvas hex1 = waitForControl(shell, "swimlane.hex.0.bar");
 		assertEquals(59, hex1.getBounds().x);
 		assertEquals(152, hex1.getBounds().y);
 		assertEquals(177, hex1.getBounds().width);
@@ -62,7 +62,7 @@ public class LayoutTests extends BaseHexViewTest {
 	@Test
 	public void testThatHex2AppearsInAboutTheRightPlace() throws InterruptedException {
 		specifyModel();
-		Canvas hex2 = waitForControl(shell, "hexagons.hex.1.bg");
+		Canvas hex2 = waitForControl(shell, "swimlane.hex.1.bg");
 		assertEquals(324, hex2.getBounds().x);
 		assertEquals(53, hex2.getBounds().y);
 		assertEquals(236, hex2.getBounds().width);
@@ -72,7 +72,7 @@ public class LayoutTests extends BaseHexViewTest {
 	@Test
 	public void testThatHex2BarAppearsInAboutTheRightPlace() throws InterruptedException {
 		specifyModel();
-		Canvas hex2 = waitForControl(shell, "hexagons.hex.1.bar");
+		Canvas hex2 = waitForControl(shell, "swimlane.hex.1.bar");
 		assertEquals(354, hex2.getBounds().x);
 		assertEquals(152, hex2.getBounds().y);
 		assertEquals(177, hex2.getBounds().width);
@@ -82,7 +82,7 @@ public class LayoutTests extends BaseHexViewTest {
 	@Test
 	public void testThatUteBarAppearsInAboutTheRightPlace() throws InterruptedException {
 		specifyModel();
-		Canvas ute = waitForControl(shell, "hexagons.utility");
+		Canvas ute = waitForControl(shell, "swimlane.utility");
 		assertEquals(0, ute.getBounds().x);
 		assertEquals(282, ute.getBounds().y);
 		assertEquals(590, ute.getBounds().width);

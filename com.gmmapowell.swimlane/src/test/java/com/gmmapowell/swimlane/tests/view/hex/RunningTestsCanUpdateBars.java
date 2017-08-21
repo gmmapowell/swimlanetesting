@@ -15,7 +15,7 @@ public class RunningTestsCanUpdateBars extends BaseHexViewTest {
 			allowing(a).getComplete(); will(returnValue(10)); when(progress.is("complete"));
 		}});
 		pushModel(modelWith("initial", a));
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.11");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.11");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {

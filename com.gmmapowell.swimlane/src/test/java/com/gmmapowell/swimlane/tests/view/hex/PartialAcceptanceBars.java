@@ -5,14 +5,14 @@ public class PartialAcceptanceBars extends BaseHexViewTest {
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel();
-		assertControlsInOrder(shell, "hexagons.acceptance.111", "hexagons.acceptance.110", "hexagons.acceptance.101", "hexagons.acceptance.011");
+		assertControlsInOrder(shell, "swimlane.acceptance.111", "swimlane.acceptance.110", "swimlane.acceptance.101", "swimlane.acceptance.011");
 	}
 	
 	@Test
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testFirstBarIsComplete() throws Exception {
 		specifyModel();
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.111");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.111");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -27,7 +27,7 @@ public class PartialAcceptanceBars extends BaseHexViewTest {
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testSecondBarIsMissingRHS() throws Exception {
 		specifyModel();
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.110");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.110");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -42,7 +42,7 @@ public class PartialAcceptanceBars extends BaseHexViewTest {
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testThirdBarIsMissingLHS() throws Exception {
 		specifyModel();
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.101");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.101");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -58,7 +58,7 @@ public class PartialAcceptanceBars extends BaseHexViewTest {
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testFourthBarIsMissingLHS() throws Exception {
 		specifyModel();
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.011");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.011");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {

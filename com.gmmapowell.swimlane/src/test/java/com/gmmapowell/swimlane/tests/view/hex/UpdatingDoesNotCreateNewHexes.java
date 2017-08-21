@@ -9,7 +9,7 @@ public class UpdatingDoesNotCreateNewHexes extends BaseHexViewTest {
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		HexagonDataModel hdm = specifyModel(10, 0, Status.NONE);
 		pushModel(hdm);
-		assertControls(shell, "hexagons.hex.1.bg", "hexagons.hex.1.bar");
+		assertControls(shell, "swimlane.hex.1.bg", "swimlane.hex.1.bar");
 	}
 	
 	protected HexagonDataModel specifyModel(int total, int complete, Status status) throws InterruptedException {

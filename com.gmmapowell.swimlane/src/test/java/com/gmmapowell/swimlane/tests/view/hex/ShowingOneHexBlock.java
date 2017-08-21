@@ -8,14 +8,14 @@ public class ShowingOneHexBlock extends BaseHexViewTest {
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel(10, 0, Status.NONE);
-		assertControls(shell, "hexagons.hex.1.bg", "hexagons.hex.1.bar");
+		assertControls(shell, "swimlane.hex.1.bg", "swimlane.hex.1.bar");
 	}
 	
 	@Test
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheHexagonHasAHexBackgroundBeforeWeStart() throws Exception {
 		specifyModel(10, 0, Status.NONE);
-		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
+		Canvas hexagon = waitForControl(shell, "swimlane.hex.1.bg");
 		checkSizeColors(hexagon, 276, 238, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -61,7 +61,7 @@ public class ShowingOneHexBlock extends BaseHexViewTest {
 	@Test
 	public void testTheTooltipWhenNoTestsHaveRun() throws Exception {
 		specifyModel(10, 0, Status.NONE);
-		Canvas ute = waitForControl(shell, "hexagons.hex.1.bar");
+		Canvas ute = waitForControl(shell, "swimlane.hex.1.bar");
 		assertEquals("1 group; 0 passed", ute.getToolTipText());
 	}
 
@@ -69,7 +69,7 @@ public class ShowingOneHexBlock extends BaseHexViewTest {
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheHexagonsBarChangesColorAfterUpdate() throws Exception {
 		specifyModel(10, 0, Status.NONE);
-		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
+		Canvas hexagon = waitForControl(shell, "swimlane.hex.1.bg");
 		mode.become("plus5");
 //		fmd.real().barChanged(bd);
 		displayHelper.flushPendingEvents();

@@ -17,10 +17,10 @@ public class InfoBar {
 //		infoBar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 //		infoBar.setLayout(new FillLayout());
 		lastBuild = new Label(infoBar, SWT.NONE);
-//		lastBuild.setData("org.eclipse.swtbot.widget.key", "hexagons.lastBuild");
+//		lastBuild.setData("org.eclipse.swtbot.widget.key", "swimlane.lastBuild");
 //		lastBuild.setText("none");
 		testsComplete = new Label(infoBar, SWT.NONE);
-//		testsComplete.setData("org.eclipse.swtbot.widget.key", "hexagons.testsComplete");
+//		testsComplete.setData("org.eclipse.swtbot.widget.key", "swimlane.testsComplete");
 //		testsComplete.setText("none");
 	}
 

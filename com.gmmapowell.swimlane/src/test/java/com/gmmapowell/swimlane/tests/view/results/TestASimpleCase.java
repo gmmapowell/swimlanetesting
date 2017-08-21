@@ -5,7 +5,7 @@ public class TestASimpleCase extends BaseViewTest {
 	@Test
 	public void testThatTheViewCanCopeWithNoChosenResultsBar() throws Exception {
 		specifyModel();
-		Tree tree = waitForControl(shell, "hexagons.casesTree");
+		Tree tree = waitForControl(shell, "swimlane.casesTree");
 		assertEquals(0, tree.getItemCount());
 	}
 
@@ -13,7 +13,7 @@ public class TestASimpleCase extends BaseViewTest {
 	public void testThatTheTreeHasOneProject() throws Exception {
 		trv.resultsFor("bar.fred");
 		specifyModel();
-		Tree tree = waitForControl(shell, "hexagons.casesTree");
+		Tree tree = waitForControl(shell, "swimlane.casesTree");
 		assertEquals(1, tree.getItemCount());
 		TreeItem ti = tree.getItem(0);
 		assertEquals("Project1", ti.getText());
@@ -23,7 +23,7 @@ public class TestASimpleCase extends BaseViewTest {
 	public void testThatTheProjectHasOneTestClass() throws Exception {
 		trv.resultsFor("bar.fred");
 		specifyModel();
-		Tree tree = waitForControl(shell, "hexagons.casesTree");
+		Tree tree = waitForControl(shell, "swimlane.casesTree");
 		TreeItem ti = tree.getItem(0);
 		ti.setExpanded(true);
 		assertEquals(1, ti.getItemCount());
@@ -35,7 +35,7 @@ public class TestASimpleCase extends BaseViewTest {
 	public void testThatTheTestClassContainsATest() throws Exception {
 		trv.resultsFor("bar.fred");
 		specifyModel();
-		Tree tree = waitForControl(shell, "hexagons.casesTree");
+		Tree tree = waitForControl(shell, "swimlane.casesTree");
 		TreeItem ti = tree.getItem(0);
 		ti.setExpanded(true);
 		TreeItem ci = ti.getItem(0);

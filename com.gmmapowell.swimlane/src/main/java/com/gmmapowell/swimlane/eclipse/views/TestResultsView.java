@@ -17,10 +17,10 @@ public class TestResultsView {
 //		view.setLayout(new GridLayout(2, false));
 //		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		tree = new Tree(view, SWT.BORDER);
-//		tree.setData("org.eclipse.swtbot.widget.key", "hexagons.casesTree");
+//		tree.setData("org.eclipse.swtbot.widget.key", "swimlane.casesTree");
 //		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		table = new Table(view, SWT.BORDER);
-//		table.setData("org.eclipse.swtbot.widget.key", "hexagons.failure");
+//		table.setData("org.eclipse.swtbot.widget.key", "swimlane.failure");
 //		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
 

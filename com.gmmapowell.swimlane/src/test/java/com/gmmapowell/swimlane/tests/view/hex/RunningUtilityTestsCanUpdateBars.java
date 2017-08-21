@@ -10,9 +10,9 @@ public class RunningUtilityTestsCanUpdateBars extends BaseHexViewTest {
 		
 		// OK, moving on
 		pushModel(modelWith("updated", a(null)));
-		assertControls(shell, "hexagons.utility"); // the ute bar appears
+		assertControls(shell, "swimlane.utility"); // the ute bar appears
 		
-		Canvas ute = waitForControl(shell, "hexagons.utility");
+		Canvas ute = waitForControl(shell, "swimlane.utility");
 		assertEquals(0, ute.getBounds().x);
 		assertEquals(282, ute.getBounds().y);
 		checkSizeColors(ute, 590, 6, new ImageChecker() {
@@ -30,13 +30,13 @@ public class RunningUtilityTestsCanUpdateBars extends BaseHexViewTest {
 	public void testUpdatingABarUpdatesIt() throws Exception {
 		BarData ea = empty();
 		pushModel(modelWith("initial", ea));
-		assertControls(shell, "hexagons.utility"); // the ute bar appears
+		assertControls(shell, "swimlane.utility"); // the ute bar appears
 		
 		// OK, moving on
 		pushModel(modelWith("updated", a(ea)));
-		assertControls(shell, "hexagons.utility"); // still there, just one ...
+		assertControls(shell, "swimlane.utility"); // still there, just one ...
 		
-		Canvas ute = waitForControl(shell, "hexagons.utility");
+		Canvas ute = waitForControl(shell, "swimlane.utility");
 		assertEquals(0, ute.getBounds().x);
 		assertEquals(282, ute.getBounds().y);
 		checkSizeColors(ute, 590, 6, new ImageChecker() {

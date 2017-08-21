@@ -23,20 +23,20 @@ public class InfoBarTests extends TestBase {
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel(10, 0, Status.OK);
-		assertControlsInOrder(shell, "hexagons.lastBuild", "hexagons.testsComplete");
+		assertControlsInOrder(shell, "swimlane.lastBuild", "swimlane.testsComplete");
 	}
 	
 	@Test
 	public void testTheBuildLabelHasTheRightTime() throws Exception {
 		specifyModel(10, 0, Status.OK);
-        Label lastBuild = waitForControl(shell, "hexagons.lastBuild");
+        Label lastBuild = waitForControl(shell, "swimlane.lastBuild");
         assertEquals("042000.420", lastBuild.getText());
 	}
 
 	@Test
 	public void testTheTestCompleteLabelHasTheRightTime() throws Exception {
 		specifyModel(10, 0, Status.OK);
-        Label tc = waitForControl(shell, "hexagons.testsComplete");
+        Label tc = waitForControl(shell, "swimlane.testsComplete");
         assertEquals("162000.420", tc.getText());
 	}
 

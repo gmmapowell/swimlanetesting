@@ -5,7 +5,7 @@ public class ClickingOnABar extends BaseViewTest {
 	@Test
 	public void testWeCanClickOnABar() throws Exception {
 		BarData bar = context.mock(BarData.class);
-		String barId = "hexagons.utility";
+		String barId = "swimlane.utility";
 		context.checking(new Expectations() {{
 			allowing(bar).getId(); will(returnValue(barId));
 			allowing(bar).getPassed(); will(returnValue(4));

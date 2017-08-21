@@ -5,14 +5,14 @@ public class ShowingMultipleHexBlocks extends BaseHexViewTest {
 	@Test
 	public void testAllTheControlsWeWantAreThereForTwoHexagons() throws Exception {
 		specifyModel(2, 10, 0, Status.NONE);
-		assertControls(shell, "hexagons.hex.1.bg", "hexagons.hex.1.bar", "hexagons.hex.2.bg", "hexagons.hex.2.bar");
+		assertControls(shell, "swimlane.hex.1.bg", "swimlane.hex.1.bar", "swimlane.hex.2.bg", "swimlane.hex.2.bar");
 	}
 	
 	@Test
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheLeftOfTwoHexagonsHasAHexBackgroundBeforeWeStart() throws Exception {
 		specifyModel(2, 10, 0, Status.NONE);
-		Canvas hexagon = waitForControl(shell, "hexagons.hex.1.bg");
+		Canvas hexagon = waitForControl(shell, "swimlane.hex.1.bg");
 		checkSizeColors(hexagon, 236, 204, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -58,21 +58,21 @@ public class ShowingMultipleHexBlocks extends BaseHexViewTest {
 	@Test
 	public void testATooltipWhenNoTestsHaveRun() throws Exception {
 		specifyModel(2, 10, 0, Status.NONE);
-		Canvas ute = waitForControl(shell, "hexagons.hex.1.bar");
+		Canvas ute = waitForControl(shell, "swimlane.hex.1.bar");
 		assertEquals("Left - 1 group; 0 passed", ute.getToolTipText());
 	}
 
 	@Test
 	public void testMiddleTooltipWhenSomeTestsHaveRun() throws Exception {
 		specifyModel(2, 10, 4, Status.OK);
-		Canvas ute = waitForControl(shell, "hexagons.hex.2.bar");
+		Canvas ute = waitForControl(shell, "swimlane.hex.2.bar");
 		assertEquals("Middle - 1 group; 4 passed", ute.getToolTipText());
 	}
 
 	@Test
 	public void testAllTheControlsWeWantAreThereForThreeHexagons() throws Exception {
 		specifyModel(3, 10, 0, Status.NONE);
-		assertControls(shell, "hexagons.hex.1.bg", "hexagons.hex.1.bar", "hexagons.hex.2.bg", "hexagons.hex.2.bar", "hexagons.hex.3.bg", "hexagons.hex.3.bar");
+		assertControls(shell, "swimlane.hex.1.bg", "swimlane.hex.1.bar", "swimlane.hex.2.bg", "swimlane.hex.2.bar", "swimlane.hex.3.bg", "swimlane.hex.3.bar");
 	}
 	
 	protected void specifyModel(int nhex, int total, int complete, Status status) throws InterruptedException {

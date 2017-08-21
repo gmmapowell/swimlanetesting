@@ -7,14 +7,14 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel();
-		assertControls(shell, "hexagons.hex.1.bg", "hexagons.hex.1.bar", "hexagons.hex.1.port.nw", "hexagons.hex.1.adapter.nw.1", "hexagons.hex.1.adapter.nw.2");
+		assertControls(shell, "swimlane.hex.1.bg", "swimlane.hex.1.bar", "swimlane.hex.1.port.nw", "swimlane.hex.1.adapter.nw.1", "swimlane.hex.1.adapter.nw.2");
 	}
 	
 	@Test
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testWeCanFindThePort() throws Exception {
 		specifyModel();
-		Canvas port = waitForControl(shell, "hexagons.hex.1.port.nw");
+		Canvas port = waitForControl(shell, "swimlane.hex.1.port.nw");
 		assertEquals(148, port.getBounds().x);
 		assertEquals(26, port.getBounds().y);
 		checkSizeColors(port, 44, 60, new ImageChecker() {
@@ -39,7 +39,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
 	@Test
 	public void testTooltipForPort() throws Exception {
 		specifyModel();
-		Canvas port = waitForControl(shell, "hexagons.hex.1.port.nw");
+		Canvas port = waitForControl(shell, "swimlane.hex.1.port.nw");
 		assertEquals("PortClass", port.getToolTipText());
 	}
 
@@ -47,7 +47,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testWeCanFindTheTopAdapter() throws Exception {
 		specifyModel();
-		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.1");
+		Canvas adapter = waitForControl(shell, "swimlane.hex.1.adapter.nw.1");
 		assertEquals(113, adapter.getBounds().x);
 		assertEquals(48, adapter.getBounds().y);
 		checkSizeColors(adapter, 34, 6, new ImageChecker() {
@@ -64,7 +64,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
 	@Test
 	public void testTooltipForTopAdapter() throws Exception {
 		specifyModel();
-		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.1");
+		Canvas adapter = waitForControl(shell, "swimlane.hex.1.adapter.nw.1");
 		assertEquals("TopAdapter - 1 group; 5 passed", adapter.getToolTipText());
 	}
 
@@ -72,7 +72,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testWeCanFindTheBottomAdapter() throws Exception {
 		specifyModel();
-		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.2");
+		Canvas adapter = waitForControl(shell, "swimlane.hex.1.adapter.nw.2");
 		assertEquals(113, adapter.getBounds().x);
 		assertEquals(58, adapter.getBounds().y);
 		checkSizeColors(adapter, 34, 6, new ImageChecker() {
@@ -88,7 +88,7 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
 	@Test
 	public void testTooltipForBottomAdapter() throws Exception {
 		specifyModel();
-		Canvas adapter = waitForControl(shell, "hexagons.hex.1.adapter.nw.2");
+		Canvas adapter = waitForControl(shell, "swimlane.hex.1.adapter.nw.2");
 		assertEquals("BottomAdapter - 1 group; 4 passed", adapter.getToolTipText());
 	}
 

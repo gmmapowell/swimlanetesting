@@ -5,14 +5,14 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseHexViewTest {
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel(10, 0, 0, Status.OK);
-		assertControls(shell, "hexagons.acceptance.1");
+		assertControls(shell, "swimlane.acceptance.1");
 	}
 	
 	@Test
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheAcceptanceRowLooksRightWhenNoTestsHaveRun() throws Exception {
 		specifyModel(10, 0, 0, Status.OK);
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.1");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -25,7 +25,7 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseHexViewTest {
 	@Test
 	public void testTheTooltipWhenNoTestsHaveRun() throws Exception {
 		specifyModel(10, 0, 0, Status.OK);
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.1");
 		assertEquals("Acceptance - 1 group; 0 passed", acceptance.getToolTipText());
 	}
 
@@ -33,7 +33,7 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseHexViewTest {
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheAcceptanceRowLooksRightWhenFiveTestsHaveRunSuccessfully() throws Exception {
 		specifyModel(10, 5, 0, Status.OK);
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.1");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -48,7 +48,7 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseHexViewTest {
 	@Test
 	public void testTheTooltipWhenFiveTestsHaveRunSuccessfully() throws Exception {
 		specifyModel(10, 5, 0, Status.OK);
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.1");
 		assertEquals("Acceptance - 1 group; 5 passed", acceptance.getToolTipText());
 	}
 
@@ -56,7 +56,7 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseHexViewTest {
 	@Ignore // anything with image checker is broken in Oxygen
 	public void testTheAcceptanceRowLooksRightWhenFiveTestsHaveRunWithFailures() throws Exception {
 		specifyModel(10, 5, 2, Status.FAILURES);
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.1");
 		checkSizeColors(acceptance, 590, 6, new ImageChecker() {
 			@Override
 			public void checkImage(ImageProxy proxy) {
@@ -69,14 +69,14 @@ public class ASimpleCaseOfOneAcceptanceBar extends BaseHexViewTest {
 	@Test
 	public void testTheTooltipWhenFiveTestsHaveRunWithOneFailureSingular() throws Exception {
 		specifyModel(10, 5, 1, Status.FAILURES);
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.1");
 		assertEquals("Acceptance - 1 group; 4 passed, 1 failure", acceptance.getToolTipText());
 	}
 
 	@Test
 	public void testTheTooltipWhenFiveTestsHaveRunWithSomeFailures() throws Exception {
 		specifyModel(10, 5, 2, Status.FAILURES);
-		Canvas acceptance = waitForControl(shell, "hexagons.acceptance.1");
+		Canvas acceptance = waitForControl(shell, "swimlane.acceptance.1");
 		assertEquals("Acceptance - 1 group; 3 passed, 2 failures", acceptance.getToolTipText());
 	}
 
