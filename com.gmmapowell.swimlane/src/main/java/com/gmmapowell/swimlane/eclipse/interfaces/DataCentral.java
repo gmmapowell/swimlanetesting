@@ -11,8 +11,8 @@ public interface DataCentral {
 	}
 
 	void addBuildDateListener(DateListener lsnr);
-
-	void allGroups(GroupHandler hdlr);
+	void addTestDateListener(DateListener lsnr);
 
 	AnalysisAccumulator startAnalysis(Date startTime);
+	void visitGroups(GroupHandler hdlr);
 }

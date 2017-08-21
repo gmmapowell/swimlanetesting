@@ -52,7 +52,7 @@ public class RemoteJUnitTestRunner implements TestRunner {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
 				IStatus ret = Status.OK_STATUS;
-				central.allGroups(g -> runGroup(monitor, g));
+				central.visitGroups(g -> runGroup(monitor, g));
 				return ret;
 			}
 

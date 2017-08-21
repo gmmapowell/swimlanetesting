@@ -11,16 +11,13 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.HasABar;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
@@ -40,16 +37,9 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	// This is here for each time we create a SolutionCreator ...
 	private Map<GroupOfTests, AllConstraints> constraints = new HashMap<GroupOfTests, AllConstraints>();
 
-	private final Map<String, Acceptance> compileAcceptances = new TreeMap<String, Acceptance>();
-	private List<BarData> acceptances = new ArrayList<>();
-	private final Map<String, HexInfo> hexesFor = new HashMap<String, HexInfo>();
-	private final List<HexData> hexagons = new ArrayList<>();
-	private Map<String, BarData> barsFor = new HashMap<>();
-	private final ArrayList<TestGroup> allTestClasses = new ArrayList<TestGroup>();
-	private final Map<String, Map<String, TestResultGroup>> resultGroups = new TreeMap<>();
-	private LogicInfo defaultLogic;
 	private Map<GroupOfTests, Object> groups = new TreeMap<>();
 	private Set<DateListener> buildDateListeners = new HashSet<>();
+	private Set<DateListener> testDateListeners = new HashSet<>();
 	private Map<GroupOfTests, Map<String, HasABar>> bars = new HashMap<>();
 
 	public SwimlaneModel(ErrorAccumulator eh, ViewLayout layout) {
@@ -77,29 +67,13 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 			lsnr.dateChanged(buildTime);
 	}
 	
-	/* should probably implement TRR
 	@Override
-	public void testsCompleted(Date d) {
-		this.testsCompleteTime = d;
+	public void addTestDateListener(DateListener lsnr) {
+		testDateListeners.add(lsnr);
+		if (testsCompleteTime != null)
+			lsnr.dateChanged(testsCompleteTime);
 	}
-	*/
-
-	/*
-	private void traverseTree(Map<String, AtomicInteger> classCounts, Tree<TestInfo> tree) {
-		TestInfo ti = tree.me();
-		if (ti.type().isTestCase()) {
-			AtomicInteger cnt = classCounts.get(ti.classUnderTest());
-			if (cnt == null) {
-				cnt = new AtomicInteger(0);
-				classCounts.put(ti.classUnderTest(), cnt);
-			}
-			cnt.incrementAndGet();
-		}
-		for (Tree<TestInfo> c : tree.children())
-			traverseTree(classCounts, c);
-	}
-	*/
-
+	
 	@Override
 	public void testsStarted(GroupOfTests grp, Date currentDate) {
 		// TODO Auto-generated method stub
@@ -149,29 +123,17 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	
 	@Override
 	public void testsCompleted(GroupOfTests grp, Date currentDate) {
-		// TODO Auto-generated method stub
-		
+		testsCompleteTime = currentDate;
+		for (DateListener l : buildDateListeners)
+			l.dateChanged(testsCompleteTime);
 	}
-
-	/* this is presumably a helper for somebody
-	private void addResultGroupToBar(BarData bar, TestInfo test) {
-		if (!resultGroups.containsKey(bar.getId())) {
-			resultGroups.put(bar.getId(), new HashMap<>());
-		}
-		Map<String, TestResultGroup> rgs = resultGroups.get(bar.getId());
-		if (!rgs.containsKey(test.groupName())) {
-			rgs.put(new AccumulatedTestResultGroup(test.groupName()).name(), new AccumulatedTestResultGroup(test.groupName()));
-		}
-		rgs.get(test.groupName()).add(test);
-	}
-	*/
 
 	public void runAllTests(TestRunner tr) {
 		tr.runAll(this, this);
 	}
 
 	@Override
-	public void allGroups(GroupHandler hdlr) {
+	public void visitGroups(GroupHandler hdlr) {
 		for (GroupOfTests g : groups.keySet())
 			hdlr.runGroup(g);
 	}
