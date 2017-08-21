@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.views.BarControl;
-import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.view.hex.BaseHexViewTest;
 
 public class LayoutTests extends BaseHexViewTest {
@@ -18,9 +17,8 @@ public class LayoutTests extends BaseHexViewTest {
 		}});
 		swimlane.addHexagon(0, h1);
 		assertControlsInOrder(shell, "swimlane.hexbg.0", "swimlane.bar.business.0");
-		ImageChecker checker = proxy -> { };
-		checkLocationSizeColors("swimlane.hexbg.0", 0, 0, 590, 290, checker);
-		checkLocationSizeColors("swimlane.bar.business.0", 118, 142, 354, 6, checker);
+		checkLocationSizeColors("swimlane.hexbg.0", 0, 0, 590, 290, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.0", 118, 142, 354, 6, proxy -> { });
 	}
 
 	@Test
@@ -34,13 +32,10 @@ public class LayoutTests extends BaseHexViewTest {
 		swimlane.addHexagon(0, h1);
 		swimlane.addHexagon(1, h2);
 		assertControlsInOrder(shell, "swimlane.hexbg.0", "swimlane.bar.business.0", "swimlane.hexbg.1", "swimlane.bar.business.1");
-		ImageChecker checker = proxy -> { };
-		shell.setVisible(true);
-		shell.open();
-		checkLocationSizeColors("swimlane.hexbg.0", 0, 0, 295, 290, checker);
-		checkLocationSizeColors("swimlane.bar.business.0", 59, 142, 177, 6, checker);
-		checkLocationSizeColors("swimlane.hexbg.1", 295, 0, 295, 290, checker);
-		checkLocationSizeColors("swimlane.bar.business.1", 354, 142, 177, 6, checker);
+		checkLocationSizeColors("swimlane.hexbg.0", 0, 0, 295, 290, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.0", 59, 142, 177, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.hexbg.1", 295, 0, 295, 290, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.1", 354, 142, 177, 6, proxy -> { });
 //		showFor(5000);
 	}
 
