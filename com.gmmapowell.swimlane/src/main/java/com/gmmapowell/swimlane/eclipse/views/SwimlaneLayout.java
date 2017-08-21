@@ -45,8 +45,12 @@ public class SwimlaneLayout extends Layout {
 		}
 		int xmax = composite.getSize().x;
 		int ymax = composite.getSize().y;
-		for (HexagonBackground bg : constraints.bgs) {
-			bg.layout(0, 0, xmax, ymax);
+		if (!constraints.bgs.isEmpty()) {
+			int x = 0;
+			int width = xmax/constraints.bgs.size();
+			for (HexagonBackground bg : constraints.bgs) {
+				bg.layout(xmax*x/constraints.bgs.size(), 0, width, ymax);
+			}
 		}
 		/*
 		// TODO: refactor this into an attribute on generation

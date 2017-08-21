@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.views.BarControl;
+import com.gmmapowell.swimlane.tests.swtutil.DisplayHelper;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.view.hex.BaseHexViewTest;
 
@@ -17,9 +18,28 @@ public class LayoutTests extends BaseHexViewTest {
 			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
 		}});
 		swimlane.addHexagon(0, h1);
-		assertControls(shell, "swimlane.hexbg.0", "swimlane.bar.business.0");
+		assertControlsInOrder(shell, "swimlane.hexbg.0", "swimlane.bar.business.0");
 		ImageChecker checker = proxy -> { };
 		checkSizeColors("swimlane.hexbg.0", 590, 290, checker);
+	}
+
+	@Test
+	public void testThatALayoutOfTwoHexesWithBusinessLogicHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
+		HexData h1 = context.mock(HexData.class, "h1");
+		HexData h2 = context.mock(HexData.class, "h2");
+		context.checking(new Expectations() {{
+			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(h2).addBusinessLogicListener(with(any(BarControl.class)));
+		}});
+		swimlane.addHexagon(0, h1);
+		swimlane.addHexagon(1, h2);
+		assertControlsInOrder(shell, "swimlane.hexbg.0", "swimlane.bar.business.0", "swimlane.hexbg.1", "swimlane.bar.business.1");
+		ImageChecker checker = proxy -> { };
+		shell.setVisible(true);
+		shell.open();
+		checkSizeColors("swimlane.hexbg.0", 295, 290, checker);
+		checkSizeColors("swimlane.hexbg.1", 295, 290, checker);
+//		showFor(5000);
 	}
 
 	/*

@@ -108,4 +108,15 @@ public abstract class BaseViewTest extends TestBase {
 		image.dispose();
 		gc.dispose();
 	}
+
+	public void showFor(int time) {
+		for (int i=0;i<time/50;i++) {
+			displayHelper.flushPendingEvents();
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
 }
