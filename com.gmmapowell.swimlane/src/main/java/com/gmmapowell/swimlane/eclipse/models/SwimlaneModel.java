@@ -9,13 +9,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
+import com.gmmapowell.swimlane.eclipse.interfaces.HasABar;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
@@ -24,6 +24,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
+import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 
 public class SwimlaneModel implements DataCentral, TestResultReporter {
 	private final ErrorAccumulator eh;
@@ -48,7 +49,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	private LogicInfo defaultLogic;
 	private Map<GroupOfTests, Object> groups = new TreeMap<>();
 	private Set<DateListener> buildDateListeners = new HashSet<>();
-
+	private Map<GroupOfTests, Map<String, HasABar>> bars = new HashMap<>();
 
 	public SwimlaneModel(ErrorAccumulator eh, ViewLayout layout) {
 		this.eh = eh;
@@ -106,34 +107,37 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	
 	@Override
 	public void testCount(GroupOfTests grp, int cnt) {
-		// TODO Auto-generated method stub
-		
+		Map<String, HasABar> lsnrs = bars.get(grp);
+		if (lsnrs == null) {// I think this is an error, but at runtime ...
+			System.out.println("Could not find any memory of test group " + grp);
+			return;
+		}
+		for (HasABar bar : lsnrs.values())
+			bar.clearGroup(grp);
 	}
 	
 	@Override
 	public void testSuccess(GroupOfTests grp, String testClz, String testFn) {
-//		String forClz = test.classUnderTest();
-//		BarData bar = barsFor.get(forClz);
-//		if (bar == null) {
-//			error("the class " + forClz + " was run but did not have a bar defined for it");
-//			return;
-//		}
-//		addResultGroupToBar(bar, test);
-//		((BarInfo)bar).passed(forClz);
-//		dispatcher.barChanged(bar);
+		Map<String, HasABar> lsnrs = bars.get(grp);
+		if (lsnrs == null) {// I think this is an error, but at runtime ...
+			System.out.println("Could not find any memory of test group " + grp);
+			return;
+		}
+		HasABar bar = lsnrs.get(testClz);
+		if (bar != null)
+			bar.testCompleted(new TestCaseInfo(grp, testClz, testFn));
 	}
 
 	@Override
 	public void testFailure(GroupOfTests grp, String testClz, String testFn, List<String> stack, List<String> expected, List<String> actual) {
-//		String forClz = test.classUnderTest();
-//		BarData bar = barsFor.get(forClz);
-//		if (bar == null) {
-//			error("the class " + forClz + " was run but did not have a bar defined for it");
-//			return;
-//		}
-//		addResultGroupToBar(bar, test);
-//		((BarInfo)bar).failed(forClz);
-//		dispatcher.barChanged(bar);
+		Map<String, HasABar> lsnrs = bars.get(grp);
+		if (lsnrs == null) {// I think this is an error, but at runtime ...
+			System.out.println("Could not find any memory of test group " + grp);
+			return;
+		}
+		HasABar bar = lsnrs.get(testClz);
+		if (bar != null)
+			bar.testCompleted(new TestCaseInfo(grp, testClz, testFn, stack, expected, actual));
 	}
 
 	@Override
@@ -175,11 +179,12 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		int chex = -1;
 		PortLocation cloc;
 		int apos = 0;
+		HasABar currentBar = null;
 		
 		@Override
 		public void beginAnalysis() {
 			// TODO in update cases, need to start tracking what was already there
-			
+			// we also need to clear out the barListeners array, presumably based on which groups we are reloading ...
 		}
 
 		@Override
@@ -188,12 +193,17 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 			chex = SwimlaneModel.this.hexes.size();
 			layout.addHexagon(chex, hi);
 			SwimlaneModel.this.hexes.add(hi);
+			currentBar = hi;
 		}
 
 		@Override
 		public void testClass(GroupOfTests grp, String clzName, List<String> tests) {
-			// TODO Auto-generated method stub
-			
+			if (!bars.containsKey(grp))
+				bars.put(grp, new TreeMap<>());
+			Map<String, HasABar> map = bars.get(grp);
+			// may need to clear it out?
+			if (currentBar != null)
+				map.put(clzName, currentBar);
 		}
 
 		@Override
@@ -218,8 +228,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 
 		@Override
 		public void acceptance(String... hexes) {
-			// TODO Auto-generated method stub
-			
+			currentBar = null;			
 		}
 		
 		@Override

@@ -3,6 +3,7 @@ package com.gmmapowell.swimlane.testsupport;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
@@ -22,13 +23,20 @@ public class CaptureLayout implements ViewLayout {
 
 	@Override
 	public void addHexagon(int pos, HexData hi) {
-		BarDataListener lsnr = context.mock(BarDataListener.class);
+		BarDataListener lsnr = context.mock(BarDataListener.class, "bdl_hex" + pos);
 
 		while (hexes.size() <= pos)
 			hexes.add(null);
 		hexes.set(pos, lsnr);
 		
 		hi.addBusinessLogicListener(lsnr);
+	}
+
+
+	public void ignore(int which) {
+		context.checking(new Expectations() {{
+			allowing(hexes.get(which));
+		}});
 	}
 
 	@Override
