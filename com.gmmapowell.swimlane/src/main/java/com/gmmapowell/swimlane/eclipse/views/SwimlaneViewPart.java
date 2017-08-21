@@ -47,7 +47,6 @@ public class SwimlaneViewPart extends ViewPart implements CommandDispatcher {
 		RealEclipseAbstractor eclipse = new RealEclipseAbstractor();
 		parent.setLayout(new GridLayout(1, false));
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		new InfoBar(parent);
 		stackUI = new Composite(parent, SWT.NONE);
 		stackUI.setLayoutData(new GridData(GridData.FILL_BOTH));
 		stack = new StackLayout();
@@ -58,6 +57,7 @@ public class SwimlaneViewPart extends ViewPart implements CommandDispatcher {
 		stack.topControl = hexView.getTop();
 		ErrorCollector errorcoll = new ErrorCollector();
 		centralModel = new SwimlaneModel(errorcoll, hexView);
+		new InfoBar(parent, centralModel);
 		try {
 			HexagonTestAnalyzer hta = new HexagonTestAnalyzer(errorcoll, centralModel);
 			bl = new BuildListener(eclipse, hta);
