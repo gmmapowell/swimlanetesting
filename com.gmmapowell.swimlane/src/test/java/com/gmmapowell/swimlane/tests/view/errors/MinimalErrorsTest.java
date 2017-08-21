@@ -1,13 +1,5 @@
 package com.gmmapowell.swimlane.tests.view.errors;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.TreeSet;
-
-import org.eclipse.swt.widgets.Table;
-import org.jmock.Expectations;
-import org.junit.Test;
-
 public class MinimalErrorsTest extends BaseViewTest {
 /*
 	@Test

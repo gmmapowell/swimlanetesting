@@ -2,24 +2,23 @@ package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 
 public class PortPaintListener implements PaintListener {
 	private final Canvas canvas;
-	private final PortLocation loc;
+//	private final PortLocation loc;
 
 	public PortPaintListener(Canvas canvas, PortData p) {
 		this.canvas = canvas;
-		this.loc = p.getLocation();
+//		this.loc = p.getLocation();
 	}
 
 	@Override
 	public void paintControl(PaintEvent e) {
+		throw new RuntimeException("not implemented");
+/*
 		Color port = new Color(canvas.getDisplay(), 200, 200, 155);
 		GC gc = new GC(canvas);
 //		gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_BLACK));
@@ -32,6 +31,7 @@ public class PortPaintListener implements PaintListener {
 		gc.fillPolygon(new int[] { midx+ex, midy-ey,  midx+rx, midy-ey, midx-ex, midy+ey, midx-rx, midy+ey });
 		gc.dispose();
 		port.dispose();
-	}
+*/
+		}
 
 }

@@ -1,11 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
@@ -29,6 +25,8 @@ public final class BarPaintListener implements PaintListener {
 
 	@Override
 	public void paintControl(PaintEvent e) {
+		throw new RuntimeException("not implemented");
+		/*
 		int total = 0;
 		int compl = 0;
 		int[] marks = new int[1];
@@ -70,8 +68,10 @@ public final class BarPaintListener implements PaintListener {
 			}
 		}
 		gc.dispose();
+		*/
 	}
 
+	/*
 	private int bitcount(int[] marks) {
 		int sum = 0;
 		for (int i=0;i<marks.length;i++)
@@ -99,4 +99,5 @@ public final class BarPaintListener implements PaintListener {
 		else
 			return barModel.getName();
 	}
+	*/
 }

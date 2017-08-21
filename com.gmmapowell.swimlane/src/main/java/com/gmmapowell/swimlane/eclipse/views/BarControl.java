@@ -8,6 +8,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 
 // An object that combines the business logic of being aware of the idea of tests
 // with the graphical display of painting them
@@ -19,9 +21,9 @@ public class BarControl implements BarDataListener {
 	public BarControl(Composite view, BarData bar, String type, String barId) {
 		this.type = type;
 		canvas = new Canvas(view, SWT.NONE);
-		canvas.setData("com.gmmapowell.swimlane.type", type);
-		canvas.setData("com.gmmapowell.swimlane.bar", this);
-		canvas.setData("org.eclipse.swtbot.widget.key", barId);
+//		canvas.setData("com.gmmapowell.swimlane.type", type);
+//		canvas.setData("com.gmmapowell.swimlane.bar", this);
+//		canvas.setData("org.eclipse.swtbot.widget.key", barId);
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -30,14 +32,25 @@ public class BarControl implements BarDataListener {
 			}
 		});
 		bpl = new BarPaintListener(canvas, bar);
-		canvas.addPaintListener(bpl);
-		barChanged(bar);
+//		canvas.addPaintListener(bpl);
+//		barChanged(bar);
 	}
 
 	public Canvas getCanvas() {
 		return canvas;
 	}
 
+	@Override
+	public void clearGroup(GroupOfTests grp) {
+		throw new RuntimeException("not implemented");
+	}
+
+	@Override
+	public void testCompleted(TestInfo ti) {
+		throw new RuntimeException("not implemented");
+	}
+	
+	/*
 	@Override
 	public void barChanged(BarData bar) {
 		BarData old;
@@ -95,4 +108,5 @@ public class BarControl implements BarDataListener {
 			return type;
 		}
 	}
+	 */
 }

@@ -1,18 +1,5 @@
 package com.gmmapowell.swimlane.tests.view.results;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.TreeSet;
-
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
-import org.jmock.Expectations;
-import org.junit.Test;
-
-import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestResultClass;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
-
 public class TestASimpleCase extends BaseViewTest {
 /*
 	@Test

@@ -1,10 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 
 public class HexagonPaintListener implements PaintListener {
@@ -16,6 +13,8 @@ public class HexagonPaintListener implements PaintListener {
 
 	@Override
 	public void paintControl(PaintEvent e) {
+		throw new RuntimeException("not implemented");
+		/*
 		int mx = canvas.getSize().x/2;
 		int my = canvas.getSize().y/2;
 		int a = mx/2; // because we have sized to 4a x R(3)*2
@@ -29,6 +28,7 @@ public class HexagonPaintListener implements PaintListener {
 		gc.fillPolygon(new int[] { mx-2*a, my, mx-a, ty, mx+a, ty, mx+2*a, my, mx+a, by, mx-a, by });
 		gc.dispose();
 		c.dispose();
+		*/
 	}
 
 }

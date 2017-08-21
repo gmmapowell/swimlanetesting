@@ -1,19 +1,10 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
-import java.util.Collection;
-
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
-
-import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestResultClass;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 
 public class TestResultsView {
 	private final Composite view;
@@ -23,19 +14,20 @@ public class TestResultsView {
 
 	public TestResultsView(Composite parent) {
 		view = new Composite(parent, SWT.NONE);
-		view.setLayout(new GridLayout(2, false));
-		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		view.setLayout(new GridLayout(2, false));
+//		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		tree = new Tree(view, SWT.BORDER);
-		tree.setData("org.eclipse.swtbot.widget.key", "hexagons.casesTree");
-		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		tree.setData("org.eclipse.swtbot.widget.key", "hexagons.casesTree");
+//		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		table = new Table(view, SWT.BORDER);
-		table.setData("org.eclipse.swtbot.widget.key", "hexagons.failure");
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+//		table.setData("org.eclipse.swtbot.widget.key", "hexagons.failure");
+//		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
 
 	public void resultsFor(String id) {
-		this.resultsFor = id;
-		updateDisplay();
+		throw new RuntimeException("not implemented");
+//		this.resultsFor = id;
+//		updateDisplay();
 	}
 
 	public Control getTop() {
@@ -43,6 +35,8 @@ public class TestResultsView {
 	}
 
 	protected void updateDisplay() {
+		throw new RuntimeException("not implemented");
+		/*
 		view.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				tree.removeAll();
@@ -66,5 +60,6 @@ public class TestResultsView {
 				}
 			}
 		});
+		 */
 	}
 }
