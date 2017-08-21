@@ -11,12 +11,15 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.UtilityData;
+import com.gmmapowell.swimlane.eclipse.interfaces.ViewComponentFactory;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 
 public class SwimlaneView implements ViewLayout {
+	private final ViewComponentFactory factory;
 	private final Composite view;
 
-	public SwimlaneView(Composite parent) {
+	public SwimlaneView(Composite parent, ViewComponentFactory factory) {
+		this.factory = factory;
 		view = new Composite(parent, SWT.NONE);
 		view.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -30,7 +33,8 @@ public class SwimlaneView implements ViewLayout {
 
 	@Override
 	public void addHexagon(int pos, HexData hi) {
-		// TODO Auto-generated method stub
+		HexagonBackground hc = factory.hexagon(view, pos);
+		BarControl bc = factory.bar(view, "business." + pos);
 		
 	}
 
@@ -146,23 +150,5 @@ public class SwimlaneView implements ViewLayout {
 //				
 //		}
 //		return null;
-//	}
-
-//	protected HexagonControl createHexagon(HexData hexModel, int hexn, String hexId) {
-//		HexagonControl hex = new HexagonControl(view, hexn, hexId, hexModel.getBar(), hexModel.getPorts());
-//
-//		// Move the hex bar above any backgrounds
-//		// The background is automatically added at the end
-//		for (Control c : view.getChildren()) {
-//			String type = (String) c.getData("com.gmmapowell.swimlane.type");
-//			if (type != null && type.equals("hexbg")) {
-//				hex.getBar().moveAbove(c);
-//				for (PortControl pc : hex.getPorts())
-//					pc.getCanvas().moveAbove(c);
-//				break;
-//			}
-//		}
-//		view.layout();
-//		return hex;
 //	}
 }

@@ -1,6 +1,18 @@
-package com.gmmapowell.swimlane.tests.view.hex;
+package com.gmmapowell.swimlane.tests.view.layout;
+
+import org.junit.Test;
+
+import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
+import com.gmmapowell.swimlane.tests.view.hex.BaseHexViewTest;
 
 public class LayoutTests extends BaseHexViewTest {
+
+	@Test
+	public void testThatASimpleLayoutOfOneHexWithBusinessLogicHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
+		HexData h1 = context.mock(HexData.class);
+		swimlane.addHexagon(0, h1);
+		assertControls(shell, "swimlane.hexbg.0", "swimlane.bar.business.0");
+	}
 
 	/*
 	@Test

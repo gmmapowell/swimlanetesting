@@ -14,16 +14,16 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 // An object that combines the business logic of being aware of the idea of tests
 // with the graphical display of painting them
 public class BarControl implements BarDataListener {
-	private final String type;
+//	private final String type;
 	private final Canvas canvas;
-	private final BarPaintListener bpl;
+//	private final BarPaintListener bpl;
 
-	public BarControl(Composite view, BarData bar, String type, String barId) {
-		this.type = type;
+	public BarControl(Composite view, String name /*, BarData bar, String type, String barId */) {
+//		this.type = type;
 		canvas = new Canvas(view, SWT.NONE);
 //		canvas.setData("com.gmmapowell.swimlane.type", type);
 //		canvas.setData("com.gmmapowell.swimlane.bar", this);
-//		canvas.setData("org.eclipse.swtbot.widget.key", barId);
+		canvas.setData("org.eclipse.swtbot.widget.key", "swimlane.bar." + name);
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -31,7 +31,7 @@ public class BarControl implements BarDataListener {
 //				dispatcher.barClicked(barId.substring("swimlane.".length()));
 			}
 		});
-		bpl = new BarPaintListener(canvas, bar);
+//		bpl = new BarPaintListener(canvas, bar);
 //		canvas.addPaintListener(bpl);
 //		barChanged(bar);
 	}

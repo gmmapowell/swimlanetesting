@@ -1,28 +1,24 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
-
-public class HexagonControl {
+public class HexagonBackground {
 	private final Canvas canvas;
-	private final BarControl bar;
-	private final List<PortControl> ports = new ArrayList<PortControl>();
+//	private final BarControl bar;
+//	private final List<PortControl> ports = new ArrayList<PortControl>();
 
-	public HexagonControl(Composite view, int hex, String hexId, BarData bar, Collection<PortData> ports) {
+	public HexagonBackground(Composite view, int hex /*, String hexId, BarData bar, Collection<PortData> ports */) {
 		canvas = new Canvas(view, SWT.NONE);
 //		canvas.setData("com.gmmapowell.swimlane.type", "hexbg");
 //		canvas.setData("com.gmmapowell.swimlane.hex", this);
-//		canvas.setData("org.eclipse.swtbot.widget.key", hexId+".bg");
+		canvas.setData("org.eclipse.swtbot.widget.key", "swimlane.hexbg." + hex);
 //		canvas.addPaintListener(new HexagonPaintListener(canvas/*,model, bar*/));
-		this.bar = new BarControl(view, bar, "businessbar", hexId+".bar");
+//		this.bar = new BarControl(view /*, bar, "businessbar", hexId+".bar" */);
 //		for (PortData p : ports) {
 //			// should we keep track of these somehow?
 //			this.ports.add(new PortControl(view, hexId+".port."+p.getLocation().toString(), hex, p));
