@@ -84,7 +84,8 @@ public class BusinessLogicAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
-//			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm2);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(errors).error("cannot use @BusinessLogic with default hexagon in TestCase1 since there are multiple hexagons");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});

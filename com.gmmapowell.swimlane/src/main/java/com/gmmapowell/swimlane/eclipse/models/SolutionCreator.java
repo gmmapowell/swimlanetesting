@@ -22,8 +22,8 @@ import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRole;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
 import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
+import com.gmmapowell.swimlane.eclipse.utils.ReverseStringOrdering;
 
-// should only be the AnalysisAccumulator ...
 public class SolutionCreator implements AnalysisAccumulator {
 	private final ErrorAccumulator eh;
 	private final Solution solution;
@@ -32,6 +32,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 
 	private List<String> hexOrdering = new ArrayList<>();
 	private Map<String, HexTracker> hexes = new TreeMap<>();
+	private Map<String, AcceptanceTracker> acceptances = new TreeMap<String, AcceptanceTracker>(new ReverseStringOrdering());
 	private boolean wantUte;
 
 	public SolutionCreator(ErrorAccumulator eh, Solution sol, Map<GroupOfTests, AllConstraints> constraints) {
@@ -51,7 +52,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 			constraints.put(grp, new AllConstraints());
 		AllConstraints c = constraints.get(grp);
 		if (role instanceof AcceptanceRole)
-			collectAcceptanceInfo(c, (AcceptanceRole)role);
+			collectAcceptanceInfo(c, (AcceptanceRole)role, grp, clzName, tests);
 		else if (role instanceof AdapterRole)
 			collectAdapterInfo(c, (AdapterRole)role);
 		else if (role instanceof UtilityRole)
@@ -62,8 +63,8 @@ public class SolutionCreator implements AnalysisAccumulator {
 			eh.error("cannot handle " + role.getClass());
 	}
 
-	private void collectAcceptanceInfo(AllConstraints c, AcceptanceRole role) {
-		c.acceptances.acase(role.getHexes());
+	private void collectAcceptanceInfo(AllConstraints c, AcceptanceRole role, GroupOfTests grp, String testClass, List<String> tests) {
+		c.acceptances.acase(role.getHexes(), new TestCaseTracker(grp, testClass, tests));
 	}
 
 	private void collectBusinessLogicInfo(AllConstraints c, BusinessRole role, GroupOfTests grp, String testClass, List<String> tests) {
@@ -119,6 +120,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 		addBusinessLogicTestsToHexes();
 		fleshOutPorts();
 		fleshOutAdapters();
+		figureAcceptanceBars();
 		figureUtilityBar();
 		announceResults(completeTime);
 	}
@@ -335,6 +337,27 @@ public class SolutionCreator implements AnalysisAccumulator {
 		}
 	}
 
+	private void figureAcceptanceBars() {
+		for (AllConstraints ac : constraints.values()) {
+			for (AcceptanceCase ab : ac.acceptances.acceptance) {
+				List<String> hexes = new ArrayList<>();
+				StringBuilder sb = new StringBuilder();
+				for (String s : hexOrdering) {
+					if (ab.hexes.isEmpty() || ab.hexes.contains(s)) {
+						sb.append("1");
+						hexes.add(s);
+					} else
+						sb.append("0");
+				}
+				String patt = sb.toString();
+				if (!acceptances.containsKey(patt))
+					acceptances.put(patt, new AcceptanceTracker(hexes));
+				AcceptanceTracker tracker = acceptances.get(patt);
+				tracker.tests.add(ab.test);
+			}
+		}		
+	}
+
 	private void figureUtilityBar() {
 		wantUte = false;
 		for (AllConstraints ac : constraints.values()) {
@@ -356,6 +379,12 @@ public class SolutionCreator implements AnalysisAccumulator {
 						solution.adapter(a.name);
 					}
 				}
+			}
+			
+			for (AcceptanceTracker at : acceptances.values()) {
+				solution.acceptance(at.hexes.toArray(new String[at.hexes.size()]));
+				for (TestCaseTracker tc : at.tests)
+					solution.testClass(tc.grp, tc.testClass, tc.tests);
 			}
 			
 			if (wantUte)
@@ -390,10 +419,23 @@ public class SolutionCreator implements AnalysisAccumulator {
 
 	public class AcceptanceConstraints {
 		private final List<List<String>> allHexes = new ArrayList<>();
+		private final List<AcceptanceCase> acceptance = new ArrayList<>();
 
-		public void acase(List<String> hexes) {
+		public void acase(List<String> hexes, TestCaseTracker test) {
 			allHexes.add(hexes);
+			acceptance.add(new AcceptanceCase(hexes, test));
 		}
+	}
+
+	public class AcceptanceCase {
+		private final List<String> hexes;
+		private final TestCaseTracker test;
+
+		public AcceptanceCase(List<String> hexes, TestCaseTracker test) {
+			this.hexes = hexes;
+			this.test = test;
+		}
+
 	}
 
 	public class AdapterConstraints {
@@ -525,7 +567,15 @@ public class SolutionCreator implements AnalysisAccumulator {
 			this.testClass = testClass;
 			this.tests = tests;
 		}
+	}
 
+	public class AcceptanceTracker {
+		private final List<String> hexes;
+		private final List<TestCaseTracker> tests = new ArrayList<>();
+
+		public AcceptanceTracker(List<String> hexes) {
+			this.hexes = hexes;
+		}
 	}
 
 	public static class PortTracker {

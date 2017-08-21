@@ -61,6 +61,8 @@ public class AcceptanceAccumulationTests {
 		context.checking(new Expectations() {{
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hmd)); inSequence(seq);
+			oneOf(solution).acceptance(hmd); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -74,6 +76,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm2); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -87,6 +91,10 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
+			oneOf(solution).acceptance(hm1); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).acceptance(hm2); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(errors).error("there is no ordering between java.lang.Integer and java.util.List");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
@@ -102,6 +110,9 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm2); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(errors).error("ordering between java.lang.Integer and java.util.List is inconsistent");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
@@ -118,6 +129,10 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm2); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).acceptance(hm2, hm3); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -133,6 +148,10 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm2); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm3); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(errors).error("there is no ordering between java.util.List and java.util.Set");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
@@ -149,6 +168,12 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm2); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm3); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase3", tests); inSequence(seq);
+			oneOf(solution).acceptance(hm2, hm3); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(errors).error("there is a cycle between java.lang.Integer and java.util.Set");
 			oneOf(errors).error("there is a cycle between java.lang.Integer and java.util.List");
 			oneOf(errors).error("there is a cycle between java.util.List and java.util.Set");
@@ -169,6 +194,12 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
 			oneOf(solution).hex(with(hm4)); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm2); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).acceptance(hm2, hm3); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
+			oneOf(solution).acceptance(hm3, hm4); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase3", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -185,6 +216,12 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm2, hm3); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm2); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase3", tests); inSequence(seq);
+			oneOf(solution).acceptance(hm2, hm3); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -201,6 +238,10 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).hex(with(hm3)); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm2, hm3); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).acceptance(hm1, hm2); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase3", tests); inSequence(seq);
 			oneOf(errors).error("ordering between java.lang.Integer and java.util.List is inconsistent");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
