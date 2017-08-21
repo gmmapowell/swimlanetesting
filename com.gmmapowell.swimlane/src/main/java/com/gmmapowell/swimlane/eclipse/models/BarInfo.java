@@ -12,7 +12,6 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.HasABar;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
 import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 
 public abstract class BarInfo implements BarData, HasABar {
@@ -34,7 +33,6 @@ public abstract class BarInfo implements BarData, HasABar {
 
 	private Map<String, Tracking> testClasses = new TreeMap<>();
 	protected String id;
-	private Status stat = Status.OK;
 	protected final Set<BarDataListener> lsnrs = new HashSet<>();
 
 	public BarInfo() {
@@ -71,16 +69,16 @@ public abstract class BarInfo implements BarData, HasABar {
 	// This is the basis of knowing how many "total" cases there should be
 	// We track the classes and their respective number of tests and then add them up
 	public void casesForClass(String key, int cnt) {
-		testClasses.get(key).total = cnt;
+//		testClasses.get(key).total = cnt;
 	}
 
 	public void passed(String forClz) {
-		testClasses.get(forClz).passed++;
+//		testClasses.get(forClz).passed++;
 	}
 
 	public void failed(String forClz) {
-		testClasses.get(forClz).failed++;
-		stat = Status.FAILURES;
+//		testClasses.get(forClz).failed++;
+//		stat = Status.FAILURES;
 	}
 
 	@Override
@@ -125,10 +123,5 @@ public abstract class BarInfo implements BarData, HasABar {
 	public void testCompleted(TestCaseInfo ti) {
 		for (BarDataListener lsnr : lsnrs)
 			lsnr.testCompleted(ti);
-	}
-
-	@Override
-	public Status getStatus() {
-		return stat;
 	}
 }
