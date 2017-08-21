@@ -3,18 +3,19 @@ package com.gmmapowell.swimlane.eclipse.views;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
-import com.gmmapowell.swimlane.eclipse.interfaces.SwimlaneLayoutData;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 
 // An object that combines the business logic of being aware of the idea of tests
 // with the graphical display of painting them
-public class BarControl implements BarDataListener {
+public class BarControl implements BarDataListener, PaintListener {
 //	private final String type;
 	private final Canvas canvas;
 //	private final BarPaintListener bpl;
@@ -34,7 +35,8 @@ public class BarControl implements BarDataListener {
 			}
 		});
 //		bpl = new BarPaintListener(canvas, bar);
-//		canvas.addPaintListener(bpl);
+		canvas.addPaintListener(this);
+		canvas.moveAbove(null); // move to top of drawing order
 //		barChanged(bar);
 	}
 
@@ -52,6 +54,84 @@ public class BarControl implements BarDataListener {
 		throw new RuntimeException("not implemented");
 	}
 	
+	@Override
+	public void paintControl(PaintEvent e) {
+		GC gc = new GC(canvas);
+		gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+		/*
+		int total = 0;
+		int compl = 0;
+		int[] marks = new int[1];
+		Status stat = Status.NONE;
+		if (barModel != null) {
+			total = barModel.getTotal();
+			compl = barModel.getComplete();
+			marks = barModel.getMarks();
+			stat = barModel.getStatus();
+		}
+		Point size = canvas.getSize();
+		int hexCount = marks.length;
+		int segwidth = size.x/hexCount;
+		int markedx = bitcount(marks)*segwidth;
+		int barx = 0;
+		if (total > 0)
+			barx = markedx*compl/total;
+		GC gc = new GC(canvas);
+		for (int i=0;i<marks.length;i++) {
+			int from = size.x*i/hexCount;
+			int to = size.x*(i+1)/hexCount;
+			if (marks[i] == 1) {
+				if (barx > from) {
+					Color barColor = canvas.getDisplay().getSystemColor(getColor(stat));
+					gc.setBackground(barColor);
+					int cw = Math.min(barx-from, to-from);
+					gc.fillRectangle(from, 0, cw, size.y);
+				}
+				if (barx < to) {
+					int left = Math.max(barx, from);
+					Color grey = canvas.getDisplay().getSystemColor(SWT.COLOR_GRAY);
+					gc.setBackground(grey);
+					int gw = Math.min(markedx-left, to-from);
+					gc.fillRectangle(left, 0, gw, size.y);
+				}
+			} else {
+				barx += segwidth;
+				markedx += segwidth;
+			}
+		}
+		gc.dispose();
+		*/
+	}
+
+	/*
+	private int bitcount(int[] marks) {
+		int sum = 0;
+		for (int i=0;i<marks.length;i++)
+			sum+=marks[i];
+		return sum;
+	}
+
+	private int getColor(Status status) {
+		switch (status) {
+		case NONE:
+			return SWT.COLOR_GRAY;
+		case OK:
+			return SWT.COLOR_GREEN;
+		case FAILURES:
+			return SWT.COLOR_RED;
+		case SKIPPED:
+			return SWT.COLOR_YELLOW;
+		}
+		throw new RuntimeException("Cannot handle status " + status);
+	}
+
+	public String getBarName() {
+		if (barModel == null)
+			return null;
+		else
+			return barModel.getName();
+	}
+	*/
 	/*
 	@Override
 	public void barChanged(BarData bar) {

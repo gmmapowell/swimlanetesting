@@ -22,6 +22,7 @@ public class HexagonBackground implements SwimlaneLayoutData, PaintListener {
 		canvas.setData("org.eclipse.swtbot.widget.key", "swimlane.hexbg." + hex);
 		canvas.setLayoutData(this);
 		canvas.addPaintListener(this);
+		canvas.moveBelow(null); // move to bottom of drawing order
 //		this.bar = new BarControl(view /*, bar, "businessbar", hexId+".bar" */);
 //		for (PortData p : ports) {
 //			// should we keep track of these somehow?

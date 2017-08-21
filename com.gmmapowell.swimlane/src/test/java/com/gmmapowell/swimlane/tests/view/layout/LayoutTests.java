@@ -17,7 +17,7 @@ public class LayoutTests extends BaseHexViewTest {
 		}});
 		swimlane.addHexagon(0, h1);
 //		showFor(5000);
-		assertControlsInOrder(shell, "swimlane.hexbg.0", "swimlane.bar.business.0");
+		assertControlsInOrder(shell, "swimlane.bar.business.0", "swimlane.hexbg.0");
 		checkLocationSizeColors("swimlane.hexbg.0", 157, 26, 276, 238, proxy -> { });
 		checkLocationSizeColors("swimlane.bar.business.0", 213, 142, 165, 6, proxy -> { });
 	}
@@ -33,7 +33,7 @@ public class LayoutTests extends BaseHexViewTest {
 		swimlane.addHexagon(0, h1);
 		swimlane.addHexagon(1, h2);
 //		showFor(5000);
-		assertControlsInOrder(shell, "swimlane.hexbg.0", "swimlane.bar.business.0", "swimlane.hexbg.1", "swimlane.bar.business.1");
+		assertControlsInOrder(shell, "swimlane.bar.business.1", "swimlane.bar.business.0", "swimlane.hexbg.0", "swimlane.hexbg.1");
 		checkLocationSizeColors("swimlane.hexbg.0", 29, 43, 236, 204, proxy -> { });
 		checkLocationSizeColors("swimlane.bar.business.0", 77, 142, 141, 6, proxy -> { });
 		checkLocationSizeColors("swimlane.hexbg.1", 324, 43, 236, 204, proxy -> { });
