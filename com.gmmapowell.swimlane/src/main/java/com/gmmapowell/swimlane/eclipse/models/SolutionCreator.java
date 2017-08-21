@@ -55,7 +55,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 		if (role instanceof AcceptanceRole)
 			collectAcceptanceInfo(c, (AcceptanceRole)role, tct);
 		else if (role instanceof AdapterRole)
-			collectAdapterInfo(c, (AdapterRole)role);
+			collectAdapterInfo(c, (AdapterRole)role, tct);
 		else if (role instanceof UtilityRole)
 			collectUtilityInfo(c, (UtilityRole)role, tct);
 		else if (role instanceof BusinessRole)
@@ -89,13 +89,13 @@ public class SolutionCreator implements AnalysisAccumulator {
 		}
 	}
 
-	private void collectAdapterInfo(AllConstraints c, AdapterRole role) {
+	private void collectAdapterInfo(AllConstraints c, AdapterRole role, TestCaseTracker tct) {
 		String adapter = role.getAdapter();		
 		if (!c.adapters.containsKey(adapter))
 			c.adapters.put(adapter, new AdapterConstraints());
 		AdapterConstraints cxt = c.adapters.get(adapter);
 		cxt.addHex(role.getHex());
-		// could add test to adapter (if we passed it in) if that would be interesting
+		cxt.tests.add(tct);
 		String port = role.getPort();
 		if (port != null) {
 			cxt.addPort(port);
@@ -320,9 +320,11 @@ public class SolutionCreator implements AnalysisAccumulator {
 		for (AllConstraints ac : constraints.values()) {
 			for (Entry<String, AdapterConstraints> e : ac.adapters.entrySet()) {
 				AdapterConstraints c = e.getValue();
+				HexTracker hi = null;
 				if (!c.hexes.isEmpty()) {
 					Iterator<String> it = c.hexes.iterator();
-					it.next(); // one is to be expected ...
+					String hn = it.next(); // one is to be expected ...
+					hi = hexes.get(hn);
 					// TODO: I think we should tell somebody this ...
 					if (it.hasNext()) { // multiple hexes
 						StringBuilder sb = new StringBuilder("duh");
@@ -330,9 +332,23 @@ public class SolutionCreator implements AnalysisAccumulator {
 							sb.append(it.next());
 						eh.error(sb.toString());
 					}
+				} else if (!hexes.isEmpty()) {
+					// we want the one-and-only default hex
+					hi = hexes.values().iterator().next();
 				}
 				if (c.ports.isEmpty())
 					eh.error("did not bind adapter " + e.getKey() + " to a port");
+				else if (hi != null) {
+					// copy over the tests
+					PortTracker pt = hi.getPort(c.ports.iterator().next());
+					if (pt != null) {
+						for (AdapterTracker at : pt.adapters) {
+							if (at.name.equals(e.getKey())) {
+								at.tests.addAll(c.tests);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -376,6 +392,8 @@ public class SolutionCreator implements AnalysisAccumulator {
 					solution.port(p.loc, p.name);
 					for (AdapterTracker a : p.adapters) {
 						solution.adapter(a.name);
+						for (TestCaseTracker tc : a.tests)
+							solution.testClass(tc.grp, tc.testClass, tc.tests);
 					}
 				}
 			}
@@ -443,6 +461,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 	public class AdapterConstraints {
 		public Set<String> hexes = new TreeSet<>();
 		public Set<String> ports = new TreeSet<>();
+		final List<TestCaseTracker> tests = new ArrayList<>();
 
 		public void addHex(String hex) {
 			if (hex != null)
@@ -593,6 +612,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 
 	public static class AdapterTracker {
 		private String name;
+		private final List<TestCaseTracker> tests = new ArrayList<>();
 
 		public AdapterTracker(String at) {
 			this.name = at;

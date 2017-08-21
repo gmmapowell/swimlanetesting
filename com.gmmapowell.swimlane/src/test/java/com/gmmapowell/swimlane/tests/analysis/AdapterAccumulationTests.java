@@ -61,7 +61,8 @@ public class AdapterAccumulationTests {
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).port(PortLocation.NORTHWEST, portClass1.getName()); inSequence(seq);
-			oneOf(solution).adapter(adapterClass1.getName());
+			oneOf(solution).adapter(adapterClass1.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -75,6 +76,7 @@ public class AdapterAccumulationTests {
 			oneOf(solution).hex(with(hmd)); inSequence(seq);
 			oneOf(solution).port(PortLocation.NORTHWEST, portClass1.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass1.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -89,6 +91,8 @@ public class AdapterAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).port(PortLocation.NORTHWEST, portClass1.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass1.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -117,11 +121,15 @@ public class AdapterAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).port(PortLocation.NORTHWEST, portClass1.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass1.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).hex(with(hm2)); inSequence(seq);
 			oneOf(solution).port(PortLocation.NORTHWEST, portClass2.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass2.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(errors).error("port " + portClass3.getName() + " was not bound to a hexagon");
 			oneOf(errors).error("there is no ordering between " + hexClass1.getName() + " and " + hexClass2.getName());
+			// we literally cannot figure out where this should go ...
+//			oneOf(solution).testClass(grp, "TestCase3", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -138,6 +146,8 @@ public class AdapterAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).port(PortLocation.NORTHWEST, portClass1.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass1.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -153,6 +163,7 @@ public class AdapterAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).port(PortLocation.SOUTHEAST, portClass1.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass1.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -167,13 +178,15 @@ public class AdapterAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).port(PortLocation.SOUTHWEST, portClass1.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass1.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).adapter(adapterClass2.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(errors).error("port " + portClass1.getName() + " cannot be in sw and se");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1), tests);
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHWEST, adapterClass2), tests);
+		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHWEST, adapterClass2), tests);
 		acc.analysisComplete(bcd);
 	}
 
@@ -214,8 +227,10 @@ public class AdapterAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).port(PortLocation.SOUTHEAST, portClass2.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass2.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(solution).port(PortLocation.NORTHWEST, portClass1.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass1.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(errors).error("ports " + portClass2.getName() + " and " + portClass1.getName() + " cannot all be in se");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
@@ -232,8 +247,10 @@ public class AdapterAccumulationTests {
 			oneOf(solution).hex(with(hm1)); inSequence(seq);
 			oneOf(solution).port(PortLocation.NORTHWEST, portClass2.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass2.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(solution).port(PortLocation.SOUTHEAST, portClass1.getName()); inSequence(seq);
 			oneOf(solution).adapter(adapterClass1.getName()); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
