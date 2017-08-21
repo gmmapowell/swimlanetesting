@@ -33,7 +33,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 	private List<String> hexOrdering = new ArrayList<>();
 	private Map<String, HexTracker> hexes = new TreeMap<>();
 	private Map<String, AcceptanceTracker> acceptances = new TreeMap<String, AcceptanceTracker>(new ReverseStringOrdering());
-	private boolean wantUte;
+	private List<TestCaseTracker> wantUte = new ArrayList<>();
 
 	public SolutionCreator(ErrorAccumulator eh, Solution sol, Map<GroupOfTests, AllConstraints> constraints) {
 		this.eh = eh;
@@ -51,27 +51,27 @@ public class SolutionCreator implements AnalysisAccumulator {
 		if (!constraints.containsKey(grp))
 			constraints.put(grp, new AllConstraints());
 		AllConstraints c = constraints.get(grp);
+		TestCaseTracker tct = new TestCaseTracker(grp, clzName, tests);
 		if (role instanceof AcceptanceRole)
-			collectAcceptanceInfo(c, (AcceptanceRole)role, grp, clzName, tests);
+			collectAcceptanceInfo(c, (AcceptanceRole)role, tct);
 		else if (role instanceof AdapterRole)
 			collectAdapterInfo(c, (AdapterRole)role);
 		else if (role instanceof UtilityRole)
-			collectUtilityInfo(c, (UtilityRole)role);
+			collectUtilityInfo(c, (UtilityRole)role, tct);
 		else if (role instanceof BusinessRole)
-			collectBusinessLogicInfo(c, (BusinessRole)role, grp, clzName, tests);
+			collectBusinessLogicInfo(c, (BusinessRole)role, tct);
 		else
 			eh.error("cannot handle " + role.getClass());
 	}
 
-	private void collectAcceptanceInfo(AllConstraints c, AcceptanceRole role, GroupOfTests grp, String testClass, List<String> tests) {
-		c.acceptances.acase(role.getHexes(), new TestCaseTracker(grp, testClass, tests));
+	private void collectAcceptanceInfo(AllConstraints c, AcceptanceRole role, TestCaseTracker tct) {
+		c.acceptances.acase(role.getHexes(), tct);
 	}
 
-	private void collectBusinessLogicInfo(AllConstraints c, BusinessRole role, GroupOfTests grp, String testClass, List<String> tests) {
+	private void collectBusinessLogicInfo(AllConstraints c, BusinessRole role, TestCaseTracker tc) {
 		String s = role.getHex();
-		TestCaseTracker tc = new TestCaseTracker(grp, testClass, tests);
 		if (s == null) {
-			c.classesInBusinessDefault.add(testClass);
+			c.classesInBusinessDefault.add(tc.testClass);
 			c.defaultTracker.add(tc);
 		} else {
 			HexTracker curr = null;
@@ -108,8 +108,8 @@ public class SolutionCreator implements AnalysisAccumulator {
 		}
 	}
 
-	private void collectUtilityInfo(AllConstraints c, UtilityRole role) {
-		c.hasUtility = true;
+	private void collectUtilityInfo(AllConstraints c, UtilityRole role, TestCaseTracker tct) {
+		c.utilityTests.add(tct);
 	}
 
 	@Override
@@ -359,9 +359,8 @@ public class SolutionCreator implements AnalysisAccumulator {
 	}
 
 	private void figureUtilityBar() {
-		wantUte = false;
 		for (AllConstraints ac : constraints.values()) {
-			wantUte |= ac.hasUtility;
+			wantUte.addAll(ac.utilityTests);
 		}
 	}
 
@@ -387,8 +386,11 @@ public class SolutionCreator implements AnalysisAccumulator {
 					solution.testClass(tc.grp, tc.testClass, tc.tests);
 			}
 			
-			if (wantUte)
+			if (!wantUte.isEmpty()) {
 				solution.needsUtilityBar();
+				for (TestCaseTracker tc : wantUte)
+					solution.testClass(tc.grp, tc.testClass, tc.tests);
+			}
 			
 			solution.analysisDone(completeTime);
 		}
@@ -414,7 +416,7 @@ public class SolutionCreator implements AnalysisAccumulator {
 		// port class name -> constraints
 		Map<String, PortConstraints> ports = new TreeMap<>();
 		// does it have any utility tests?
-		public boolean hasUtility;
+		public List<TestCaseTracker> utilityTests = new ArrayList<>();
 	}
 
 	public class AcceptanceConstraints {

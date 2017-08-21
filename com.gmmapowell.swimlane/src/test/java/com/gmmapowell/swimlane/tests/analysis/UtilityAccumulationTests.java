@@ -35,6 +35,7 @@ public class UtilityAccumulationTests {
 		context.checking(new Expectations() {{
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).needsUtilityBar(); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
@@ -47,11 +48,13 @@ public class UtilityAccumulationTests {
 		context.checking(new Expectations() {{
 			oneOf(solution).beginAnalysis(); inSequence(seq);
 			oneOf(solution).needsUtilityBar(); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
+			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new UtilityRole(), tests);
-		acc.haveTestClass(grp, "TestCase1", new UtilityRole(), tests);
+		acc.haveTestClass(grp, "TestCase2", new UtilityRole(), tests);
 		acc.analysisComplete(bcd);
 	}
 }
