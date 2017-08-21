@@ -12,10 +12,9 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 
-public class HexInfo implements HexData, HasABar {
+public class HexInfo extends BarInfo implements HexData, HasABar {
 	private final String name;
 	private final List<PortData> ports = new ArrayList<PortData>();
-	private final Set<BarDataListener> lsnrs = new HashSet<>();
 	
 	public HexInfo(String name) {
 		this.name = name;
@@ -44,18 +43,6 @@ public class HexInfo implements HexData, HasABar {
 	@Override
 	public void addBusinessLogicListener(BarDataListener lsnr) {
 		lsnrs.add(lsnr);
-	}
-
-	@Override
-	public void clearGroup(GroupOfTests grp) {
-		for (BarDataListener lsnr : lsnrs)
-			lsnr.clearGroup(grp);
-	}
-
-	@Override
-	public void testCompleted(TestCaseInfo ti) {
-		for (BarDataListener lsnr : lsnrs)
-			lsnr.testCompleted(ti);
 	}
 
 	@Override

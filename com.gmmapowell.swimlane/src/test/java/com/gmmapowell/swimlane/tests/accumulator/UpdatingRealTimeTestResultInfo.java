@@ -73,14 +73,31 @@ public class UpdatingRealTimeTestResultInfo {
 		BarDataListener lsnr1 = capture.hexes.get(0);
 		BarDataListener lsnr2 = capture.hexes.get(1);
 		context.checking(new Expectations() {{
+			allowing(capture.acceptance.get(0));
 			oneOf(lsnr1).clearGroup(grp);
 			oneOf(lsnr2).clearGroup(grp);
 			oneOf(lsnr1).testCompleted(with(TestInfoMatcher.success(grp, "TestClass1", "case1")));
 			oneOf(lsnr2).testCompleted(with(TestInfoMatcher.success(grp, "TestClass2", "case1")));
 		}});
-		acc.testCount(grp, 1);
+		acc.testCount(grp, 2);
 		acc.testSuccess(grp, "TestClass1", "case1");
 		acc.testSuccess(grp, "TestClass2", "case1");
 		acc.testsCompleted(grp, new Date());
 	}
+
+	@Test
+	public void weCanRegisterForUpdatesAboutAcceptanceTests() {
+		AnalysisAccumulator analyzer = acc.startAnalysis(new Date());
+		analyzer.haveTestClass(grp, "Acc", new AcceptanceRole(String.class, Double.class), tests);
+		analyzer.analysisComplete(new Date());
+		BarDataListener lsnr1 = capture.acceptance.get(0);
+		context.checking(new Expectations() {{
+			oneOf(lsnr1).clearGroup(grp);
+			oneOf(lsnr1).testCompleted(with(TestInfoMatcher.success(grp, "TestClass1", "case1")));
+		}});
+		acc.testCount(grp, 1);
+		acc.testSuccess(grp, "Acc", "case1");
+		acc.testsCompleted(grp, new Date());
+	}
+
 }

@@ -1,13 +1,26 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class Acceptance extends BarInfo {
+import com.gmmapowell.swimlane.eclipse.interfaces.AcceptanceData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
+import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
+
+public class Acceptance extends BarInfo implements AcceptanceData {
 	private List<String> hexs;
 	private int[] marks;
-	
+
 	public Acceptance(List<String> hexs) {
 		this.hexs = hexs;
+	}
+
+
+	@Override
+	public void addTestListener(BarDataListener lsnr) {
+		lsnrs.add(lsnr);
 	}
 
 	@Override

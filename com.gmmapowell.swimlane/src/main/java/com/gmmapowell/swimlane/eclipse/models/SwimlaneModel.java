@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -228,7 +229,9 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 
 		@Override
 		public void acceptance(String... hexes) {
-			currentBar = null;			
+			Acceptance acc = new Acceptance(Arrays.asList(hexes));
+			layout.addAcceptance(new int[] { 1 }, acc);
+			currentBar = acc;			
 		}
 		
 		@Override

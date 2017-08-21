@@ -1,15 +1,21 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
+import com.gmmapowell.swimlane.eclipse.interfaces.HasABar;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
+import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 
-public abstract class BarInfo implements BarData {
+public abstract class BarInfo implements BarData, HasABar {
 	public class Tracking {
 		int total;
 		int passed;
@@ -29,7 +35,8 @@ public abstract class BarInfo implements BarData {
 	private Map<String, Tracking> testClasses = new TreeMap<>();
 	protected String id;
 	private Status stat = Status.OK;
-	
+	protected final Set<BarDataListener> lsnrs = new HashSet<>();
+
 	public BarInfo() {
 	}
 
@@ -106,6 +113,18 @@ public abstract class BarInfo implements BarData {
 		for (Entry<String, Tracking> q : testClasses.entrySet())
 			ret += q.getValue().failed;
 		return ret;
+	}
+
+	@Override
+	public void clearGroup(GroupOfTests grp) {
+		for (BarDataListener lsnr : lsnrs)
+			lsnr.clearGroup(grp);
+	}
+
+	@Override
+	public void testCompleted(TestCaseInfo ti) {
+		for (BarDataListener lsnr : lsnrs)
+			lsnr.testCompleted(ti);
 	}
 
 	@Override

@@ -3,19 +3,21 @@ package com.gmmapowell.swimlane.testsupport;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.AcceptanceData;
 import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
+import com.gmmapowell.swimlane.eclipse.interfaces.UtilityData;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 
 public class CaptureLayout implements ViewLayout {
 	private final JUnitRuleMockery context;
 	public final List<BarDataListener> hexes = new ArrayList<>();
+	public final List<BarDataListener> acceptance = new ArrayList<>();
 	
 	public CaptureLayout(JUnitRuleMockery context) {
 		this.context = context;
@@ -32,11 +34,11 @@ public class CaptureLayout implements ViewLayout {
 		hi.addBusinessLogicListener(lsnr);
 	}
 
-
-	public void ignore(int which) {
-		context.checking(new Expectations() {{
-			allowing(hexes.get(which));
-		}});
+	@Override
+	public void addAcceptance(int[] hexes, AcceptanceData ad) {
+		BarDataListener lsnr = context.mock(BarDataListener.class, "bdl_acc" + acceptance.size());
+		ad.addTestListener(lsnr);
+		acceptance.add(lsnr);
 	}
 
 	@Override
@@ -51,4 +53,10 @@ public class CaptureLayout implements ViewLayout {
 		
 	}
 
+
+	@Override
+	public void addUtility(UtilityData ad) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -4,4 +4,6 @@ public interface ViewLayout {
 	void addHexagon(int pos, HexData hi);
 	void addHexagonPort(int pos, PortLocation loc, PortData port);
 	void addAdapter(int hex, PortLocation ploc, int aloc, AdapterData adapter);
+	void addAcceptance(int[] hexes, AcceptanceData ad);
+	void addUtility(UtilityData ad);
 }
