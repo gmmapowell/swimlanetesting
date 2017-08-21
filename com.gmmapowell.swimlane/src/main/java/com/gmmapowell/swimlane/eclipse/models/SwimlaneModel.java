@@ -35,6 +35,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	private Date buildTime;
 	private Date testsCompleteTime;
 	private SolutionCreator currentSolution;
+	public UtilityInfo uteData;
 
 	// This is here for each time we create a SolutionCreator ...
 	private Map<GroupOfTests, AllConstraints> constraints = new HashMap<GroupOfTests, AllConstraints>();
@@ -45,7 +46,6 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	private final List<HexData> hexagons = new ArrayList<>();
 	private Map<String, BarData> barsFor = new HashMap<>();
 	private final ArrayList<TestGroup> allTestClasses = new ArrayList<TestGroup>();
-	private LogicInfo uteBar;
 	private final Map<String, Map<String, TestResultGroup>> resultGroups = new TreeMap<>();
 	private LogicInfo defaultLogic;
 	private Map<GroupOfTests, Object> groups = new TreeMap<>();
@@ -236,8 +236,11 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		
 		@Override
 		public void needsUtilityBar() {
-			// TODO Auto-generated method stub
-			
+			if (uteData == null) {
+				uteData = new UtilityInfo();
+				layout.addUtility(uteData);
+			}
+			currentBar = uteData;
 		}
 
 		public void analysisDone(Date completeTime) {

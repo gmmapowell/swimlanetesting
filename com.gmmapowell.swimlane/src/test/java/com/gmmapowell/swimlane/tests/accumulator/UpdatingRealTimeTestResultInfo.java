@@ -10,6 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.analyzer.BusinessRole;
+import com.gmmapowell.swimlane.eclipse.analyzer.UtilityRole;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
@@ -93,10 +94,25 @@ public class UpdatingRealTimeTestResultInfo {
 		BarDataListener lsnr1 = capture.acceptance.get(0);
 		context.checking(new Expectations() {{
 			oneOf(lsnr1).clearGroup(grp);
-			oneOf(lsnr1).testCompleted(with(TestInfoMatcher.success(grp, "TestClass1", "case1")));
+			oneOf(lsnr1).testCompleted(with(TestInfoMatcher.success(grp, "Acc", "case1")));
 		}});
 		acc.testCount(grp, 1);
 		acc.testSuccess(grp, "Acc", "case1");
+		acc.testsCompleted(grp, new Date());
+	}
+
+	@Test
+	public void weCanRegisterForUpdatesAboutUtilityTests() {
+		AnalysisAccumulator analyzer = acc.startAnalysis(new Date());
+		analyzer.haveTestClass(grp, "Ute", new UtilityRole(), tests);
+		analyzer.analysisComplete(new Date());
+		BarDataListener lsnr1 = capture.utility;
+		context.checking(new Expectations() {{
+			oneOf(lsnr1).clearGroup(grp);
+			oneOf(lsnr1).testCompleted(with(TestInfoMatcher.success(grp, "Ute", "case1")));
+		}});
+		acc.testCount(grp, 1);
+		acc.testSuccess(grp, "Ute", "case1");
 		acc.testsCompleted(grp, new Date());
 	}
 

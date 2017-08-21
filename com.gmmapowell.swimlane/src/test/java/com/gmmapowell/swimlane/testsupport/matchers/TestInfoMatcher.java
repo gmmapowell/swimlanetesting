@@ -29,10 +29,10 @@ public class TestInfoMatcher extends BaseMatcher<TestInfo> {
 		TestInfo actual = (TestInfo) item;
 		if (outcome != actual.outcome())
 			return false;
-//		if (!expected.classUnderTest().equals(actual.classUnderTest()))
-//			return false;
-//		if (!expected.testName().equals(actual.testName()))
-//			return false;
+		if (!testClass.equals(actual.classUnderTest()))
+			return false;
+		if (!testName.equals(actual.testName()))
+			return false;
 //		if (crs) { // check run-time status
 //			if (expected.hasFailed() != actual.hasFailed())
 //				return false;

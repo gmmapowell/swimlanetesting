@@ -18,6 +18,7 @@ public class CaptureLayout implements ViewLayout {
 	private final JUnitRuleMockery context;
 	public final List<BarDataListener> hexes = new ArrayList<>();
 	public final List<BarDataListener> acceptance = new ArrayList<>();
+	public BarDataListener utility;
 	
 	public CaptureLayout(JUnitRuleMockery context) {
 		this.context = context;
@@ -55,8 +56,10 @@ public class CaptureLayout implements ViewLayout {
 
 
 	@Override
-	public void addUtility(UtilityData ad) {
-		// TODO Auto-generated method stub
-		
+	public void addUtility(UtilityData ud) {
+		if (utility == null) {
+			utility = context.mock(BarDataListener.class, "utility");
+			ud.addTestListener(utility);
+		}
 	}
 }
