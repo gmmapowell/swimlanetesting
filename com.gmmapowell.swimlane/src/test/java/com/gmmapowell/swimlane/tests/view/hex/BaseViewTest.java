@@ -15,15 +15,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.junit.After;
 import org.junit.Before;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public abstract class BaseViewTest extends TestBase {
 	public Shell shell;
-	protected ModelDispatcher md;
 
 	@Before
 	public void setup() throws Exception {
@@ -34,7 +31,6 @@ public abstract class BaseViewTest extends TestBase {
 	protected void create() {
 		shell = displayHelper.createShell();
 		shell.setLayout(new GridLayout(1, false));
-		md = context.mock(ModelDispatcher.class);
 	}
 
 	protected void complete() {
@@ -47,11 +43,6 @@ public abstract class BaseViewTest extends TestBase {
 	public void tearDown() throws Exception {
 //		Thread.sleep(3000);
 		displayHelper.dispose();
-	}
-
-	protected HexagonDataModel pushModel(HexagonDataModel testModel) {
-		updateShell();
-		return testModel;
 	}
 
 	protected void updateShell() {

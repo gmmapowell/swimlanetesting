@@ -1,27 +1,7 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Canvas;
-import org.jmock.Expectations;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
-import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
-import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
-import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
-
 public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
+	/*
 	private BarData bd;
 	
 	@Test
@@ -174,4 +154,5 @@ public class ShowingHexBlockWithPortsAndAdapters extends BaseHexViewTest {
 		}});
 		return testModel;
 	}
+	*/
 }

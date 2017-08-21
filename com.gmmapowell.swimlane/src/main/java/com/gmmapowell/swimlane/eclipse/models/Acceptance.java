@@ -1,13 +1,8 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import com.gmmapowell.swimlane.eclipse.interfaces.AcceptanceData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
-import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 
 public class Acceptance extends BarInfo implements AcceptanceData {
 	private List<String> hexs;

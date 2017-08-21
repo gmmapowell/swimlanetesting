@@ -1,18 +1,7 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
-import java.util.ArrayList;
-
-import org.jmock.Expectations;
-import org.junit.Test;
-
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
-import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
-
 public class MultipleAcceptanceBars extends BaseHexViewTest {
-	
+	/*
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel();
@@ -67,4 +56,5 @@ public class MultipleAcceptanceBars extends BaseHexViewTest {
 		}});
 		return testModel;
 	}
+	*/
 }

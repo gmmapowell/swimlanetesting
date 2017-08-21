@@ -5,15 +5,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.junit.After;
 import org.junit.Before;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.views.ErrorView;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public abstract class BaseViewTest extends TestBase {
 	public Shell shell;
 	public ErrorView hv;
-	protected ModelDispatcher md;
 
 	@Before
 	public void setup() throws Exception {
@@ -31,10 +28,9 @@ public abstract class BaseViewTest extends TestBase {
 		displayHelper.dispose();
 	}
 
-	protected HexagonDataModel pushModel(HexagonDataModel testModel) {
+	protected void pushModel() {
 		shell.redraw();
 		shell.update();
 		displayHelper.flushPendingEvents();
-		return testModel;
 	}
 }

@@ -1,22 +1,8 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-
-import org.eclipse.swt.widgets.Canvas;
-import org.jmock.Expectations;
-import org.junit.Test;
-
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
-import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
-
 public class LayoutTests extends BaseHexViewTest {
 
+	/*
 	@Test
 	public void testThatAllTheControlsArePresent() throws InterruptedException {
 		specifyModel();
@@ -191,5 +177,6 @@ public class LayoutTests extends BaseHexViewTest {
 		}});
 		return testModel;
 	}
+	*/
 
 }

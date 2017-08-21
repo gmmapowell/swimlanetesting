@@ -9,9 +9,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
-
 public class InfoBar implements HexagonModelListener {
 	private final SimpleDateFormat sdf;
 	private final Label lastBuild;

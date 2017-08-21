@@ -1,25 +1,7 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Canvas;
-import org.jmock.Expectations;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
-import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
-import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
-import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
-
 public class UtilityBar extends BaseHexViewTest {
-	
+	/*
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel(10, 0, 0, Status.OK);
@@ -109,4 +91,5 @@ public class UtilityBar extends BaseHexViewTest {
 		}});
 		return testModel;
 	}
+	*/
 }

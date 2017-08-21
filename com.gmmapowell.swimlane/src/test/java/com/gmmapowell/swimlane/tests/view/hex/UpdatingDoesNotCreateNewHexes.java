@@ -1,19 +1,7 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
-import java.util.ArrayList;
-
-import org.jmock.Expectations;
-import org.jmock.States;
-import org.junit.Test;
-
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
-import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
-
 public class UpdatingDoesNotCreateNewHexes extends BaseHexViewTest {
+	/*
 	States mode = context.states("mode").startsAs("initial");
 	private BarData bd;
 	
@@ -59,4 +47,5 @@ public class UpdatingDoesNotCreateNewHexes extends BaseHexViewTest {
 		}});
 		return testModel;
 	}
+	*/
 }

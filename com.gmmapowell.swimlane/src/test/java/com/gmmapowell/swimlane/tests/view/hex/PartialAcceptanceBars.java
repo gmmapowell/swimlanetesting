@@ -1,23 +1,7 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
-import java.util.ArrayList;
-
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Canvas;
-import org.jmock.Expectations;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
-import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
-import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
-import com.gmmapowell.swimlane.tests.swtutil.ImageProxy;
-
 public class PartialAcceptanceBars extends BaseHexViewTest {
-	
+	/*
 	@Test
 	public void testAllTheControlsWeWantAreThere() throws Exception {
 		specifyModel();
@@ -143,4 +127,5 @@ public class PartialAcceptanceBars extends BaseHexViewTest {
 		}});
 		return testModel;
 	}
+	*/
 }

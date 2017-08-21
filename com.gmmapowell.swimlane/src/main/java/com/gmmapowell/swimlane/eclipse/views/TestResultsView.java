@@ -11,18 +11,15 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultClass;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 
-public class TestResultsView implements HexagonModelListener {
+public class TestResultsView {
 	private final Composite view;
 	private final Tree tree;
 	private final Table table;
 	private String resultsFor;
-	private HexagonDataModel model;
 
 	public TestResultsView(Composite parent) {
 		view = new Composite(parent, SWT.NONE);
@@ -43,12 +40,6 @@ public class TestResultsView implements HexagonModelListener {
 
 	public Control getTop() {
 		return view;
-	}
-
-	@Override
-	public void setModel(HexagonDataModel model) {
-		this.model = model;
-		updateDisplay();
 	}
 
 	protected void updateDisplay() {
@@ -76,5 +67,4 @@ public class TestResultsView implements HexagonModelListener {
 			}
 		});
 	}
-
 }

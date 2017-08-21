@@ -14,18 +14,13 @@ import org.jmock.Expectations;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.handlers.RunAllTestsHandler;
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.CommandDispatcher;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
 public class TestRunnerTests extends TestBase {
 
 	interface HVP extends CommandDispatcher, IViewPart {
-	}
-	interface HexAcc extends TestResultReporter, Accumulator, HexagonDataModel {
 	}
 	
 	@Test

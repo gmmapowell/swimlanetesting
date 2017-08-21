@@ -1,18 +1,7 @@
 package com.gmmapowell.swimlane.tests.view.hex;
 
-import java.util.ArrayList;
-
-import org.jmock.Expectations;
-import org.junit.Test;
-
-import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
-import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel.Status;
-
 public class DiscoveringNewAcceptanceBars extends BaseHexViewTest {
-	
+	/*
 	@Test
 	public void testWeCanAddASecond_Later_Bar() throws Exception {
 		BarData a = a();
@@ -77,4 +66,5 @@ public class DiscoveringNewAcceptanceBars extends BaseHexViewTest {
 		}});
 		return b;
 	}
+	*/
 }
