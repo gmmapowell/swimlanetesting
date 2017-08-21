@@ -9,11 +9,12 @@ import org.eclipse.swt.widgets.Composite;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
+import com.gmmapowell.swimlane.eclipse.interfaces.SwimlaneLayoutData;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 
 // An object that combines the business logic of being aware of the idea of tests
 // with the graphical display of painting them
-public class BarControl implements BarDataListener {
+public class BarControl implements BarDataListener, SwimlaneLayoutData {
 //	private final String type;
 	private final Canvas canvas;
 //	private final BarPaintListener bpl;
@@ -24,6 +25,7 @@ public class BarControl implements BarDataListener {
 //		canvas.setData("com.gmmapowell.swimlane.type", type);
 //		canvas.setData("com.gmmapowell.swimlane.bar", this);
 		canvas.setData("org.eclipse.swtbot.widget.key", "swimlane.bar." + name);
+		canvas.setLayoutData(this);
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -38,6 +40,12 @@ public class BarControl implements BarDataListener {
 
 	public Canvas getCanvas() {
 		return canvas;
+	}
+
+	@Override
+	public void constrain(SwimlaneLayoutConstraints constraints) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

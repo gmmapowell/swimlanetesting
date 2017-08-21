@@ -7,7 +7,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-public class HexagonBackground {
+import com.gmmapowell.swimlane.eclipse.interfaces.SwimlaneLayoutData;
+
+public class HexagonBackground implements SwimlaneLayoutData {
 	private final Canvas canvas;
 //	private final BarControl bar;
 //	private final List<PortControl> ports = new ArrayList<PortControl>();
@@ -17,6 +19,7 @@ public class HexagonBackground {
 //		canvas.setData("com.gmmapowell.swimlane.type", "hexbg");
 //		canvas.setData("com.gmmapowell.swimlane.hex", this);
 		canvas.setData("org.eclipse.swtbot.widget.key", "swimlane.hexbg." + hex);
+		canvas.setLayoutData(this);
 //		canvas.addPaintListener(new HexagonPaintListener(canvas/*,model, bar*/));
 //		this.bar = new BarControl(view /*, bar, "businessbar", hexId+".bar" */);
 //		for (PortData p : ports) {
@@ -35,6 +38,17 @@ public class HexagonBackground {
 //		}
 	}
 
+	@Override
+	public void constrain(SwimlaneLayoutConstraints constraints) {
+		constraints.background(this);
+	}
+
+	@Override
+	public void layout(int xpos, int ypos, int xmax, int ymax) {
+		canvas.setLocation(xpos, ypos);
+		canvas.setSize(xmax, ymax);
+		
+	}
 	/*
 	public Canvas getBackground() {
 		return canvas;

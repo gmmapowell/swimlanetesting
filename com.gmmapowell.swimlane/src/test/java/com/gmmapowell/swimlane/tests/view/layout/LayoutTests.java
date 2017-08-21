@@ -1,8 +1,11 @@
 package com.gmmapowell.swimlane.tests.view.layout;
 
+import org.jmock.Expectations;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
+import com.gmmapowell.swimlane.eclipse.views.BarControl;
+import com.gmmapowell.swimlane.tests.swtutil.ImageChecker;
 import com.gmmapowell.swimlane.tests.view.hex.BaseHexViewTest;
 
 public class LayoutTests extends BaseHexViewTest {
@@ -10,8 +13,13 @@ public class LayoutTests extends BaseHexViewTest {
 	@Test
 	public void testThatASimpleLayoutOfOneHexWithBusinessLogicHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
 		HexData h1 = context.mock(HexData.class);
+		context.checking(new Expectations() {{
+			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
+		}});
 		swimlane.addHexagon(0, h1);
 		assertControls(shell, "swimlane.hexbg.0", "swimlane.bar.business.0");
+		ImageChecker checker = proxy -> { };
+		checkSizeColors("swimlane.hexbg.0", 590, 290, checker);
 	}
 
 	/*

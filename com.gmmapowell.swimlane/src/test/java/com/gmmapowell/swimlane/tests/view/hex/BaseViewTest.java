@@ -3,6 +3,9 @@ package com.gmmapowell.swimlane.tests.view.hex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -11,6 +14,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.junit.After;
 import org.junit.Before;
@@ -51,6 +56,19 @@ public abstract class BaseViewTest extends TestBase {
 		displayHelper.flushPendingEvents();
 	}
 
+	protected void checkSizeColors(String objName, int x, int y, ImageChecker checker) {
+		List<String> names = new ArrayList<String>();
+		for (Control ch : ((Composite)shell.getChildren()[0]).getChildren()) {
+			String cn = (String) ch.getData("org.eclipse.swtbot.widget.key");
+			if (objName.equals(cn)) {
+				checkSizeColors((Canvas)ch, x, y, checker);
+				return;
+			}
+			names.add(cn);
+		}
+		throw new RuntimeException(objName + " was not a valid child: " + names);
+	}
+	
 	protected void checkSizeColors(Canvas canvas, int x, int y, ImageChecker checker) {
 		Point pt = canvas.getSize();
 		assertEquals(x, pt.x);

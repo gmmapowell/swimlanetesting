@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
+import com.gmmapowell.swimlane.eclipse.interfaces.SwimlaneLayoutData;
 
 public class SwimlaneLayout extends Layout {
 
@@ -17,8 +18,37 @@ public class SwimlaneLayout extends Layout {
 
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
+
+		// I think the drawing happens automatically, so we need to have things in the right "z-axis" order
+		// i.e. (I think exclusively) The business bars need to be "in front of" the hexagons
+		// But that doesn't say anything about vertically (y-axis)
+		
+		// Let's try and take a multi-phase approach with a TDA pipeline
+		// Phase 1: get everybody to agree on how much space needs to be used for Accs and Ute, and how much is left for hexes
+		//   also try and figure out where the acceptance bars should go vertically and hexes horizontally
+		//   also which adapters & ports are needed for which hexes and where they should go
+		// Then, global action: divvy up the actual space and come up with some concrete numbers
+		// Phase 2: go back and tell everyone the space they have to draw themselves in
+		
+		// Start Phase I by having a helper object exist
+		SwimlaneLayoutConstraints constraints = new SwimlaneLayoutConstraints();
+		
+		System.out.println("Layout called but not implemented with " + composite.getChildren().length);
+		for (Control ch : composite.getChildren()) {
+			Object ld = ch.getLayoutData();
+			System.out.println("  " + ld);
+			if (!(ld instanceof SwimlaneLayoutData)) {
+				System.out.println("invalid layout data for " + ch);
+				continue;
+			}
+			((SwimlaneLayoutData)ld).constrain(constraints);
+		}
 		int xmax = composite.getSize().x;
 		int ymax = composite.getSize().y;
+		for (HexagonBackground bg : constraints.bgs) {
+			bg.layout(0, 0, xmax, ymax);
+		}
+		/*
 		// TODO: refactor this into an attribute on generation
 		int hexAt = 0;
 		int nhexes = 0;
@@ -94,6 +124,7 @@ public class SwimlaneLayout extends Layout {
         	} else
         		System.out.println("Don't lay out " + type);
         }
+        */
 	}
 
 	public static int figureA(int wx, int hy) {
