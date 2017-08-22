@@ -2,7 +2,7 @@ package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.swt.widgets.Canvas;
 
-public class UtilityBarLayout extends BarLayout {
+public class UtilityBarLayout extends LayoutPlacer {
 
 	public UtilityBarLayout(Canvas bar) {
 		super(bar);

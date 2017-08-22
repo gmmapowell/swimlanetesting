@@ -1,10 +1,15 @@
 package com.gmmapowell.swimlane.tests.view.layout;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 import org.jmock.Expectations;
 import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.AcceptanceData;
+import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
+import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.UtilityData;
 import com.gmmapowell.swimlane.eclipse.views.BarControl;
 import com.gmmapowell.swimlane.tests.view.hex.BaseHexViewTest;
@@ -102,7 +107,9 @@ public class LayoutTests extends BaseHexViewTest {
 		swimlane.addUtility(ute);
 //		showFor(5000);
 		assertControlsInOrder(shell, "swimlane.bar.utility");
-		checkLocationSizeColors("swimlane.bar.utility", 0, 2, 590, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.utility", 0, 2, 590, 6, proxy -> {
+			proxy.assertColorOfPixel(SWT.COLOR_BLUE, 10, 5);
+		});
 	}
 
 	@Test
@@ -159,6 +166,26 @@ public class LayoutTests extends BaseHexViewTest {
 		checkLocationSizeColors("swimlane.bar.utility", 0, 282, 590, 6, proxy -> { });
 	}
 	
+	@Test
+	public void oneHexWithOnePortAndOneAdapterHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
+		HexData h1 = context.mock(HexData.class);
+		PortData port = context.mock(PortData.class);
+		AdapterData adapter = context.mock(AdapterData.class);
+		context.checking(new Expectations() {{
+			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
+//			oneOf(adapter).addTestListener(with(any(BarControl.class)));
+		}});
+		swimlane.addHexagon(0, h1);
+		swimlane.addHexagonPort(0, PortLocation.NORTHWEST, port);
+		swimlane.addAdapter(0, PortLocation.NORTHWEST, 0, adapter);
+//		showFor(5000);
+//		dumpComposite((Composite) swimlane.getTop(), "");
+		assertControlsInOrder(shell, /* "swimlane.bar.adapter.0.nw.0", */ "swimlane.port.0.nw", "swimlane.bar.business.0", "swimlane.hexbg.0");
+		checkLocationSizeColors("swimlane.hexbg.0", 157, 26, 276, 238, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.0", 213, 142, 165, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.port.0.nw", 148, 26, 44, 60, proxy -> { });
+	}
+
 	/*
 	@Test
 	public void testThatAllTheControlsArePresent() throws InterruptedException {

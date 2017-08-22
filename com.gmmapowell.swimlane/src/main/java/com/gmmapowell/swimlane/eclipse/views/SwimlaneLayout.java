@@ -1,10 +1,14 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.SwimlaneLayoutData;
 
 public class SwimlaneLayout extends Layout {
@@ -31,10 +35,8 @@ public class SwimlaneLayout extends Layout {
 		// Start Phase I by having a helper object exist
 		SwimlaneLayoutConstraints constraints = new SwimlaneLayoutConstraints();
 		
-		System.out.println("Layout called but not implemented with " + composite.getChildren().length);
 		for (Control ch : composite.getChildren()) {
 			Object ld = ch.getLayoutData();
-			System.out.println("  " + ld);
 			if (!(ld instanceof SwimlaneLayoutData)) {
 				System.out.println("invalid layout data for " + ch);
 				continue;
@@ -63,11 +65,23 @@ public class SwimlaneLayout extends Layout {
 			int h = (int)(a*Math.sqrt(3));
 			for (HexagonBackground bg : constraints.bgs) {
         			int midx = xmax*(2*whichHex+1)/nhexes/2;
+        			int midy = hexTop+ymax/2;
     				int width = 4*a;
-				bg.layout(midx-2*a, hexTop+ymax/2-h, width, 2*h);
+				bg.layout(midx-2*a, midy-h, width, 2*h);
 				SwimlaneLayoutData bar = constraints.businessBars.get(bg);
 				if (bar != null)
-					bar.layout(midx-width*3/10, hexTop+ymax/2-3, width*3/5, 6);
+					bar.layout(midx-width*3/10, midy-3, width*3/5, 6);
+				Map<PortLocation, PortControl> ports = constraints.ports.get(whichHex);
+				if (ports != null) {
+					for (Entry<PortLocation, PortControl> e : ports.entrySet()) {
+						PortLocation pl = e.getKey();
+						int x1 = midx + pl.x(3*a/2);
+						int x2 = x1 + pl.x(a/2+10);
+			        		int y1 = midy + pl.y((int) (Math.sqrt(3)*a));
+			        		int y2 = midy + pl.y((int) (Math.sqrt(3)*a/2));
+			        		e.getValue().layout(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1-x2), Math.abs(y1-y2));
+					}
+				}
 				whichHex++;
 			}
 			hexTop += ymax;

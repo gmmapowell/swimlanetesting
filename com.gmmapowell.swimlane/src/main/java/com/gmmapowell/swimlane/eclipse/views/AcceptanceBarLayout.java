@@ -2,7 +2,7 @@ package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.swt.widgets.Canvas;
 
-public class AcceptanceBarLayout extends BarLayout {
+public class AcceptanceBarLayout extends LayoutPlacer {
 	private final String mask;
 
 	public AcceptanceBarLayout(String mask, Canvas bar) {

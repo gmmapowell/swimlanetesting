@@ -49,18 +49,10 @@ public class SwimlaneView implements ViewLayout {
 		view.layout();
 	}
 	
-	private String maskString(int[] hexes) {
-		StringBuilder sb = new StringBuilder();
-		for (int i : hexes) {
-			sb.append(i);
-		}
-		return sb.toString();
-	}
-
 	@Override
 	public void addHexagonPort(int pos, PortLocation loc, PortData port) {
-		// TODO Auto-generated method stub
-		
+		PortControl pc = factory.port(view, pos, loc, port);
+		view.layout();
 	}
 
 	@Override
@@ -75,6 +67,14 @@ public class SwimlaneView implements ViewLayout {
 		bc.getCanvas().setLayoutData(new UtilityBarLayout(bc.getCanvas()));
 		ad.addTestListener(bc);
 		view.layout();
+	}
+
+	private String maskString(int[] hexes) {
+		StringBuilder sb = new StringBuilder();
+		for (int i : hexes) {
+			sb.append(i);
+		}
+		return sb.toString();
 	}
 
 	// TODO: break a lot of this stuff off into a factory

@@ -4,17 +4,17 @@ import org.eclipse.swt.widgets.Canvas;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.SwimlaneLayoutData;
 
-public abstract class BarLayout implements SwimlaneLayoutData {
-	protected final Canvas bar;
+public abstract class LayoutPlacer implements SwimlaneLayoutData {
+	protected final Canvas canvas;
 
-	public BarLayout(Canvas bar) {
-		this.bar = bar;
+	public LayoutPlacer(Canvas canvas) {
+		this.canvas = canvas;
 	}
 
 	@Override
 	public void layout(int xpos, int ypos, int xmax, int ymax) {
-		bar.setLocation(xpos, ypos);
-		bar.setSize(xmax, ymax);
+		canvas.setLocation(xpos, ypos);
+		canvas.setSize(xmax, ymax);
 	}
 
 }
