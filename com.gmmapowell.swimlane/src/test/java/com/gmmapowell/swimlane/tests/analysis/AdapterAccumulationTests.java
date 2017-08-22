@@ -21,6 +21,7 @@ import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
+import com.gmmapowell.swimlane.testsupport.DirectRunner;
 
 /** The purpose of this is to test that inputs allegedly coming from scanning of test files
  * are correctly "accumulated" by the Accumulator into a model the view can use in terms
@@ -30,7 +31,7 @@ public class AdapterAccumulationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	Solution solution = context.mock(Solution.class);
 	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
-	AnalysisAccumulator acc = new SolutionCreator(errors, solution, new HashMap<GroupOfTests, AllConstraints>());
+	AnalysisAccumulator acc = new SolutionCreator(new DirectRunner(), errors, solution, new HashMap<GroupOfTests, AllConstraints>());
 	Date bcd = new Date();
 	TestGroup grp = new TestGroup("Project", null);
 	Class<?> hexClass1 = Integer.class;

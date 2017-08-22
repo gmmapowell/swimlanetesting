@@ -15,6 +15,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel.SolutionHelper;
+import com.gmmapowell.swimlane.testsupport.DirectRunner;
 import com.gmmapowell.swimlane.testsupport.matchers.AdapterMatcher;
 import com.gmmapowell.swimlane.testsupport.matchers.HexInfoMatcher;
 import com.gmmapowell.swimlane.testsupport.matchers.PortInfoMatcher;
@@ -25,7 +26,7 @@ public class SolutionCreationInitialTests {
 	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
 	DateListener lsnr = context.mock(DateListener.class);
 	ViewLayout layout = context.mock(ViewLayout.class);
-	SwimlaneModel model = new SwimlaneModel(errors, layout);
+	SwimlaneModel model = new SwimlaneModel(new DirectRunner(), errors, layout);
 	Date bcd = new Date();
 	SolutionHelper helper;
 

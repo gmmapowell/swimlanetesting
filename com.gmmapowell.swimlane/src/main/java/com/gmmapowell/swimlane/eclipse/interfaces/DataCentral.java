@@ -15,4 +15,5 @@ public interface DataCentral {
 
 	AnalysisAccumulator startAnalysis(Date startTime);
 	void visitGroups(GroupHandler hdlr);
+	void testsRun(Date date);
 }

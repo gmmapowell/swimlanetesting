@@ -16,6 +16,7 @@ import org.junit.Test;
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
+import com.gmmapowell.swimlane.eclipse.interfaces.ScreenSync;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
@@ -31,7 +32,8 @@ public class AcceptanceAccumulationTests {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	Solution solution = context.mock(Solution.class);
 	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
-	AnalysisAccumulator acc = new SolutionCreator(errors, solution, new HashMap<GroupOfTests, AllConstraints>());
+	ScreenSync device = context.mock(ScreenSync.class);
+	AnalysisAccumulator acc = new SolutionCreator(device, errors, solution, new HashMap<GroupOfTests, AllConstraints>());
 	Sequence seq = context.sequence("solution");
 	TestGroup grp = new TestGroup("Project", null);
 	Date bcd = new Date();

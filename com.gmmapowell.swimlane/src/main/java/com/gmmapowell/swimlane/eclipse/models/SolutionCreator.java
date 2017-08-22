@@ -18,6 +18,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
+import com.gmmapowell.swimlane.eclipse.interfaces.ScreenSync;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRole;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
@@ -34,8 +35,10 @@ public class SolutionCreator implements AnalysisAccumulator {
 	private Map<String, HexTracker> hexes = new TreeMap<>();
 	private Map<String, AcceptanceTracker> acceptances = new TreeMap<String, AcceptanceTracker>(new ReverseStringOrdering());
 	private List<TestCaseTracker> wantUte = new ArrayList<>();
+	private ScreenSync device;
 
-	public SolutionCreator(ErrorAccumulator eh, Solution sol, Map<GroupOfTests, AllConstraints> constraints) {
+	public SolutionCreator(ScreenSync device, ErrorAccumulator eh, Solution sol, Map<GroupOfTests, AllConstraints> constraints) {
+		this.device = device;
 		this.eh = eh;
 		solution = sol;
 		this.constraints = constraints;
@@ -382,35 +385,37 @@ public class SolutionCreator implements AnalysisAccumulator {
 
 	private void announceResults(Date completeTime) {
 		if (solution != null) {
-			solution.beginAnalysis();
-			for (String s : hexOrdering) {
-				solution.hex(s);
-				HexTracker hi = hexes.get(s);
-				for (TestCaseTracker tc : hi.tests)
-					solution.testClass(tc.grp, tc.testClass, tc.tests);
-				for (PortTracker p : hi.getPorts()) {
-					solution.port(p.loc, p.name);
-					for (AdapterTracker a : p.adapters) {
-						solution.adapter(a.name);
-						for (TestCaseTracker tc : a.tests)
-							solution.testClass(tc.grp, tc.testClass, tc.tests);
+			device.syncExec(() -> {
+				solution.beginAnalysis();
+				for (String s : hexOrdering) {
+					solution.hex(s);
+					HexTracker hi = hexes.get(s);
+					for (TestCaseTracker tc : hi.tests)
+						solution.testClass(tc.grp, tc.testClass, tc.tests);
+					for (PortTracker p : hi.getPorts()) {
+						solution.port(p.loc, p.name);
+						for (AdapterTracker a : p.adapters) {
+							solution.adapter(a.name);
+							for (TestCaseTracker tc : a.tests)
+								solution.testClass(tc.grp, tc.testClass, tc.tests);
+						}
 					}
 				}
-			}
-			
-			for (AcceptanceTracker at : acceptances.values()) {
-				solution.acceptance(at.hexes.toArray(new String[at.hexes.size()]));
-				for (TestCaseTracker tc : at.tests)
-					solution.testClass(tc.grp, tc.testClass, tc.tests);
-			}
-			
-			if (!wantUte.isEmpty()) {
-				solution.needsUtilityBar();
-				for (TestCaseTracker tc : wantUte)
-					solution.testClass(tc.grp, tc.testClass, tc.tests);
-			}
-			
-			solution.analysisDone(completeTime);
+				
+				for (AcceptanceTracker at : acceptances.values()) {
+					solution.acceptance(at.hexes.toArray(new String[at.hexes.size()]));
+					for (TestCaseTracker tc : at.tests)
+						solution.testClass(tc.grp, tc.testClass, tc.tests);
+				}
+				
+				if (!wantUte.isEmpty()) {
+					solution.needsUtilityBar();
+					for (TestCaseTracker tc : wantUte)
+						solution.testClass(tc.grp, tc.testClass, tc.tests);
+				}
+				
+				solution.analysisDone(completeTime);
+			});
 		}
 	}
 

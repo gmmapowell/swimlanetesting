@@ -1,7 +1,6 @@
 package com.gmmapowell.swimlane.tests.view.layout;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Composite;
 import org.jmock.Expectations;
 import org.junit.Test;
 

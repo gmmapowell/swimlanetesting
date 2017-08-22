@@ -86,7 +86,7 @@ public class TestThreeHexagonsHappyCase {
 	
 	@Test
 	public void step03a_testThatItFoundOneOfTheHexagons() {
-		SWTBotCanvas hex1 = bot.canvasWithId("swimlane.com.gmmapowell.swimlane.sample.code.Hexagon1.bg");
+		SWTBotCanvas hex1 = bot.canvasWithId("swimlane.hexbg.0");
 		assertTrue(hex1.isVisible());
 		Point ws = ext.getSize(hex1.widget);
 		ext.assertPct(ws.x, viewSize.x, 18, 22);
@@ -119,7 +119,8 @@ public class TestThreeHexagonsHappyCase {
 	
 	@Test
 	public void step11_testThatTheAcceptanceBarIsNowGreen() {
-		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
+		ext.dumpActiveShell();
+		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.bar.acceptance.1");
 		assertTrue(acc123.isVisible());
 		Point ws = ext.getSize(acc123.widget);
 		ext.assertColor(acc123, SWT.COLOR_GREEN, ws.x/2, ws.y/2);
@@ -152,7 +153,7 @@ public class TestThreeHexagonsHappyCase {
 	
 	@Test
 	public void step21_andSwitchBack() {
-		SWTBotToolbarButton showHexes = bot.toolbarRadioButtonWithTooltip("Show Hex Diagram");
+		SWTBotToolbarButton showHexes = bot.toolbarRadioButtonWithTooltip("Show Swimlane Diagram");
 		showHexes.click();
 		bot.getDisplay().syncExec(new Runnable() {
 			@Override
@@ -160,7 +161,7 @@ public class TestThreeHexagonsHappyCase {
 				assertTrue(showHexes.widget.getSelection());
 			}
 		});
-		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
+		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.bar.acceptance.111");
 		assertTrue(acc123.isVisible());
 		bot.performWithTimeout(new VoidResult() {
 			@Override
@@ -176,7 +177,7 @@ public class TestThreeHexagonsHappyCase {
 	
 	@Test
 	public void step30_checkToolTipOnAcc123() {
-		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
+		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.bar.acceptance.111");
 		assertEquals("Acceptance - 1 group; 2 passed", acc123.getToolTipText());
 	}
 	
@@ -190,7 +191,7 @@ public class TestThreeHexagonsHappyCase {
 				// I feel it should be easy programmatically to change the state of a radio button
 				// But the thing that everybody seems to say should work doesn't, and I can't figure out anything else to do
 				// Instead, just check that we have the right set of things displayed
-//				SWTBotToolbarButton showHexes = bot.toolbarRadioButtonWithTooltip("Show Hex Diagram");
+//				SWTBotToolbarButton showHexes = bot.toolbarRadioButtonWithTooltip("Show Swimlane Diagram");
 //				assertFalse("hexes button should be deactivated", showHexes.widget.getSelection());
 //				SWTBotToolbarButton showTests = bot.toolbarRadioButtonWithTooltip("Test Results");
 //				assertTrue("results button should be activated", showTests.widget.getSelection());
@@ -246,7 +247,7 @@ public class TestThreeHexagonsHappyCase {
 	
 	@Test
 	public void step35_andSwitchBackToHexMode() {
-		SWTBotToolbarButton showHexes = bot.toolbarRadioButtonWithTooltip("Show Hex Diagram");
+		SWTBotToolbarButton showHexes = bot.toolbarRadioButtonWithTooltip("Show Swimlane Diagram");
 		showHexes.click();
 		bot.getDisplay().syncExec(new Runnable() {
 			@Override
@@ -254,19 +255,19 @@ public class TestThreeHexagonsHappyCase {
 				assertTrue(showHexes.widget.getSelection());
 			}
 		});
-		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
+		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.bar.acceptance.111");
 		assertTrue(acc123.isVisible());
 	}
 
 	@Test
 	public void step40_testAdapterHasAFailure() {
-		SWTBotCanvas adapter = bot.canvasWithId("swimlane.com.gmmapowell.swimlane.sample.code.Hexagon1.adapter.nw.1");
+		SWTBotCanvas adapter = bot.canvasWithId("swimlane.bar.adapter.0.nw.0");
 		assertEquals("Hex1Port1Adapter1 - 1 group; 0 passed, 1 failure", adapter.getToolTipText());
 	}
 
 	@Test
 	public void step41_clickToMoveToAdapter() {
-		SWTBotCanvas adapter = bot.canvasWithId("swimlane.com.gmmapowell.swimlane.sample.code.Hexagon1.adapter.nw.1");
+		SWTBotCanvas adapter = bot.canvasWithId("swimlane.bar.adapter.0.nw.0");
 		adapter.click();
 		SWTBotTree cases = bot.treeWithId("swimlane.casesTree");
 		assertTrue(cases.isVisible());

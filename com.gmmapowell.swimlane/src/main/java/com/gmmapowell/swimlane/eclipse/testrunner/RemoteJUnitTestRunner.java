@@ -53,6 +53,7 @@ public class RemoteJUnitTestRunner implements TestRunner {
 			public IStatus run(IProgressMonitor monitor) {
 				IStatus ret = Status.OK_STATUS;
 				central.visitGroups(g -> runGroup(monitor, g));
+				central.testsRun(new Date());
 				return ret;
 			}
 

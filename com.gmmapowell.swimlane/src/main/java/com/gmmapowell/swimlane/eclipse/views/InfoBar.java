@@ -20,6 +20,7 @@ public class InfoBar {
 		sdf = new SimpleDateFormat("HHmmss.SSS");
 
 		Composite infoBar = new Composite(parent, SWT.NONE);
+		infoBar.moveAbove(null);
 		infoBar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 		infoBar.setLayout(new FillLayout());
 		lastBuild = new Label(infoBar, SWT.NONE);
@@ -29,8 +30,8 @@ public class InfoBar {
 		testsComplete.setData("org.eclipse.swtbot.widget.key", "swimlane.testsComplete");
 		testsComplete.setText("none");
 		
-		model.addBuildDateListener(date -> lastBuild.setText(formatDate(date)));
-		model.addTestDateListener(date -> testsComplete.setText(formatDate(date)));
+		model.addBuildDateListener(date -> parent.getDisplay().syncExec(() -> lastBuild.setText(formatDate(date))));
+		model.addTestDateListener(date -> parent.getDisplay().syncExec(() -> testsComplete.setText(formatDate(date))));
 	}
 
 	protected String formatDate(Date tmp) {

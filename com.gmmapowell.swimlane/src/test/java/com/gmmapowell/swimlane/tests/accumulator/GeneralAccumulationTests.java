@@ -14,6 +14,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
+import com.gmmapowell.swimlane.testsupport.DirectRunner;
 
 /* The purpose of the accumulator is to take input in one form (what we discover)
  * and to build a stable model out of it.
@@ -25,7 +26,7 @@ public class GeneralAccumulationTests {
 	Solution solution = context.mock(Solution.class);
 	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
 	ViewLayout layout = context.mock(ViewLayout.class);
-	DataCentral acc = new SwimlaneModel(errors, layout);
+	DataCentral acc = new SwimlaneModel(new DirectRunner(), errors, layout);
 	DateListener lsnr = context.mock(DateListener.class);
 	
 	@Test

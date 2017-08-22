@@ -20,13 +20,14 @@ import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
 import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 import com.gmmapowell.swimlane.testsupport.CaptureLayout;
+import com.gmmapowell.swimlane.testsupport.DirectRunner;
 import com.gmmapowell.swimlane.testsupport.matchers.TestInfoMatcher;
 
 public class UpdatingRealTimeTestResultInfo {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
 	CaptureLayout capture = new CaptureLayout(context);
-	SwimlaneModel acc = new SwimlaneModel(errors, capture);
+	SwimlaneModel acc = new SwimlaneModel(new DirectRunner(), errors, capture);
 	TestResultReporter trr = (TestResultReporter) acc;
 	GroupOfTests grp = context.mock(GroupOfTests.class);
 	List<String> tests = new ArrayList<>();

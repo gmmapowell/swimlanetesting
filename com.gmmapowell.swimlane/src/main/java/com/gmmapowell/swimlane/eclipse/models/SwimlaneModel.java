@@ -17,6 +17,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.HasABar;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
+import com.gmmapowell.swimlane.eclipse.interfaces.ScreenSync;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
@@ -41,8 +42,10 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	private Set<DateListener> buildDateListeners = new HashSet<>();
 	private Set<DateListener> testDateListeners = new HashSet<>();
 	private Map<GroupOfTests, Map<String, HasABar>> bars = new HashMap<>();
+	private ScreenSync sync;
 
-	public SwimlaneModel(ErrorAccumulator eh, ViewLayout layout) {
+	public SwimlaneModel(ScreenSync sync, ErrorAccumulator eh, ViewLayout layout) {
+		this.sync = sync;
 		this.eh = eh;
 		this.layout = layout;
 		
@@ -51,7 +54,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	public AnalysisAccumulator startAnalysis(Date startTime) {
 		if (currentSolution != null)
 			throw new RuntimeException("I think you are running two analyses at the same time ... don't");
-		return new SolutionCreator(eh, new SolutionHelper(), constraints);
+		return new SolutionCreator(sync, eh, new SolutionHelper(), constraints);
 	}
 	
 	private void analysisDone(Date completeTime) {
@@ -69,6 +72,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	
 	@Override
 	public void addTestDateListener(DateListener lsnr) {
+		System.out.println("Adding test date listener " + lsnr);
 		testDateListeners.add(lsnr);
 		if (testsCompleteTime != null)
 			lsnr.dateChanged(testsCompleteTime);
@@ -123,20 +127,30 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	
 	@Override
 	public void testsCompleted(GroupOfTests grp, Date currentDate) {
-		testsCompleteTime = currentDate;
-		for (DateListener l : buildDateListeners)
-			l.dateChanged(testsCompleteTime);
 	}
 
 	public void runAllTests(TestRunner tr) {
+		System.out.println("Running all tests");
 		tr.runAll(this, this);
 	}
 
 	@Override
 	public void visitGroups(GroupHandler hdlr) {
+		System.out.println("Visiting all groups");
 		for (GroupOfTests g : groups.keySet())
 			hdlr.runGroup(g);
+		System.out.println("Visited all groups");
 	}
+
+	
+	@Override
+	public void testsRun(Date currentDate) {
+		System.out.println("Tests completed at " + currentDate + " notifying " + testDateListeners);
+		testsCompleteTime = currentDate;
+		for (DateListener l : testDateListeners)
+			l.dateChanged(testsCompleteTime);
+	}
+
 
 	public class SolutionHelper implements Solution {
 		int chex = -1;
