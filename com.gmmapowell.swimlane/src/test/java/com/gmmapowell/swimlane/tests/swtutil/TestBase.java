@@ -101,7 +101,7 @@ public class TestBase {
 			System.out.println(indent + "null");
 			return;
 		}
-		System.out.println(indent + c + " " + c.getClass());
+		System.out.println(indent + c + " " + c.getClass() + " " + c.getBounds());
 		if (c.getData("org.eclipse.swtbot.widget.key") != null)
 			System.out.println(indent + " -> " + c.getData("org.eclipse.swtbot.widget.key"));
 		if (c instanceof Composite)
