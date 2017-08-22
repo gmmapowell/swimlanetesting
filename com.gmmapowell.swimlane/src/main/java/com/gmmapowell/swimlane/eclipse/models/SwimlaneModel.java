@@ -1,7 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,12 +27,12 @@ import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 public class SwimlaneModel implements DataCentral, TestResultReporter {
 	private final ErrorAccumulator eh;
 	private final ViewLayout layout;
-	private final List<HexInfo> hexes = new ArrayList<>();
+	private final List<BarInfo> hexes = new ArrayList<>();
 
 	private Date buildTime;
 	private Date testsCompleteTime;
 	private SolutionCreator currentSolution;
-	public UtilityInfo uteData;
+	public BarInfo uteData;
 
 	// This is here for each time we create a SolutionCreator ...
 	private Map<GroupOfTests, AllConstraints> constraints = new HashMap<GroupOfTests, AllConstraints>();
@@ -166,7 +165,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 
 		@Override
 		public void hex(String clzName) {
-			HexInfo hi = new HexInfo(clzName);
+			BarInfo hi = new BarInfo();
 			chex = SwimlaneModel.this.hexes.size();
 			layout.addHexagon(chex, hi);
 			SwimlaneModel.this.hexes.add(hi);
@@ -189,10 +188,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		public void port(PortLocation loc, String port) {
 			if (chex == -1)
 				throw new RuntimeException("Protocol error");
-			HexInfo hi = hexes.get(chex);
-			PortInfo pi = new PortInfo(port, loc);
-			hi.addPort(pi);
-			layout.addHexagonPort(chex, loc, pi);
+			layout.addHexagonPort(chex, loc);
 			cloc = loc;
 		}
 
@@ -201,14 +197,14 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 			if (chex == -1 || cloc == null)
 				throw new RuntimeException("Protocol error");
 			
-			AdapterInfo adapter = new AdapterInfo(name);
+			BarInfo adapter = new BarInfo();
 			layout.addAdapter(chex, cloc, apos++, adapter);
 			currentBar = adapter;
 		}
 
 		@Override
 		public void acceptance(String... hexes) {
-			Acceptance acc = new Acceptance(Arrays.asList(hexes));
+			BarInfo acc = new BarInfo();
 			layout.addAcceptance(new int[] { 1 }, acc);
 			currentBar = acc;			
 		}
@@ -216,7 +212,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		@Override
 		public void needsUtilityBar() {
 			if (uteData == null) {
-				uteData = new UtilityInfo();
+				uteData = new BarInfo();
 				layout.addUtility(uteData);
 			}
 			currentBar = uteData;

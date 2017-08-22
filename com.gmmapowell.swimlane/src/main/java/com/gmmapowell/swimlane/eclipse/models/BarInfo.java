@@ -26,6 +26,11 @@ public class BarInfo implements BarData, HasABar {
 	public BarInfo() {
 	}
 
+	@Override
+	public void addTestListener(BarDataListener lsnr) {
+		lsnrs.add(lsnr);
+	}
+
 	// I think we need something to reject old data during updates
 	@Override
 	public void testClass(GroupOfTests grp, String clzName, List<String> tests) {

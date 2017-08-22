@@ -4,12 +4,8 @@ import org.eclipse.swt.SWT;
 import org.jmock.Expectations;
 import org.junit.Test;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.AcceptanceData;
-import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
-import com.gmmapowell.swimlane.eclipse.interfaces.UtilityData;
 import com.gmmapowell.swimlane.eclipse.views.BarControl;
 import com.gmmapowell.swimlane.tests.view.hex.BaseHexViewTest;
 
@@ -17,9 +13,9 @@ public class LayoutTests extends BaseHexViewTest {
 
 	@Test
 	public void oneHexWithBusinessLogicHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
-		HexData h1 = context.mock(HexData.class);
+		BarData h1 = context.mock(BarData.class);
 		context.checking(new Expectations() {{
-			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(h1).addTestListener(with(any(BarControl.class)));
 		}});
 		swimlane.addHexagon(0, h1);
 //		showFor(5000);
@@ -30,11 +26,11 @@ public class LayoutTests extends BaseHexViewTest {
 
 	@Test
 	public void twoHexesWithBusinessLogicHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
-		HexData h1 = context.mock(HexData.class, "h1");
-		HexData h2 = context.mock(HexData.class, "h2");
+		BarData h1 = context.mock(BarData.class, "h1");
+		BarData h2 = context.mock(BarData.class, "h2");
 		context.checking(new Expectations() {{
-			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
-			oneOf(h2).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(h1).addTestListener(with(any(BarControl.class)));
+			oneOf(h2).addTestListener(with(any(BarControl.class)));
 		}});
 		swimlane.addHexagon(0, h1);
 		swimlane.addHexagon(1, h2);
@@ -49,10 +45,10 @@ public class LayoutTests extends BaseHexViewTest {
 
 	@Test
 	public void oneHexAndOneAcceptanceHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
-		HexData h1 = context.mock(HexData.class);
-		AcceptanceData ad = context.mock(AcceptanceData.class);
+		BarData h1 = context.mock(BarData.class, "h1");
+		BarData ad = context.mock(BarData.class, "ad");
 		context.checking(new Expectations() {{
-			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(h1).addTestListener(with(any(BarControl.class)));
 			oneOf(ad).addTestListener(with(any(BarControl.class)));
 		}});
 		swimlane.addHexagon(0, h1);
@@ -66,14 +62,14 @@ public class LayoutTests extends BaseHexViewTest {
 
 	@Test
 	public void twoHexesAndThreeAcceptanceBarsHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
-		HexData h1 = context.mock(HexData.class, "h1");
-		HexData h2 = context.mock(HexData.class, "h2");
-		AcceptanceData a11 = context.mock(AcceptanceData.class, "a11");
-		AcceptanceData a01 = context.mock(AcceptanceData.class, "a10");
-		AcceptanceData a10 = context.mock(AcceptanceData.class, "a01");
+		BarData h1 = context.mock(BarData.class, "h1");
+		BarData h2 = context.mock(BarData.class, "h2");
+		BarData a11 = context.mock(BarData.class, "a11");
+		BarData a01 = context.mock(BarData.class, "a10");
+		BarData a10 = context.mock(BarData.class, "a01");
 		context.checking(new Expectations() {{
-			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
-			oneOf(h2).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(h1).addTestListener(with(any(BarControl.class)));
+			oneOf(h2).addTestListener(with(any(BarControl.class)));
 			oneOf(a11).addTestListener(with(any(BarControl.class)));
 			oneOf(a10).addTestListener(with(any(BarControl.class)));
 			oneOf(a01).addTestListener(with(any(BarControl.class)));
@@ -101,7 +97,7 @@ public class LayoutTests extends BaseHexViewTest {
 
 	@Test
 	public void justTheUtilityBarHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
-		UtilityData ute = context.mock(UtilityData.class);
+		BarData ute = context.mock(BarData.class);
 		context.checking(new Expectations() {{
 			oneOf(ute).addTestListener(with(any(BarControl.class)));
 		}});
@@ -115,15 +111,14 @@ public class LayoutTests extends BaseHexViewTest {
 
 	@Test
 	public void oneHexWithOnePortAndOneAdapterHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
-		HexData h1 = context.mock(HexData.class);
-		PortData port = context.mock(PortData.class);
-		AdapterData adapter = context.mock(AdapterData.class);
+		BarData h1 = context.mock(BarData.class, "h1");
+		BarData adapter = context.mock(BarData.class, "ad");
 		context.checking(new Expectations() {{
-			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(h1).addTestListener(with(any(BarControl.class)));
 			oneOf(adapter).addTestListener(with(any(BarControl.class)));
 		}});
 		swimlane.addHexagon(0, h1);
-		swimlane.addHexagonPort(0, PortLocation.NORTHWEST, port);
+		swimlane.addHexagonPort(0, PortLocation.NORTHWEST);
 		swimlane.addAdapter(0, PortLocation.NORTHWEST, 0, adapter);
 //		dumpComposite((Composite) swimlane.getTop(), "");
 //		showFor(5000);
@@ -136,15 +131,14 @@ public class LayoutTests extends BaseHexViewTest {
 
 	@Test
 	public void oneHexWithOnePortAndMultipleAdaptersHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
-		HexData h1 = context.mock(HexData.class);
-		PortData port = context.mock(PortData.class);
-		AdapterData adapter = context.mock(AdapterData.class);
+		BarData h1 = context.mock(BarData.class, "h1");
+		BarData adapter = context.mock(BarData.class, "a1");
 		context.checking(new Expectations() {{
-			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(h1).addTestListener(with(any(BarControl.class)));
 			exactly(5).of(adapter).addTestListener(with(any(BarControl.class)));
 		}});
 		swimlane.addHexagon(0, h1);
-		swimlane.addHexagonPort(0, PortLocation.NORTHWEST, port);
+		swimlane.addHexagonPort(0, PortLocation.NORTHWEST);
 		swimlane.addAdapter(0, PortLocation.NORTHWEST, 0, adapter);
 		swimlane.addAdapter(0, PortLocation.NORTHWEST, 1, adapter);
 		swimlane.addAdapter(0, PortLocation.NORTHWEST, 2, adapter);
@@ -171,20 +165,19 @@ public class LayoutTests extends BaseHexViewTest {
 
 	@Test
 	public void aComplexLayoutHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
-		HexData h1 = context.mock(HexData.class, "h1");
-		HexData h2 = context.mock(HexData.class, "h2");
-		HexData h3 = context.mock(HexData.class, "h3");
-		PortData port = context.mock(PortData.class);
-		AdapterData adapter = context.mock(AdapterData.class);
-		AcceptanceData a111 = context.mock(AcceptanceData.class, "a111");
-		AcceptanceData a011 = context.mock(AcceptanceData.class, "a011");
-		AcceptanceData a100 = context.mock(AcceptanceData.class, "a100");
-		AcceptanceData a010 = context.mock(AcceptanceData.class, "a010");
-		UtilityData ute = context.mock(UtilityData.class);
+		BarData h1 = context.mock(BarData.class, "h1");
+		BarData h2 = context.mock(BarData.class, "h2");
+		BarData h3 = context.mock(BarData.class, "h3");
+		BarData adapter = context.mock(BarData.class);
+		BarData a111 = context.mock(BarData.class, "a111");
+		BarData a011 = context.mock(BarData.class, "a011");
+		BarData a100 = context.mock(BarData.class, "a100");
+		BarData a010 = context.mock(BarData.class, "a010");
+		BarData ute = context.mock(BarData.class, "ute");
 		context.checking(new Expectations() {{
-			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
-			oneOf(h2).addBusinessLogicListener(with(any(BarControl.class)));
-			oneOf(h3).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(h1).addTestListener(with(any(BarControl.class)));
+			oneOf(h2).addTestListener(with(any(BarControl.class)));
+			oneOf(h3).addTestListener(with(any(BarControl.class)));
 			exactly(15).of(adapter).addTestListener(with(any(BarControl.class)));
 			oneOf(a111).addTestListener(with(any(BarControl.class)));
 			oneOf(a011).addTestListener(with(any(BarControl.class)));
@@ -195,27 +188,27 @@ public class LayoutTests extends BaseHexViewTest {
 		swimlane.addHexagon(0, h1);
 		swimlane.addHexagon(1, h2);
 		swimlane.addHexagon(2, h3);
-		swimlane.addHexagonPort(0, PortLocation.NORTHWEST, port);
+		swimlane.addHexagonPort(0, PortLocation.NORTHWEST);
 		swimlane.addAdapter(0, PortLocation.NORTHWEST, 0, adapter);
 		swimlane.addAdapter(0, PortLocation.NORTHWEST, 1, adapter);
 		swimlane.addAdapter(0, PortLocation.NORTHWEST, 2, adapter);
 		swimlane.addAdapter(0, PortLocation.NORTHWEST, 3, adapter);
 		swimlane.addAdapter(0, PortLocation.NORTHWEST, 4, adapter);
-		swimlane.addHexagonPort(0, PortLocation.SOUTHEAST, port);
+		swimlane.addHexagonPort(0, PortLocation.SOUTHEAST);
 		swimlane.addAdapter(0, PortLocation.SOUTHEAST, 0, adapter);
-		swimlane.addHexagonPort(1, PortLocation.SOUTHWEST, port);
+		swimlane.addHexagonPort(1, PortLocation.SOUTHWEST);
 		swimlane.addAdapter(1, PortLocation.SOUTHWEST, 0, adapter);
-		swimlane.addHexagonPort(1, PortLocation.NORTHEAST, port);
+		swimlane.addHexagonPort(1, PortLocation.NORTHEAST);
 		swimlane.addAdapter(1, PortLocation.NORTHEAST, 0, adapter);
-		swimlane.addHexagonPort(2, PortLocation.NORTHWEST, port);
+		swimlane.addHexagonPort(2, PortLocation.NORTHWEST);
 		swimlane.addAdapter(2, PortLocation.NORTHWEST, 0, adapter);
 		swimlane.addAdapter(2, PortLocation.NORTHWEST, 1, adapter);
-		swimlane.addHexagonPort(2, PortLocation.SOUTHWEST, port);
+		swimlane.addHexagonPort(2, PortLocation.SOUTHWEST);
 		swimlane.addAdapter(2, PortLocation.SOUTHWEST, 0, adapter);
-		swimlane.addHexagonPort(2, PortLocation.SOUTHEAST, port);
+		swimlane.addHexagonPort(2, PortLocation.SOUTHEAST);
 		swimlane.addAdapter(2, PortLocation.SOUTHEAST, 0, adapter);
 		swimlane.addAdapter(2, PortLocation.SOUTHEAST, 1, adapter);
-		swimlane.addHexagonPort(2, PortLocation.NORTHEAST, port);
+		swimlane.addHexagonPort(2, PortLocation.NORTHEAST);
 		swimlane.addAdapter(2, PortLocation.NORTHEAST, 0, adapter);
 		swimlane.addAdapter(2, PortLocation.NORTHEAST, 1, adapter);
 		swimlane.addAcceptance(new int[] { 0, 1, 0 }, a010); // bottom

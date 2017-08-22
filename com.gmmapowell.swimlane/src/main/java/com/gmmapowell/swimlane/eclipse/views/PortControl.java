@@ -8,14 +8,13 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 
 public class PortControl extends LayoutPlacer implements PaintListener {
 	private final int hex;
 	private final PortLocation loc;
 
-	public PortControl(Composite parent, int hex, PortLocation loc, PortData port) {
+	public PortControl(Composite parent, int hex, PortLocation loc) {
 //	public PortControl(Composite view, String portId, int hex, PortData p) {
 		super(new Canvas(parent, SWT.NONE));
 		this.hex = hex;

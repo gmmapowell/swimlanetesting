@@ -11,8 +11,6 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 
 // An object that combines the business logic of being aware of the idea of tests
 // with the graphical display of painting them

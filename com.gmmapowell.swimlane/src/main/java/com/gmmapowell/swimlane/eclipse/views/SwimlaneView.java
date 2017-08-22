@@ -5,12 +5,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.AcceptanceData;
-import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
-import com.gmmapowell.swimlane.eclipse.interfaces.UtilityData;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewComponentFactory;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 
@@ -32,16 +28,16 @@ public class SwimlaneView implements ViewLayout {
 	}
 
 	@Override
-	public void addHexagon(int pos, HexData hi) {
+	public void addHexagon(int pos, BarData hi) {
 		HexagonBackground hc = factory.hexagon(view, pos);
 		BarControl bc = factory.bar(view, "business." + pos);
 		bc.getCanvas().setLayoutData(new BusinessBarLayout(hc, bc.getCanvas()));
-		hi.addBusinessLogicListener(bc);
+		hi.addTestListener(bc);
 		view.layout();
 	}
 
 	@Override
-	public void addAcceptance(int[] hexes, AcceptanceData ad) {
+	public void addAcceptance(int[] hexes, BarData ad) {
 		String mask = maskString(hexes);
 		BarControl bc = factory.bar(view, "acceptance." + mask);
 		bc.getCanvas().setLayoutData(new AcceptanceBarLayout(mask, bc.getCanvas()));
@@ -50,13 +46,13 @@ public class SwimlaneView implements ViewLayout {
 	}
 	
 	@Override
-	public void addHexagonPort(int pos, PortLocation loc, PortData port) {
-		factory.port(view, pos, loc, port);
+	public void addHexagonPort(int pos, PortLocation loc) {
+		factory.port(view, pos, loc);
 		view.layout();
 	}
 
 	@Override
-	public void addAdapter(int hex, PortLocation ploc, int aloc, AdapterData adapter) {
+	public void addAdapter(int hex, PortLocation ploc, int aloc, BarData adapter) {
 		BarControl bc = factory.bar(view, "adapter." + hex + "." + ploc + "." + aloc);
 		bc.getCanvas().setLayoutData(new AdapterBarLayout(hex, ploc, aloc, bc.getCanvas()));
 		adapter.addTestListener(bc);
@@ -64,7 +60,7 @@ public class SwimlaneView implements ViewLayout {
 	}
 
 	@Override
-	public void addUtility(UtilityData ad) {
+	public void addUtility(BarData ad) {
 		BarControl bc = factory.bar(view, "utility");
 		bc.getCanvas().setLayoutData(new UtilityBarLayout(bc.getCanvas()));
 		ad.addTestListener(bc);

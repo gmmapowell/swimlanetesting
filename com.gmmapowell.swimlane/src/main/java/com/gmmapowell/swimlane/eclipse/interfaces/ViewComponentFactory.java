@@ -10,6 +10,6 @@ public interface ViewComponentFactory {
 
 	HexagonBackground hexagon(Composite parent, int which);
 	BarControl bar(Composite view, String name);
-	PortControl port(Composite view, int pos, PortLocation loc, PortData port);
+	PortControl port(Composite view, int pos, PortLocation loc);
 
 }

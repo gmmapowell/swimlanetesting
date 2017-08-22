@@ -7,13 +7,9 @@ import java.util.TreeMap;
 
 import org.jmock.integration.junit4.JUnitRuleMockery;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.AcceptanceData;
-import com.gmmapowell.swimlane.eclipse.interfaces.AdapterData;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
-import com.gmmapowell.swimlane.eclipse.interfaces.PortData;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
-import com.gmmapowell.swimlane.eclipse.interfaces.UtilityData;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 
 public class CaptureLayout implements ViewLayout {
@@ -28,39 +24,40 @@ public class CaptureLayout implements ViewLayout {
 	}
 
 	@Override
-	public void addHexagon(int pos, HexData hi) {
+	public void addHexagon(int pos, BarData hi) {
 		BarDataListener lsnr = context.mock(BarDataListener.class, "bdl_hex" + pos);
 
 		while (hexes.size() <= pos)
 			hexes.add(null);
 		hexes.set(pos, lsnr);
 		
-		hi.addBusinessLogicListener(lsnr);
+		hi.addTestListener(lsnr);
 	}
 
 	@Override
-	public void addAcceptance(int[] hexes, AcceptanceData ad) {
+	public void addAcceptance(int[] hexes, BarData bar) {
 		BarDataListener lsnr = context.mock(BarDataListener.class, "bdl_acc" + acceptance.size());
-		ad.addTestListener(lsnr);
+		bar.addTestListener(lsnr);
 		acceptance.add(lsnr);
 	}
 
 	@Override
-	public void addHexagonPort(int pos, PortLocation loc, PortData port) {
+	public void addHexagonPort(int pos, PortLocation loc) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void addAdapter(int hex, PortLocation ploc, int aloc, AdapterData adapter) {
-		BarDataListener lsnr = context.mock(BarDataListener.class, "adapter_" + adapter.getName());
+	public void addAdapter(int hex, PortLocation ploc, int aloc, BarData adapter) {
+		String name = "adapter_" + hex +"_"+ploc+"_"+aloc;
+		BarDataListener lsnr = context.mock(BarDataListener.class, name);
 		adapter.addTestListener(lsnr);
-		adapters.put(adapter.getName(), lsnr);
+		adapters.put(name, lsnr);
 	}
 
 
 	@Override
-	public void addUtility(UtilityData ud) {
+	public void addUtility(BarData ud) {
 		if (utility == null) {
 			utility = context.mock(BarDataListener.class, "utility");
 			ud.addTestListener(utility);
