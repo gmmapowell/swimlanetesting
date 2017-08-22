@@ -72,15 +72,6 @@ public abstract class BarInfo implements BarData, HasABar {
 //		testClasses.get(key).total = cnt;
 	}
 
-	public void passed(String forClz) {
-//		testClasses.get(forClz).passed++;
-	}
-
-	public void failed(String forClz) {
-//		testClasses.get(forClz).failed++;
-//		stat = Status.FAILURES;
-	}
-
 	@Override
 	public int getTotal() {
 		int ret = 0;
@@ -115,13 +106,15 @@ public abstract class BarInfo implements BarData, HasABar {
 
 	@Override
 	public void clearGroup(GroupOfTests grp) {
+		// TODO: clear this group
 		for (BarDataListener lsnr : lsnrs)
-			lsnr.clearGroup(grp);
+			lsnr.barChanged(this);
 	}
 
 	@Override
 	public void testCompleted(TestCaseInfo ti) {
+		// TODO: consolidate this
 		for (BarDataListener lsnr : lsnrs)
-			lsnr.testCompleted(ti);
+			lsnr.barChanged(this);
 	}
 }

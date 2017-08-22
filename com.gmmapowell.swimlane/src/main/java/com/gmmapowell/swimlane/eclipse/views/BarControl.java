@@ -9,6 +9,7 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
@@ -19,6 +20,7 @@ public class BarControl implements BarDataListener, PaintListener {
 //	private final String type;
 	private final Canvas canvas;
 //	private final BarPaintListener bpl;
+	private BarData barData;
 
 	public BarControl(Composite view, String name /*, BarData bar, String type, String barId */) {
 //		this.type = type;
@@ -45,23 +47,39 @@ public class BarControl implements BarDataListener, PaintListener {
 	}
 
 	@Override
-	public void clearGroup(GroupOfTests grp) {
-		throw new RuntimeException("not implemented");
+	public void barChanged(BarData updated) {
+		this.barData = updated;
+		canvas.getDisplay().asyncExec(() -> canvas.redraw());
 	}
-
-	@Override
-	public void testCompleted(TestInfo ti) {
-		throw new RuntimeException("not implemented");
+	
+	// This is public because we currently can't test the actual drawing, so we test these instead
+	public int total() {
+		return canvas.getSize().x;
+	}
+	
+	public int progress() {
+		return canvas.getSize().x*barData.getComplete()/barData.getTotal();
+	}
+	
+	public int color() {
+		if (barData.isPassing())
+			return SWT.COLOR_GREEN;
+		else
+			return SWT.COLOR_RED;
 	}
 	
 	@Override
 	public void paintControl(PaintEvent e) {
+		if (barData == null)
+			return;
 		// TODO: that light/dark 3d framing effect
 		GC gc = new GC(canvas);
 		gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		gc.fillRectangle(0, 0, canvas.getSize().x, canvas.getSize().y);
-		gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_GREEN));
-		gc.fillRectangle(0, 0, canvas.getSize().x/2, canvas.getSize().y);
+		gc.fillRectangle(0, 0, total(), canvas.getSize().y);
+		if (total() > 0) {
+			gc.setBackground(canvas.getDisplay().getSystemColor(color()));
+			gc.fillRectangle(0, 0, progress(), canvas.getSize().y);
+		}
 		/*
 		int total = 0;
 		int compl = 0;

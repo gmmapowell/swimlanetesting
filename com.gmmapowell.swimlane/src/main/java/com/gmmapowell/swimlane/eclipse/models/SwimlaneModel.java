@@ -179,8 +179,10 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 				bars.put(grp, new TreeMap<>());
 			Map<String, HasABar> map = bars.get(grp);
 			// may need to clear it out?
-			if (currentBar != null)
+			if (currentBar != null) {
 				map.put(clzName, currentBar);
+				currentBar.testClass(grp, clzName, tests);
+			}
 		}
 
 		@Override

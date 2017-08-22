@@ -13,8 +13,8 @@ public class HexagonSizingTests {
 	}
 
 	@Test
-	public void testACanvas290x290GivesAOf58() {
-		assertEquals(58, SwimlaneLayout.figureA(290, 290));
+	public void testACanvas290x290GivesAOf54() {
+		assertEquals(54, SwimlaneLayout.figureA(290, 290));
 	}
 
 	@Test
@@ -23,8 +23,8 @@ public class HexagonSizingTests {
 	}
 
 	@Test
-	public void testACanvas295x290GivesAOf59() {
-		assertEquals(59, SwimlaneLayout.figureA(295, 290));
+	public void testACanvas295x290GivesAOf55() {
+		assertEquals(55, SwimlaneLayout.figureA(295, 290));
 	}
 
 }

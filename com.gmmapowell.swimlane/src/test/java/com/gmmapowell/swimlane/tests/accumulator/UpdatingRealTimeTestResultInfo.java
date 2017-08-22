@@ -40,7 +40,7 @@ public class UpdatingRealTimeTestResultInfo {
 		BarDataListener lsnr = capture.hexes.get(0);
 		context.checking(new Expectations() {{
 			oneOf(lsnr).clearGroup(grp);
-			oneOf(lsnr).testCompleted(with(TestInfoMatcher.success(grp, "TestClass1", "case1")));
+			oneOf(lsnr).barChanged(with(TestInfoMatcher.success(grp, "TestClass1", "case1")));
 		}});
 		acc.testCount(grp, 1);
 		acc.testSuccess(grp, "TestClass1", "case1");
@@ -59,7 +59,7 @@ public class UpdatingRealTimeTestResultInfo {
 		List<String> actual = context.mock(List.class, "actual");
 		context.checking(new Expectations() {{
 			oneOf(lsnr).clearGroup(grp);
-			oneOf(lsnr).testCompleted(with(TestInfoMatcher.failure(grp, "TestClass1", "case1", stack, expected, actual)));
+			oneOf(lsnr).barChanged(with(TestInfoMatcher.failure(grp, "TestClass1", "case1", stack, expected, actual)));
 		}});
 		acc.testCount(grp, 1);
 		acc.testFailure(grp, "TestClass1", "case1", stack, expected, actual);
@@ -79,8 +79,8 @@ public class UpdatingRealTimeTestResultInfo {
 			allowing(capture.acceptance.get(0));
 			oneOf(lsnr1).clearGroup(grp);
 			oneOf(lsnr2).clearGroup(grp);
-			oneOf(lsnr1).testCompleted(with(TestInfoMatcher.success(grp, "TestClass1", "case1")));
-			oneOf(lsnr2).testCompleted(with(TestInfoMatcher.success(grp, "TestClass2", "case1")));
+			oneOf(lsnr1).barChanged(with(TestInfoMatcher.success(grp, "TestClass1", "case1")));
+			oneOf(lsnr2).barChanged(with(TestInfoMatcher.success(grp, "TestClass2", "case1")));
 		}});
 		acc.testCount(grp, 2);
 		acc.testSuccess(grp, "TestClass1", "case1");
@@ -96,7 +96,7 @@ public class UpdatingRealTimeTestResultInfo {
 		BarDataListener lsnr1 = capture.acceptance.get(0);
 		context.checking(new Expectations() {{
 			oneOf(lsnr1).clearGroup(grp);
-			oneOf(lsnr1).testCompleted(with(TestInfoMatcher.success(grp, "Acc", "case1")));
+			oneOf(lsnr1).barChanged(with(TestInfoMatcher.success(grp, "Acc", "case1")));
 		}});
 		acc.testCount(grp, 1);
 		acc.testSuccess(grp, "Acc", "case1");
@@ -111,7 +111,7 @@ public class UpdatingRealTimeTestResultInfo {
 		BarDataListener lsnr1 = capture.adapters.get(Integer.class.getName());
 		context.checking(new Expectations() {{
 			oneOf(lsnr1).clearGroup(grp);
-			oneOf(lsnr1).testCompleted(with(TestInfoMatcher.success(grp, "Test1", "case1")));
+			oneOf(lsnr1).barChanged(with(TestInfoMatcher.success(grp, "Test1", "case1")));
 		}});
 		acc.testCount(grp, 1);
 		acc.testSuccess(grp, "Test1", "case1");
@@ -126,7 +126,7 @@ public class UpdatingRealTimeTestResultInfo {
 		BarDataListener lsnr1 = capture.utility;
 		context.checking(new Expectations() {{
 			oneOf(lsnr1).clearGroup(grp);
-			oneOf(lsnr1).testCompleted(with(TestInfoMatcher.success(grp, "Ute", "case1")));
+			oneOf(lsnr1).barChanged(with(TestInfoMatcher.success(grp, "Ute", "case1")));
 		}});
 		acc.testCount(grp, 1);
 		acc.testSuccess(grp, "Ute", "case1");

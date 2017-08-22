@@ -3,18 +3,18 @@ package com.gmmapowell.swimlane.eclipse.interfaces;
 import java.util.List;
 
 public interface BarData {
+	int getTotal();
+	int getComplete();
+	boolean isPassing();
+
 	@Deprecated
 	String getId();
 	@Deprecated
 	String getName();
 	@Deprecated
-	int getComplete();
-	@Deprecated
 	int getPassed();
 	@Deprecated
 	int getFailures();
-	@Deprecated
-	int getTotal();
 	@Deprecated
 	int[] getMarks();
 	@Deprecated
