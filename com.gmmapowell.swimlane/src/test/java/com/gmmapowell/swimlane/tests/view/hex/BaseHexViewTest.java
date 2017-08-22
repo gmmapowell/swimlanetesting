@@ -10,7 +10,7 @@ public abstract class BaseHexViewTest extends BaseViewTest {
 	@Before
 	public void setup() throws Exception {
 		super.create();
-		hv = new HexView(shell, fmd);
+		hv = new HexView(shell);
 		super.complete();
 	}
 }

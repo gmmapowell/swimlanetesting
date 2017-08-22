@@ -1,8 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.project;
 
-import java.io.File;
-import java.net.URLClassLoader;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -11,40 +9,36 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 
-import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
-import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
-import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.ProjectAnalyzer;
 import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 
 public class BuildListener implements IResourceChangeListener {
-	private final ModelDispatcher lsnrs;
 	private final EclipseAbstractor eclipse;
+	private final ProjectAnalyzer analyzer;
+	private final ProjectScanner scanner;
 
-	public BuildListener(ModelDispatcher lsnrs, EclipseAbstractor eclipse) {
-		this.lsnrs = lsnrs;
+	public BuildListener(EclipseAbstractor eclipse, ProjectAnalyzer analyzer) {
 		this.eclipse = eclipse;
+		this.analyzer = analyzer;
+		scanner = new ProjectScanner(analyzer);
 	}
 	
 	@Override
-	public void resourceChanged(IResourceChangeEvent ignored) {
-		gatherModel();
+	public void resourceChanged(IResourceChangeEvent rce) {
+		List<IProject> projects = new ArrayList<>();
+		analyzeProjects(projects);
 	}
 
-	public void gatherModel() {
-		Accumulator acc = new HexagonAccumulator(lsnrs);
-		List<IProject> projects = eclipse.getAllProjects();
+	public void analyzeProjects(List<IProject> projects) {
+		analyzer.startAnalysis(eclipse.currentDate());
 		for (IProject p : projects) {
 			IJavaProject jp = eclipse.javaProject(p);
 			if (jp != null) {
 				try {
 					ProjectHelper ph = new ProjectHelper(eclipse, jp);
-					List<File> cp = ph.retrieveClasspath();
-					URLClassLoader cl = new URLClassLoader(ph.urlsFrom(cp));
-					ProjectScanner scanner = new ProjectScanner(ph, new HexagonTestAnalyzer(new TestGroup(p.getName(), cp), cl, acc));
-					scanner.scan(jp);
+					TestGroup grp = new TestGroup(p.getName(), ph.retrieveClasspath());
+					scanner.scan(ph, grp, jp);
 				} catch (JavaModelException e) {
 					// TODO: we should capture "problems" with the view
 					e.printStackTrace();
@@ -52,8 +46,6 @@ public class BuildListener implements IResourceChangeListener {
 			}
 		}
 
-		acc.setBuildTime(new Date());
-		acc.analysisComplete();
-		lsnrs.setModel((HexagonDataModel) acc);
+		analyzer.analysisComplete(eclipse.currentDate());
 	}
 }

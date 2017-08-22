@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.fakes;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -10,6 +11,7 @@ import org.eclipse.jdt.core.IJavaProject;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
 
+@Deprecated
 public class FakeEclipseAbstractor implements EclipseAbstractor {
 
 	@Override
@@ -39,6 +41,11 @@ public class FakeEclipseAbstractor implements EclipseAbstractor {
 
 	@Override
 	public void switchRadio(String toolId, String cmdId, String value) {
+		throw new RuntimeException("Not implemented");
+	}
+
+	@Override
+	public Date currentDate() {
 		throw new RuntimeException("Not implemented");
 	}
 

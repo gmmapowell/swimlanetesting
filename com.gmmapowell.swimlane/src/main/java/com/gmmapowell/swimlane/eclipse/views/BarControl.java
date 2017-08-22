@@ -8,18 +8,15 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 
 // An object that combines the business logic of being aware of the idea of tests
 // with the graphical display of painting them
 public class BarControl implements BarDataListener {
-	private final ModelDispatcher dispatcher;
 	private final String type;
 	private final Canvas canvas;
 	private final BarPaintListener bpl;
 
-	public BarControl(ModelDispatcher dispatcher, Composite view, BarData bar, String type, String barId) {
-		this.dispatcher = dispatcher;
+	public BarControl(Composite view, BarData bar, String type, String barId) {
 		this.type = type;
 		canvas = new Canvas(view, SWT.NONE);
 		canvas.setData("com.gmmapowell.swimlane.type", type);
@@ -28,12 +25,12 @@ public class BarControl implements BarDataListener {
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				dispatcher.barClicked(barId.substring("hexagons.".length()));
+				// TODO: fix this
+//				dispatcher.barClicked(barId.substring("hexagons.".length()));
 			}
 		});
 		bpl = new BarPaintListener(canvas, bar);
 		canvas.addPaintListener(bpl);
-		dispatcher.addBarListener(bar, this);
 		barChanged(bar);
 	}
 
@@ -45,8 +42,8 @@ public class BarControl implements BarDataListener {
 	public void barChanged(BarData bar) {
 		BarData old;
 		if ((old = bpl.updateBar(bar)) != null) {
-			dispatcher.removeBarListener(old, this);
-			dispatcher.addBarListener(bar, this);
+//			dispatcher.removeBarListener(old, this);
+//			dispatcher.addBarListener(bar, this);
 		}
 		canvas.getDisplay().asyncExec(new Runnable() {
 			@Override

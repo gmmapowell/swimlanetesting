@@ -27,7 +27,7 @@ public class ClickingOnABar extends BaseViewTest {
 			allowing(md).addBarListener(with(bar), with(aNonNull(BarDataListener.class)));
 			oneOf(md).barClicked(barId);
 		}});
-		BarControl bc = new BarControl(fmd, shell, bar, "utility", barId);
+		BarControl bc = new BarControl(shell, bar, "utility", barId);
 		bc.getCanvas().setBounds(0, 10, shell.getSize().x, 6);
 		bc.getCanvas().notifyListeners(SWT.MouseUp, new Event());
 		updateShell();

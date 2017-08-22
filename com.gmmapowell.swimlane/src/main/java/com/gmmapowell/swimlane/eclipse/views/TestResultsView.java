@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
 import java.util.Collection;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -12,7 +13,6 @@ import org.eclipse.swt.widgets.TreeItem;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultClass;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
@@ -24,7 +24,7 @@ public class TestResultsView implements HexagonModelListener {
 	private String resultsFor;
 	private HexagonDataModel model;
 
-	public TestResultsView(Composite parent, ModelDispatcher dispatcher) {
+	public TestResultsView(Composite parent) {
 		view = new Composite(parent, SWT.NONE);
 		view.setLayout(new GridLayout(2, false));
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -34,8 +34,6 @@ public class TestResultsView implements HexagonModelListener {
 		table = new Table(view, SWT.BORDER);
 		table.setData("org.eclipse.swtbot.widget.key", "hexagons.failure");
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
-		dispatcher.addHexagonModelListener(this);
 	}
 
 	public void resultsFor(String id) {

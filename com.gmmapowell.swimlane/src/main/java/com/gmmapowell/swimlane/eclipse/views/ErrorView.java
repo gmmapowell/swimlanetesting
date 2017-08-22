@@ -11,13 +11,12 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 
 public class ErrorView implements HexagonModelListener {
 	private final Composite view;
 	private final Table table;
 
-	public ErrorView(Composite parent, ModelDispatcher dispatcher) {
+	public ErrorView(Composite parent) {
 		view = new Composite(parent, SWT.NONE);
 		view.setLayout(new GridLayout(1, false));
 		view.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
@@ -35,8 +34,6 @@ public class ErrorView implements HexagonModelListener {
 		
 		table.getColumn(0).pack();
 		table.getColumn(1).pack();
-		
-		dispatcher.addHexagonModelListener(this);
 	}
 
 	public Control getTop() {

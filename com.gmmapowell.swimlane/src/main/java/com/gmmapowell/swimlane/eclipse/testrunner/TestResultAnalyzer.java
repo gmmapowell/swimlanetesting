@@ -40,6 +40,7 @@ public class TestResultAnalyzer {
 	}
 
 	public void push(String s) {
+		System.out.println("tra - " + s);
 		if (s.startsWith("%TRACEE")) {
 			cfail.stack(capture);
 			capture = null;

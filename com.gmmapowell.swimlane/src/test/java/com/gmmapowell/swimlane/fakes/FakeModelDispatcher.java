@@ -7,6 +7,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
 
+@Deprecated
 public class FakeModelDispatcher implements ModelDispatcher {
 	private final ModelDispatcher mock;
 	private final SolidModelDispatcher smd;

@@ -1,12 +1,9 @@
 package com.gmmapowell.swimlane.eclipse.interfaces;
 
-public interface SingleStore {
-
-	Accumulator getAccumulator();
-	ModelDispatcher getDispatcher();
-	TestRunner getTestRunner();
+public interface CommandDispatcher {
 
 	void showHexPane();
 	void showTestResults(String id);
 	void showErrorPane();
+	void runAllTests();
 }

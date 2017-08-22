@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.commands.Command;
@@ -34,6 +35,11 @@ import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.views.HexagonViewPart;
 
 public class RealEclipseAbstractor implements EclipseAbstractor {
+
+	@Override
+	public Date currentDate() {
+		return new Date();
+	}
 
 	@Override
 	public List<IProject> getAllProjects() {

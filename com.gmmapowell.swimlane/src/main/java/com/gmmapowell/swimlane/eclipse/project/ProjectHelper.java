@@ -33,10 +33,23 @@ public class ProjectHelper implements ProjectSimplifier {
 	}
 
 	public URLClassLoader deduceClasspath() throws JavaModelException {
-		URL[] urls = urlsFrom(retrieveClasspath());
-		return new URLClassLoader(urls);
+		return new URLClassLoader(urlsFrom());
 	}
 
+	private URL[] urlsFrom() throws JavaModelException {
+		List<File> classpath = retrieveClasspath();
+		URL[] ret = new URL[classpath.size()];
+		for (int i = 0; i < classpath.size(); i++) {
+			try {
+				ret[i] = classpath.get(i).toURI().toURL();
+			} catch (MalformedURLException e) {
+				// TODO: should capture these errors
+				e.printStackTrace();
+			}
+		}
+		return ret;
+	}
+	
 	protected List<File> retrieveClasspath() throws JavaModelException {
 		List<File> classpath = new ArrayList<File>();
 		IClasspathEntry[] resolvedClasspath = jp.getResolvedClasspath(true);
@@ -57,19 +70,6 @@ public class ProjectHelper implements ProjectSimplifier {
 		return classpath;
 	}
     
-	public URL[] urlsFrom(List<File> classpath) {
-		URL[] ret = new URL[classpath.size()];
-		for (int i = 0; i < classpath.size(); i++) {
-			try {
-				ret[i] = classpath.get(i).toURI().toURL();
-			} catch (MalformedURLException e) {
-				// TODO: should capture these errors
-				e.printStackTrace();
-			}
-		}
-		return ret;
-	}
-	
 	@Override
 	public File resolvePath(IPath path) {
 		return eclipse.resolvePath(jp, path);

@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.interfaces;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.resources.IProject;
@@ -21,4 +22,6 @@ public interface EclipseAbstractor {
 	void backgroundWithProgress(IJobFunction job);
 
 	void switchRadio(String toolId, String cmdId, String value);
+
+	Date currentDate();
 }

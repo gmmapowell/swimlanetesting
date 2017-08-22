@@ -21,9 +21,7 @@ public abstract class BaseViewTest extends TestBase {
 	public void setup() throws Exception {
 		shell = displayHelper.createShell();
 		shell.setLayout(new GridLayout(1, false));
-		md = context.mock(ModelDispatcher.class);
-		fmd = new FakeModelDispatcher(md);
-		hv = new ErrorView(shell, fmd);
+		hv = new ErrorView(shell);
 		shell.setSize(600, 300);
 		shell.open();
 		displayHelper.flushPendingEvents();
@@ -36,7 +34,6 @@ public abstract class BaseViewTest extends TestBase {
 	}
 
 	protected HexagonDataModel pushModel(HexagonDataModel testModel) {
-		fmd.setModel(testModel);
 		shell.redraw();
 		shell.update();
 		displayHelper.flushPendingEvents();

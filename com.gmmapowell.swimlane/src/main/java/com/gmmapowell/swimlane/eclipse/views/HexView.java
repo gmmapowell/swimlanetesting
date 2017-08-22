@@ -11,23 +11,18 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 
 public class HexView implements HexagonModelListener, AccumulatorListener {
 	private final Composite view;
-	private final ModelDispatcher dispatcher;
 	private HexagonDataModel model;
 	private Accumulator accumulator;
 
-	public HexView(Composite parent, ModelDispatcher dispatcher) {
-		this.dispatcher = dispatcher;
+	public HexView(Composite parent) {
 		view = new Composite(parent, SWT.NONE);
 		view.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		HexagonLayout layout = new HexagonLayout();
 		view.setLayout(layout);
-		dispatcher.addHexagonModelListener(this);
-		dispatcher.addAccumulator(this);
 	}
 
 	public Control getTop() {
@@ -78,7 +73,7 @@ public class HexView implements HexagonModelListener, AccumulatorListener {
 	}
 
 	protected BarControl createBar(HexagonDataModel model, BarData accModel, String barType, String accId) {
-		BarControl bc = new BarControl(dispatcher, view, accModel, barType, accId);
+		BarControl bc = new BarControl(view, accModel, barType, accId);
 
 		// By default, the bar will have been added at "the end".  If that is the wrong place, we need to consider moving it up
 		// In particular, it should go before any keys that are "acceptance.N" where N is less than our N,
@@ -130,7 +125,7 @@ public class HexView implements HexagonModelListener, AccumulatorListener {
 	}
 
 	protected HexagonControl createHexagon(HexData hexModel, int hexn, String hexId) {
-		HexagonControl hex = new HexagonControl(dispatcher, view, hexn, hexId, hexModel.getBar(), hexModel.getPorts());
+		HexagonControl hex = new HexagonControl(view, hexn, hexId, hexModel.getBar(), hexModel.getPorts());
 
 		// Move the hex bar above any backgrounds
 		// The background is automatically added at the end

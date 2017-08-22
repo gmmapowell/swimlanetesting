@@ -15,16 +15,17 @@ import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
-import com.gmmapowell.swimlane.eclipse.interfaces.SingleStore;
+import com.gmmapowell.swimlane.eclipse.interfaces.CommandDispatcher;
 
+@Deprecated
 public class SolidModelDispatcher implements ModelDispatcher {
 	private final EclipseAbstractor eclipse;
-	private final SingleStore store;
+	private final CommandDispatcher store;
 	private final List<HexagonModelListener> modelLsnrs = new ArrayList<>();
 	private final Map<String, Set<BarDataListener>> barLsnrs = new HashMap<>();
 	private final List<AccumulatorListener> accLsnrs = new ArrayList<>();
 	
-	public SolidModelDispatcher(EclipseAbstractor eclipse, SingleStore store) {
+	public SolidModelDispatcher(EclipseAbstractor eclipse, CommandDispatcher store) {
 		this.eclipse = eclipse;
 		this.store = store;
 	}

@@ -14,6 +14,7 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
+import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
@@ -22,9 +23,11 @@ import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultGroup;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
+import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
 
-public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestResultReporter {
+public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestResultReporter, AnalysisAccumulator {
 	private final ModelDispatcher dispatcher;
 	private Date buildTime;
 	private Date testsCompleteTime;
@@ -390,5 +393,10 @@ public class HexagonAccumulator implements HexagonDataModel, Accumulator, TestRe
 		if (ret == null)
 			return new HashSet<>();
 		return ret.values();
+	}
+
+	// TDA: this should do much more of the work
+	public void runAllTests(TestRunner tr) {
+		tr.runAll(null, this);
 	}
 }

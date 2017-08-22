@@ -11,14 +11,13 @@ import org.eclipse.swt.widgets.Label;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonDataModel;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexagonModelListener;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
 
 public class InfoBar implements HexagonModelListener {
 	private final SimpleDateFormat sdf;
 	private final Label lastBuild;
 	private final Label testsComplete;
 
-	public InfoBar(Composite parent, ModelDispatcher lsnrs) {
+	public InfoBar(Composite parent) {
 		sdf = new SimpleDateFormat("HHmmss.SSS");
 
 		Composite infoBar = new Composite(parent, SWT.NONE);
@@ -30,8 +29,6 @@ public class InfoBar implements HexagonModelListener {
 		testsComplete = new Label(infoBar, SWT.NONE);
 		testsComplete.setData("org.eclipse.swtbot.widget.key", "hexagons.testsComplete");
 		testsComplete.setText("none");
-
-		lsnrs.addHexagonModelListener(this);
 	}
 
 	public void setModel(HexagonDataModel model) {

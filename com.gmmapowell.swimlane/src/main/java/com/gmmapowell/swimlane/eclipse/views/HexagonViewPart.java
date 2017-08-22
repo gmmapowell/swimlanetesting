@@ -13,11 +13,9 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.part.ViewPart;
 
 import com.gmmapowell.swimlane.eclipse.RealEclipseAbstractor;
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
-import com.gmmapowell.swimlane.eclipse.interfaces.ModelDispatcher;
-import com.gmmapowell.swimlane.eclipse.interfaces.SingleStore;
-import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
-import com.gmmapowell.swimlane.eclipse.models.SolidModelDispatcher;
+import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
+import com.gmmapowell.swimlane.eclipse.interfaces.CommandDispatcher;
+import com.gmmapowell.swimlane.eclipse.models.HexagonAccumulator;
 import com.gmmapowell.swimlane.eclipse.project.BuildListener;
 import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
 
@@ -32,65 +30,67 @@ import com.gmmapowell.swimlane.eclipse.testrunner.RemoteJUnitTestRunner;
  * From this, it builds a "dynamic" view of the tests, i.e. quantity, names and (current) results
  * These are then put together with the static view to build and color the bars within the various portions of the static layout
  */
-public class HexagonViewPart extends ViewPart implements SingleStore {
+public class HexagonViewPart extends ViewPart implements CommandDispatcher {
 	public static final String ID = "com.gmmapowell.swimlane.views.HexagonView";
 
 	private BuildListener bl;
-	private ModelDispatcher dispatcher;
 	private RemoteJUnitTestRunner tr;
 	private Composite stackUI;
 	private StackLayout stack;
 	private HexView hexView;
 	private ErrorView errorView;
 	private TestResultsView testResults;
+	private HexagonAccumulator accumulator;
 
 	public void createPartControl(Composite parent) {
-		System.out.println("In create part control");
 		RealEclipseAbstractor eclipse = new RealEclipseAbstractor();
 		parent.setLayout(new GridLayout(1, false));
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		dispatcher = new SolidModelDispatcher(eclipse, this);
-		tr = new RemoteJUnitTestRunner(eclipse);
-		new InfoBar(parent, dispatcher);
+		new InfoBar(parent);
 		stackUI = new Composite(parent, SWT.NONE);
 		stackUI.setLayoutData(new GridData(GridData.FILL_BOTH));
 		stack = new StackLayout();
 		stackUI.setLayout(stack);
-		hexView = new HexView(stackUI, dispatcher);
-		errorView = new ErrorView(stackUI, dispatcher);
-		testResults = new TestResultsView(stackUI, dispatcher);
+		hexView = new HexView(stackUI);
+		errorView = new ErrorView(stackUI);
+		testResults = new TestResultsView(stackUI);
 		stack.topControl = hexView.getTop();
+		accumulator = new HexagonAccumulator(null);
 		try {
-			bl = new BuildListener(dispatcher, eclipse);
+			HexagonTestAnalyzer hta = new HexagonTestAnalyzer(accumulator);
+			bl = new BuildListener(eclipse, hta);
 			ResourcesPlugin.getWorkspace().addResourceChangeListener(bl, IResourceChangeEvent.POST_BUILD);
-			bl.gatherModel();
+			bl.analyzeProjects(eclipse.getAllProjects());
 		} catch (IllegalStateException ex) {
-			// Unit tests will find the workspace closed, so cannot do this; this is OK in that case
-			// TODO: how do we tell?
+			ex.printStackTrace();
 			bl = null;
 		}
+
+		tr = new RemoteJUnitTestRunner(eclipse);
 	}
 
 	@Override
 	public void showErrorPane() {
+		// TDA this ...
 		stack.topControl = errorView.getTop();
 		stackUI.layout();
 	}
 
 	@Override
 	public void showHexPane() {
+		// TDA this ...
 		stack.topControl = hexView.getTop();
 		stackUI.layout();
 	}
 
 	@Override
 	public void showTestResults(String id) {
+		// TDA this ...
 		stack.topControl = testResults.getTop();
 		stackUI.layout();
 		if (id != null) // only update the current test results flag if something valid
 			testResults.resultsFor(id);
-		else
-			testResults.updateDisplay();
+		testResults.updateDisplay();
 	}
 
 	public void dispose() {
@@ -101,27 +101,18 @@ public class HexagonViewPart extends ViewPart implements SingleStore {
 	public void setFocus() {
 	}
 
+	
 	@Override
-	public TestRunner getTestRunner() {
-		return tr;
+	public void runAllTests() {
+		accumulator.runAllTests(tr);
 	}
 
-	@Override
-	public ModelDispatcher getDispatcher() {
-		return dispatcher;
-	}
-
-	@Override
-	public Accumulator getAccumulator() {
-		return hexView.getAccumulator();
-	}
-
-	public static SingleStore get(ExecutionEvent event) {
+	public static CommandDispatcher get(ExecutionEvent event) {
 		IWorkbenchPart me = HandlerUtil.getActivePart(event);
 		if (me == null)
 			return null;
-		if (!(me instanceof SingleStore))
+		if (!(me instanceof CommandDispatcher))
 			return null;
-		return (SingleStore) me;
+		return (CommandDispatcher) me;
 	}
 }

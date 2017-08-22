@@ -3,97 +3,101 @@ package com.gmmapowell.swimlane.eclipse.analyzer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URLClassLoader;
-import java.util.Arrays;
+import java.util.Date;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.Accumulator;
-import com.gmmapowell.swimlane.eclipse.interfaces.ClassAnalyzer;
+import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
-import com.gmmapowell.swimlane.eclipse.models.TestGroup;
+import com.gmmapowell.swimlane.eclipse.interfaces.ProjectAnalyzer;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestRole;
+import com.gmmapowell.swimlane.eclipse.models.GroupOfTests;
+import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
+import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
+import com.gmmapowell.swimlane.eclipse.roles.UnlabelledTestRole;
 
-public class HexagonTestAnalyzer implements ClassAnalyzer {
-	private final TestGroup grp;
-	private final URLClassLoader cl;
-	private final Accumulator accumulator;
+public class HexagonTestAnalyzer implements ProjectAnalyzer {
+	private final AnalysisAccumulator accumulator;
 
-	public HexagonTestAnalyzer(TestGroup grp, URLClassLoader cl, Accumulator accumulator) {
-		this.grp = grp;
-		this.cl = cl;
+	public HexagonTestAnalyzer(AnalysisAccumulator accumulator) {
 		this.accumulator = accumulator;
 	}
 
 	@Override
-	public void consider(String clzName) {
+	public void startAnalysis(Date startTime) {
+		accumulator.startAnalysis(startTime);
+	}
+	
+	@Override
+	public void consider(GroupOfTests grp, URLClassLoader cl, String clzName) {
 		try {
-			boolean foundSomething = false;
 			Class<?> tc = Class.forName(clzName, false, cl);
-			for (Annotation y : tc.getAnnotations()) {
-				String aname = y.annotationType().getName();
-				if (aname.equals("com.gmmapowell.swimlane.annotations.Acceptance")) {
-					try {
-						Class<?>[] hexes = (Class<?>[]) y.getClass().getMethod("value").invoke(y);
-						accumulator.acceptance(grp, tc, Arrays.asList(hexes));
-						foundSomething = true;
-					} catch (Exception e) {
-						accumulator.error(e.getMessage());
-					}
-				} else if (aname.equals("com.gmmapowell.swimlane.annotations.BusinessLogic")) {
-					try {
+			TestRole finalRole = null;
+			for (Annotation sla : tc.getAnnotations()) {
+				try {
+					String aname = sla.annotationType().getName();
+					TestRole role = null;
+					if (aname.equals("com.gmmapowell.swimlane.annotations.Acceptance")) {
+						Class<?>[] hexes = (Class<?>[]) sla.getClass().getMethod("value").invoke(sla);
+						role = new AcceptanceRole(hexes);
+					} else if (aname.equals("com.gmmapowell.swimlane.annotations.BusinessLogic")) {
 						Class<?> hex = null;
-						Class<?> tmp = (Class<?>) y.getClass().getMethod("value").invoke(y);
+						Class<?> tmp = (Class<?>) sla.getClass().getMethod("value").invoke(sla);
 						if (!tmp.equals(Object.class))
 							hex = tmp;
-						accumulator.logic(grp, tc, hex);
-						foundSomething = true;
-					} catch (Exception e) {
-						accumulator.error(e.getMessage());
-					}
-				} else if (aname.equals("com.gmmapowell.swimlane.annotations.Adapter")) {
-					try {
-						Class<?> adapter = (Class<?>) y.getClass().getMethod("value").invoke(y);
+						role = new BusinessRole(hex);
+					} else if (aname.equals("com.gmmapowell.swimlane.annotations.Adapter")) {
+						Class<?> adapter = (Class<?>) sla.getClass().getMethod("value").invoke(sla);
 						Class<?> hex = null, port = null;
+						PortLocation pl = null;
 						{
-							Class<?> tmp = (Class<?>) y.getClass().getMethod("hexagon").invoke(y);
+							Class<?> tmp = (Class<?>) sla.getClass().getMethod("hexagon").invoke(sla);
 							if (!tmp.equals(Object.class))
 								hex = tmp;
 						}
 						{
-							Class<?> tmp = (Class<?>) y.getClass().getMethod("port").invoke(y);
+							Class<?> tmp = (Class<?>) sla.getClass().getMethod("port").invoke(sla);
 							if (!tmp.equals(Object.class))
 								port = tmp;
 						}
-						accumulator.adapter(grp, tc, hex, port, adapter);
 						{
-							Object tmp = y.getClass().getMethod("location").invoke(y);
+							Object tmp = sla.getClass().getMethod("location").invoke(sla);
 							String loc = tmp.toString();
 							if (!"NONE".equals(loc)) {
-								PortLocation pl = PortLocation.valueOf(loc);
-								accumulator.portLocation(adapter, pl);
+								pl = PortLocation.valueOf(loc);
 							}
 						}
-						foundSomething = true;
-					} catch (Exception e) {
-						accumulator.error(e.getMessage());
+						role = new AdapterRole(hex, port, pl, adapter);
+					} else if (aname.equals("com.gmmapowell.swimlane.annotations.Utility")) {
+						role = new UtilityRole();
 					}
-				} else if (aname.equals("com.gmmapowell.swimlane.annotations.Utility")) {
-					try {
-						accumulator.utility(grp, tc);
-						foundSomething = true;
-					} catch (Exception e) {
-						accumulator.error(e.getMessage());
+					if (role != null && finalRole != null) {
+						accumulator.error("cannot have multiple role annotations on " + clzName);
+						return;
 					}
+					finalRole = role;
+				} catch (Exception e) {
+					accumulator.error(e.getMessage());
 				}
 			}
-			if (!foundSomething) {
+			if (finalRole == null) {
 				for (Method m : tc.getMethods()) {
-					for (Annotation y : m.getAnnotations())
-						if (y.annotationType().getName().equals("org.junit.Test")) {
-							accumulator.error(clzName + " has @Test annotations but no swimlane annotations");
+					for (Annotation ts : m.getAnnotations())
+						if (ts.annotationType().getName().equals("org.junit.Test")) {
+							finalRole = new UnlabelledTestRole();
 						}
 				}
 			}
+			if (finalRole != null)
+				accumulator.haveTestClass(grp, clzName, finalRole);
 		} catch (ClassNotFoundException e1) {
 			accumulator.error("No such class: " + e1.getMessage());
 		}
 	}
+
+	@Override
+	public void analysisComplete(Date completeTime) {
+		accumulator.analysisComplete(completeTime);
+	}
+	
+	
 
 }

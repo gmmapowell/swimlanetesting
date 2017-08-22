@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class TestGroup {
+public class TestGroup implements GroupOfTests {
 	private final List<File> cp;
 	private final Set<String> tcs = new TreeSet<>();
 	private final String name;

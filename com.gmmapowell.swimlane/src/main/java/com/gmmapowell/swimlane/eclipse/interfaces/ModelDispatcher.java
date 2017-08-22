@@ -1,5 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.interfaces;
 
+@Deprecated
 public interface ModelDispatcher {
 
 	void addHexagonModelListener(HexagonModelListener lsnr);
