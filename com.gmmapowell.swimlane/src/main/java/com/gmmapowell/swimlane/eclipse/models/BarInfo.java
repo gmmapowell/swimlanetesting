@@ -38,13 +38,6 @@ public abstract class BarInfo implements BarData, HasABar {
 	public BarInfo() {
 	}
 
-	@Override
-	public String getId() {
-		return id;
-	}
-	
-	public abstract String getName();
-	
 	public void addCase(Class<?> tc) {
 		testClasses.put(tc.getName(), new Tracking());
 	}
@@ -53,7 +46,6 @@ public abstract class BarInfo implements BarData, HasABar {
 		return new ArrayList<>(testClasses.keySet());
 	}
 
-	@Override
 	public int[] getMarks() {
 		return new int[] { 1 };
 	}
@@ -89,19 +81,15 @@ public abstract class BarInfo implements BarData, HasABar {
 	}
 
 	@Override
-	public int getPassed() {
-		int ret = 0;
-		for (Entry<String, Tracking> q : testClasses.entrySet())
-			ret += q.getValue().passed;
-		return ret;
+	public void testClass(GroupOfTests grp, String clzName, List<String> tests) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public int getFailures() {
-		int ret = 0;
-		for (Entry<String, Tracking> q : testClasses.entrySet())
-			ret += q.getValue().failed;
-		return ret;
+	public boolean isPassing() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override

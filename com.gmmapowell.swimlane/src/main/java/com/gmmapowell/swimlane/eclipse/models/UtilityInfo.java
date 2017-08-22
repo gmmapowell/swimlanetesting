@@ -14,11 +14,6 @@ public class UtilityInfo extends BarInfo implements UtilityData {
 	}
 
 	@Override
-	public String getName() {
-		throw new RuntimeException("acceptance bars do not have names");
-	}
-
-	@Override
 	public String toString() {
 		return "Utility" + classesUnderTest();
 	}

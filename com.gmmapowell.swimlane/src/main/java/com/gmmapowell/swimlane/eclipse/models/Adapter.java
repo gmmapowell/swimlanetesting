@@ -8,11 +8,6 @@ public class Adapter extends BarInfo {
 		this.id = "adapter." + adapterUnderTest.getName();
 	}
 
-	@Override
-	public String getName() {
-		return adapterUnderTest.getName();
-	}
-
 	public boolean forAdapter(Class<?> adapter) {
 		return adapter.equals(adapterUnderTest);
 	}

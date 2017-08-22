@@ -7,9 +7,4 @@ public class LogicInfo extends BarInfo {
 		this.clz = clz;
 		this.id = id;
 	}
-
-	@Override
-	public String getName() {
-		return clz;
-	}
 }

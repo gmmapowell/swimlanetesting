@@ -18,11 +18,6 @@ public class Acceptance extends BarInfo implements AcceptanceData {
 		lsnrs.add(lsnr);
 	}
 
-	@Override
-	public String getName() {
-		throw new RuntimeException("acceptance bars do not have names");
-	}
-
 	public void setMarks(List<String> order) {
 		StringBuilder sb = new StringBuilder("acceptance.");
 		marks = new int[order.size()];
