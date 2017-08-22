@@ -5,7 +5,6 @@ public class Adapter extends BarInfo {
 
 	public Adapter(Class<?> adapterUnderTest) {
 		this.adapterUnderTest = adapterUnderTest;
-		this.id = "adapter." + adapterUnderTest.getName();
 	}
 
 	public boolean forAdapter(Class<?> adapter) {
@@ -13,6 +12,6 @@ public class Adapter extends BarInfo {
 	}
 	
 	public String toString() {
-		return "Adapter" + classesUnderTest();
+		return "Adapter";
 	}
 }

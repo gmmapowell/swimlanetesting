@@ -5,6 +5,5 @@ public class LogicInfo extends BarInfo {
 
 	public LogicInfo(String clz, String id) {
 		this.clz = clz;
-		this.id = id;
 	}
 }

@@ -12,7 +12,6 @@ public class Acceptance extends BarInfo implements AcceptanceData {
 		this.hexs = hexs;
 	}
 
-
 	@Override
 	public void addTestListener(BarDataListener lsnr) {
 		lsnrs.add(lsnr);
@@ -27,16 +26,14 @@ public class Acceptance extends BarInfo implements AcceptanceData {
 			marks[i++] = val;
 			sb.append(val);
 		}
-		id = sb.toString();
 	}
 
-	@Override
 	public int[] getMarks() {
 		return marks;
 	}
 
 	@Override
 	public String toString() {
-		return "Acceptance" + classesUnderTest();
+		return "Acceptance";
 	}
 }

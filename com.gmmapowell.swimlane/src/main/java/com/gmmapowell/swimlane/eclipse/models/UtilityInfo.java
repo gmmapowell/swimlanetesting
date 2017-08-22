@@ -15,6 +15,6 @@ public class UtilityInfo extends BarInfo implements UtilityData {
 
 	@Override
 	public String toString() {
-		return "Utility" + classesUnderTest();
+		return "Utility";
 	}
 }

@@ -39,9 +39,4 @@ public class HexInfo extends BarInfo implements HexData, HasABar {
 	public void addBusinessLogicListener(BarDataListener lsnr) {
 		lsnrs.add(lsnr);
 	}
-
-	@Override
-	public String toString() {
-		return "hex[" + name + "]";
-	}
 }
