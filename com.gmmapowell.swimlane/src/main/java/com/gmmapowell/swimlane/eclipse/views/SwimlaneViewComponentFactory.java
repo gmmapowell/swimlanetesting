@@ -1,9 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-
-import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewComponentFactory;
 
 public class SwimlaneViewComponentFactory implements ViewComponentFactory {

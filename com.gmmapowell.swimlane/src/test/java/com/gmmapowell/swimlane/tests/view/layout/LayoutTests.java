@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.AcceptanceData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
+import com.gmmapowell.swimlane.eclipse.interfaces.UtilityData;
 import com.gmmapowell.swimlane.eclipse.views.BarControl;
 import com.gmmapowell.swimlane.tests.view.hex.BaseHexViewTest;
 
@@ -79,7 +80,7 @@ public class LayoutTests extends BaseHexViewTest {
 		swimlane.addAcceptance(new int[] { 1, 1 }, a11); // top
 		swimlane.addAcceptance(new int[] { 1, 0 }, a10); // middle
 		
-		showFor(5000);
+//		showFor(5000);
 		// this is the order, but the y-order is not relevant here (just the z-order)
 		assertControlsInOrder(shell, "swimlane.bar.acceptance.10", "swimlane.bar.acceptance.11", "swimlane.bar.acceptance.01", "swimlane.bar.business.1", "swimlane.bar.business.0", "swimlane.hexbg.0", "swimlane.hexbg.1");
 		// what is relevant is the y-placements here
@@ -92,6 +93,72 @@ public class LayoutTests extends BaseHexViewTest {
 		checkLocationSizeColors("swimlane.bar.business.1", 372, 157, 141, 6, proxy -> { });
 	}
 
+	@Test
+	public void justTheUtilityBarHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
+		UtilityData ute = context.mock(UtilityData.class);
+		context.checking(new Expectations() {{
+			oneOf(ute).addTestListener(with(any(BarControl.class)));
+		}});
+		swimlane.addUtility(ute);
+//		showFor(5000);
+		assertControlsInOrder(shell, "swimlane.bar.utility");
+		checkLocationSizeColors("swimlane.bar.utility", 0, 2, 590, 6, proxy -> { });
+	}
+
+	@Test
+	public void aComplexLayoutHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
+		HexData h1 = context.mock(HexData.class, "h1");
+		HexData h2 = context.mock(HexData.class, "h2");
+		HexData h3 = context.mock(HexData.class, "h3");
+		AcceptanceData a111 = context.mock(AcceptanceData.class, "a111");
+		AcceptanceData a011 = context.mock(AcceptanceData.class, "a011");
+		AcceptanceData a100 = context.mock(AcceptanceData.class, "a100");
+		AcceptanceData a010 = context.mock(AcceptanceData.class, "a010");
+		UtilityData ute = context.mock(UtilityData.class);
+		context.checking(new Expectations() {{
+			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(h2).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(h3).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(a111).addTestListener(with(any(BarControl.class)));
+			oneOf(a011).addTestListener(with(any(BarControl.class)));
+			oneOf(a100).addTestListener(with(any(BarControl.class)));
+			oneOf(a010).addTestListener(with(any(BarControl.class)));
+			oneOf(ute).addTestListener(with(any(BarControl.class)));
+		}});
+		swimlane.addHexagon(0, h1);
+		swimlane.addHexagon(1, h2);
+		swimlane.addHexagon(2, h3);
+		// don't add them in the right order, although I believe this will be the default first case
+		swimlane.addAcceptance(new int[] { 0, 1, 0 }, a010); // bottom
+		swimlane.addAcceptance(new int[] { 1, 1, 1 }, a111); // top
+		swimlane.addAcceptance(new int[] { 1, 0, 0 }, a100); // upper/middle
+		swimlane.addAcceptance(new int[] { 0, 1, 1 }, a011); // lower/middle
+		swimlane.addUtility(ute);
+		
+//		showFor(5000);
+		// this is the order, but the y-order is not relevant here (just the z-order)
+		assertControlsInOrder(shell,
+			"swimlane.bar.utility",
+			"swimlane.bar.acceptance.011",
+			"swimlane.bar.acceptance.100",
+			"swimlane.bar.acceptance.111",
+			"swimlane.bar.acceptance.010",
+			"swimlane.bar.business.2", "swimlane.bar.business.1", "swimlane.bar.business.0",
+			"swimlane.hexbg.0", "swimlane.hexbg.1", "swimlane.hexbg.2");
+		// what is relevant is the y-placements here
+		checkLocationSizeColors("swimlane.bar.acceptance.111", 0,  2, 590, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.acceptance.100", 0, 12, 590, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.acceptance.011", 0, 22, 590, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.acceptance.010", 0, 32, 590, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.hexbg.0", 20, 93, 156, 134, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.0", 52, 157, 93, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.hexbg.1", 217, 93, 156, 134, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.1", 249, 157, 93, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.hexbg.2", 413, 93, 156, 134, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.2", 445, 157, 93, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.utility", 0, 282, 590, 6, proxy -> { });
+	}
+	
 	/*
 	@Test
 	public void testThatAllTheControlsArePresent() throws InterruptedException {

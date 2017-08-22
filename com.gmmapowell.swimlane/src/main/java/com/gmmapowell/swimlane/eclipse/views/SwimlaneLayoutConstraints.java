@@ -13,6 +13,7 @@ public class SwimlaneLayoutConstraints implements LayoutConstrainer {
 	public final TreeMap<String, AcceptanceBarLayout> acceptances = new TreeMap<>(new ReverseStringOrdering());
 	public final List<HexagonBackground> bgs = new ArrayList<>();
 	public final Map<HexagonBackground, SwimlaneLayoutData> businessBars = new HashMap<>();
+	public UtilityBarLayout utility;
 	
 	public void background(HexagonBackground bg) {
 		bgs.add(bg);
@@ -24,6 +25,10 @@ public class SwimlaneLayoutConstraints implements LayoutConstrainer {
 
 	public void acceptanceCalled(String mask, AcceptanceBarLayout layout) {
 		acceptances.put(mask, layout);
+	}
+
+	public void utility(UtilityBarLayout utility) {
+		this.utility = utility;
 	}
 
 }

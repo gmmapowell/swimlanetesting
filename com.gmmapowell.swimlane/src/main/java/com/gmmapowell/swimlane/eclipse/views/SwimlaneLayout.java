@@ -1,12 +1,10 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
 
-import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.SwimlaneLayoutData;
 
 public class SwimlaneLayout extends Layout {
@@ -45,10 +43,12 @@ public class SwimlaneLayout extends Layout {
 		}
 		int xmax = composite.getSize().x;
 		int ymax = composite.getSize().y;
+		if (constraints.utility != null)
+			ymax -= 10;
+		int hexTop = 0;
 		if (!constraints.bgs.isEmpty()) {
 			int nhexes = constraints.bgs.size();
 			int a = figureA(xmax/nhexes, ymax - 10*constraints.acceptances.size());
-			int hexTop = 0;
 
 			// TODO: I think we want to limit the total width in use if there is only one hex and the view is "widescreen"
 			// For now, use all of it
@@ -60,9 +60,9 @@ public class SwimlaneLayout extends Layout {
 			}
 			
 			int whichHex = 0;
+			int h = (int)(a*Math.sqrt(3));
 			for (HexagonBackground bg : constraints.bgs) {
         			int midx = xmax*(2*whichHex+1)/nhexes/2;
-            		int h = (int)(a*Math.sqrt(3));
     				int width = 4*a;
 				bg.layout(midx-2*a, hexTop+ymax/2-h, width, 2*h);
 				SwimlaneLayoutData bar = constraints.businessBars.get(bg);
@@ -70,7 +70,10 @@ public class SwimlaneLayout extends Layout {
 					bar.layout(midx-width*3/10, hexTop+ymax/2-3, width*3/5, 6);
 				whichHex++;
 			}
+			hexTop += ymax;
 		}
+		if (constraints.utility != null)
+			constraints.utility.layout(0, hexTop+2, xmax, 6);
 		/*
 		// TODO: refactor this into an attribute on generation
 		int hexAt = 0;

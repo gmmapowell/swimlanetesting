@@ -71,8 +71,10 @@ public class SwimlaneView implements ViewLayout {
 
 	@Override
 	public void addUtility(UtilityData ad) {
-		// TODO Auto-generated method stub
-		
+		BarControl bc = factory.bar(view, "utility");
+		bc.getCanvas().setLayoutData(new UtilityBarLayout(bc.getCanvas()));
+		ad.addTestListener(bc);
+		view.layout();
 	}
 
 	// TODO: break a lot of this stuff off into a factory
