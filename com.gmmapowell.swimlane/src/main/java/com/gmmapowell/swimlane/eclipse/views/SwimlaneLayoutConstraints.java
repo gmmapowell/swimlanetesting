@@ -15,6 +15,7 @@ public class SwimlaneLayoutConstraints implements LayoutConstrainer {
 	public final List<HexagonBackground> bgs = new ArrayList<>();
 	public final Map<HexagonBackground, SwimlaneLayoutData> businessBars = new HashMap<>();
 	public final Map<Integer, Map<PortLocation, PortControl>> ports = new HashMap<>();
+	public final Map<Integer, Map<PortLocation, List<SwimlaneLayoutData>>> adapters = new HashMap<>();
 	public UtilityBarLayout utility;
 	
 	public void background(HexagonBackground bg) {
@@ -31,6 +32,18 @@ public class SwimlaneLayoutConstraints implements LayoutConstrainer {
 		Map<PortLocation, PortControl> map = ports.get(hex);
 		map.put(loc, portControl);
 	}
+	
+	public void adapter(int hex, PortLocation ploc, int aloc, AdapterBarLayout adapterBarLayout) {
+		if (!adapters.containsKey(hex))
+			adapters.put(hex, new HashMap<>());
+		Map<PortLocation, List<SwimlaneLayoutData>> map = adapters.get(hex);
+		if (!map.containsKey(ploc))
+			map.put(ploc, new ArrayList<>());
+		List<SwimlaneLayoutData> list = map.get(ploc);
+		while (list.size() <= aloc)
+			list.add(null);
+		list.set(aloc, adapterBarLayout);
+	}
 
 	public void acceptanceCalled(String mask, AcceptanceBarLayout layout) {
 		acceptances.put(mask, layout);
@@ -39,5 +52,4 @@ public class SwimlaneLayoutConstraints implements LayoutConstrainer {
 	public void utility(UtilityBarLayout utility) {
 		this.utility = utility;
 	}
-
 }

@@ -1,5 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -80,6 +81,27 @@ public class SwimlaneLayout extends Layout {
 			        		int y1 = midy + pl.y((int) (Math.sqrt(3)*a));
 			        		int y2 = midy + pl.y((int) (Math.sqrt(3)*a/2));
 			        		e.getValue().layout(Math.min(x1, x2), Math.min(y1, y2), Math.abs(x1-x2), Math.abs(y1-y2));
+					}
+				}
+				Map<PortLocation, List<SwimlaneLayoutData>> adapters = constraints.adapters.get(whichHex);
+				if (adapters != null) {
+					for (Entry<PortLocation, List<SwimlaneLayoutData>> e : adapters.entrySet()) {
+						PortLocation pl = e.getKey();
+						List<SwimlaneLayoutData> list = e.getValue();
+						int atot = list.size();
+						for (int an=0;an<atot;an++) {
+							// Each bar has 10 allocated, but 6 used, so total vertical space is 10*total-4
+				        		int totY = 10*atot-4;
+				        		// find a point halfwqy up the port (see y1 and y2 above)
+				        		int median = midy + pl.y((int) (Math.sqrt(3)*3*a/4));
+				        		// first is "above" median line, so take half this off (this is never reflected based on location)
+				        		int first = median - totY/2;
+				        		// and now add an*10 back on for the ones above
+				        		int y1 = first + an*10;
+				        		int x1 = midx + pl.x(2*a+10);
+				        		int x2 = x1 + pl.x(a/2);
+				        		list.get(an).layout(Math.min(x1, x2), y1, Math.abs(x1-x2), 6);
+						}
 					}
 				}
 				whichHex++;

@@ -173,17 +173,53 @@ public class LayoutTests extends BaseHexViewTest {
 		AdapterData adapter = context.mock(AdapterData.class);
 		context.checking(new Expectations() {{
 			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
-//			oneOf(adapter).addTestListener(with(any(BarControl.class)));
+			oneOf(adapter).addTestListener(with(any(BarControl.class)));
 		}});
 		swimlane.addHexagon(0, h1);
 		swimlane.addHexagonPort(0, PortLocation.NORTHWEST, port);
 		swimlane.addAdapter(0, PortLocation.NORTHWEST, 0, adapter);
-//		showFor(5000);
 //		dumpComposite((Composite) swimlane.getTop(), "");
-		assertControlsInOrder(shell, /* "swimlane.bar.adapter.0.nw.0", */ "swimlane.port.0.nw", "swimlane.bar.business.0", "swimlane.hexbg.0");
+//		showFor(5000);
+		assertControlsInOrder(shell, "swimlane.bar.adapter.0.nw.0", "swimlane.port.0.nw", "swimlane.bar.business.0", "swimlane.hexbg.0");
 		checkLocationSizeColors("swimlane.hexbg.0", 157, 26, 276, 238, proxy -> { });
 		checkLocationSizeColors("swimlane.bar.business.0", 213, 142, 165, 6, proxy -> { });
 		checkLocationSizeColors("swimlane.port.0.nw", 148, 26, 44, 60, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.adapter.0.nw.0", 113, 53, 34, 6, proxy -> { });
+	}
+
+	@Test
+	public void oneHexWithOnePortAndMultipleAdaptersHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
+		HexData h1 = context.mock(HexData.class);
+		PortData port = context.mock(PortData.class);
+		AdapterData adapter = context.mock(AdapterData.class);
+		context.checking(new Expectations() {{
+			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
+			exactly(5).of(adapter).addTestListener(with(any(BarControl.class)));
+		}});
+		swimlane.addHexagon(0, h1);
+		swimlane.addHexagonPort(0, PortLocation.NORTHWEST, port);
+		swimlane.addAdapter(0, PortLocation.NORTHWEST, 0, adapter);
+		swimlane.addAdapter(0, PortLocation.NORTHWEST, 1, adapter);
+		swimlane.addAdapter(0, PortLocation.NORTHWEST, 2, adapter);
+		swimlane.addAdapter(0, PortLocation.NORTHWEST, 3, adapter);
+		swimlane.addAdapter(0, PortLocation.NORTHWEST, 4, adapter);
+		dumpComposite((Composite) swimlane.getTop(), "");
+		showFor(5000);
+		assertControlsInOrder(shell,
+				"swimlane.bar.adapter.0.nw.4",
+				"swimlane.bar.adapter.0.nw.3",
+				"swimlane.bar.adapter.0.nw.2",
+				"swimlane.bar.adapter.0.nw.1",
+				"swimlane.bar.adapter.0.nw.0",
+				"swimlane.port.0.nw", "swimlane.bar.business.0", "swimlane.hexbg.0");
+		checkLocationSizeColors("swimlane.hexbg.0", 157, 26, 276, 238, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.0", 213, 142, 165, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.port.0.nw", 148, 26, 44, 60, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.adapter.0.nw.0", 113, 33, 34, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.adapter.0.nw.1", 113, 43, 34, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.adapter.0.nw.2", 113, 53, 34, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.adapter.0.nw.3", 113, 63, 34, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.adapter.0.nw.4", 113, 73, 34, 6, proxy -> { });
 	}
 
 	/*

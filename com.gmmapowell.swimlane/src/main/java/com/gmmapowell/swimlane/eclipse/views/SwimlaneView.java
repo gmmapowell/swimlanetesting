@@ -51,14 +51,16 @@ public class SwimlaneView implements ViewLayout {
 	
 	@Override
 	public void addHexagonPort(int pos, PortLocation loc, PortData port) {
-		PortControl pc = factory.port(view, pos, loc, port);
+		factory.port(view, pos, loc, port);
 		view.layout();
 	}
 
 	@Override
 	public void addAdapter(int hex, PortLocation ploc, int aloc, AdapterData adapter) {
-		// TODO Auto-generated method stub
-		
+		BarControl bc = factory.bar(view, "adapter." + hex + "." + ploc + "." + aloc);
+		bc.getCanvas().setLayoutData(new AdapterBarLayout(hex, ploc, aloc, bc.getCanvas()));
+		adapter.addTestListener(bc);
+		view.layout();
 	}
 
 	@Override
