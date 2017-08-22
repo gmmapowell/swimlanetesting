@@ -42,10 +42,21 @@ public class SwimlaneView implements ViewLayout {
 
 	@Override
 	public void addAcceptance(int[] hexes, AcceptanceData ad) {
-		// TODO Auto-generated method stub
-		
+		String mask = maskString(hexes);
+		BarControl bc = factory.bar(view, "acceptance." + mask);
+		bc.getCanvas().setLayoutData(new AcceptanceBarLayout(mask, bc.getCanvas()));
+		ad.addTestListener(bc);
+		view.layout();
 	}
 	
+	private String maskString(int[] hexes) {
+		StringBuilder sb = new StringBuilder();
+		for (int i : hexes) {
+			sb.append(i);
+		}
+		return sb.toString();
+	}
+
 	@Override
 	public void addHexagonPort(int pos, PortLocation loc, PortData port) {
 		// TODO Auto-generated method stub

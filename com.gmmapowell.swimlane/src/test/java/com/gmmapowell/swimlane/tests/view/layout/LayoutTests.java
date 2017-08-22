@@ -3,6 +3,7 @@ package com.gmmapowell.swimlane.tests.view.layout;
 import org.jmock.Expectations;
 import org.junit.Test;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.AcceptanceData;
 import com.gmmapowell.swimlane.eclipse.interfaces.HexData;
 import com.gmmapowell.swimlane.eclipse.views.BarControl;
 import com.gmmapowell.swimlane.tests.view.hex.BaseHexViewTest;
@@ -10,7 +11,7 @@ import com.gmmapowell.swimlane.tests.view.hex.BaseHexViewTest;
 public class LayoutTests extends BaseHexViewTest {
 
 	@Test
-	public void testThatASimpleLayoutOfOneHexWithBusinessLogicHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
+	public void oneHexWithBusinessLogicHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
 		HexData h1 = context.mock(HexData.class);
 		context.checking(new Expectations() {{
 			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
@@ -23,7 +24,7 @@ public class LayoutTests extends BaseHexViewTest {
 	}
 
 	@Test
-	public void testThatALayoutOfTwoHexesWithBusinessLogicHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
+	public void twoHexesWithBusinessLogicHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
 		HexData h1 = context.mock(HexData.class, "h1");
 		HexData h2 = context.mock(HexData.class, "h2");
 		context.checking(new Expectations() {{
@@ -38,6 +39,57 @@ public class LayoutTests extends BaseHexViewTest {
 		checkLocationSizeColors("swimlane.bar.business.0", 77, 142, 141, 6, proxy -> { });
 		checkLocationSizeColors("swimlane.hexbg.1", 324, 43, 236, 204, proxy -> { });
 		checkLocationSizeColors("swimlane.bar.business.1", 372, 142, 141, 6, proxy -> { });
+	}
+
+	@Test
+	public void oneHexAndOneAcceptanceHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
+		HexData h1 = context.mock(HexData.class);
+		AcceptanceData ad = context.mock(AcceptanceData.class);
+		context.checking(new Expectations() {{
+			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(ad).addTestListener(with(any(BarControl.class)));
+		}});
+		swimlane.addHexagon(0, h1);
+		swimlane.addAcceptance(new int[] { 1 }, ad);
+//		showFor(5000);
+		assertControlsInOrder(shell, "swimlane.bar.acceptance.1", "swimlane.bar.business.0", "swimlane.hexbg.0");
+		checkLocationSizeColors("swimlane.bar.acceptance.1", 0, 2, 590, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.hexbg.0", 161, 34, 268, 232, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.0", 215, 147, 160, 6, proxy -> { });
+	}
+
+	@Test
+	public void twoHexesAndThreeAcceptanceBarsHasTheRightComponentsInTheRightPlaces() throws InterruptedException {
+		HexData h1 = context.mock(HexData.class, "h1");
+		HexData h2 = context.mock(HexData.class, "h2");
+		AcceptanceData a11 = context.mock(AcceptanceData.class, "a11");
+		AcceptanceData a01 = context.mock(AcceptanceData.class, "a10");
+		AcceptanceData a10 = context.mock(AcceptanceData.class, "a01");
+		context.checking(new Expectations() {{
+			oneOf(h1).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(h2).addBusinessLogicListener(with(any(BarControl.class)));
+			oneOf(a11).addTestListener(with(any(BarControl.class)));
+			oneOf(a10).addTestListener(with(any(BarControl.class)));
+			oneOf(a01).addTestListener(with(any(BarControl.class)));
+		}});
+		swimlane.addHexagon(0, h1);
+		swimlane.addHexagon(1, h2);
+		// don't add them in the right order, although I believe this will be the default first case
+		swimlane.addAcceptance(new int[] { 0, 1 }, a01); // bottom
+		swimlane.addAcceptance(new int[] { 1, 1 }, a11); // top
+		swimlane.addAcceptance(new int[] { 1, 0 }, a10); // middle
+		
+		showFor(5000);
+		// this is the order, but the y-order is not relevant here (just the z-order)
+		assertControlsInOrder(shell, "swimlane.bar.acceptance.10", "swimlane.bar.acceptance.11", "swimlane.bar.acceptance.01", "swimlane.bar.business.1", "swimlane.bar.business.0", "swimlane.hexbg.0", "swimlane.hexbg.1");
+		// what is relevant is the y-placements here
+		checkLocationSizeColors("swimlane.bar.acceptance.11", 0,  2, 590, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.acceptance.10", 0, 12, 590, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.acceptance.01", 0, 22, 590, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.hexbg.0", 29, 58, 236, 204, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.0", 77, 157, 141, 6, proxy -> { });
+		checkLocationSizeColors("swimlane.hexbg.1", 324, 58, 236, 204, proxy -> { });
+		checkLocationSizeColors("swimlane.bar.business.1", 372, 157, 141, 6, proxy -> { });
 	}
 
 	/*

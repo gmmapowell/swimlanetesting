@@ -46,18 +46,29 @@ public class SwimlaneLayout extends Layout {
 		int xmax = composite.getSize().x;
 		int ymax = composite.getSize().y;
 		if (!constraints.bgs.isEmpty()) {
-			int x = 0;
 			int nhexes = constraints.bgs.size();
+			int a = figureA(xmax/nhexes, ymax - 10*constraints.acceptances.size());
+			int hexTop = 0;
+
+			// TODO: I think we want to limit the total width in use if there is only one hex and the view is "widescreen"
+			// For now, use all of it
+			// The TreeMap makes sure these are in the right order
+			for (AcceptanceBarLayout bar : constraints.acceptances.values()) {
+				bar.layout(0, hexTop+2, xmax, 6);
+				hexTop += 10;
+				ymax-=10;
+			}
+			
+			int whichHex = 0;
 			for (HexagonBackground bg : constraints.bgs) {
-				int a = figureA(xmax/nhexes, ymax);
-        			int midx = xmax*(2*x+1)/nhexes/2;
+        			int midx = xmax*(2*whichHex+1)/nhexes/2;
             		int h = (int)(a*Math.sqrt(3));
     				int width = 4*a;
-				bg.layout(midx-2*a, /*hexAt+*/ymax/2-h, width, 2*h);
+				bg.layout(midx-2*a, hexTop+ymax/2-h, width, 2*h);
 				SwimlaneLayoutData bar = constraints.businessBars.get(bg);
 				if (bar != null)
-					bar.layout(midx-width*3/10, ymax/2-3, width*3/5, 6);
-				x++;
+					bar.layout(midx-width*3/10, hexTop+ymax/2-3, width*3/5, 6);
+				whichHex++;
 			}
 		}
 		/*

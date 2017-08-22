@@ -56,8 +56,12 @@ public class BarControl implements BarDataListener, PaintListener {
 	
 	@Override
 	public void paintControl(PaintEvent e) {
+		// TODO: that light/dark 3d framing effect
 		GC gc = new GC(canvas);
-		gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+		gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		gc.fillRectangle(0, 0, canvas.getSize().x, canvas.getSize().y);
+		gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_GREEN));
+		gc.fillRectangle(0, 0, canvas.getSize().x/2, canvas.getSize().y);
 		/*
 		int total = 0;
 		int compl = 0;
