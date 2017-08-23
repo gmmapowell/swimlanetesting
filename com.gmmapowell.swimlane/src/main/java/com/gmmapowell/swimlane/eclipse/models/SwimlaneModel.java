@@ -37,7 +37,6 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	// This is here for each time we create a SolutionCreator ...
 	private Map<GroupOfTests, AllConstraints> constraints = new HashMap<GroupOfTests, AllConstraints>();
 
-	private Map<GroupOfTests, Object> groups = new TreeMap<>();
 	private Set<DateListener> buildDateListeners = new HashSet<>();
 	private Set<DateListener> testDateListeners = new HashSet<>();
 	private Map<GroupOfTests, Map<String, UpdateBar>> bars = new HashMap<>();
@@ -79,12 +78,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	
 	@Override
 	public void testsStarted(GroupOfTests grp, Date currentDate) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void testCount(GroupOfTests grp) {
+		System.out.println("Have test group for " + grp);
 		Map<String, UpdateBar> lsnrs = bars.get(grp);
 		if (lsnrs == null) {// I think this is an error, but at runtime ...
 			System.out.println("Could not find any memory of test group " + grp);
@@ -135,8 +129,8 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 
 	@Override
 	public void visitGroups(GroupHandler hdlr) {
-		System.out.println("Visiting all groups");
-		for (GroupOfTests g : groups.keySet())
+		System.out.println("Visiting all groups ... " + bars.keySet());
+		for (GroupOfTests g : bars.keySet())
 			hdlr.runGroup(g);
 		System.out.println("Visited all groups");
 	}

@@ -36,7 +36,6 @@ public class TestAnalyzerTests extends TestBase {
 		context.checking(new Expectations() {{
 			allowing(monitor).beginTask("", 1000);
 			allowing(monitor).isCanceled(); will(returnValue(false));
-			oneOf(trr).testCount(grp);
 			oneOf(trr).testSuccess(grp, "com.gmmapowell.swimlane.sample.TestPasses", "test1");
 		}});
 		TestResultAnalyzer tra = new TestResultAnalyzer(monitor, eh, trr, grp);

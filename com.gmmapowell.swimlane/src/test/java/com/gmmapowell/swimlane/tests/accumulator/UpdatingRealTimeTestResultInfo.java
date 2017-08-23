@@ -38,6 +38,12 @@ public class UpdatingRealTimeTestResultInfo {
 		testsForClass1.add("case1");
 		testsForClass1.add("case2");
 		testsForClass1.add("case3");
+		context.checking(new Expectations() {{
+			allowing(grp).addTest("Acc");
+			allowing(grp).addTest("TestClass1");
+			allowing(grp).addTest("TestClass2");
+			allowing(grp).addTest("Ute");
+		}});
 	}
 
 	@Test
@@ -53,7 +59,7 @@ public class UpdatingRealTimeTestResultInfo {
 			oneOf(lsnr).barChanged(with(BarInfoMatcher.passing(2, 3))); inSequence(passing);
 			oneOf(lsnr).barChanged(with(BarInfoMatcher.passing(3, 3))); inSequence(passing);
 		}});
-		acc.testCount(grp);
+		acc.testsStarted(grp, new Date());
 		acc.testSuccess(grp, "TestClass1", "case1");
 		acc.testSuccess(grp, "TestClass1", "case2");
 		acc.testSuccess(grp, "TestClass1", "case3");
@@ -77,7 +83,7 @@ public class UpdatingRealTimeTestResultInfo {
 			oneOf(lsnr).barChanged(with(BarInfoMatcher.failing(2, 3))); inSequence(running);
 			oneOf(lsnr).barChanged(with(BarInfoMatcher.failing(3, 3))); inSequence(running);
 		}});
-		acc.testCount(grp);
+		acc.testsStarted(grp, new Date());
 		acc.testSuccess(grp, "TestClass1", "case1");
 		acc.testFailure(grp, "TestClass1", "case2", stack, expected, actual);
 		acc.testSuccess(grp, "TestClass1", "case3");
@@ -112,7 +118,7 @@ public class UpdatingRealTimeTestResultInfo {
 			oneOf(lsnr2).barChanged(with(BarInfoMatcher.failing(3, 3))); inSequence(seq);
 			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(3, 3))); inSequence(seq);
 		}});
-		acc.testCount(grp);
+		acc.testsStarted(grp, new Date());
 		acc.testSuccess(grp, "TestClass1", "case1");
 		acc.testSuccess(grp, "TestClass1", "case2");
 		acc.testSuccess(grp, "Acc", "case3");
@@ -126,15 +132,15 @@ public class UpdatingRealTimeTestResultInfo {
 	@Test
 	public void weCanRegisterForUpdatesAboutAdapterTests() {
 		AnalysisAccumulator analyzer = acc.startAnalysis(new Date());
-		analyzer.haveTestClass(grp, "Test1", new AdapterRole(String.class, Double.class, null, Integer.class), testsForClass1);
+		analyzer.haveTestClass(grp, "TestClass1", new AdapterRole(String.class, Double.class, null, Integer.class), testsForClass1);
 		analyzer.analysisComplete(new Date());
 		BarDataListener lsnr1 = capture.adapters.get("adapter_0_nw_0");
 		context.checking(new Expectations() {{
 			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(0, 3)));
 			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(1, 3)));
 		}});
-		acc.testCount(grp);
-		acc.testSuccess(grp, "Test1", "case1");
+		acc.testsStarted(grp, new Date());
+		acc.testSuccess(grp, "TestClass1", "case1");
 		acc.testsCompleted(grp, new Date());
 	}
 
@@ -148,7 +154,7 @@ public class UpdatingRealTimeTestResultInfo {
 			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(0, 3)));
 			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(1, 3)));
 		}});
-		acc.testCount(grp);
+		acc.testsStarted(grp, new Date());
 		acc.testSuccess(grp, "Ute", "case1");
 		acc.testsCompleted(grp, new Date());
 	}

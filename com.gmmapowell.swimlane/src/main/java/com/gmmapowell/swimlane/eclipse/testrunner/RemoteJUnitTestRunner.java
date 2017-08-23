@@ -8,6 +8,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.IJobFunction;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.EclipseAbstractor;
@@ -20,6 +22,8 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestRunner;
 // We only want one set of tests to be running at once, no matter how many have been dispatched
 // We thus probably need some sort of coordination signal such as "the backlog is done"
 public class RemoteJUnitTestRunner implements TestRunner {
+	private static final Logger logger = LoggerFactory.getLogger("JUnitRunner");
+	
 	private final EclipseAbstractor eclipse;
 	private class TestRunnerRule implements ISchedulingRule {
 		@Override
@@ -61,7 +65,7 @@ public class RemoteJUnitTestRunner implements TestRunner {
 				IStatus ret;
 				String classpath = g.getClassPath();
 				String[] classesUnderTest = g.getClasses();
-				System.out.println(new Date() + " Group " + g + " is running tests " + Arrays.asList(classesUnderTest) + " in classpath " + classpath);
+				logger.info(g + " is running tests " + Arrays.asList(classesUnderTest) + " in classpath " + classpath);
 				ret = Status.OK_STATUS;
 				try {
 					reporter.testsStarted(g, eclipse.currentDate());

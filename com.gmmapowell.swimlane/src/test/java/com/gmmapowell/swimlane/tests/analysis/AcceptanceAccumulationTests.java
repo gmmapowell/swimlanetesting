@@ -10,6 +10,7 @@ import java.util.Set;
 import org.jmock.Expectations;
 import org.jmock.Sequence;
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -19,7 +20,6 @@ import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator;
 import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
-import com.gmmapowell.swimlane.eclipse.models.TestGroup;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
 import com.gmmapowell.swimlane.testsupport.DirectRunner;
 
@@ -34,7 +34,7 @@ public class AcceptanceAccumulationTests {
 	ErrorAccumulator errors = context.mock(ErrorAccumulator.class);
 	AnalysisAccumulator acc = new SolutionCreator(new DirectRunner(), errors, solution, new HashMap<GroupOfTests, AllConstraints>());
 	Sequence seq = context.sequence("solution");
-	TestGroup grp = new TestGroup("Project", null);
+	GroupOfTests grp = context.mock(GroupOfTests.class);
 	Date bcd = new Date();
 	Class<?> hexClass1 = Integer.class;
 	Class<?> hexClass2 = List.class;
@@ -47,6 +47,11 @@ public class AcceptanceAccumulationTests {
 	String hm4 = hexClass4.getName();
 	List<String> tests = new ArrayList<>();
 
+	@Before
+	public void setup() {
+		tests.add("case1");
+	}
+	
 	@Test
 	public void testNoTestsMeansNoHexes() {
 		context.checking(new Expectations() {{
@@ -65,6 +70,7 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).acceptance(hmd); inSequence(seq);
 			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
+			oneOf(grp).addTest("TestCase1");
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(), tests);
@@ -80,6 +86,7 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).acceptance(hm1, hm2); inSequence(seq);
 			oneOf(solution).testClass(grp, "TestCase1", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
+			oneOf(grp).addTest("TestCase1");
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
@@ -98,6 +105,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(errors).error("there is no ordering between java.lang.Integer and java.util.List");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
+			oneOf(grp).addTest("TestCase1");
+			oneOf(grp).addTest("TestCase2");
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1), tests);
@@ -116,6 +125,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(errors).error("ordering between java.lang.Integer and java.util.List is inconsistent");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
+			oneOf(grp).addTest("TestCase1");
+			oneOf(grp).addTest("TestCase2");
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
@@ -135,6 +146,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).acceptance(hm2, hm3); inSequence(seq);
 			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
+			oneOf(grp).addTest("TestCase1");
+			oneOf(grp).addTest("TestCase2");
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
@@ -155,6 +168,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(errors).error("there is no ordering between java.util.List and java.util.Set");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
+			oneOf(grp).addTest("TestCase1");
+			oneOf(grp).addTest("TestCase2");
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
@@ -179,6 +194,9 @@ public class AcceptanceAccumulationTests {
 			oneOf(errors).error("there is a cycle between java.lang.Integer and java.util.List");
 			oneOf(errors).error("there is a cycle between java.util.List and java.util.Set");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
+			oneOf(grp).addTest("TestCase1");
+			oneOf(grp).addTest("TestCase2");
+			oneOf(grp).addTest("TestCase3");
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
@@ -202,6 +220,9 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).acceptance(hm3, hm4); inSequence(seq);
 			oneOf(solution).testClass(grp, "TestCase3", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
+			oneOf(grp).addTest("TestCase1");
+			oneOf(grp).addTest("TestCase2");
+			oneOf(grp).addTest("TestCase3");
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2), tests);
@@ -224,6 +245,9 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).acceptance(hm2, hm3); inSequence(seq);
 			oneOf(solution).testClass(grp, "TestCase2", tests); inSequence(seq);
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
+			oneOf(grp).addTest("TestCase1");
+			oneOf(grp).addTest("TestCase2");
+			oneOf(grp).addTest("TestCase3");
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2, hexClass3), tests);
@@ -245,6 +269,8 @@ public class AcceptanceAccumulationTests {
 			oneOf(solution).testClass(grp, "TestCase3", tests); inSequence(seq);
 			oneOf(errors).error("ordering between java.lang.Integer and java.util.List is inconsistent");
 			oneOf(solution).analysisDone(bcd); inSequence(seq);
+			oneOf(grp).addTest("TestCase1");
+			oneOf(grp).addTest("TestCase3");
 		}});
 		acc.clean(grp);
 		acc.haveTestClass(grp, "TestCase1", new AcceptanceRole(hexClass1, hexClass2, hexClass3), tests);

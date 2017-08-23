@@ -63,8 +63,11 @@ public class SolutionCreator implements AnalysisAccumulator {
 			collectUtilityInfo(c, (UtilityRole)role, tct);
 		else if (role instanceof BusinessRole)
 			collectBusinessLogicInfo(c, (BusinessRole)role, tct);
-		else
+		else {
 			eh.error("cannot handle " + role.getClass());
+			return;
+		}
+		grp.addTest(clzName);
 	}
 
 	private void collectAcceptanceInfo(AllConstraints c, AcceptanceRole role, TestCaseTracker tct) {
@@ -135,43 +138,12 @@ public class SolutionCreator implements AnalysisAccumulator {
 		TotalOrder hexorder = new TotalOrder();
 		List<String> defaultLogic = new ArrayList<>();
 		
-		// TODO: I think I'm looping wrongly about this; I think
-		// the bestordering should be called after we've looped over all
-		// the acceptance tests, so:
-		//   loop on constraints, collect bestorder
-		//   figure the best ordering & update hexes
-		//   then loop to do adapters
 		for (AllConstraints ac : constraints.values()) {
 			for (List<String> s : ac.acceptances.allHexes)
 				if (s.isEmpty())
 					hexorder.haveDefault();
 				else
 					hexorder.addAll(s);
-//			if (defaultLogic != null)
-//				this.hexorder.haveDefault();
-//			else if (!adapterPort.isEmpty() && portHex.isEmpty())
-//				this.hexorder.haveDefault();
-//			this.hexorder.ensureTotalOrdering(errors);
-//			TreeMap<String, Acceptance> tmp = new TreeMap<String, Acceptance>();
-//			for (Acceptance a : compileAcceptances.values()) {
-//				a.setMarks(order);
-//				// Handle an error case where because of inconsistent hex definitions, we have two
-//				// different acceptance tests that think they represent the same pattern (i.e. we can't distinguish two 1s in the name in different orders)
-//				// Merge these into a single test
-//				Acceptance prev = tmp.get(a.getId());
-//				if (prev != null) {
-//					prev.merge(a);
-//				} else {
-//					// This is the normal non-error case
-//					tmp.put(a.getId(), a);
-//				}
-//			}
-//			// Because we want to sort 111, 110, 101, 100, 011 ... reverse the default sorted list by adding each item on the front
-//			for (Acceptance a : tmp.values()) {
-//				acceptances.add(0, a);
-//				for (String c : a.classesUnderTest())
-//					barsFor.put(c, a);
-//			}
 
 			defaultLogic.addAll(ac.classesInBusinessDefault);
 			for (HexTracker ht : ac.businessHexes) {

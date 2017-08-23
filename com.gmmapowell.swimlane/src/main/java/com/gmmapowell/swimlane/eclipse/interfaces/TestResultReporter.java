@@ -7,7 +7,6 @@ import java.util.List;
 // not the one doing the reporting
 public interface TestResultReporter {
 	void testsStarted(GroupOfTests grp, Date currentDate);
-	void testCount(GroupOfTests grp);
 	void testSuccess(GroupOfTests grp, String testClz, String testFn);
 	void testFailure(GroupOfTests grp, String testClz, String testFn, List<String> stack, List<String> expected, List<String> actual);
 	void testError(GroupOfTests grp, String testClz, String testFn, List<String> stack);

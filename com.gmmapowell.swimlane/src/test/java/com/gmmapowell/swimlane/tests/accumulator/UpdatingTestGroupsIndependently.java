@@ -50,6 +50,12 @@ public class UpdatingTestGroupsIndependently {
 
 		testsForClass3.add("case6");
 
+		context.checking(new Expectations() {{
+			allowing(grp1).addTest("TestClass1");
+			allowing(grp2).addTest("TestClass2");
+			allowing(grp1).addTest("TestClass3");
+		}});
+
 		AnalysisAccumulator analyzer = acc.startAnalysis(new Date());
 		analyzer.haveTestClass(grp1, "TestClass1", new BusinessRole(String.class), testsForClass1);
 		analyzer.haveTestClass(grp2, "TestClass2", new BusinessRole(String.class), testsForClass2);
@@ -62,6 +68,7 @@ public class UpdatingTestGroupsIndependently {
 		stack = context.mock(List.class, "stack");
 		expected = context.mock(List.class, "expected");
 		actual = context.mock(List.class, "actual");
+
 	}
 
 	// Start off by checking that we can run the tests back-to-back without any overwriting
@@ -84,7 +91,7 @@ public class UpdatingTestGroupsIndependently {
 		}});
 		
 		// Now go back and run grp1 without affecting grp2
-		acc.testCount(grp1);
+		acc.testsStarted(grp1, new Date());
 		acc.testSuccess(grp1, "TestClass1", "case1");
 		acc.testSuccess(grp1, "TestClass1", "case2");
 		acc.testSuccess(grp1, "TestClass1", "case3");
@@ -103,7 +110,7 @@ public class UpdatingTestGroupsIndependently {
 		}});
 		
 		// Now go back and run grp2 without affecting grp1
-		acc.testCount(grp2);
+		acc.testsStarted(grp2, new Date());
 		acc.testSuccess(grp2, "TestClass2", "case4");
 		acc.testSuccess(grp2, "TestClass2", "case5");
 		acc.testsCompleted(grp2, new Date());
@@ -120,7 +127,7 @@ public class UpdatingTestGroupsIndependently {
 		}});
 		
 		// Now go back and run grp2 without affecting grp1
-		acc.testCount(grp2);
+		acc.testsStarted(grp2, new Date());
 		acc.testFailure(grp2, "TestClass2", "case4", stack, expected, actual);
 		acc.testSuccess(grp2, "TestClass2", "case5");
 		acc.testsCompleted(grp2, new Date());
@@ -139,13 +146,13 @@ public class UpdatingTestGroupsIndependently {
 		}});
 		
 		// Now go back and run grp2 without affecting grp1
-		acc.testCount(grp2);
+		acc.testsStarted(grp2, new Date());
 		acc.testFailure(grp2, "TestClass2", "case4", stack, expected, actual);
 		acc.testSuccess(grp2, "TestClass2", "case5");
 		acc.testsCompleted(grp2, new Date());
 
 		// run them again and it goes green again ...
-		acc.testCount(grp2);
+		acc.testsStarted(grp2, new Date());
 	}
 
 	// Run all the tests one time to get to the right place ...
@@ -163,13 +170,13 @@ public class UpdatingTestGroupsIndependently {
 			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(5, 5)));
 			oneOf(lsnr2).barChanged(with(BarInfoMatcher.passing(1, 1)));
 		}});
-		acc.testCount(grp1);
+		acc.testsStarted(grp1, new Date());
 		acc.testSuccess(grp1, "TestClass1", "case1");
 		acc.testSuccess(grp1, "TestClass1", "case2");
 		acc.testSuccess(grp1, "TestClass1", "case3");
 		acc.testSuccess(grp1, "TestClass3", "case6");
 		acc.testsCompleted(grp1, new Date());
-		acc.testCount(grp2);
+		acc.testsStarted(grp2, new Date());
 		acc.testSuccess(grp2, "TestClass2", "case4");
 		acc.testSuccess(grp2, "TestClass2", "case5");
 		acc.testsCompleted(grp2, new Date());
