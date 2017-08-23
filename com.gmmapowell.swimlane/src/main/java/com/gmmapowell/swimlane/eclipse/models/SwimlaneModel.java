@@ -14,7 +14,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
-import com.gmmapowell.swimlane.eclipse.interfaces.HasABar;
+import com.gmmapowell.swimlane.eclipse.interfaces.UpdateBar;
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.ScreenSync;
 import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
@@ -40,7 +40,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	private Map<GroupOfTests, Object> groups = new TreeMap<>();
 	private Set<DateListener> buildDateListeners = new HashSet<>();
 	private Set<DateListener> testDateListeners = new HashSet<>();
-	private Map<GroupOfTests, Map<String, HasABar>> bars = new HashMap<>();
+	private Map<GroupOfTests, Map<String, UpdateBar>> bars = new HashMap<>();
 	private ScreenSync sync;
 
 	public SwimlaneModel(ScreenSync sync, ErrorAccumulator eh, ViewLayout layout) {
@@ -84,36 +84,36 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	}
 	
 	@Override
-	public void testCount(GroupOfTests grp, int cnt) {
-		Map<String, HasABar> lsnrs = bars.get(grp);
+	public void testCount(GroupOfTests grp) {
+		Map<String, UpdateBar> lsnrs = bars.get(grp);
 		if (lsnrs == null) {// I think this is an error, but at runtime ...
 			System.out.println("Could not find any memory of test group " + grp);
 			return;
 		}
-		for (HasABar bar : lsnrs.values())
+		for (UpdateBar bar : lsnrs.values())
 			bar.clearGroup(grp);
 	}
 	
 	@Override
 	public void testSuccess(GroupOfTests grp, String testClz, String testFn) {
-		Map<String, HasABar> lsnrs = bars.get(grp);
+		Map<String, UpdateBar> lsnrs = bars.get(grp);
 		if (lsnrs == null) {// I think this is an error, but at runtime ...
 			System.out.println("Could not find any memory of test group " + grp);
 			return;
 		}
-		HasABar bar = lsnrs.get(testClz);
+		UpdateBar bar = lsnrs.get(testClz);
 		if (bar != null)
 			bar.testCompleted(new TestCaseInfo(grp, testClz, testFn));
 	}
 
 	@Override
 	public void testFailure(GroupOfTests grp, String testClz, String testFn, List<String> stack, List<String> expected, List<String> actual) {
-		Map<String, HasABar> lsnrs = bars.get(grp);
+		Map<String, UpdateBar> lsnrs = bars.get(grp);
 		if (lsnrs == null) {// I think this is an error, but at runtime ...
 			System.out.println("Could not find any memory of test group " + grp);
 			return;
 		}
-		HasABar bar = lsnrs.get(testClz);
+		UpdateBar bar = lsnrs.get(testClz);
 		if (bar != null)
 			bar.testCompleted(new TestCaseInfo(grp, testClz, testFn, stack, expected, actual));
 	}
@@ -155,7 +155,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		int chex = -1;
 		PortLocation cloc;
 		int apos = 0;
-		HasABar currentBar = null;
+		UpdateBar currentBar = null;
 		
 		@Override
 		public void beginAnalysis() {
@@ -176,7 +176,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		public void testClass(GroupOfTests grp, String clzName, List<String> tests) {
 			if (!bars.containsKey(grp))
 				bars.put(grp, new TreeMap<>());
-			Map<String, HasABar> map = bars.get(grp);
+			Map<String, UpdateBar> map = bars.get(grp);
 			// may need to clear it out?
 			if (currentBar != null) {
 				map.put(clzName, currentBar);

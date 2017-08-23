@@ -44,7 +44,7 @@ public class TestResultAnalyzer {
 			}
 			int ntests = Integer.parseInt(codes[0]);
 			monitor.setWorkRemaining(ntests);
-			sink.testCount(group, ntests);
+			sink.testCount(group);
 		} else if (s.startsWith("%TSTTREE")) {
 		} else if (s.startsWith("%TESTS")) {
 			monitor.newChild(1);

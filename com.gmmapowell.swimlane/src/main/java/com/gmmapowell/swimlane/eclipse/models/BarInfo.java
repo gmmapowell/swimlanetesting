@@ -1,5 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,11 +10,11 @@ import java.util.Set;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
-import com.gmmapowell.swimlane.eclipse.interfaces.HasABar;
+import com.gmmapowell.swimlane.eclipse.interfaces.UpdateBar;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo.State;
 import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 
-public class BarInfo implements BarData, HasABar {
+public class BarInfo implements BarData, UpdateBar {
 	static class ConsolidatedState {
 		State state = State.SUCCESS;
 		int total;
@@ -34,6 +35,10 @@ public class BarInfo implements BarData, HasABar {
 	// I think we need something to reject old data during updates
 	@Override
 	public void testClass(GroupOfTests grp, String clzName, List<String> tests) {
+		if (!groups.containsKey(grp))
+			groups.put(grp, new ConsolidatedState());
+		ConsolidatedState cs = groups.get(grp);
+		cs.total += tests.size();
 		currentState.total += tests.size();
 	}
 
@@ -54,20 +59,37 @@ public class BarInfo implements BarData, HasABar {
 
 	@Override
 	public void clearGroup(GroupOfTests grp) {
-		// TODO: clear this group
-//		throw new RuntimeException("not implemented");
+		ConsolidatedState cs = groups.get(grp);
+		if (cs != null) {
+			currentState.completed -= cs.completed;
+			currentState.state = consolidate(groups.values());
+		}
+		
 		for (BarDataListener lsnr : lsnrs)
 			lsnr.barChanged(this);
 	}
 
 	@Override
 	public void testCompleted(TestCaseInfo ti) {
+		GroupOfTests grp = ti.groupName();
+		if (!groups.containsKey(grp))
+			groups.put(grp, new ConsolidatedState());
+		ConsolidatedState cs = groups.get(grp);
+		cs.completed++;
+		cs.state = cs.state.merge(ti.outcome());
 		currentState.completed++;
 		currentState.state = currentState.state.merge(ti.outcome());
 		for (BarDataListener lsnr : lsnrs)
 			lsnr.barChanged(this);
 	}
 	
+	private State consolidate(Collection<ConsolidatedState> values) {
+		State ret = State.SUCCESS;
+		for (ConsolidatedState cs : values)
+			ret = ret.merge(cs.state);
+		return ret;
+	}
+
 	@Override
 	public String toString() {
 		return "BarInfo[" + getComplete() + "/" + getTotal() + "?" + isPassing() +"]";

@@ -53,7 +53,7 @@ public class UpdatingRealTimeTestResultInfo {
 			oneOf(lsnr).barChanged(with(BarInfoMatcher.passing(2, 3))); inSequence(passing);
 			oneOf(lsnr).barChanged(with(BarInfoMatcher.passing(3, 3))); inSequence(passing);
 		}});
-		acc.testCount(grp, 3);
+		acc.testCount(grp);
 		acc.testSuccess(grp, "TestClass1", "case1");
 		acc.testSuccess(grp, "TestClass1", "case2");
 		acc.testSuccess(grp, "TestClass1", "case3");
@@ -77,7 +77,7 @@ public class UpdatingRealTimeTestResultInfo {
 			oneOf(lsnr).barChanged(with(BarInfoMatcher.failing(2, 3))); inSequence(running);
 			oneOf(lsnr).barChanged(with(BarInfoMatcher.failing(3, 3))); inSequence(running);
 		}});
-		acc.testCount(grp, 3);
+		acc.testCount(grp);
 		acc.testSuccess(grp, "TestClass1", "case1");
 		acc.testFailure(grp, "TestClass1", "case2", stack, expected, actual);
 		acc.testSuccess(grp, "TestClass1", "case3");
@@ -112,7 +112,7 @@ public class UpdatingRealTimeTestResultInfo {
 			oneOf(lsnr2).barChanged(with(BarInfoMatcher.failing(3, 3))); inSequence(seq);
 			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(3, 3))); inSequence(seq);
 		}});
-		acc.testCount(grp, 6);
+		acc.testCount(grp);
 		acc.testSuccess(grp, "TestClass1", "case1");
 		acc.testSuccess(grp, "TestClass1", "case2");
 		acc.testSuccess(grp, "Acc", "case3");
@@ -133,7 +133,7 @@ public class UpdatingRealTimeTestResultInfo {
 			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(0, 3)));
 			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(1, 3)));
 		}});
-		acc.testCount(grp, 3);
+		acc.testCount(grp);
 		acc.testSuccess(grp, "Test1", "case1");
 		acc.testsCompleted(grp, new Date());
 	}
@@ -148,7 +148,7 @@ public class UpdatingRealTimeTestResultInfo {
 			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(0, 3)));
 			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(1, 3)));
 		}});
-		acc.testCount(grp, 3);
+		acc.testCount(grp);
 		acc.testSuccess(grp, "Ute", "case1");
 		acc.testsCompleted(grp, new Date());
 	}

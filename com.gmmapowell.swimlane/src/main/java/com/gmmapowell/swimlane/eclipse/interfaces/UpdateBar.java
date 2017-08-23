@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 
-public interface HasABar {
+public interface UpdateBar {
 	// TODO: should there be a "clear all record of this" action?
 	// Statically declare that a class exists
 	void testClass(GroupOfTests grp, String clzName, List<String> tests);

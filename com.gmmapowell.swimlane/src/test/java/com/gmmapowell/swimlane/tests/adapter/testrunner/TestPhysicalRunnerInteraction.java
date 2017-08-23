@@ -21,7 +21,7 @@ public class TestPhysicalRunnerInteraction extends TestBase {
 	public void testThatWeCanInvokeOneClassWithJustTwoSuccessfulTests() throws Exception {
 		TestResultReporter sink = context.mock(TestResultReporter.class);
 		context.checking(new Expectations() {{
-			oneOf(sink).testCount(grp, 2);
+			oneOf(sink).testCount(grp);
 			oneOf(sink).testSuccess(grp, "com.gmmapowell.swimlane.sample.TestPasses", "testPasses");
 			oneOf(sink).testSuccess(grp, "com.gmmapowell.swimlane.sample.TestPasses", "test2");
 //			oneOf(sink).testRuntime(with(any(Integer.class)));
@@ -34,7 +34,7 @@ public class TestPhysicalRunnerInteraction extends TestBase {
 	public void testThatWeCanInvokeTwoClassesWithJustThreeTotalTests() throws Exception {
 		TestResultReporter sink = context.mock(TestResultReporter.class);
 		context.checking(new Expectations() {{
-			oneOf(sink).testCount(grp, 4);
+			oneOf(sink).testCount(grp);
 			oneOf(sink).testSuccess(grp, "com.gmmapowell.swimlane.sample.TestPasses", "testPasses");
 			oneOf(sink).testSuccess(grp, "com.gmmapowell.swimlane.sample.TestPasses", "test2");
 			oneOf(sink).testFailure(with(grp), with("com.gmmapowell.swimlane.sample.TestFails"), with("fail1"), with(aNonNull(List.class)), with(aNull(List.class)), with(aNull(List.class)));
