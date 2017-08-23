@@ -61,7 +61,9 @@ public class BarInfo implements BarData, UpdateBar {
 	public void clearGroup(GroupOfTests grp) {
 		ConsolidatedState cs = groups.get(grp);
 		if (cs != null) {
-			currentState.completed -= cs.completed;
+			currentState.completed -= cs.completed; // this has to be before we reset the count to 0
+			cs.completed = 0;
+			cs.state = State.SUCCESS; // and this has to be before we reset the state, otherwise it will include any errors from last time
 			currentState.state = consolidate(groups.values());
 		}
 		

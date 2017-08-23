@@ -34,7 +34,11 @@ public class UpdatingTestGroupsIndependently {
 	List<String> testsForClass3 = new ArrayList<>();
 	private BarDataListener lsnr1;
 	private BarDataListener lsnr2;
+	private List<String> stack;
+	private List<String> expected;
+	private List<String> actual;
 
+	@SuppressWarnings("unchecked")
 	@Before
 	public void setup() {
 		testsForClass1.add("case1");
@@ -54,6 +58,10 @@ public class UpdatingTestGroupsIndependently {
 
 		lsnr1 = capture.hexes.get(0);
 		lsnr2 = capture.utility;
+
+		stack = context.mock(List.class, "stack");
+		expected = context.mock(List.class, "expected");
+		actual = context.mock(List.class, "actual");
 	}
 
 	// Start off by checking that we can run the tests back-to-back without any overwriting
@@ -82,6 +90,62 @@ public class UpdatingTestGroupsIndependently {
 		acc.testSuccess(grp1, "TestClass1", "case3");
 		acc.testSuccess(grp1, "TestClass3", "case6");
 		acc.testsCompleted(grp1, new Date());
+	}
+
+	@Test
+	public void weCanRerunTheGroup2TestsWithoutCausingHarmToGroup1() {
+		runEverythingOnce();
+
+		context.checking(new Expectations() {{
+			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(3, 5)));
+			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(4, 5)));
+			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(5, 5)));
+		}});
+		
+		// Now go back and run grp2 without affecting grp1
+		acc.testCount(grp2);
+		acc.testSuccess(grp2, "TestClass2", "case4");
+		acc.testSuccess(grp2, "TestClass2", "case5");
+		acc.testsCompleted(grp2, new Date());
+	}
+
+	@Test
+	public void weThatWeCanCauseTheBarToGoRed() {
+		runEverythingOnce();
+
+		context.checking(new Expectations() {{
+			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(3, 5)));
+			oneOf(lsnr1).barChanged(with(BarInfoMatcher.failing(4, 5)));
+			oneOf(lsnr1).barChanged(with(BarInfoMatcher.failing(5, 5)));
+		}});
+		
+		// Now go back and run grp2 without affecting grp1
+		acc.testCount(grp2);
+		acc.testFailure(grp2, "TestClass2", "case4", stack, expected, actual);
+		acc.testSuccess(grp2, "TestClass2", "case5");
+		acc.testsCompleted(grp2, new Date());
+	}
+
+	@Test
+	public void weThatRerunningTheFailingGroupCausesTheBarToGoBackToGreen() {
+		runEverythingOnce();
+
+		context.checking(new Expectations() {{
+			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(3, 5)));
+			oneOf(lsnr1).barChanged(with(BarInfoMatcher.failing(4, 5)));
+			oneOf(lsnr1).barChanged(with(BarInfoMatcher.failing(5, 5)));
+
+			oneOf(lsnr1).barChanged(with(BarInfoMatcher.passing(3, 5)));
+		}});
+		
+		// Now go back and run grp2 without affecting grp1
+		acc.testCount(grp2);
+		acc.testFailure(grp2, "TestClass2", "case4", stack, expected, actual);
+		acc.testSuccess(grp2, "TestClass2", "case5");
+		acc.testsCompleted(grp2, new Date());
+
+		// run them again and it goes green again ...
+		acc.testCount(grp2);
 	}
 
 	// Run all the tests one time to get to the right place ...
