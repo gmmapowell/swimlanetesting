@@ -45,4 +45,8 @@ public class BarInfoMatcher extends TypeSafeMatcher<BarInfo> {
 		return new BarInfoMatcher(true, complete, total);
 	}
 
+	public static BarInfoMatcher failing(int complete, int total) {
+		return new BarInfoMatcher(false, complete, total);
+	}
+
 }

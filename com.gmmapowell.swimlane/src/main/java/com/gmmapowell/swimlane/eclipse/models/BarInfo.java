@@ -63,6 +63,7 @@ public class BarInfo implements BarData, HasABar {
 	@Override
 	public void testCompleted(TestCaseInfo ti) {
 		currentState.completed++;
+		currentState.state = currentState.state.merge(ti.outcome());
 		for (BarDataListener lsnr : lsnrs)
 			lsnr.barChanged(this);
 	}
