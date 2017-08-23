@@ -19,4 +19,5 @@ public @interface Adapter {
 	Class<?> hexagon() default Object.class;
 	Class<?> port() default Object.class;
 	Location location() default Location.NONE;
+	boolean autobuild() default false;
 }

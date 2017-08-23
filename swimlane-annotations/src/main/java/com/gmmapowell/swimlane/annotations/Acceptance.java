@@ -21,4 +21,21 @@ public @interface Acceptance {
 	 * @return the (ordered) set of class names representing the hexagons
 	 */
 	Class<?>[] value() default {};
+	
+	/** In general, acceptance tests do not want to be automatically run at build time, because
+	 * they are slow are resource-intensive.
+	 * 
+	 * However, if an acceptance test can be run very quickly (it only uses in-memory objects) this
+	 * attribute can be set to true to enable autorunning on every build.
+	 * 
+	 * @return true if the test should be automatically run after a build; false if it should only be run on demand
+	 */
+	boolean autobuild() default false;
+	
+	/** If this acceptance test has been written, but the code has not been implemented,
+	 * use this flag to "disable" it
+	 * 
+	 * @return true if the test in under active development; false if it is part of the regression suite
+	 */
+	boolean inprogress() default false;
 }

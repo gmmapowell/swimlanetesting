@@ -15,4 +15,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface BusinessLogic {
 	Class<?> value() default Object.class;
+	boolean autobuild() default true;
 }
