@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.gmmapowell.swimlane.eclipse.interfaces.AnalysisAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.DataCentral;
 import com.gmmapowell.swimlane.eclipse.interfaces.DateListener;
@@ -25,6 +28,7 @@ import com.gmmapowell.swimlane.eclipse.models.SolutionCreator.AllConstraints;
 import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 
 public class SwimlaneModel implements DataCentral, TestResultReporter {
+	private final static Logger logger = LoggerFactory.getLogger("SwimlaneModel");
 	private final ErrorAccumulator eh;
 	private final ViewLayout layout;
 	private final List<BarInfo> hexes = new ArrayList<>();
@@ -70,7 +74,6 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	
 	@Override
 	public void addTestDateListener(DateListener lsnr) {
-		System.out.println("Adding test date listener " + lsnr);
 		testDateListeners.add(lsnr);
 		if (testsCompleteTime != null)
 			lsnr.dateChanged(testsCompleteTime);
@@ -78,10 +81,9 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	
 	@Override
 	public void testsStarted(GroupOfTests grp, Date currentDate) {
-		System.out.println("Have test group for " + grp);
 		Map<String, UpdateBar> lsnrs = bars.get(grp);
 		if (lsnrs == null) {// I think this is an error, but at runtime ...
-			System.out.println("Could not find any memory of test group " + grp);
+			logger.warn("Could not find any memory of test group " + grp);
 			return;
 		}
 		for (UpdateBar bar : lsnrs.values())
@@ -92,7 +94,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	public void testSuccess(GroupOfTests grp, String testClz, String testFn) {
 		Map<String, UpdateBar> lsnrs = bars.get(grp);
 		if (lsnrs == null) {// I think this is an error, but at runtime ...
-			System.out.println("Could not find any memory of test group " + grp);
+			logger.warn("Could not find any memory of test group " + grp);
 			return;
 		}
 		UpdateBar bar = lsnrs.get(testClz);
@@ -104,7 +106,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	public void testFailure(GroupOfTests grp, String testClz, String testFn, List<String> stack, List<String> expected, List<String> actual) {
 		Map<String, UpdateBar> lsnrs = bars.get(grp);
 		if (lsnrs == null) {// I think this is an error, but at runtime ...
-			System.out.println("Could not find any memory of test group " + grp);
+			logger.warn("Could not find any memory of test group " + grp);
 			return;
 		}
 		UpdateBar bar = lsnrs.get(testClz);
@@ -123,22 +125,22 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 	}
 
 	public void runAllTests(TestRunner tr) {
-		System.out.println("Running all tests");
+		logger.info("Running all tests");
 		tr.runAll(this, this);
 	}
 
 	@Override
 	public void visitGroups(GroupHandler hdlr) {
-		System.out.println("Visiting all groups ... " + bars.keySet());
+		logger.info("Visiting all groups ... " + bars.keySet());
 		for (GroupOfTests g : bars.keySet())
 			hdlr.runGroup(g);
-		System.out.println("Visited all groups");
+		logger.info("Visited all groups");
 	}
 
 	
 	@Override
 	public void testsRun(Date currentDate) {
-		System.out.println("Tests completed at " + currentDate + " notifying " + testDateListeners);
+		logger.info("Tests completed at " + currentDate + " notifying " + testDateListeners);
 		testsCompleteTime = currentDate;
 		for (DateListener l : testDateListeners)
 			l.dateChanged(testsCompleteTime);

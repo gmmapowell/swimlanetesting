@@ -3,6 +3,8 @@ package com.gmmapowell.swimlane.eclipse.testrunner;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.ErrorAccumulator;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
@@ -11,6 +13,8 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.interfaces.Tree;
 
 public class TestResultAnalyzer {
+	private final static Logger logger = LoggerFactory.getLogger("TestAnalyzer");
+
 	class PendingNode {
 		int quant;
 		Tree<TestInfo> node;
@@ -34,7 +38,7 @@ public class TestResultAnalyzer {
 	}
 
 	public void push(String s) {
-		System.out.println("tra - " + s);
+		logger.info(s);
 		if (s.startsWith("%TESTC")) {
 			s = s.substring(8);
 			String[] codes = s.split(" ");

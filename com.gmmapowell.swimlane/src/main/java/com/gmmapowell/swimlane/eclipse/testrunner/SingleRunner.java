@@ -3,7 +3,6 @@ package com.gmmapowell.swimlane.eclipse.testrunner;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -66,7 +65,7 @@ public class SingleRunner {
 			trr.done();
 			trr.interrupt();
 			trr.join();
-			System.out.println(new Date() + " finished running tests");
+			logger.info("finished running tests");
 		} finally {
 			file.delete();
 		}

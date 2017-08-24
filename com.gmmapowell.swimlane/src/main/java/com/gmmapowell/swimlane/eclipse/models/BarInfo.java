@@ -7,19 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
-import com.gmmapowell.swimlane.eclipse.interfaces.UpdateBar;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo.State;
+import com.gmmapowell.swimlane.eclipse.interfaces.UpdateBar;
 import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
 
 public class BarInfo implements BarData, UpdateBar {
-	private final static Logger logger = LoggerFactory.getLogger("BarInfo");
-
 	static class ConsolidatedState {
 		State state = State.SUCCESS;
 		int total;
@@ -78,8 +73,6 @@ public class BarInfo implements BarData, UpdateBar {
 
 	@Override
 	public void testCompleted(TestCaseInfo ti) {
-		System.out.println("hi there");
-		logger.error("hello");
 		GroupOfTests grp = ti.groupName();
 		if (!groups.containsKey(grp))
 			groups.put(grp, new ConsolidatedState());
