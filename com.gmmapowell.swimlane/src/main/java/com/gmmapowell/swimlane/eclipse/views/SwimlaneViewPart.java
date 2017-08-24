@@ -57,6 +57,7 @@ public class SwimlaneViewPart extends ViewPart implements CommandDispatcher {
 		testResults = new TestResultsView(stackUI);
 		stack.topControl = hexView.getTop();
 		ErrorCollector errorcoll = new ErrorCollector();
+		errorcoll.addErrorMessageListener(errorView);
 		centralModel = new SwimlaneModel(r -> parent.getDisplay().syncExec(r), errorcoll, hexView);
 		new InfoBar(parent, centralModel);
 		try {

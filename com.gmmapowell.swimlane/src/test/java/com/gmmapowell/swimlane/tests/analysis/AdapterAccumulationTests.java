@@ -191,36 +191,6 @@ public class AdapterAccumulationTests {
 		acc.analysisComplete(bcd);
 	}
 
-	/* I don't think this adds anything on the previous test as written - what case did it previously capture?
-	@Test
-	public void testWeCannotSpecifyConflictingAdapterHexLocations() {
-		context.checking(new Expectations() {{
-			oneOf(solution).beginHexes(); inSequence(seq);
-			oneOf(solution).hex(with(hm1)); inSequence(seq);
-			oneOf(solution).hexesDone(); inSequence(seq);
-			oneOf(solution).beginPorts(with(hm1)); inSequence(seq);
-			oneOf(solution).port(with(hm1), with(PortInfoMatcher.port(PortLocation.SOUTHWEST, portClass1))); inSequence(seq);
-			oneOf(solution).portsDone(with(hm1)); inSequence(seq);
-			oneOf(errors).error("port " + portClass1.getName() + " cannot be in sw and se");
-		}});
-		acc.startAnalysis(bcd);
-		acc.clean(grp);
-		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHEAST, adapterClass1));
-		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass1, portClass1, PortLocation.SOUTHWEST, adapterClass1));
-		acc.analysisComplete(bcd);
-//		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
-//		acc.portLocation(adapterClass1, PortLocation.SOUTHEAST);
-//		acc.adapter(grp, testCase2, hexClass1, portClass1, adapterClass1);
-//		acc.portLocation(adapterClass1, PortLocation.SOUTHWEST);
-//		acc.analysisComplete();
-//		assertTrue(hdm.getErrors().contains("cannot assign locations se and sw to adapter " + adapterClass1.getName()));
-//		HexData hd = hdm.getHexagons().get(0);
-//		assertEquals(1, hd.getPorts().size());
-//		PortData pd = hd.getPorts().get(0);
-//		assertEquals(PortLocation.SOUTHEAST, pd.getLocation());
-	}
-	*/
-
 	@Test
 	public void testWeCannotSpecifyTwoAdaptersInTheSamePortLocation() {
 		context.checking(new Expectations() {{
@@ -259,29 +229,20 @@ public class AdapterAccumulationTests {
 		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass1, portClass2, null, adapterClass2), tests);
 		acc.analysisComplete(bcd);
 	}
-
-	/* TODO: If these tests are relevant at all, they are relevant somewhere else
+	
 	@Test
-	public void testWeCreateABarForTheAdapterTestsToDisplayIn() {
-		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
-		acc.analysisComplete();
-		assertEquals(1, hdm.getHexagons().get(0).getPorts().get(0).getAdapters().size());
+	public void weCannotBindTheSameAdapterToTwoDifferentPorts() {
+		context.checking(new Expectations() {{
+			oneOf(errors).error("cannot bind adapter java.lang.Exception to both java.lang.Float and java.lang.Long"); inSequence(seq);
+			oneOf(solution).beginAnalysis(); inSequence(seq);
+			oneOf(solution).hex(with(hm1)); inSequence(seq);
+			oneOf(solution).port(PortLocation.NORTHWEST, portClass1.getName()); inSequence(seq);
+			oneOf(solution).adapter(adapterClass1.getName()); inSequence(seq);
+			oneOf(solution).analysisDone(bcd); inSequence(seq);
+		}});
+		acc.clean(grp);
+		acc.haveTestClass(grp, "TestCase1", new AdapterRole(hexClass1, portClass1, null, adapterClass1), tests);
+		acc.haveTestClass(grp, "TestCase2", new AdapterRole(hexClass1, portClass2, null, adapterClass1), tests);
+		acc.analysisComplete(bcd);
 	}
-
-	@Test
-	public void testTheAdapterBarHasTheRightName() {
-		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
-		acc.analysisComplete();
-		assertEquals(adapterClass1.getName(), hdm.getHexagons().get(0).getPorts().get(0).getAdapters().get(0).getName());
-	}
-
-	@Test
-	public void testWeGroupMultipleTestsIntoASingleBarForTheSameAdapter() {
-		acc.adapter(grp, testCase1, hexClass1, portClass1, adapterClass1);
-		acc.adapter(grp, testCase2, hexClass1, portClass1, adapterClass1);
-		acc.analysisComplete();
-		assertEquals(1, hdm.getHexagons().get(0).getPorts().get(0).getAdapters().size());
-		assertEquals(2, hdm.getHexagons().get(0).getPorts().get(0).getAdapters().get(0).classesUnderTest().size());
-	}
-	*/
 }

@@ -65,7 +65,7 @@ public class TestErrorDisplayCase {
 		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		assertTrue(t.isVisible());
 		assertEquals(2, t.columnCount());
-		assertEquals(4, t.rowCount());
+		assertEquals(3, t.rowCount());
 	}
 	
 	@Test
@@ -73,15 +73,16 @@ public class TestErrorDisplayCase {
 		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		boolean found = false;
 		for (int i=0;i<t.rowCount();i++) {
-			if (t.cell(i, 1).equals("there is a cycle between com.gmmapowell.swimlane.sample.code.Hexagon2 and com.gmmapowell.swimlane.sample.code.Hexagon3")) {
+			if (t.cell(i, 1).equals("there is no ordering between com.gmmapowell.swimlane.sample.code.Hexagon2 and com.gmmapowell.swimlane.sample.code.Hexagon3")) {
 				found = true;
 				break;
 			} else
 				System.out.println(t.cell(i, 1));
 		}
-		assertTrue("did not find cycle message", found);
+		assertTrue("did not find no ordering message", found);
 	}
 	
+	/* This does not come up because we don't process the second location because of the port error (2c)
 	@Test
 	public void step02b_checkForLocationProblemMessage() {
 		SWTBotTable t = bot.tableWithId("swimlane.errors");
@@ -95,13 +96,14 @@ public class TestErrorDisplayCase {
 		}
 		assertTrue("did not find location message", found);
 	}
+	*/
 	
 	@Test
 	public void step02c_checkForAdapterPortError() {
 		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		boolean found = false;
 		for (int i=0;i<t.rowCount();i++) {
-			if (t.cell(i, 1).equals("cannot bind adapter com.gmmapowell.swimlane.sample.code.Hex1Port1Adapter1 to both com.gmmapowell.swimlane.sample.code.Hex2Port1 and com.gmmapowell.swimlane.sample.code.Hex1Port1")) {
+			if (t.cell(i, 1).equals("cannot bind adapter com.gmmapowell.swimlane.sample.code.Hex1Port1Adapter1 to both com.gmmapowell.swimlane.sample.code.Hex1Port1 and com.gmmapowell.swimlane.sample.code.Hex2Port1")) {
 				found = true;
 				break;
 			} else
@@ -124,8 +126,26 @@ public class TestErrorDisplayCase {
 		assertTrue("did not find no annotations message", found);
 	}
 	
+	/* This doesn't actually come up, because we ignore the fact that it exists
 	@Test
-	public void step10_checkWeStillHaveFourAfterAnotherBuild() {
+	public void step02e_checkForNotBoundError() {
+		SWTBotTable t = bot.tableWithId("swimlane.errors");
+		boolean found = false;
+		for (int i=0;i<t.rowCount();i++) {
+			if (t.cell(i, 1).equals("port com.gmmapowell.swimlane.sample.code.Hex2Port1 was not bound to a hexagon")) {
+				found = true;
+				break;
+			} else
+				System.out.println(t.cell(i, 1));
+		}
+		assertTrue("did not find not bound message", found);
+	}
+	*/
+	
+	@Test
+	public void step10_checkWeStillHaveThreeAfterAnotherBuild() throws Exception {
+		// It seems we can already be in a build, which seems odd ...
+		Thread.sleep(2500);
 		startBuildAt = new Date();
 		ext.projectMenu().menu("Build All").click();
 		SWTBotLabel lastBuild = bot.labelWithId("swimlane.lastBuild");
@@ -135,7 +155,7 @@ public class TestErrorDisplayCase {
 		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		assertTrue(t.isVisible());
 		assertEquals(2, t.columnCount());
-		assertEquals(4, t.rowCount());
+		assertEquals(3, t.rowCount());
 	}
 	
 	@AfterClass

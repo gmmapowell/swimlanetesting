@@ -23,6 +23,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.Solution;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestRole;
 import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
 import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
+import com.gmmapowell.swimlane.eclipse.roles.UnlabelledTestRole;
 import com.gmmapowell.swimlane.eclipse.utils.ReverseStringOrdering;
 
 public class SolutionCreator implements AnalysisAccumulator {
@@ -63,6 +64,8 @@ public class SolutionCreator implements AnalysisAccumulator {
 			collectUtilityInfo(c, (UtilityRole)role, tct);
 		else if (role instanceof BusinessRole)
 			collectBusinessLogicInfo(c, (BusinessRole)role, tct);
+		else if (role instanceof UnlabelledTestRole)
+			eh.error(clzName + " has @Test annotations but no swimlane annotations");
 		else {
 			eh.error("cannot handle " + role.getClass());
 			return;
@@ -104,13 +107,14 @@ public class SolutionCreator implements AnalysisAccumulator {
 		cxt.tests.add(tct);
 		String port = role.getPort();
 		if (port != null) {
-			cxt.addPort(port);
-			if (!c.ports.containsKey(port))
-				c.ports.put(port, new PortConstraints());
-			PortConstraints pc = c.ports.get(port);
-			pc.addHex(role.getHex());
-			pc.addLocation(role.getLocation());
-			pc.adapters.add(adapter);
+			if (cxt.addPort(port)) { // only define it for the first port it's associated with ...
+				if (!c.ports.containsKey(port))
+					c.ports.put(port, new PortConstraints());
+				PortConstraints pc = c.ports.get(port);
+				pc.addHex(role.getHex());
+				pc.addLocation(role.getLocation());
+				pc.adapters.add(adapter);
+			}
 		}
 	}
 
@@ -313,13 +317,32 @@ public class SolutionCreator implements AnalysisAccumulator {
 				}
 				if (c.ports.isEmpty())
 					eh.error("did not bind adapter " + e.getKey() + " to a port");
-				else if (hi != null) {
-					// copy over the tests
-					PortTracker pt = hi.getPort(c.ports.iterator().next());
-					if (pt != null) {
-						for (AdapterTracker at : pt.adapters) {
-							if (at.name.equals(e.getKey())) {
-								at.tests.addAll(c.tests);
+				else {
+					if (c.ports.size() > 1) {
+						StringBuilder sb = new StringBuilder("cannot bind adapter ");
+						sb.append(e.getKey());
+						sb.append(" to ");
+						if (c.ports.size() == 2)
+							sb.append("both ");
+						String sep = ",";
+						int q = c.ports.size();
+						for (String s : c.ports) {
+							sb.append(s);
+							if (--q == 1)
+								sep = " and ";
+							if (q > 0)
+								sb.append(sep);
+						}
+						eh.error(sb.toString());
+					}
+					if (hi != null) {
+						// copy over the tests
+						PortTracker pt = hi.getPort(c.ports.iterator().next());
+						if (pt != null) {
+							for (AdapterTracker at : pt.adapters) {
+								if (at.name.equals(e.getKey())) {
+									at.tests.addAll(c.tests);
+								}
 							}
 						}
 					}
@@ -445,9 +468,10 @@ public class SolutionCreator implements AnalysisAccumulator {
 				hexes.add(hex);
 		}
 
-		public void addPort(String port) {
+		public boolean addPort(String port) {
 			if (port != null)
 				ports.add(port);
+			return ports.size() == 1;
 		}
 	}
 
