@@ -80,7 +80,7 @@ public class BarInfoTests {
 		bi.testClass(grp1, "TestClass1", tests1);
 		bi.testClass(grp2, "TestClass2", tests2);
 		bi.testCompleted(new TestCaseInfo(grp1, "TestClass1", "case1"));
-		bi.testCompleted(new TestCaseInfo(grp1, "TestClass2", "case3", stack, expected, actual));
+		bi.testCompleted(new TestCaseInfo(grp2, "TestClass2", "case3", stack, expected, actual));
 		assertEquals("Utility - 2 groups; 1 passed, 1 failed", bi.getTooltip("utility"));
 	}
 	
@@ -130,5 +130,45 @@ public class BarInfoTests {
 		bi.testCompleted(new TestCaseInfo(grp1, "TestClass1", "case2", stack));
 		bi.testCompleted(new TestCaseInfo(grp2, "TestClass2", "case3", stack, expected, actual));
 		assertEquals("Adapter - 2 groups; 1 passed, 1 failed, 1 error", bi.getTooltip("adapter.0.nw.0"));
+	}
+
+	@Test
+	public void theTooltipIsTidiedUpWhenWeResetTheTooltipOnClearGroupOfOneError() {
+		BarInfo bi = new BarInfo();
+		bi.testClass(grp1, "TestClass1", tests1);
+		bi.testClass(grp2, "TestClass2", tests2);
+		bi.testCompleted(new TestCaseInfo(grp1, "TestClass1", "case1"));
+		bi.testCompleted(new TestCaseInfo(grp1, "TestClass1", "case2", stack));
+		bi.testCompleted(new TestCaseInfo(grp2, "TestClass2", "case3", stack, expected, actual));
+		assertEquals("Utility - 2 groups; 1 passed, 1 failed, 1 error", bi.getTooltip("utility"));
+		bi.clearGroup(grp2); // reset the failure
+		assertEquals("Utility - 2 groups; 1 passed, 1 error", bi.getTooltip("utility"));
+	}
+	
+	@Test
+	public void theTooltipIsTidiedUpWhenWeResetTheTooltipOnClearGroupOfASuccessAndFail() {
+		BarInfo bi = new BarInfo();
+		bi.testClass(grp1, "TestClass1", tests1);
+		bi.testClass(grp2, "TestClass2", tests2);
+		bi.testCompleted(new TestCaseInfo(grp1, "TestClass1", "case1"));
+		bi.testCompleted(new TestCaseInfo(grp1, "TestClass1", "case2", stack));
+		bi.testCompleted(new TestCaseInfo(grp2, "TestClass2", "case3", stack, expected, actual));
+		assertEquals("Utility - 2 groups; 1 passed, 1 failed, 1 error", bi.getTooltip("utility"));
+		bi.clearGroup(grp1); // reset the success & error
+		assertEquals("Utility - 2 groups; 1 failed", bi.getTooltip("utility"));
+	}
+	
+	@Test
+	public void theTooltipIsClearedWhenWeResetTheTooltipOnClearGroupOfASuccessAndFail() {
+		BarInfo bi = new BarInfo();
+		bi.testClass(grp1, "TestClass1", tests1);
+		bi.testClass(grp2, "TestClass2", tests2);
+		bi.testCompleted(new TestCaseInfo(grp1, "TestClass1", "case1"));
+		bi.testCompleted(new TestCaseInfo(grp1, "TestClass1", "case2", stack));
+		bi.testCompleted(new TestCaseInfo(grp2, "TestClass2", "case3", stack, expected, actual));
+		assertEquals("Utility - 2 groups; 1 passed, 1 failed, 1 error", bi.getTooltip("utility"));
+		bi.clearGroup(grp1); // reset the success & error
+		bi.clearGroup(grp2); // reset the failure
+		assertEquals("Utility - 2 groups", bi.getTooltip("utility"));
 	}
 }
