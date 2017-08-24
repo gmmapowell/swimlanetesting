@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
+import com.gmmapowell.swimlane.eclipse.interfaces.ShowErrorsPane;
 
 // An object that combines the business logic of being aware of the idea of tests
 // with the graphical display of painting them
@@ -24,7 +25,7 @@ public class BarControl implements BarDataListener, PaintListener {
 	private BarData barData;
 	private String name;
 
-	public BarControl(Composite view, String name /*, BarData bar, String type, String barId */) {
+	public BarControl(Composite view, String name, ShowErrorsPane showErrors) {
 		this.name = name;
 //		this.type = type;
 		canvas = new Canvas(view, SWT.NONE);
@@ -35,8 +36,7 @@ public class BarControl implements BarDataListener, PaintListener {
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				// TODO: fix this
-//				dispatcher.barClicked(barId.substring("swimlane.".length()));
+				showErrors.showFor(name);
 			}
 		});
 //		bpl = new BarPaintListener(canvas, bar);

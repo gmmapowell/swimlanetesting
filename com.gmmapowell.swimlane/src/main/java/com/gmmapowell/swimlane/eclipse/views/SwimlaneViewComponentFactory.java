@@ -19,7 +19,7 @@ public class SwimlaneViewComponentFactory implements ViewComponentFactory {
 
 	@Override
 	public BarControl bar(Composite view, String name) {
-		BarControl ret = new BarControl(view, name);
+		BarControl ret = new BarControl(view, name, null);
 		return ret;
 	}
 }

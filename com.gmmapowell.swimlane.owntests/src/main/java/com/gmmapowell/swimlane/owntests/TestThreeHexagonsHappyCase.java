@@ -73,7 +73,7 @@ public class TestThreeHexagonsHappyCase {
 	public void step02_testThatItFoundTheAcceptanceBar() throws Exception {
 		System.out.println(new Date() + "Waiting for canvas");
 		try {
-			SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
+			SWTBotCanvas acc123 = bot.canvasWithId("swimlane.bar.acceptance.111");
 			assertTrue(acc123.isVisible());
 			Point ws = ext.getSize(acc123.widget);
 			ext.assertPct(ws.x, viewSize.x, 95, 100);
@@ -185,7 +185,7 @@ public class TestThreeHexagonsHappyCase {
 	
 	@Test
 	public void step31_clickAcc123ToMoveToTestResults() {
-		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.acceptance.111");
+		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.bar.acceptance.111");
 		acc123.click();
 		bot.getDisplay().syncExec(new Runnable() {
 			@Override
@@ -210,8 +210,8 @@ public class TestThreeHexagonsHappyCase {
 				} catch (WidgetNotFoundException ex) {
 				}
 				try {
-					bot.canvasWithId("swimlane.acceptance.111");
-					fail("Should not have found hexagons.acceptance.111");
+					bot.canvasWithId("swimlane.bar.acceptance.111");
+					fail("Should not have found swimlance.bar.acceptance.111");
 				} catch (WidgetNotFoundException ex) {
 				}
 			}

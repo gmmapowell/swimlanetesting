@@ -16,7 +16,7 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 	@Test
 	public void testTheBarCanBeRedrawnProgressivelyMoreGreen() throws Exception {
 		shell.setLayout(new GridLayout(1, false));
-		BarControl bar = new BarControl(shell, "anybar");
+		BarControl bar = new BarControl(shell, "anybar", null);
 		bar.getCanvas().setLayoutData(new GridData(590, 6));
 		bar.getCanvas().setSize(590, 6);
 		displayHelper.flushPendingEvents();
@@ -74,7 +74,7 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 	@Test
 	public void testTheBarCanChangeFromGreenToRed() throws Exception {
 		shell.setLayout(new GridLayout(1, false));
-		BarControl bar = new BarControl(shell, "anybar");
+		BarControl bar = new BarControl(shell, "anybar", null);
 		bar.getCanvas().setLayoutData(new GridData(590, 6));
 		bar.getCanvas().setSize(590, 6);
 		displayHelper.flushPendingEvents();
@@ -122,7 +122,7 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 	@Test
 	public void testTheBarCanCopeWithNewTestsAppearing() throws Exception {
 		shell.setLayout(new GridLayout(1, false));
-		BarControl bar = new BarControl(shell, "anybar");
+		BarControl bar = new BarControl(shell, "anybar", null);
 		bar.getCanvas().setLayoutData(new GridData(590, 6));
 		bar.getCanvas().setSize(590, 6);
 		displayHelper.flushPendingEvents();
