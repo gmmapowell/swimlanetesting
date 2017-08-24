@@ -1,11 +1,13 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
@@ -21,9 +23,10 @@ public class BarInfo implements BarData, UpdateBar {
 		int total;
 		int completed;
 		int passed, failed, errors;
+		Map<String, Set<TestCaseInfo>> cases = new TreeMap<>();
 	}
 	protected ConsolidatedState currentState = new ConsolidatedState();
-	protected final Map<GroupOfTests, ConsolidatedState> groups = new HashMap<>();
+	protected final Map<GroupOfTests, ConsolidatedState> groups = new TreeMap<>();
 	protected final Set<BarDataListener> lsnrs = new HashSet<>();
 
 	@Override
@@ -116,6 +119,9 @@ public class BarInfo implements BarData, UpdateBar {
 		if (!groups.containsKey(grp))
 			groups.put(grp, new ConsolidatedState());
 		ConsolidatedState cs = groups.get(grp);
+		if (!cs.cases.containsKey(ti.classUnderTest()))
+			cs.cases.put(ti.classUnderTest(), new TreeSet<TestCaseInfo>());
+		cs.cases.get(ti.classUnderTest()).add(ti);
 		cs.completed++;
 		cs.state = cs.state.merge(ti.outcome());
 		switch (ti.outcome()) {
@@ -140,8 +146,14 @@ public class BarInfo implements BarData, UpdateBar {
 	
 	@Override
 	public void traverseTree(GroupTraverser traverser) {
-		// TODO Auto-generated method stub
-		
+		for (Entry<GroupOfTests, ConsolidatedState> grp : groups.entrySet()) {
+			traverser.group(grp.getKey());
+			for (Entry<String, Set<TestCaseInfo>> clz : grp.getValue().cases.entrySet()) {
+				traverser.testClass(clz.getKey());
+				for (TestCaseInfo tci : clz.getValue())
+					traverser.testCase(tci);
+			}
+		}
 	}
 
 	private State consolidate(Collection<ConsolidatedState> values) {

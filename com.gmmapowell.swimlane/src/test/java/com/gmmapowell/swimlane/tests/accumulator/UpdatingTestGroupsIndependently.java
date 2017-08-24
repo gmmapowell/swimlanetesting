@@ -52,6 +52,10 @@ public class UpdatingTestGroupsIndependently {
 		testsForClass3.add("case6");
 
 		context.checking(new Expectations() {{
+			allowing(grp1).compareTo(grp1); will(returnValue(0));
+			allowing(grp2).compareTo(grp1); will(returnValue(1));
+			allowing(grp1).compareTo(grp2); will(returnValue(-1));
+			allowing(grp2).compareTo(grp2); will(returnValue(0));
 			allowing(grp1).addTest("TestClass1");
 			allowing(grp2).addTest("TestClass2");
 			allowing(grp1).addTest("TestClass3");

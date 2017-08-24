@@ -40,6 +40,7 @@ public class UpdatingRealTimeTestResultInfo {
 		testsForClass1.add("case2");
 		testsForClass1.add("case3");
 		context.checking(new Expectations() {{
+			allowing(grp).compareTo(grp); will(returnValue(0));
 			allowing(grp).addTest("Acc");
 			allowing(grp).addTest("TestClass1");
 			allowing(grp).addTest("TestClass2");

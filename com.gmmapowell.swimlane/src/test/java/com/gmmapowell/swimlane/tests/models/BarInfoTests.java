@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Before;
 import org.junit.Rule;
@@ -29,6 +30,12 @@ public class BarInfoTests {
 
 	@Before
 	public void setup() {
+		context.checking(new Expectations() {{
+			allowing(grp1).compareTo(grp1); will(returnValue(0));
+			allowing(grp2).compareTo(grp1); will(returnValue(1));
+			allowing(grp1).compareTo(grp2); will(returnValue(-1));
+			allowing(grp2).compareTo(grp2); will(returnValue(0));
+		}});
 		tests1.add("case1");
 		tests1.add("case2");
 		tests2.add("case3");

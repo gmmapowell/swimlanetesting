@@ -75,7 +75,7 @@ public class TestASimpleCase extends BaseResultsViewTest {
 		}});
 		trv.group(grp);
 		trv.testClass(tc1);
-		trv.testCase("case1", tci);
+		trv.testCase(tci);
 		Tree tree = waitForControl(shell, "swimlane.casesTree");
 		assertEquals(1, tree.getItemCount());
 		TreeItem groupItem = tree.getItem(0);

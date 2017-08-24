@@ -1,6 +1,6 @@
 package com.gmmapowell.swimlane.eclipse.interfaces;
 
-public interface GroupOfTests {
+public interface GroupOfTests extends Comparable<GroupOfTests> {
 	String groupName();
 	String[] getClasses();
 	String getClassPath();

@@ -66,7 +66,7 @@ public class TestResultsView implements GroupTraverser {
 	}
 
 	@Override
-	public void testCase(String string, TestInfo tci) {
+	public void testCase(TestInfo tci) {
 		TreeItem item = new TreeItem(currentTest, SWT.NONE);
 		item.setText(tci.testName());
 	}

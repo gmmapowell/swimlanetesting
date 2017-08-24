@@ -41,6 +41,11 @@ public class TestGroup implements GroupOfTests {
 	}
 
 	@Override
+	public int compareTo(GroupOfTests o) {
+		return name.compareTo(o.groupName());
+	}
+
+	@Override
 	public String toString() {
 		return "Group[" + name + "]";
 	}
