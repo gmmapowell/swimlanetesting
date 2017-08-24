@@ -19,6 +19,7 @@ public class BarInfo implements BarData, UpdateBar {
 		State state = State.SUCCESS;
 		int total;
 		int completed;
+		int passed, failed, errors;
 	}
 	protected ConsolidatedState currentState = new ConsolidatedState();
 	protected final Map<GroupOfTests, ConsolidatedState> groups = new HashMap<>();
@@ -62,25 +63,26 @@ public class BarInfo implements BarData, UpdateBar {
 			sb.append(" group");
 			if (groups.size() > 1)
 				sb.append("s");
-			/*
-			sb.append("; ");
-			sb.append(passed);
-			sb.append(" passed");
-			if (failed > 0) {
-				sb.append(", ");
-				sb.append(failed);
-				sb.append(" failure");
-				if (failed != 1)
-					sb.append("s");
+			String sep = "; ";
+			if (currentState.passed > 0) {
+				sb.append(sep);
+				sb.append(currentState.passed);
+				sb.append(" passed");
+				sep = ", ";
 			}
-			if (errors > 0) {
-				sb.append(", ");
-				sb.append(errors);
+			if (currentState.failed > 0) {
+				sb.append(sep);
+				sb.append(currentState.failed);
+				sb.append(" failed");
+				sep = ", ";
+			}
+			if (currentState.errors > 0) {
+				sb.append(sep);
+				sb.append(currentState.errors);
 				sb.append(" error");
-				if (errors != 1)
+				if (currentState.errors != 1)
 					sb.append("s");
 			}
-			 */
 		}
 		return sb.toString();
 	}
@@ -112,6 +114,20 @@ public class BarInfo implements BarData, UpdateBar {
 		ConsolidatedState cs = groups.get(grp);
 		cs.completed++;
 		cs.state = cs.state.merge(ti.outcome());
+		switch (ti.outcome()) {
+		case SUCCESS:
+			cs.passed++;
+			currentState.passed++;
+			break;
+		case FAILURE:
+			cs.failed++;
+			currentState.failed++;
+			break;
+		case ERROR:
+			cs.errors++;
+			currentState.errors++;
+			break;
+		}
 		currentState.completed++;
 		currentState.state = currentState.state.merge(ti.outcome());
 		for (BarDataListener lsnr : lsnrs)
@@ -126,26 +142,16 @@ public class BarInfo implements BarData, UpdateBar {
 	}
 
 	private String typeName(String barid) {
-		if (barid.startsWith("acceptance."))
+		if (barid.startsWith("business."))
+			return "Business";
+		else if (barid.startsWith("adapter."))
+			return "Adapter";
+		else if (barid.startsWith("acceptance."))
 			return "Acceptance";
+		else if (barid.equals("utility"))
+			return "Utility";
 		else 
 			return barid;
-		/*
-		switch (barid) {
-		case "accbar":
-		case "utebar":
-			return "Utilities";
-		case "businessbar":
-		case "adapterbar":
-		{
-			String bn = name;
-			if (bn == null)
-				return null;
-			return bn.substring(bn.lastIndexOf('.')+1);
-		}
-		default:
-		}
-		*/
 	}
 
 	@Override
