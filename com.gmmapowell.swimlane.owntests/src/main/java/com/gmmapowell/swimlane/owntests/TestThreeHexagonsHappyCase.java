@@ -264,7 +264,7 @@ public class TestThreeHexagonsHappyCase {
 	@Test
 	public void step40_testAdapterHasAFailure() {
 		SWTBotCanvas adapter = bot.canvasWithId("swimlane.bar.adapter.0.nw.0");
-		assertEquals("Hex1Port1Adapter1 - 1 group; 0 passed, 1 failure", adapter.getToolTipText());
+		assertEquals("Adapter - 1 group; 1 failed", adapter.getToolTipText());
 	}
 
 	@Test
