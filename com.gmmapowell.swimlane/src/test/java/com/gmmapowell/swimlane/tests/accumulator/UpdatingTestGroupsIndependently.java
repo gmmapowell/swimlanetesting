@@ -20,6 +20,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.TestResultReporter;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 import com.gmmapowell.swimlane.testsupport.CaptureLayout;
 import com.gmmapowell.swimlane.testsupport.DirectRunner;
+import com.gmmapowell.swimlane.testsupport.matchers.BarInfoMatcher;
 
 public class UpdatingTestGroupsIndependently {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();

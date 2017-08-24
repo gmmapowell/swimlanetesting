@@ -29,6 +29,7 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 			allowing(bi).isPassing(); will(returnValue(true));
 			allowing(bi).getTotal(); will(returnValue(10));
 			allowing(bi).getComplete(); will(returnValue(0)); when(progress.is("t0"));
+			allowing(bi).getTooltip("anybar");
 		}});
 		bar.barChanged(bi);
 
@@ -86,6 +87,7 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 			allowing(bi).isPassing(); will(returnValue(true)); when(progress.is("green"));
 			allowing(bi).getTotal(); will(returnValue(10));
 			allowing(bi).getComplete(); will(returnValue(0)); when(progress.is("green"));
+			allowing(bi).getTooltip("anybar");
 		}});
 		bar.barChanged(bi);
 
@@ -133,6 +135,7 @@ public class RunningTestsCanUpdateBars extends BaseViewTest {
 			allowing(bi).isPassing(); will(returnValue(true));
 			allowing(bi).getTotal(); will(returnValue(10)); when(progress.is("before"));
 			allowing(bi).getComplete(); will(returnValue(5));
+			allowing(bi).getTooltip("anybar");
 		}});
 		bar.barChanged(bi);
 

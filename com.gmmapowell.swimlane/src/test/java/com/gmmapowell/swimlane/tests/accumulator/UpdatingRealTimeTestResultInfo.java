@@ -23,6 +23,7 @@ import com.gmmapowell.swimlane.eclipse.roles.AcceptanceRole;
 import com.gmmapowell.swimlane.eclipse.roles.AdapterRole;
 import com.gmmapowell.swimlane.testsupport.CaptureLayout;
 import com.gmmapowell.swimlane.testsupport.DirectRunner;
+import com.gmmapowell.swimlane.testsupport.matchers.BarInfoMatcher;
 
 public class UpdatingRealTimeTestResultInfo {
 	@Rule public JUnitRuleMockery context = new JUnitRuleMockery();

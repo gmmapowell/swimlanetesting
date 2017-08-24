@@ -15,8 +15,8 @@ import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewLayout;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel.SolutionHelper;
-import com.gmmapowell.swimlane.tests.accumulator.BarInfoMatcher;
 import com.gmmapowell.swimlane.testsupport.DirectRunner;
+import com.gmmapowell.swimlane.testsupport.matchers.BarInfoMatcher;
 
 // This just tests everything from a "standing" start ...
 public class SolutionCreationInitialTests {

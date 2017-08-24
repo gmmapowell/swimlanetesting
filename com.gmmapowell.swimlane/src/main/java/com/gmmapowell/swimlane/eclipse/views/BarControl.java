@@ -8,6 +8,8 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
@@ -15,12 +17,15 @@ import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 // An object that combines the business logic of being aware of the idea of tests
 // with the graphical display of painting them
 public class BarControl implements BarDataListener, PaintListener {
+	private final static Logger logger = LoggerFactory.getLogger("BarControl");
 //	private final String type;
 	private final Canvas canvas;
 //	private final BarPaintListener bpl;
 	private BarData barData;
+	private String name;
 
 	public BarControl(Composite view, String name /*, BarData bar, String type, String barId */) {
+		this.name = name;
 //		this.type = type;
 		canvas = new Canvas(view, SWT.NONE);
 //		canvas.setData("com.gmmapowell.swimlane.type", type);
@@ -47,10 +52,22 @@ public class BarControl implements BarDataListener, PaintListener {
 	@Override
 	public void barChanged(BarData updated) {
 		this.barData = updated;
-		canvas.getDisplay().asyncExec(() -> canvas.redraw());
+		canvas.getDisplay().asyncExec(() -> updateBarInDisplayThread());
+	}
+
+	private void updateBarInDisplayThread() {
+		boolean vis = barData != null && barData.getTotal() > 0;
+		canvas.setVisible(vis);
+		logger.info("Setting bar " + name + " visibility to " + vis);
+		if (vis) {
+			String tooltip = barData.getTooltip(name);
+			logger.info("Setting bar " + name + " tooltip to " + tooltip);
+			canvas.setToolTipText(tooltip);
+		}
+		canvas.redraw();
 	}
 	
-	// This is public because we currently can't test the actual drawing, so we test these instead
+	// Thiese are public because we currently can't test the actual drawing, so we test these instead
 	public int total() {
 		return canvas.getSize().x;
 	}
@@ -190,25 +207,6 @@ public class BarControl implements BarDataListener, PaintListener {
 			}
 
 		});
-	}
-
-	private String typeName() {
-		switch (type) {
-		case "accbar":
-			return "Acceptance";
-		case "utebar":
-			return "Utilities";
-		case "businessbar":
-		case "adapterbar":
-		{
-			String bn = bpl.getBarName();
-			if (bn == null)
-				return null;
-			return bn.substring(bn.lastIndexOf('.')+1);
-		}
-		default:
-			return type;
-		}
 	}
 	 */
 }

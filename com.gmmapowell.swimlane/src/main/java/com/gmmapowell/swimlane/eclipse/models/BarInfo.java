@@ -24,9 +24,6 @@ public class BarInfo implements BarData, UpdateBar {
 	protected final Map<GroupOfTests, ConsolidatedState> groups = new HashMap<>();
 	protected final Set<BarDataListener> lsnrs = new HashSet<>();
 
-	public BarInfo() {
-	}
-
 	@Override
 	public void addTestListener(BarDataListener lsnr) {
 		lsnrs.add(lsnr);
@@ -50,6 +47,42 @@ public class BarInfo implements BarData, UpdateBar {
 	@Override
 	public int getComplete() {
 		return currentState.completed;
+	}
+
+	@Override
+	public String getTooltip(String barid) {
+		StringBuilder sb = new StringBuilder();
+		String tn = typeName(barid);
+		if (tn != null) {
+			sb.append(tn);
+		}
+		if (!groups.isEmpty()) {
+			sb.append(" - ");
+			sb.append(groups.size());
+			sb.append(" group");
+			if (groups.size() > 1)
+				sb.append("s");
+			/*
+			sb.append("; ");
+			sb.append(passed);
+			sb.append(" passed");
+			if (failed > 0) {
+				sb.append(", ");
+				sb.append(failed);
+				sb.append(" failure");
+				if (failed != 1)
+					sb.append("s");
+			}
+			if (errors > 0) {
+				sb.append(", ");
+				sb.append(errors);
+				sb.append(" error");
+				if (errors != 1)
+					sb.append("s");
+			}
+			 */
+		}
+		return sb.toString();
 	}
 
 	@Override
@@ -90,6 +123,29 @@ public class BarInfo implements BarData, UpdateBar {
 		for (ConsolidatedState cs : values)
 			ret = ret.merge(cs.state);
 		return ret;
+	}
+
+	private String typeName(String barid) {
+		if (barid.startsWith("acceptance."))
+			return "Acceptance";
+		else 
+			return barid;
+		/*
+		switch (barid) {
+		case "accbar":
+		case "utebar":
+			return "Utilities";
+		case "businessbar":
+		case "adapterbar":
+		{
+			String bn = name;
+			if (bn == null)
+				return null;
+			return bn.substring(bn.lastIndexOf('.')+1);
+		}
+		default:
+		}
+		*/
 	}
 
 	@Override

@@ -121,7 +121,7 @@ public class TestThreeHexagonsHappyCase {
 	@Test
 	public void step11_testThatTheAcceptanceBarIsNowGreen() {
 		ext.dumpActiveShell();
-		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.bar.acceptance.1");
+		SWTBotCanvas acc123 = bot.canvasWithId("swimlane.bar.acceptance.111");
 		assertTrue(acc123.isVisible());
 		Point ws = ext.getSize(acc123.widget);
 		ext.assertColor(acc123, SWT.COLOR_GREEN, ws.x/2, ws.y/2);

@@ -1,4 +1,4 @@
-package com.gmmapowell.swimlane.tests.accumulator;
+package com.gmmapowell.swimlane.testsupport.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;

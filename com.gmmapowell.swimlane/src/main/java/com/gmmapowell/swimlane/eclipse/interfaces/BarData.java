@@ -5,4 +5,5 @@ public interface BarData {
 	int getTotal();
 	int getComplete();
 	boolean isPassing();
+	String getTooltip(String name);
 }
