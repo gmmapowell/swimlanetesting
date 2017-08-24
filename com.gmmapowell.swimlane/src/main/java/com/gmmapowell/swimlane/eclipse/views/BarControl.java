@@ -36,7 +36,8 @@ public class BarControl implements BarDataListener, PaintListener {
 		canvas.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				showErrors.showFor(name);
+				if (barData != null)
+					showErrors.showFor(barData);
 			}
 		});
 //		bpl = new BarPaintListener(canvas, bar);

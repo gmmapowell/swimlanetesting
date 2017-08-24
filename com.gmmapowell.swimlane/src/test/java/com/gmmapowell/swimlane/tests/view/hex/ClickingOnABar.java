@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Event;
 import org.jmock.Expectations;
 import org.junit.Test;
 
+import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.ShowErrorsPane;
 import com.gmmapowell.swimlane.eclipse.views.BarControl;
 
@@ -13,19 +14,16 @@ public class ClickingOnABar extends BaseViewTest {
 	public void testWeCanClickOnABar() throws Exception {
 		String barId = "bar.to.show";
 		ShowErrorsPane sep = context.mock(ShowErrorsPane.class);
+		BarData bar = context.mock(BarData.class);
 		context.checking(new Expectations() {{
-			oneOf(sep).showFor(barId);
-//			allowing(bar).getId(); will(returnValue(barId));
-//			allowing(bar).getPassed(); will(returnValue(4));
-//			allowing(bar).getFailures(); will(returnValue(1));
-//			allowing(bar).getTotal(); will(returnValue(6));
-//			allowing(bar).getComplete(); will(returnValue(5));
-//			allowing(bar).getStatus(); will(returnValue(Status.OK));
-//			allowing(bar).getMarks(); will(returnValue(new int[] { 1 }));
-//			allowing(md).addBarListener(with(bar), with(aNonNull(BarDataListener.class)));
-//			oneOf(md).barClicked(barId);
+			allowing(bar).isPassing(); will(returnValue(true));
+			allowing(bar).getComplete(); will(returnValue(5));
+			allowing(bar).getTotal(); will(returnValue(6));
+			allowing(bar).getTooltip(barId); will(returnValue("tooltip"));
+			oneOf(sep).showFor(bar);
 		}});
 		BarControl bc = new BarControl(shell, barId, sep);
+		bc.barChanged(bar);
 		bc.getCanvas().setBounds(0, 10, shell.getSize().x, 6);
 		bc.getCanvas().notifyListeners(SWT.MouseUp, new Event());
 		updateShell();

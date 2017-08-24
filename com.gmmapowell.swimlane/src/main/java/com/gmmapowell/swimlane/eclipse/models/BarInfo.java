@@ -10,6 +10,7 @@ import java.util.Set;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.BarDataListener;
 import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupTraverser;
 import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo.State;
 import com.gmmapowell.swimlane.eclipse.interfaces.UpdateBar;
 import com.gmmapowell.swimlane.eclipse.testrunner.TestCaseInfo;
@@ -137,6 +138,12 @@ public class BarInfo implements BarData, UpdateBar {
 			lsnr.barChanged(this);
 	}
 	
+	@Override
+	public void traverseTree(GroupTraverser traverser) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private State consolidate(Collection<ConsolidatedState> values) {
 		State ret = State.SUCCESS;
 		for (ConsolidatedState cs : values)

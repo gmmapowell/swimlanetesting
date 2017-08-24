@@ -6,4 +6,5 @@ public interface BarData {
 	int getComplete();
 	boolean isPassing();
 	String getTooltip(String name);
+	void traverseTree(GroupTraverser traverser);
 }

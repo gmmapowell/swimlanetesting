@@ -14,6 +14,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import com.gmmapowell.swimlane.eclipse.RealEclipseAbstractor;
 import com.gmmapowell.swimlane.eclipse.analyzer.HexagonTestAnalyzer;
+import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
 import com.gmmapowell.swimlane.eclipse.interfaces.CommandDispatcher;
 import com.gmmapowell.swimlane.eclipse.models.ErrorCollector;
 import com.gmmapowell.swimlane.eclipse.models.SwimlaneModel;
@@ -86,12 +87,12 @@ public class SwimlaneViewPart extends ViewPart implements CommandDispatcher {
 	}
 
 	@Override
-	public void showTestResults(String id) {
+	public void showTestResults(BarData bar) {
 		// TDA this ...
 		stack.topControl = testResults.getTop();
 		stackUI.layout();
-		if (id != null) // only update the current test results flag if something valid
-			testResults.resultsFor(id);
+		if (bar != null) // only update the current test results flag if something valid
+			testResults.resultsFor(bar);
 		testResults.updateDisplay();
 	}
 

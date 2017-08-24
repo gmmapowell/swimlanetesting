@@ -7,12 +7,20 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 
-public class TestResultsView {
+import com.gmmapowell.swimlane.eclipse.interfaces.BarData;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupOfTests;
+import com.gmmapowell.swimlane.eclipse.interfaces.GroupTraverser;
+import com.gmmapowell.swimlane.eclipse.interfaces.TestInfo;
+
+public class TestResultsView implements GroupTraverser {
 	private final Composite view;
 	private final Tree tree;
 	private final Table table;
-	private String resultsFor;
+	private BarData resultsFor;
+	private TreeItem currentGroup;
+	private TreeItem currentTest;
 
 	public TestResultsView(Composite parent) {
 		view = new Composite(parent, SWT.NONE);
@@ -26,10 +34,9 @@ public class TestResultsView {
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
 
-	public void resultsFor(String id) {
-		throw new RuntimeException("not implemented");
-//		this.resultsFor = id;
-//		updateDisplay();
+	public void resultsFor(BarData bar) {
+		this.resultsFor = bar;
+		view.getDisplay().asyncExec(() -> updateDisplay());
 	}
 
 	public Control getTop() {
@@ -37,31 +44,30 @@ public class TestResultsView {
 	}
 
 	protected void updateDisplay() {
-		throw new RuntimeException("not implemented");
-		/*
-		view.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				tree.removeAll();
-				table.removeAll();
-				if (resultsFor == null) {
-					System.out.println("resultsFor not set; displaying nothing");
-					return;
-				}
-				Collection<TestResultGroup> groups = model.getTestResultsFor(resultsFor);
-				for (TestResultGroup grp : groups) {
-					TreeItem gi = new TreeItem(tree, SWT.NONE);
-					gi.setText(grp.name());
-					for (TestResultClass clz : grp.testClasses()) {
-						TreeItem ci = new TreeItem(gi, SWT.NONE);
-						ci.setText(clz.className());
-						for (TestInfo test : clz.tests()) {
-							TreeItem ti = new TreeItem(ci, SWT.NONE);
-							ti.setText(test.testName());
-						}
-					}
-				}
-			}
-		});
-		 */
+		tree.removeAll();
+		table.removeAll();
+		if (resultsFor == null) {
+			System.out.println("resultsFor not set; displaying nothing");
+			return;
+		}
+		resultsFor.traverseTree(this);
+	}
+
+	@Override
+	public void group(GroupOfTests grp) {
+		currentGroup = new TreeItem(tree, SWT.NONE);
+		currentGroup.setText(grp.groupName());
+	}
+
+	@Override
+	public void testClass(String testClassName) {
+		currentTest = new TreeItem(currentGroup, SWT.NONE);
+		currentTest.setText(testClassName);
+	}
+
+	@Override
+	public void testCase(String string, TestInfo tci) {
+		TreeItem item = new TreeItem(currentTest, SWT.NONE);
+		item.setText(tci.testName());
 	}
 }
