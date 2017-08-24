@@ -1,6 +1,8 @@
 package com.gmmapowell.swimlane.eclipse.views;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Table;
@@ -14,14 +16,14 @@ public class TestResultsView {
 
 	public TestResultsView(Composite parent) {
 		view = new Composite(parent, SWT.NONE);
-//		view.setLayout(new GridLayout(2, false));
-//		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		view.setLayout(new GridLayout(2, false));
+		view.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		tree = new Tree(view, SWT.BORDER);
 		tree.setData("org.eclipse.swtbot.widget.key", "swimlane.casesTree");
-//		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		tree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		table = new Table(view, SWT.BORDER);
-//		table.setData("org.eclipse.swtbot.widget.key", "swimlane.failure");
-//		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		table.setData("org.eclipse.swtbot.widget.key", "swimlane.failure");
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 	}
 
 	public void resultsFor(String id) {

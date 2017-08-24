@@ -1,14 +1,18 @@
 package com.gmmapowell.swimlane.tests.view.results;
 
-public class TestASimpleCase extends BaseViewTest {
-/*
+import static org.junit.Assert.assertEquals;
+
+import org.eclipse.swt.widgets.Tree;
+import org.junit.Test;
+
+public class TestASimpleCase extends BaseResultsViewTest {
 	@Test
 	public void testThatTheViewCanCopeWithNoChosenResultsBar() throws Exception {
-		specifyModel();
 		Tree tree = waitForControl(shell, "swimlane.casesTree");
 		assertEquals(0, tree.getItemCount());
 	}
 
+	/*
 	@Test
 	public void testThatTheTreeHasOneProject() throws Exception {
 		trv.resultsFor("bar.fred");

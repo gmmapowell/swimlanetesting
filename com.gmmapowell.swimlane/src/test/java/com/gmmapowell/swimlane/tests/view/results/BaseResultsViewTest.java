@@ -8,7 +8,7 @@ import org.junit.Before;
 import com.gmmapowell.swimlane.eclipse.views.TestResultsView;
 import com.gmmapowell.swimlane.tests.swtutil.TestBase;
 
-public abstract class BaseViewTest extends TestBase {
+public abstract class BaseResultsViewTest extends TestBase {
 	public Shell shell;
 	public TestResultsView trv;
 
