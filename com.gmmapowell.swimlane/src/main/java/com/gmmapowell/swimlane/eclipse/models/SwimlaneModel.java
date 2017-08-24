@@ -1,6 +1,7 @@
 package com.gmmapowell.swimlane.eclipse.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,12 +51,20 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		this.sync = sync;
 		this.eh = eh;
 		this.layout = layout;
-		
 	}
+	
+	private boolean justOnce = false;
+	
 	@Override
 	public AnalysisAccumulator startAnalysis(Date startTime) {
+		logger.info("Starting analysis at " + startTime + " with justOnce = " + justOnce);
 		if (currentSolution != null)
 			throw new RuntimeException("I think you are running two analyses at the same time ... don't");
+		if (justOnce) {
+			logger.error("Can't handle re-analysis yet; see TODO list");
+			return null;
+		}
+		justOnce = true;
 		return new SolutionCreator(sync, eh, new SolutionHelper(), constraints);
 	}
 	
@@ -152,6 +161,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 		PortLocation cloc;
 		int apos = 0;
 		UpdateBar currentBar = null;
+		List<String> hexNames = new ArrayList<>();
 		
 		@Override
 		public void beginAnalysis() {
@@ -161,6 +171,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 
 		@Override
 		public void hex(String clzName) {
+			hexNames.add(clzName);
 			BarInfo hi = new BarInfo();
 			chex = SwimlaneModel.this.hexes.size();
 			layout.addHexagon(chex, hi);
@@ -200,8 +211,12 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 
 		@Override
 		public void acceptance(String... hexes) {
+			List<String> mine = Arrays.asList(hexes);
+			int[] mask = new int[this.hexNames.size()];
+			for (int i=0;i<hexNames.size();i++)
+				mask[i] = mine.contains(hexNames.get(i))?1:0;
 			BarInfo acc = new BarInfo();
-			layout.addAcceptance(new int[] { 1 }, acc);
+			layout.addAcceptance(mask, acc);
 			currentBar = acc;			
 		}
 		

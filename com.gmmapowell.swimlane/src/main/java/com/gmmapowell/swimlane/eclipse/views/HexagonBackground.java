@@ -16,6 +16,7 @@ public class HexagonBackground extends LayoutPlacer implements PaintListener {
 //		canvas.setData("com.gmmapowell.swimlane.type", "hexbg");
 //		canvas.setData("com.gmmapowell.swimlane.hex", this);
 		canvas.setData("org.eclipse.swtbot.widget.key", "swimlane.hexbg." + hex);
+		canvas.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_TRANSPARENT));
 		canvas.setLayoutData(this);
 		canvas.addPaintListener(this);
 		canvas.moveBelow(null); // move to bottom of drawing order
@@ -50,6 +51,8 @@ public class HexagonBackground extends LayoutPlacer implements PaintListener {
 		int ty = my-h, by = my+h;
 		
 		GC gc = new GC(canvas);
+		gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_TRANSPARENT));
+		gc.fillRectangle(0, 0, canvas.getSize().x, canvas.getSize().y);
 		gc.setBackground(canvas.getDisplay().getSystemColor(SWT.COLOR_BLACK));
 		gc.fillPolygon(new int[] { mx-2*a, my, mx-a, ty, mx+a, ty, mx+2*a, my, mx+a, by, mx-a, by });
 		gc.dispose();

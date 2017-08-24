@@ -63,6 +63,7 @@ public class TestThreeHexagonsHappyCase {
 		SWTBotLabel lastBuild = bot.labelWithId("swimlane.lastBuild");
 		assertNotNull(lastBuild);
 		bot.waitUntil(ext.labelAfterDate(lastBuild, startBuildAt));
+		ext.dumpActiveShell();
 	}
 	
 	/* Because of new visibility constraints, we don't display the acceptance bar until we have identified it has some tests
@@ -137,6 +138,7 @@ public class TestThreeHexagonsHappyCase {
 				
 			}
 		});
+		ext.dumpActiveShell();
 		SWTBotTable t = bot.tableWithId("swimlane.errors");
 		assertTrue(t.isVisible());
 		bot.performWithTimeout(new VoidResult() {

@@ -38,6 +38,11 @@ public class SwimlaneView implements ViewLayout {
 
 	@Override
 	public void addAcceptance(int[] hexes, BarData ad) {
+		try {
+			throw new RuntimeException("hexes = " + hexes.length);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		String mask = maskString(hexes);
 		BarControl bc = factory.bar(view, "acceptance." + mask);
 		bc.getCanvas().setLayoutData(new AcceptanceBarLayout(mask, bc.getCanvas()));
