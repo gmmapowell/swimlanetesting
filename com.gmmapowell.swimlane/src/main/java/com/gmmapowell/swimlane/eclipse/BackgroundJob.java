@@ -7,7 +7,7 @@ import com.gmmapowell.swimlane.eclipse.interfaces.RunningJob;
 public class BackgroundJob implements RunningJob {
 
 	public BackgroundJob(Job job) {
-		// TODO Auto-generated constructor stub
+		throw new RuntimeException("Not implemented");
 	}
 
 }

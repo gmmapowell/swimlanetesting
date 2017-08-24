@@ -117,7 +117,6 @@ public class RealEclipseAbstractor implements EclipseAbstractor {
 			HandlerUtil.updateRadioState(command, "Tests");
 //			System.out.println(command.getState(RadioState.STATE_ID).getValue());
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

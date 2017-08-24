@@ -43,7 +43,6 @@ public class CaptureLayout implements ViewLayout {
 
 	@Override
 	public void addHexagonPort(int pos, PortLocation loc) {
-		// TODO Auto-generated method stub
 		
 	}
 

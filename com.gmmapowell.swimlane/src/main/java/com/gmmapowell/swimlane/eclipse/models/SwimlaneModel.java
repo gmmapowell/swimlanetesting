@@ -125,8 +125,7 @@ public class SwimlaneModel implements DataCentral, TestResultReporter {
 
 	@Override
 	public void testError(GroupOfTests grp, String testClz, String testFn, List<String> stack) {
-		// TODO Auto-generated method stub
-		
+		throw new RuntimeException("Not implemented");
 	}
 	
 	@Override

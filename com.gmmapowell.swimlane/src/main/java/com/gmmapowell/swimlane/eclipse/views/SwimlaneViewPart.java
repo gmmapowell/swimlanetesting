@@ -75,21 +75,18 @@ public class SwimlaneViewPart extends ViewPart implements CommandDispatcher {
 
 	@Override
 	public void showErrorPane() {
-		// TDA this ...
 		stack.topControl = errorView.getTop();
 		stackUI.layout();
 	}
 
 	@Override
 	public void showHexPane() {
-		// TDA this ...
 		stack.topControl = hexView.getTop();
 		stackUI.layout();
 	}
 
 	@Override
 	public void showTestResults(BarData bar) {
-		// TDA this ...
 		stack.topControl = testResults.getTop();
 		stackUI.layout();
 		if (bar != null) // only update the current test results flag if something valid
