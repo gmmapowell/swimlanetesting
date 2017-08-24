@@ -3,6 +3,7 @@ package com.gmmapowell.swimlane.eclipse.views;
 import org.eclipse.swt.widgets.Composite;
 
 import com.gmmapowell.swimlane.eclipse.interfaces.PortLocation;
+import com.gmmapowell.swimlane.eclipse.interfaces.ShowErrorsPane;
 import com.gmmapowell.swimlane.eclipse.interfaces.ViewComponentFactory;
 
 public class SwimlaneViewComponentFactory implements ViewComponentFactory {
@@ -18,8 +19,8 @@ public class SwimlaneViewComponentFactory implements ViewComponentFactory {
 	}
 
 	@Override
-	public BarControl bar(Composite view, String name) {
-		BarControl ret = new BarControl(view, name, null);
+	public BarControl bar(Composite view, String name, int[] mask, ShowErrorsPane sep) {
+		BarControl ret = new BarControl(view, name, sep);
 		return ret;
 	}
 }

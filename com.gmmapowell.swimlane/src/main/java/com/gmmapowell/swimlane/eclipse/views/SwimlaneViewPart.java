@@ -51,7 +51,7 @@ public class SwimlaneViewPart extends ViewPart implements CommandDispatcher {
 		stackUI.setLayoutData(new GridData(GridData.FILL_BOTH));
 		stack = new StackLayout();
 		stackUI.setLayout(stack);
-		hexView = new SwimlaneView(stackUI, new SwimlaneViewComponentFactory());
+		hexView = new SwimlaneView(stackUI, new SwimlaneViewComponentFactory(), id -> showTestResults(id));
 		errorView = new ErrorView(stackUI);
 		testResults = new TestResultsView(stackUI);
 		stack.topControl = hexView.getTop();
